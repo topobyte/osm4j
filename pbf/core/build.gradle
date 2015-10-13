@@ -1,0 +1,28 @@
+if (project.hasProperty("topobyte")) {
+    apply from: 'file:///' + System.getProperty("user.home") \
+        + '/.gradle/topobyte.gradle'
+}
+
+sourceSets {
+    main {
+        java {
+            srcDir 'src/gen/java'
+            srcDir 'src/import/java'
+        }
+    }
+    test {
+        java {
+            srcDir 'src/test-import/java'
+        }
+    }
+}
+
+dependencies {
+    compile 'de.topobyte:osm4j-core:0.0.1'
+
+    compile 'com.google.protobuf:protobuf-java:2.4.1'
+
+    compile 'org.slf4j:slf4j-api:1.6.1'
+    runtime 'org.slf4j:slf4j-log4j12:1.6.1'
+    runtime 'log4j:log4j:1.2.16'
+}
