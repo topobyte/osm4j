@@ -21,7 +21,7 @@ import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
-public class DateParser
+class DateParser
 {
 
 	private static final String[] PATTERNS = { "yyyy-MM-dd'T'HH:mm:ss'Z'",
