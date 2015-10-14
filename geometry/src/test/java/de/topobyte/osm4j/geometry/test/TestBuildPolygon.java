@@ -78,7 +78,7 @@ public class TestBuildPolygon
 		writer.write(polygon, fileWriter);
 		fileWriter.close();
 
-		System.out.println("Successfully create WKT representation");
+		System.out.println("Successfully created WKT representation");
 	}
 
 }
