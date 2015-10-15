@@ -24,7 +24,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.topobyte.osm4j.core.access.OsmHandler;
+import de.topobyte.osm4j.core.access.OsmInputException;
 import de.topobyte.osm4j.core.access.OsmIterator;
+import de.topobyte.osm4j.core.access.OsmReader;
 import de.topobyte.osm4j.core.model.iface.EntityContainer;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.osm4j.core.model.iface.OsmRelation;
@@ -33,7 +36,6 @@ import de.topobyte.osm4j.core.model.iface.OsmWay;
 import de.topobyte.osm4j.core.model.impl.Node;
 import de.topobyte.osm4j.core.model.impl.Relation;
 import de.topobyte.osm4j.core.model.impl.Way;
-import de.topobyte.osm4j.core.resolve.InMemoryDataSet;
 
 public class DataSetReader
 {
@@ -83,6 +85,67 @@ public class DataSetReader
 				break;
 			}
 		}
+
+		return dataSet;
+	}
+
+	public static InMemoryDataSet read(OsmReader reader,
+			final boolean keepNodeTags, final boolean keepWayTags,
+			final boolean keepRelationTags) throws OsmInputException
+	{
+		InMemoryDataSet dataSet = new InMemoryDataSet();
+
+		final TLongObjectMap<OsmNode> nodes = dataSet.getNodes();
+		final TLongObjectMap<OsmWay> ways = dataSet.getWays();
+		final TLongObjectMap<OsmRelation> relations = dataSet.getRelations();
+
+		reader.setHandler(new OsmHandler() {
+
+			@Override
+			public void handle(OsmNode node) throws IOException
+			{
+				if (!keepNodeTags) {
+					node = new Node(node.getId(), node.getLongitude(), node
+							.getLatitude());
+				}
+				nodes.put(node.getId(), node);
+			}
+
+			@Override
+			public void handle(OsmWay way) throws IOException
+			{
+				if (!keepWayTags) {
+					TLongArrayList ids = new TLongArrayList();
+					for (int i = 0; i < way.getNumberOfNodes(); i++) {
+						ids.add(way.getNodeId(i));
+					}
+					way = new Way(way.getId(), ids);
+				}
+				ways.put(way.getId(), way);
+			}
+
+			@Override
+			public void handle(OsmRelation relation) throws IOException
+			{
+				if (!keepRelationTags) {
+					List<OsmRelationMember> members = new ArrayList<OsmRelationMember>();
+					for (int i = 0; i < relation.getNumberOfMembers(); i++) {
+						members.add(relation.getMember(i));
+					}
+					relation = new Relation(relation.getId(), members);
+				}
+				relations.put(relation.getId(), relation);
+			}
+
+			@Override
+			public void complete() throws IOException
+			{
+				// nothing to do here
+			}
+
+		});
+
+		reader.read();
 
 		return dataSet;
 	}
