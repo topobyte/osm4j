@@ -95,7 +95,7 @@ public class PbfParser extends BinaryParser
 			List<OsmTag> tags = new ArrayList<OsmTag>();
 
 			OsmMetadata metadata = null;
-			if (fetchMetadata) {
+			if (fetchMetadata && i.hasInfo()) {
 				Info info = i.getInfo();
 				metadata = convertMetadata(info);
 			}
@@ -173,7 +173,7 @@ public class PbfParser extends BinaryParser
 			List<OsmTag> tags = new ArrayList<OsmTag>();
 
 			OsmMetadata metadata = null;
-			if (fetchMetadata) {
+			if (fetchMetadata && i.hasInfo()) {
 				Info info = i.getInfo();
 				metadata = convertMetadata(info);
 			}
@@ -206,7 +206,7 @@ public class PbfParser extends BinaryParser
 			List<OsmTag> tags = new ArrayList<OsmTag>();
 
 			OsmMetadata metadata = null;
-			if (fetchMetadata) {
+			if (fetchMetadata && i.hasInfo()) {
 				Info info = i.getInfo();
 				metadata = convertMetadata(info);
 			}

@@ -153,7 +153,7 @@ class NodeGroup extends Prim<OsmNode> implements PrimGroupWriterInterface
 				bi.addKeys(stable.getIndex(t.getKey()));
 				bi.addVals(stable.getIndex(t.getValue()));
 			}
-			if (writeMetadata) {
+			if (writeMetadata && node.getMetadata() != null) {
 				bi.setInfo(serializeMetadata(node, serializer));
 			}
 			builder.addNodes(bi);

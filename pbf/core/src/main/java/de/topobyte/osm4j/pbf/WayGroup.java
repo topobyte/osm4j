@@ -78,7 +78,7 @@ class WayGroup extends Prim<OsmWay> implements PrimGroupWriterInterface
 				bi.addKeys(stable.getIndex(t.getKey()));
 				bi.addVals(stable.getIndex(t.getValue()));
 			}
-			if (writeMetadata) {
+			if (writeMetadata && way.getMetadata() != null) {
 				bi.setInfo(serializeMetadata(way, serializer));
 			}
 			builder.addWays(bi);
