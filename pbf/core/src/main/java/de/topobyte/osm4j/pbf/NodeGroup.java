@@ -90,9 +90,11 @@ class NodeGroup extends Prim<OsmNode> implements PrimGroupWriterInterface
 					|| (node.getNumberOfTags() != 0);
 		}
 
-		Osmformat.DenseInfo.Builder bdi = Osmformat.DenseInfo.newBuilder();
-		serializeMetadataDense(bdi, contents, serializer);
-		bi.setDenseinfo(bdi);
+		if (writeMetadata) {
+			Osmformat.DenseInfo.Builder bdi = Osmformat.DenseInfo.newBuilder();
+			serializeMetadataDense(bdi, contents, serializer);
+			bi.setDenseinfo(bdi);
+		}
 
 		for (OsmNode node : contents) {
 			long id = node.getId();
@@ -151,7 +153,9 @@ class NodeGroup extends Prim<OsmNode> implements PrimGroupWriterInterface
 				bi.addKeys(stable.getIndex(t.getKey()));
 				bi.addVals(stable.getIndex(t.getValue()));
 			}
-			bi.setInfo(serializeMetadata(node, serializer));
+			if (writeMetadata) {
+				bi.setInfo(serializeMetadata(node, serializer));
+			}
 			builder.addNodes(bi);
 		}
 		return builder.build();

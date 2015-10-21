@@ -50,11 +50,12 @@ import crosby.binary.StringTable;
 import de.topobyte.osm4j.core.model.iface.OsmEntity;
 import de.topobyte.osm4j.core.model.iface.OsmMetadata;
 import de.topobyte.osm4j.core.model.iface.OsmTag;
+import de.topobyte.osm4j.core.model.impl.Metadata;
 
 abstract class Prim<T extends OsmEntity>
 {
 
-	private boolean writeMetadata = true;
+	protected boolean writeMetadata = true;
 
 	public Prim(boolean writeMetadata)
 	{
@@ -130,7 +131,7 @@ abstract class Prim<T extends OsmEntity>
 		for (OsmEntity e : entities) {
 			OsmMetadata metadata = e.getMetadata();
 			if (metadata == null) {
-				continue;
+				metadata = new Metadata(-1, -1, -1, "", -1);
 			}
 			int uid = (int) metadata.getUid();
 			int userSid = stable.getIndex(metadata.getUser());

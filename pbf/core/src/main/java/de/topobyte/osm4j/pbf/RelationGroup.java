@@ -100,7 +100,9 @@ class RelationGroup extends Prim<OsmRelation> implements
 				bi.addKeys(stable.getIndex(t.getKey()));
 				bi.addVals(stable.getIndex(t.getValue()));
 			}
-			bi.setInfo(serializeMetadata(relation, serializer));
+			if (writeMetadata) {
+				bi.setInfo(serializeMetadata(relation, serializer));
+			}
 			builder.addRelations(bi);
 		}
 		return builder.build();

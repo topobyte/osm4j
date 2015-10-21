@@ -114,7 +114,7 @@ public class PbfParser extends BinaryParser
 	protected void parseDense(DenseNodes nodes) throws IOException
 	{
 		DenseInfo denseInfo = null;
-		if (fetchMetadata) {
+		if (fetchMetadata && nodes.hasDenseinfo()) {
 			denseInfo = nodes.getDenseinfo();
 		}
 
@@ -136,7 +136,7 @@ public class PbfParser extends BinaryParser
 
 			OsmMetadata metadata = null;
 
-			if (fetchMetadata) {
+			if (fetchMetadata && nodes.hasDenseinfo()) {
 				version = denseInfo.getVersion(i);
 				timestamp += denseInfo.getTimestamp(i);
 				uid += denseInfo.getUid(i);
