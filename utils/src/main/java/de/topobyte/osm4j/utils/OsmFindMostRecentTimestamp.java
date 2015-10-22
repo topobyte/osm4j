@@ -80,6 +80,9 @@ public class OsmFindMostRecentTimestamp extends AbstractTaskSingleInputIterator
 			OsmEntity entity = entityContainer.getEntity();
 
 			OsmMetadata metadata = entity.getMetadata();
+			if (metadata == null) {
+				continue;
+			}
 			long time = metadata.getTimestamp();
 			if (time > latest) {
 				latest = time;
@@ -89,7 +92,11 @@ public class OsmFindMostRecentTimestamp extends AbstractTaskSingleInputIterator
 			}
 		}
 
-		printTime(latest);
+		if (latest == 0) {
+			System.out.println("No metadata found");
+		} else {
+			printTime(latest);
+		}
 
 		finish();
 	}
