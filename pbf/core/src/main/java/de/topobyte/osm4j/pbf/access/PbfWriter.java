@@ -35,11 +35,11 @@ public class PbfWriter implements OsmOutputStream
 
 	public PbfWriter(OutputStream output, boolean outputMetadata)
 	{
-		this(output, outputMetadata, true);
+		this(output, outputMetadata, true, true);
 	}
 
 	public PbfWriter(OutputStream output, boolean outputMetadata,
-			boolean useCompression)
+			boolean useCompression, boolean useDenseNodes)
 	{
 		BlockOutputStream blockOutputStream = new BlockOutputStream(output);
 		CompressFlags flags = useCompression ? CompressFlags.DEFLATE
