@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 import crosby.binary.file.BlockOutputStream;
+import crosby.binary.file.CompressFlags;
 import de.topobyte.osm4j.core.access.OsmOutputStream;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.osm4j.core.model.iface.OsmRelation;
@@ -34,7 +35,16 @@ public class PbfWriter implements OsmOutputStream
 
 	public PbfWriter(OutputStream output, boolean outputMetadata)
 	{
+		this(output, outputMetadata, true);
+	}
+
+	public PbfWriter(OutputStream output, boolean outputMetadata,
+			boolean useCompression)
+	{
 		BlockOutputStream blockOutputStream = new BlockOutputStream(output);
+		CompressFlags flags = useCompression ? CompressFlags.DEFLATE
+				: CompressFlags.NONE;
+		blockOutputStream.setCompress(flags);
 		serializer = new PbfSerializer(blockOutputStream, outputMetadata);
 	}
 
