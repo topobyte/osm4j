@@ -90,7 +90,16 @@ class NodeGroup extends Prim<OsmNode> implements PrimGroupWriterInterface
 					|| (node.getNumberOfTags() != 0);
 		}
 
-		if (writeMetadata) {
+		// Find out if any of the nodes has metadata. If none does, we can omit
+		// the metadata completely.
+		boolean hasMetadata = false;
+		for (OsmNode node : contents) {
+			if (node.getMetadata() != null) {
+				hasMetadata = true;
+			}
+		}
+
+		if (writeMetadata && hasMetadata) {
 			Osmformat.DenseInfo.Builder bdi = Osmformat.DenseInfo.newBuilder();
 			serializeMetadataDense(bdi, contents, serializer);
 			bi.setDenseinfo(bdi);
