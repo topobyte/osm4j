@@ -107,10 +107,9 @@ public class PbfFile
 	 * Access to raw blocks (header data + block data)
 	 */
 
-	public byte[] getRawHeaderBlockWithHeader(int i) throws IOException
+	public byte[] getRawHeaderBlockWithHeader() throws IOException
 	{
-		BlockInfo info = dataBlockInfos.get(i);
-		return getRawBlockWithHeader(info);
+		return getRawBlockWithHeader(headerBlockInfo);
 	}
 
 	public byte[] getRawDataBlockWithHeader(int i) throws IOException
