@@ -22,6 +22,7 @@ import java.util.List;
 
 import crosby.binary.Osmformat.PrimitiveBlock;
 import crosby.binary.Osmformat.PrimitiveGroup;
+import de.topobyte.osm4j.core.model.iface.EntityType;
 
 public class EntityGroups
 {
@@ -90,6 +91,20 @@ public class EntityGroups
 	public List<PrimitiveGroup> getRelationGroups()
 	{
 		return relationGroups;
+	}
+
+	public List<PrimitiveGroup> getGroups(EntityType type)
+	{
+		switch (type) {
+		case Node:
+			return nodeGroups;
+		case Way:
+			return wayGroups;
+		case Relation:
+			return relationGroups;
+		default:
+			return null;
+		}
 	}
 
 }
