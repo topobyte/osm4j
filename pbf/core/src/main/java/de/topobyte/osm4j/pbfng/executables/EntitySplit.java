@@ -38,7 +38,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import crosby.binary.Fileformat;
-import crosby.binary.Fileformat.Blob;
 import crosby.binary.Osmformat;
 import crosby.binary.Osmformat.PrimitiveBlock;
 import crosby.binary.Osmformat.PrimitiveBlock.Builder;
@@ -174,6 +173,9 @@ public class EntitySplit
 
 				String type = header.getType();
 
+				// TODO: stop iterating if not all entity type are requested
+				// (for example only nodes) and we are beyond the last block of
+				// requested types
 				if (type.equals(Constants.BLOCK_TYPE_DATA)) {
 					data(blob);
 				} else if (type.equals(Constants.BLOCK_TYPE_HEADER)) {
@@ -206,7 +208,7 @@ public class EntitySplit
 
 	}
 
-	private void data(Blob blob) throws IOException
+	private void data(Fileformat.Blob blob) throws IOException
 	{
 		BlockData blockData = PbfUtil.getBlockData(blob);
 		Osmformat.PrimitiveBlock primBlock = Osmformat.PrimitiveBlock
