@@ -69,8 +69,8 @@ public class PbfFile
 
 				if (header.getType().equals(Constants.BLOCK_TYPE_DATA)) {
 					dataBlockInfos.add(info);
-				} else if (header.getType().equals(Constants.BLOCK_TYPE_DATA)) {
-					if (headerBlockInfo != null) {
+				} else if (header.getType().equals(Constants.BLOCK_TYPE_HEADER)) {
+					if (headerBlockInfo == null) {
 						headerBlockInfo = info;
 					} else {
 						throw new IOException("Multiple header blocks");
@@ -91,6 +91,11 @@ public class PbfFile
 	public boolean isBlockIndexInitialized()
 	{
 		return blockIndexInitialized;
+	}
+
+	public boolean hasHeader()
+	{
+		return headerBlockInfo != null;
 	}
 
 	public int getNumberOfDataBlocks()
