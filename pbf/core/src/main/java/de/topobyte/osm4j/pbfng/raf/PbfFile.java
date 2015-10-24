@@ -146,6 +146,13 @@ public class PbfFile
 		return PbfUtil.parseHeader(file, info.getLengthHeader());
 	}
 
+	public Fileformat.Blob getDataBlob(int i) throws IOException
+	{
+		BlockInfo info = dataBlockInfos.get(i);
+		Fileformat.Blob blob = getBlockBlob(info);
+		return blob;
+	}
+
 	public Osmformat.PrimitiveBlock getDataBlock(int i) throws IOException
 	{
 		BlockInfo info = dataBlockInfos.get(i);
