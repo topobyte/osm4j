@@ -23,11 +23,10 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import com.google.protobuf.ByteString;
-
 import crosby.binary.Fileformat;
 import crosby.binary.Osmformat;
 import de.topobyte.osm4j.pbfng.Constants;
+import de.topobyte.osm4j.pbfng.util.BlockData;
 import de.topobyte.osm4j.pbfng.util.BlockHeader;
 import de.topobyte.osm4j.pbfng.util.PbfUtil;
 
@@ -59,7 +58,7 @@ public class HeaderInfo
 
 				Fileformat.Blob blob = PbfUtil.parseBlock(data,
 						header.getDataLength());
-				ByteString blobData = PbfUtil.getBlockData(blob);
+				BlockData blockData = PbfUtil.getBlockData(blob);
 
 				String type = header.getType();
 
@@ -67,7 +66,7 @@ public class HeaderInfo
 
 				if (type.equals(Constants.BLOCK_TYPE_HEADER)) {
 					Osmformat.HeaderBlock headerBlock = Osmformat.HeaderBlock
-							.parseFrom(blobData);
+							.parseFrom(blockData.getBlobData());
 					printHeaderInfo(headerBlock);
 					return;
 				}

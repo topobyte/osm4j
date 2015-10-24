@@ -30,6 +30,7 @@ import com.google.protobuf.ByteString;
 import crosby.binary.Fileformat;
 import crosby.binary.Osmformat;
 import de.topobyte.osm4j.core.model.impl.Bound;
+import de.topobyte.osm4j.pbfng.Compression;
 import de.topobyte.osm4j.pbfng.Constants;
 
 public class PbfUtil
@@ -108,13 +109,16 @@ public class PbfUtil
 		}
 	}
 
-	public static ByteString getBlockData(Fileformat.Blob blob)
+	public static BlockData getBlockData(Fileformat.Blob blob)
 			throws IOException
 	{
 		ByteString blobData;
+		Compression compression;
 		if (blob.hasRaw()) {
+			compression = Compression.NONE;
 			blobData = blob.getRaw();
 		} else if (blob.hasZlibData()) {
+			compression = Compression.DEFLATE;
 			byte uncompressed[] = new byte[blob.getRawSize()];
 
 			Inflater decompresser = new Inflater();
@@ -129,6 +133,7 @@ public class PbfUtil
 
 			blobData = ByteString.copyFrom(uncompressed);
 		} else if (blob.hasLz4Data()) {
+			compression = Compression.LZ4;
 			byte uncompressed[] = new byte[blob.getRawSize()];
 
 			initLz4();
@@ -140,7 +145,7 @@ public class PbfUtil
 			throw new IOException("Encountered block without data");
 		}
 
-		return blobData;
+		return new BlockData(blobData, compression);
 	}
 
 }

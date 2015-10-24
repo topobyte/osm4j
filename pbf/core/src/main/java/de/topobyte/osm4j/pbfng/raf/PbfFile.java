@@ -25,11 +25,10 @@ import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.google.protobuf.ByteString;
-
 import crosby.binary.Fileformat;
 import crosby.binary.Osmformat;
 import de.topobyte.osm4j.pbfng.Constants;
+import de.topobyte.osm4j.pbfng.util.BlockData;
 import de.topobyte.osm4j.pbfng.util.BlockHeader;
 import de.topobyte.osm4j.pbfng.util.PbfUtil;
 
@@ -136,8 +135,8 @@ public class PbfFile
 	public Osmformat.HeaderBlock getHeaderBlock() throws IOException
 	{
 		Fileformat.Blob blob = getBlockBlob(headerBlockInfo);
-		ByteString blobData = PbfUtil.getBlockData(blob);
-		return Osmformat.HeaderBlock.parseFrom(blobData);
+		BlockData blockData = PbfUtil.getBlockData(blob);
+		return Osmformat.HeaderBlock.parseFrom(blockData.getBlobData());
 	}
 
 	public BlockHeader getDataBlockHeader(int i) throws IOException
@@ -152,10 +151,10 @@ public class PbfFile
 	{
 		BlockInfo info = dataBlockInfos.get(i);
 		Fileformat.Blob blob = getBlockBlob(info);
-		ByteString blobData = PbfUtil.getBlockData(blob);
+		BlockData blockData = PbfUtil.getBlockData(blob);
 
 		Osmformat.PrimitiveBlock primBlock = Osmformat.PrimitiveBlock
-				.parseFrom(blobData);
+				.parseFrom(blockData.getBlobData());
 		return primBlock;
 	}
 

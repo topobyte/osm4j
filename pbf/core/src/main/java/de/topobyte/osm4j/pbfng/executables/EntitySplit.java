@@ -37,8 +37,6 @@ import org.apache.commons.cli.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.protobuf.ByteString;
-
 import crosby.binary.Fileformat;
 import crosby.binary.Fileformat.Blob;
 import crosby.binary.Osmformat;
@@ -49,6 +47,7 @@ import de.topobyte.osm4j.core.model.iface.EntityType;
 import de.topobyte.osm4j.pbfng.Compression;
 import de.topobyte.osm4j.pbfng.Constants;
 import de.topobyte.osm4j.pbfng.seq.BlockWriter;
+import de.topobyte.osm4j.pbfng.util.BlockData;
 import de.topobyte.osm4j.pbfng.util.BlockHeader;
 import de.topobyte.osm4j.pbfng.util.PbfMeta;
 import de.topobyte.osm4j.pbfng.util.PbfUtil;
@@ -209,9 +208,9 @@ public class EntitySplit
 
 	private void data(Blob blob) throws IOException
 	{
-		ByteString blockData = PbfUtil.getBlockData(blob);
+		BlockData blockData = PbfUtil.getBlockData(blob);
 		Osmformat.PrimitiveBlock primBlock = Osmformat.PrimitiveBlock
-				.parseFrom(blockData);
+				.parseFrom(blockData.getBlobData());
 
 		if (!PbfMeta.hasMixedContent(primBlock)) {
 			// If the block does not contain multiple entity types, we can copy
@@ -231,7 +230,7 @@ public class EntitySplit
 			// appropriate output.
 			EntityGroups groups = EntityGroups.splitEntities(primBlock);
 
-			Compression compression = Compression.DEFLATE;
+			Compression compression = blockData.getCompression();
 
 			if (copyNodes && groups.getNodeGroups().size() > 0) {
 				copy(blockWriterNodes, groups.getNodeGroups(), primBlock,

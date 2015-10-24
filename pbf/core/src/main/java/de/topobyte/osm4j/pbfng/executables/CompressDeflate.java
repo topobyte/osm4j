@@ -25,11 +25,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import com.google.protobuf.ByteString;
-
 import crosby.binary.Fileformat;
 import de.topobyte.osm4j.pbfng.Compression;
 import de.topobyte.osm4j.pbfng.seq.BlockWriter;
+import de.topobyte.osm4j.pbfng.util.BlockData;
 import de.topobyte.osm4j.pbfng.util.BlockHeader;
 import de.topobyte.osm4j.pbfng.util.PbfUtil;
 
@@ -59,10 +58,10 @@ public class CompressDeflate
 				Fileformat.Blob blob = PbfUtil.parseBlock(data,
 						header.getDataLength());
 
-				ByteString blockData = PbfUtil.getBlockData(blob);
+				BlockData blockData = PbfUtil.getBlockData(blob);
 
 				blockWriter.write(header.getType(), null, Compression.DEFLATE,
-						blockData);
+						blockData.getBlobData());
 
 			} catch (EOFException eof) {
 				break;

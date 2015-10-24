@@ -19,11 +19,10 @@ package de.topobyte.osm4j.pbfng.seq;
 
 import java.io.IOException;
 
-import com.google.protobuf.ByteString;
-
 import crosby.binary.Fileformat;
 import crosby.binary.Osmformat;
 import de.topobyte.osm4j.pbfng.Constants;
+import de.topobyte.osm4j.pbfng.util.BlockData;
 import de.topobyte.osm4j.pbfng.util.BlockHeader;
 import de.topobyte.osm4j.pbfng.util.PbfUtil;
 
@@ -34,16 +33,16 @@ public abstract class BlockParser extends BlobParser
 	protected void parse(BlockHeader header, Fileformat.Blob blob)
 			throws IOException
 	{
-		ByteString blobData = PbfUtil.getBlockData(blob);
+		BlockData blockData = PbfUtil.getBlockData(blob);
 
 		String type = header.getType();
 		if (type.equals(Constants.BLOCK_TYPE_DATA)) {
 			Osmformat.PrimitiveBlock primBlock = Osmformat.PrimitiveBlock
-					.parseFrom(blobData);
+					.parseFrom(blockData.getBlobData());
 			parse(primBlock);
 		} else if (type.equals(Constants.BLOCK_TYPE_HEADER)) {
 			Osmformat.HeaderBlock headerBlock = Osmformat.HeaderBlock
-					.parseFrom(blobData);
+					.parseFrom(blockData.getBlobData());
 			parse(headerBlock);
 		}
 	}

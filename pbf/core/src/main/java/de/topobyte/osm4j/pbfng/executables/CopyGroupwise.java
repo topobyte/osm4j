@@ -30,9 +30,9 @@ import com.google.protobuf.ByteString;
 
 import crosby.binary.Fileformat;
 import crosby.binary.Osmformat;
-import de.topobyte.osm4j.pbfng.Compression;
 import de.topobyte.osm4j.pbfng.Constants;
 import de.topobyte.osm4j.pbfng.seq.BlockWriter;
+import de.topobyte.osm4j.pbfng.util.BlockData;
 import de.topobyte.osm4j.pbfng.util.BlockHeader;
 import de.topobyte.osm4j.pbfng.util.PbfUtil;
 
@@ -64,9 +64,9 @@ public class CopyGroupwise
 				String type = header.getType();
 
 				if (type.equals(Constants.BLOCK_TYPE_DATA)) {
-					ByteString blockData = PbfUtil.getBlockData(blob);
+					BlockData blockData = PbfUtil.getBlockData(blob);
 					Osmformat.PrimitiveBlock primBlock = Osmformat.PrimitiveBlock
-							.parseFrom(blockData);
+							.parseFrom(blockData.getBlobData());
 
 					Osmformat.PrimitiveBlock.Builder builder = Osmformat.PrimitiveBlock
 							.newBuilder();
@@ -99,7 +99,7 @@ public class CopyGroupwise
 					ByteString message = block.toByteString();
 
 					blockWriter.write(header.getType(), null,
-							Compression.DEFLATE, message);
+							blockData.getCompression(), message);
 				} else if (type.equals(Constants.BLOCK_TYPE_HEADER)) {
 					blockWriter.write(header.getType(), null, blob);
 				}
