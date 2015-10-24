@@ -38,6 +38,7 @@ public class PbfFile
 
 	private RandomAccessFile file;
 
+	private boolean blockIndexInitialized = false;
 	private BlockInfo headerBlockInfo;
 	private List<BlockInfo> dataBlockInfos = new ArrayList<>();
 
@@ -80,11 +81,18 @@ public class PbfFile
 				break;
 			}
 		}
+
+		blockIndexInitialized = true;
 	}
 
 	/*
 	 * Block info
 	 */
+
+	public boolean isBlockIndexInitialized()
+	{
+		return blockIndexInitialized;
+	}
 
 	public int getNumberOfDataBlocks()
 	{
