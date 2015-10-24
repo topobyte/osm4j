@@ -22,6 +22,9 @@ import java.io.IOException;
 import java.util.zip.DataFormatException;
 import java.util.zip.Inflater;
 
+import net.jpountz.lz4.LZ4Factory;
+import net.jpountz.lz4.LZ4FastDecompressor;
+
 import com.google.protobuf.ByteString;
 
 import crosby.binary.Fileformat;
@@ -95,6 +98,16 @@ public class PbfUtil
 		return blob;
 	}
 
+	private static LZ4FastDecompressor lz4Decompressor = null;
+
+	private static void initLz4()
+	{
+		if (lz4Decompressor == null) {
+			LZ4Factory factory = LZ4Factory.fastestInstance();
+			lz4Decompressor = factory.fastDecompressor();
+		}
+	}
+
 	public static ByteString getBlockData(Fileformat.Blob blob)
 			throws IOException
 	{
@@ -113,9 +126,18 @@ public class PbfUtil
 						e);
 			}
 			decompresser.end();
+
+			blobData = ByteString.copyFrom(uncompressed);
+		} else if (blob.hasLz4Data()) {
+			byte uncompressed[] = new byte[blob.getRawSize()];
+
+			initLz4();
+			lz4Decompressor.decompress(blob.getLz4Data().toByteArray(), 0,
+					uncompressed, 0, blob.getRawSize());
+
 			blobData = ByteString.copyFrom(uncompressed);
 		} else {
-			throw new IOException("Enountered block without data");
+			throw new IOException("Encountered block without data");
 		}
 
 		return blobData;

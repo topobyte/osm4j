@@ -20,6 +20,7 @@ package de.topobyte.osm4j.pbfng;
 public enum Compression {
 
 	NONE,
-	DEFLATE
+	DEFLATE,
+	LZ4
 
 }

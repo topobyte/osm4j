@@ -100,6 +100,26 @@ public final class Fileformat {
      * </pre>
      */
     @java.lang.Deprecated com.google.protobuf.ByteString getOBSOLETEBzip2Data();
+
+    // optional bytes lz4_data = 6;
+    /**
+     * <code>optional bytes lz4_data = 6;</code>
+     *
+     * <pre>
+     * lz4 compressed data. It optimized for performance, pretty fast
+     * while still offering useful compression ratios.
+     * </pre>
+     */
+    boolean hasLz4Data();
+    /**
+     * <code>optional bytes lz4_data = 6;</code>
+     *
+     * <pre>
+     * lz4 compressed data. It optimized for performance, pretty fast
+     * while still offering useful compression ratios.
+     * </pre>
+     */
+    com.google.protobuf.ByteString getLz4Data();
   }
   /**
    * Protobuf type {@code OSMPBF.Blob}
@@ -167,6 +187,11 @@ public final class Fileformat {
             case 42: {
               bitField0_ |= 0x00000010;
               oBSOLETEBzip2Data_ = input.readBytes();
+              break;
+            }
+            case 50: {
+              bitField0_ |= 0x00000020;
+              lz4Data_ = input.readBytes();
               break;
             }
           }
@@ -316,12 +341,39 @@ public final class Fileformat {
       return oBSOLETEBzip2Data_;
     }
 
+    // optional bytes lz4_data = 6;
+    public static final int LZ4_DATA_FIELD_NUMBER = 6;
+    private com.google.protobuf.ByteString lz4Data_;
+    /**
+     * <code>optional bytes lz4_data = 6;</code>
+     *
+     * <pre>
+     * lz4 compressed data. It optimized for performance, pretty fast
+     * while still offering useful compression ratios.
+     * </pre>
+     */
+    public boolean hasLz4Data() {
+      return ((bitField0_ & 0x00000020) == 0x00000020);
+    }
+    /**
+     * <code>optional bytes lz4_data = 6;</code>
+     *
+     * <pre>
+     * lz4 compressed data. It optimized for performance, pretty fast
+     * while still offering useful compression ratios.
+     * </pre>
+     */
+    public com.google.protobuf.ByteString getLz4Data() {
+      return lz4Data_;
+    }
+
     private void initFields() {
       raw_ = com.google.protobuf.ByteString.EMPTY;
       rawSize_ = 0;
       zlibData_ = com.google.protobuf.ByteString.EMPTY;
       lzmaData_ = com.google.protobuf.ByteString.EMPTY;
       oBSOLETEBzip2Data_ = com.google.protobuf.ByteString.EMPTY;
+      lz4Data_ = com.google.protobuf.ByteString.EMPTY;
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -350,6 +402,9 @@ public final class Fileformat {
       if (((bitField0_ & 0x00000010) == 0x00000010)) {
         output.writeBytes(5, oBSOLETEBzip2Data_);
       }
+      if (((bitField0_ & 0x00000020) == 0x00000020)) {
+        output.writeBytes(6, lz4Data_);
+      }
     }
 
     private int memoizedSerializedSize = -1;
@@ -377,6 +432,10 @@ public final class Fileformat {
       if (((bitField0_ & 0x00000010) == 0x00000010)) {
         size += com.google.protobuf.CodedOutputStream
           .computeBytesSize(5, oBSOLETEBzip2Data_);
+      }
+      if (((bitField0_ & 0x00000020) == 0x00000020)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(6, lz4Data_);
       }
       memoizedSerializedSize = size;
       return size;
@@ -479,6 +538,8 @@ public final class Fileformat {
         bitField0_ = (bitField0_ & ~0x00000008);
         oBSOLETEBzip2Data_ = com.google.protobuf.ByteString.EMPTY;
         bitField0_ = (bitField0_ & ~0x00000010);
+        lz4Data_ = com.google.protobuf.ByteString.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000020);
         return this;
       }
 
@@ -522,6 +583,10 @@ public final class Fileformat {
           to_bitField0_ |= 0x00000010;
         }
         result.oBSOLETEBzip2Data_ = oBSOLETEBzip2Data_;
+        if (((from_bitField0_ & 0x00000020) == 0x00000020)) {
+          to_bitField0_ |= 0x00000020;
+        }
+        result.lz4Data_ = lz4Data_;
         result.bitField0_ = to_bitField0_;
         return result;
       }
@@ -542,6 +607,9 @@ public final class Fileformat {
         }
         if (other.hasOBSOLETEBzip2Data()) {
           setOBSOLETEBzip2Data(other.getOBSOLETEBzip2Data());
+        }
+        if (other.hasLz4Data()) {
+          setLz4Data(other.getLz4Data());
         }
         return this;
       }
@@ -822,6 +890,62 @@ public final class Fileformat {
       @java.lang.Deprecated public Builder clearOBSOLETEBzip2Data() {
         bitField0_ = (bitField0_ & ~0x00000010);
         oBSOLETEBzip2Data_ = getDefaultInstance().getOBSOLETEBzip2Data();
+        
+        return this;
+      }
+
+      // optional bytes lz4_data = 6;
+      private com.google.protobuf.ByteString lz4Data_ = com.google.protobuf.ByteString.EMPTY;
+      /**
+       * <code>optional bytes lz4_data = 6;</code>
+       *
+       * <pre>
+       * lz4 compressed data. It optimized for performance, pretty fast
+       * while still offering useful compression ratios.
+       * </pre>
+       */
+      public boolean hasLz4Data() {
+        return ((bitField0_ & 0x00000020) == 0x00000020);
+      }
+      /**
+       * <code>optional bytes lz4_data = 6;</code>
+       *
+       * <pre>
+       * lz4 compressed data. It optimized for performance, pretty fast
+       * while still offering useful compression ratios.
+       * </pre>
+       */
+      public com.google.protobuf.ByteString getLz4Data() {
+        return lz4Data_;
+      }
+      /**
+       * <code>optional bytes lz4_data = 6;</code>
+       *
+       * <pre>
+       * lz4 compressed data. It optimized for performance, pretty fast
+       * while still offering useful compression ratios.
+       * </pre>
+       */
+      public Builder setLz4Data(com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000020;
+        lz4Data_ = value;
+        
+        return this;
+      }
+      /**
+       * <code>optional bytes lz4_data = 6;</code>
+       *
+       * <pre>
+       * lz4 compressed data. It optimized for performance, pretty fast
+       * while still offering useful compression ratios.
+       * </pre>
+       */
+      public Builder clearLz4Data() {
+        bitField0_ = (bitField0_ & ~0x00000020);
+        lz4Data_ = getDefaultInstance().getLz4Data();
         
         return this;
       }

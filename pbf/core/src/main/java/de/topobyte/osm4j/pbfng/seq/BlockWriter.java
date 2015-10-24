@@ -23,6 +23,9 @@ import java.io.OutputStream;
 import java.util.Arrays;
 import java.util.zip.Deflater;
 
+import net.jpountz.lz4.LZ4Compressor;
+import net.jpountz.lz4.LZ4Factory;
+
 import com.google.protobuf.ByteString;
 
 import crosby.binary.Fileformat;
@@ -54,6 +57,13 @@ public class BlockWriter
 			ByteString zlibData = ByteString.copyFrom(compressed.getData(), 0,
 					compressed.getLength());
 			blobBuilder.setZlibData(zlibData);
+			break;
+		case LZ4:
+			blobBuilder.setRawSize(data.size());
+			compressed = lz4(data);
+			ByteString lz4Data = ByteString.copyFrom(compressed.getData(), 0,
+					compressed.getLength());
+			blobBuilder.setLz4Data(lz4Data);
 			break;
 		}
 		Fileformat.Blob blob = blobBuilder.build();
@@ -101,6 +111,30 @@ public class BlockWriter
 
 		int length = deflater.getTotalOut();
 		deflater.end();
+
+		return new ByteArray(out, length);
+	}
+
+	private LZ4Compressor lz4Compressor = null;
+
+	private void initLz4()
+	{
+		if (lz4Compressor == null) {
+			LZ4Factory factory = LZ4Factory.fastestInstance();
+			lz4Compressor = factory.fastCompressor();
+		}
+	}
+
+	protected ByteArray lz4(ByteString data)
+	{
+		initLz4();
+
+		int size = data.size();
+
+		int estimate = lz4Compressor.maxCompressedLength(size);
+		byte[] out = new byte[estimate];
+		int length = lz4Compressor.compress(data.toByteArray(), 0, size, out,
+				0, estimate);
 
 		return new ByteArray(out, length);
 	}

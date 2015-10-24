@@ -38,6 +38,10 @@ message Blob {
 
   // Formerly used for bzip2 compressed data. Depreciated in 2010.
   optional bytes OBSOLETE_bzip2_data = 5 [deprecated=true]; // Don't reuse this tag number.
+
+  // lz4 compressed data. It optimized for performance, pretty fast
+  // while still offering useful compression ratios.
+  optional bytes lz4_data = 6;
 }
 
 /* A file contains an sequence of fileblock headers, each prefixed by
