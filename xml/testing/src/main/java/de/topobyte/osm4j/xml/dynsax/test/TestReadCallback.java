@@ -17,30 +17,28 @@
 
 package de.topobyte.osm4j.xml.dynsax.test;
 
-import java.io.BufferedInputStream;
-import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
-
-import org.xml.sax.SAXException;
 
 import de.topobyte.osm4j.core.access.OsmHandler;
+import de.topobyte.osm4j.core.access.OsmInputException;
+import de.topobyte.osm4j.core.access.OsmReader;
+import de.topobyte.osm4j.core.model.iface.OsmBounds;
 import de.topobyte.osm4j.core.model.iface.OsmEntity;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.osm4j.core.model.iface.OsmRelation;
 import de.topobyte.osm4j.core.model.iface.OsmRelationMember;
 import de.topobyte.osm4j.core.model.iface.OsmWay;
 import de.topobyte.osm4j.core.model.util.OsmModelUtil;
-import de.topobyte.osm4j.xml.dynsax.OsmSaxHandler;
+import de.topobyte.osm4j.xml.dynsax.OsmXmlReader;
 
 public class TestReadCallback implements OsmHandler
 {
 
 	public static void main(String[] args) throws ParserConfigurationException,
-			SAXException, IOException
+			OsmInputException, FileNotFoundException
 	{
 		if (args.length != 1) {
 			System.out.println("usage: "
@@ -51,16 +49,17 @@ public class TestReadCallback implements OsmHandler
 
 		String pathInput = args[0];
 
-		SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
-		SAXParser parser = saxParserFactory.newSAXParser();
-
 		TestReadCallback test = new TestReadCallback();
-		OsmSaxHandler saxHandler = OsmSaxHandler.createInstance(test, false);
+		OsmReader reader = new OsmXmlReader(pathInput, false);
 
-		FileInputStream fis = new FileInputStream(pathInput);
-		BufferedInputStream bis = new BufferedInputStream(fis);
-		parser.parse(bis, saxHandler);
+		reader.setHandler(test);
+		reader.read();
+	}
 
+	@Override
+	public void handle(OsmBounds bounds) throws IOException
+	{
+		System.out.println("bounds: " + bounds);
 	}
 
 	@Override

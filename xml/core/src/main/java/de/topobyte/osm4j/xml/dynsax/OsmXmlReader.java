@@ -17,6 +17,10 @@
 
 package de.topobyte.osm4j.xml.dynsax;
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -26,11 +30,13 @@ import javax.xml.parsers.SAXParserFactory;
 import de.topobyte.osm4j.core.access.OsmHandler;
 import de.topobyte.osm4j.core.access.OsmInputException;
 import de.topobyte.osm4j.core.access.OsmReader;
-import de.topobyte.osm4j.core.model.iface.OsmNode;
-import de.topobyte.osm4j.core.model.iface.OsmRelation;
-import de.topobyte.osm4j.core.model.iface.OsmWay;
 
-public class OsmXmlReader implements OsmReader, OsmHandler
+/**
+ * This is a SAX-based parser for OSM XML data.
+ * 
+ * @author Sebastian Kuerten (sebastian@topobyte.de)
+ */
+public class OsmXmlReader implements OsmReader
 {
 
 	private OsmHandler handler;
@@ -42,6 +48,20 @@ public class OsmXmlReader implements OsmReader, OsmHandler
 	{
 		this.inputStream = inputStream;
 		this.parseMetadata = parseMetadata;
+	}
+
+	public OsmXmlReader(File file, boolean parseMetadata)
+			throws FileNotFoundException
+	{
+		InputStream fis = new FileInputStream(file);
+		inputStream = new BufferedInputStream(fis);
+		this.parseMetadata = parseMetadata;
+	}
+
+	public OsmXmlReader(String pathname, boolean parseMetadata)
+			throws FileNotFoundException
+	{
+		this(new File(pathname), parseMetadata);
 	}
 
 	@Override
@@ -61,7 +81,7 @@ public class OsmXmlReader implements OsmReader, OsmHandler
 			throw new OsmInputException("error while creating xml parser", e);
 		}
 
-		OsmSaxHandler saxHandler = OsmSaxHandler.createInstance(this,
+		OsmSaxHandler saxHandler = OsmSaxHandler.createInstance(handler,
 				parseMetadata);
 
 		try {
@@ -75,30 +95,6 @@ public class OsmXmlReader implements OsmReader, OsmHandler
 		} catch (IOException e) {
 			throw new OsmInputException("error while completing handler", e);
 		}
-	}
-
-	@Override
-	public void handle(OsmNode node) throws IOException
-	{
-		handler.handle(node);
-	}
-
-	@Override
-	public void handle(OsmWay way) throws IOException
-	{
-		handler.handle(way);
-	}
-
-	@Override
-	public void handle(OsmRelation relation) throws IOException
-	{
-		handler.handle(relation);
-	}
-
-	@Override
-	public void complete() throws IOException
-	{
-		handler.complete();
 	}
 
 }

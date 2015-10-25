@@ -17,6 +17,7 @@
 
 package de.topobyte.osm4j.xml.output;
 
+import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.text.DecimalFormat;
@@ -30,6 +31,7 @@ import org.joda.time.format.DateTimeFormatter;
 
 import de.topobyte.osm4j.core.access.OsmOutputStream;
 import de.topobyte.osm4j.core.model.iface.EntityType;
+import de.topobyte.osm4j.core.model.iface.OsmBounds;
 import de.topobyte.osm4j.core.model.iface.OsmEntity;
 import de.topobyte.osm4j.core.model.iface.OsmMetadata;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
@@ -79,6 +81,15 @@ public class OsmXmlOutputStream implements OsmOutputStream
 	// EntityArrays.BASIC_ESCAPE());
 
 	private CharSequenceTranslator escaper = StringEscapeUtils.ESCAPE_XML;
+
+	private String templateBounds = "  <bounds minlon=\"%f\" minlat=\"%f\" maxlon=\"%f\" maxlat=\"%f\"/>";
+
+	@Override
+	public void write(OsmBounds bounds) throws IOException
+	{
+		out.println(String.format(templateBounds, bounds.getLeft(),
+				bounds.getBottom(), bounds.getRight(), bounds.getTop()));
+	}
 
 	@Override
 	public void write(OsmNode node)
