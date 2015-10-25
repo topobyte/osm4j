@@ -59,4 +59,10 @@ public class Bounds implements OsmBounds
 		return bottom;
 	}
 
+	@Override
+	public String toString()
+	{
+		return String.format("%f:%f,%f:%f", left, right, bottom, top);
+	}
+
 }

@@ -29,6 +29,7 @@ import de.topobyte.osm4j.core.access.OsmInputException;
 import de.topobyte.osm4j.core.access.OsmIterator;
 import de.topobyte.osm4j.core.access.OsmReader;
 import de.topobyte.osm4j.core.model.iface.EntityContainer;
+import de.topobyte.osm4j.core.model.iface.OsmBounds;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.osm4j.core.model.iface.OsmRelation;
 import de.topobyte.osm4j.core.model.iface.OsmRelationMember;
@@ -49,6 +50,10 @@ public class DataSetReader
 		TLongObjectMap<OsmNode> nodes = dataSet.getNodes();
 		TLongObjectMap<OsmWay> ways = dataSet.getWays();
 		TLongObjectMap<OsmRelation> relations = dataSet.getRelations();
+
+		if (iterator.hasBounds()) {
+			dataSet.setBounds(iterator.getBounds());
+		}
 
 		while (iterator.hasNext()) {
 			EntityContainer container = iterator.next();
@@ -93,13 +98,19 @@ public class DataSetReader
 			final boolean keepNodeTags, final boolean keepWayTags,
 			final boolean keepRelationTags) throws OsmInputException
 	{
-		InMemoryDataSet dataSet = new InMemoryDataSet();
+		final InMemoryDataSet dataSet = new InMemoryDataSet();
 
 		final TLongObjectMap<OsmNode> nodes = dataSet.getNodes();
 		final TLongObjectMap<OsmWay> ways = dataSet.getWays();
 		final TLongObjectMap<OsmRelation> relations = dataSet.getRelations();
 
 		reader.setHandler(new OsmHandler() {
+
+			@Override
+			public void handle(OsmBounds bounds) throws IOException
+			{
+				dataSet.setBounds(bounds);
+			}
 
 			@Override
 			public void handle(OsmNode node) throws IOException

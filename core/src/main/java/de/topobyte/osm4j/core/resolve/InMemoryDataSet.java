@@ -19,6 +19,7 @@ package de.topobyte.osm4j.core.resolve;
 
 import gnu.trove.map.TLongObjectMap;
 import gnu.trove.map.hash.TLongObjectHashMap;
+import de.topobyte.osm4j.core.model.iface.OsmBounds;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.osm4j.core.model.iface.OsmRelation;
 import de.topobyte.osm4j.core.model.iface.OsmWay;
@@ -32,9 +33,26 @@ import de.topobyte.osm4j.core.model.iface.OsmWay;
 public class InMemoryDataSet implements OsmEntityProvider
 {
 
+	private OsmBounds bounds = null;
+
 	private TLongObjectMap<OsmNode> nodes = new TLongObjectHashMap<OsmNode>();
 	private TLongObjectMap<OsmWay> ways = new TLongObjectHashMap<OsmWay>();
 	private TLongObjectMap<OsmRelation> relations = new TLongObjectHashMap<OsmRelation>();
+
+	public boolean hasBounds()
+	{
+		return bounds != null;
+	}
+
+	public OsmBounds getBounds()
+	{
+		return bounds;
+	}
+
+	public void setBounds(OsmBounds bounds)
+	{
+		this.bounds = bounds;
+	}
 
 	/**
 	 * @return all nodes.

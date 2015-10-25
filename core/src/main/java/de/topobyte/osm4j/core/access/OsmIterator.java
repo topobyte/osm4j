@@ -20,9 +20,14 @@ package de.topobyte.osm4j.core.access;
 import java.util.Iterator;
 
 import de.topobyte.osm4j.core.model.iface.EntityContainer;
+import de.topobyte.osm4j.core.model.iface.OsmBounds;
 
 public interface OsmIterator extends Iterable<EntityContainer>,
 		Iterator<EntityContainer>
 {
+
+	public boolean hasBounds();
+
+	public OsmBounds getBounds();
 
 }
