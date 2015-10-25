@@ -23,7 +23,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Iterator;
 
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -34,7 +33,7 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.xml.sax.SAXException;
 
-import de.topobyte.osm4j.core.model.iface.EntityContainer;
+import de.topobyte.osm4j.core.access.OsmIterator;
 import de.topobyte.osm4j.pbf.access.PbfIterator;
 import de.topobyte.osm4j.tbo.access.TboIterator;
 import de.topobyte.osm4j.xml.dynsax.OsmXmlIterator;
@@ -58,7 +57,7 @@ public abstract class AbstractTaskSingleInputIterator
 
 	protected boolean closeInput = true;
 	protected InputStream in;
-	protected Iterator<EntityContainer> inputIterator;
+	protected OsmIterator inputIterator;
 
 	public AbstractTaskSingleInputIterator()
 	{
