@@ -17,7 +17,9 @@
 
 package de.topobyte.osm4j.core.model.impl;
 
-public class Bound
+import de.topobyte.osm4j.core.model.iface.OsmBounds;
+
+public class Bounds implements OsmBounds
 {
 
 	private final double left;
@@ -25,7 +27,7 @@ public class Bound
 	private final double top;
 	private final double bottom;
 
-	public Bound(double left, double right, double top, double bottom)
+	public Bounds(double left, double right, double top, double bottom)
 	{
 		this.left = left;
 		this.right = right;
@@ -33,21 +35,25 @@ public class Bound
 		this.bottom = bottom;
 	}
 
+	@Override
 	public double getLeft()
 	{
 		return left;
 	}
 
+	@Override
 	public double getRight()
 	{
 		return right;
 	}
 
+	@Override
 	public double getTop()
 	{
 		return top;
 	}
 
+	@Override
 	public double getBottom()
 	{
 		return bottom;
