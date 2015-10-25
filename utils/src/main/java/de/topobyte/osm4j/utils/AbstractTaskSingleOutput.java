@@ -33,6 +33,8 @@ import org.apache.commons.cli.ParseException;
 import de.topobyte.osm4j.core.access.OsmOutputStream;
 import de.topobyte.osm4j.pbf.access.PbfWriter;
 import de.topobyte.osm4j.tbo.access.TboWriter;
+import de.topobyte.osm4j.utils.config.PbfConfig;
+import de.topobyte.osm4j.utils.config.PbfOptions;
 import de.topobyte.osm4j.xml.output.OsmXmlOutputStream;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
@@ -48,6 +50,7 @@ public abstract class AbstractTaskSingleOutput
 	protected CommandLine line = null;
 
 	protected FileFormat outputFormat;
+	protected PbfConfig pbfConfig;
 	protected String pathOutput = null;
 
 	protected boolean readMetadata = true;
@@ -63,6 +66,7 @@ public abstract class AbstractTaskSingleOutput
 		// @formatter:off
 		OptionHelper.add(options, OPTION_OUTPUT, true, false, "the output file");
 		OptionHelper.add(options, OPTION_OUTPUT_FORMAT, true, true, "the file format of the output");
+		PbfOptions.add(options);
 		// @formatter:on
 	}
 
@@ -90,6 +94,8 @@ public abstract class AbstractTaskSingleOutput
 			System.exit(1);
 		}
 
+		pbfConfig = PbfOptions.parse(line);
+
 		pathOutput = line.getOptionValue(OPTION_OUTPUT);
 	}
 
@@ -114,7 +120,8 @@ public abstract class AbstractTaskSingleOutput
 			osmOutputStream = new TboWriter(out);
 			break;
 		case PBF:
-			osmOutputStream = new PbfWriter(out, writeMetadata);
+			osmOutputStream = new PbfWriter(out, writeMetadata,
+					pbfConfig.isUseCompression(), pbfConfig.isUseDenseNodes());
 			break;
 		}
 	}

@@ -33,6 +33,8 @@ import de.topobyte.osm4j.core.model.iface.OsmRelation;
 import de.topobyte.osm4j.core.model.iface.OsmWay;
 import de.topobyte.osm4j.pbf.access.PbfWriter;
 import de.topobyte.osm4j.tbo.access.TboWriter;
+import de.topobyte.osm4j.utils.config.PbfConfig;
+import de.topobyte.osm4j.utils.config.PbfOptions;
 import de.topobyte.osm4j.xml.output.OsmXmlOutputStream;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
@@ -67,6 +69,7 @@ public class OsmEntitySplit extends AbstractTaskSingleInputIterator
 	protected boolean writeMetadata = true;
 
 	private FileFormat outputFormat;
+	private PbfConfig pbfConfig;
 
 	private boolean passNodes = false;
 	private boolean passWays = false;
@@ -107,6 +110,8 @@ public class OsmEntitySplit extends AbstractTaskSingleInputIterator
 					+ FileFormat.getHumanReadableListOfSupportedFormats());
 			System.exit(1);
 		}
+
+		pbfConfig = PbfOptions.parse(line);
 
 		readMetadata = outputFormat != FileFormat.TBO;
 
@@ -161,7 +166,8 @@ public class OsmEntitySplit extends AbstractTaskSingleInputIterator
 		case XML:
 			return new OsmXmlOutputStream(out, writeMetadata);
 		case PBF:
-			return new PbfWriter(out, writeMetadata);
+			return new PbfWriter(out, writeMetadata,
+					pbfConfig.isUseCompression(), pbfConfig.isUseDenseNodes());
 		}
 	}
 
