@@ -29,6 +29,7 @@ import de.topobyte.osm4j.core.access.OsmHandler;
 import de.topobyte.osm4j.core.access.OsmIterator;
 import de.topobyte.osm4j.core.model.iface.EntityContainer;
 import de.topobyte.osm4j.core.model.iface.EntityType;
+import de.topobyte.osm4j.core.model.iface.OsmBounds;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.osm4j.core.model.iface.OsmRelation;
 import de.topobyte.osm4j.core.model.iface.OsmWay;
@@ -95,12 +96,21 @@ public class PbfIterator implements OsmIterator, OsmHandler
 		}
 	}
 
+	private OsmBounds bounds = null;
+	private boolean beyondBounds = false;
+
 	private List<OsmNode> nodes = new LinkedList<>();
 	private List<OsmWay> ways = new LinkedList<>();
 	private List<OsmRelation> relations = new LinkedList<>();
 
 	private int available = 0;
 	private boolean finished = false;
+
+	@Override
+	public void handle(OsmBounds bounds) throws IOException
+	{
+		this.bounds = bounds;
+	}
 
 	@Override
 	public void handle(OsmNode node) throws IOException
@@ -133,6 +143,18 @@ public class PbfIterator implements OsmIterator, OsmHandler
 	public Iterator<EntityContainer> iterator()
 	{
 		return this;
+	}
+
+	@Override
+	public boolean hasBounds()
+	{
+		return bounds != null;
+	}
+
+	@Override
+	public OsmBounds getBounds()
+	{
+		return bounds;
 	}
 
 }

@@ -18,7 +18,7 @@ sourceSets {
 }
 
 dependencies {
-    compile 'de.topobyte:osm4j-core:0.0.1'
+    compile 'de.topobyte:osm4j-core:0.0.2'
     compile 'de.topobyte:commons-cli-helper:0.0.1'
 
     compile 'com.google.protobuf:protobuf-java:2.5.0'

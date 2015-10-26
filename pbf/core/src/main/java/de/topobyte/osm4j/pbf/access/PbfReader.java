@@ -25,6 +25,7 @@ import crosby.binary.file.FileBlock;
 import de.topobyte.osm4j.core.access.OsmHandler;
 import de.topobyte.osm4j.core.access.OsmInputException;
 import de.topobyte.osm4j.core.access.OsmReader;
+import de.topobyte.osm4j.core.model.iface.OsmBounds;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.osm4j.core.model.iface.OsmRelation;
 import de.topobyte.osm4j.core.model.iface.OsmWay;
@@ -67,6 +68,12 @@ public class PbfReader implements OsmHandler, OsmReader
 				throw new OsmInputException("error while processing block", e);
 			}
 		}
+	}
+
+	@Override
+	public void handle(OsmBounds bounds) throws IOException
+	{
+		handler.handle(bounds);
 	}
 
 	@Override

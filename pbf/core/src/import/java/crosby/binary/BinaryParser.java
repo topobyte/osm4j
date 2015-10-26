@@ -141,6 +141,6 @@ public abstract class BinaryParser implements BlockReaderAdapter {
     /** Parse a list of Way protocol buffers and send the resulting ways to a sink.  */
     protected abstract void parseWays(List<Osmformat.Way> ways)  throws IOException;
     /** Parse a header message. */
-    protected abstract void parse(Osmformat.HeaderBlock header);
+    protected abstract void parse(Osmformat.HeaderBlock header) throws IOException;
 
 }

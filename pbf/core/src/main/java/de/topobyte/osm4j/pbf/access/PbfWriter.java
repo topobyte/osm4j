@@ -23,6 +23,7 @@ import java.io.OutputStream;
 import crosby.binary.file.BlockOutputStream;
 import crosby.binary.file.CompressFlags;
 import de.topobyte.osm4j.core.access.OsmOutputStream;
+import de.topobyte.osm4j.core.model.iface.OsmBounds;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.osm4j.core.model.iface.OsmRelation;
 import de.topobyte.osm4j.core.model.iface.OsmWay;
@@ -52,6 +53,12 @@ public class PbfWriter implements OsmOutputStream
 	public void complete() throws IOException
 	{
 		serializer.complete();
+	}
+
+	@Override
+	public void write(OsmBounds bounds) throws IOException
+	{
+		serializer.write(bounds);
 	}
 
 	@Override

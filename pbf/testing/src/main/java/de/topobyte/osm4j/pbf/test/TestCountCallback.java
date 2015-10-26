@@ -23,6 +23,7 @@ import java.io.IOException;
 
 import crosby.binary.file.BlockInputStream;
 import de.topobyte.osm4j.core.access.OsmHandler;
+import de.topobyte.osm4j.core.model.iface.OsmBounds;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.osm4j.core.model.iface.OsmRelation;
 import de.topobyte.osm4j.core.model.iface.OsmWay;
@@ -51,6 +52,12 @@ public class TestCountCallback implements OsmHandler
 	}
 
 	private int nc = 0, wc = 0, rc = 0;
+
+	@Override
+	public void handle(OsmBounds bounds) throws IOException
+	{
+		// ignore bounds
+	}
 
 	@Override
 	public void handle(OsmNode node)

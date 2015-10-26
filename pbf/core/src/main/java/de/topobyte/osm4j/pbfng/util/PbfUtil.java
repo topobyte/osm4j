@@ -29,7 +29,7 @@ import com.google.protobuf.ByteString;
 
 import crosby.binary.Fileformat;
 import crosby.binary.Osmformat;
-import de.topobyte.osm4j.core.model.impl.Bound;
+import de.topobyte.osm4j.core.model.iface.OsmBounds;
 import de.topobyte.osm4j.pbfng.Compression;
 import de.topobyte.osm4j.pbfng.Constants;
 
@@ -37,7 +37,7 @@ public class PbfUtil
 {
 
 	public static Osmformat.HeaderBlock createHeader(String writingProgram,
-			boolean requiresDense, Bound bound)
+			boolean requiresDense, OsmBounds bound)
 	{
 		Osmformat.HeaderBlock.Builder headerblock = Osmformat.HeaderBlock
 				.newBuilder();

@@ -48,11 +48,13 @@ import java.util.List;
 import com.google.protobuf.ByteString;
 
 import crosby.binary.Osmformat;
+import crosby.binary.Osmformat.HeaderBlock;
 import crosby.binary.Osmformat.PrimitiveBlock;
 import crosby.binary.Osmformat.PrimitiveGroup;
 import crosby.binary.StringTable;
 import de.topobyte.osm4j.core.access.OsmOutputStream;
 import de.topobyte.osm4j.core.model.iface.EntityType;
+import de.topobyte.osm4j.core.model.iface.OsmBounds;
 import de.topobyte.osm4j.core.model.iface.OsmEntity;
 import de.topobyte.osm4j.core.model.iface.OsmMetadata;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
@@ -63,6 +65,7 @@ import de.topobyte.osm4j.core.model.iface.OsmWay;
 import de.topobyte.osm4j.core.model.impl.Metadata;
 import de.topobyte.osm4j.pbfng.Compression;
 import de.topobyte.osm4j.pbfng.Constants;
+import de.topobyte.osm4j.pbfng.util.PbfUtil;
 
 public class PbfWriter extends BlockWriter implements OsmOutputStream
 {
@@ -86,6 +89,8 @@ public class PbfWriter extends BlockWriter implements OsmOutputStream
 	private List<OsmNode> bufNodes = new ArrayList<>();
 	private List<OsmWay> bufWays = new ArrayList<>();
 	private List<OsmRelation> bufRelations = new ArrayList<>();
+
+	private boolean headerWritten = false;
 
 	public PbfWriter(OutputStream output, boolean writeMetadata)
 	{
@@ -144,6 +149,21 @@ public class PbfWriter extends BlockWriter implements OsmOutputStream
 	}
 
 	@Override
+	public void write(OsmBounds bounds) throws IOException
+	{
+		if (!headerWritten) {
+			writeHeader(bounds);
+		}
+	}
+
+	private void ensureHeader() throws IOException
+	{
+		if (!headerWritten) {
+			writeHeader(null);
+		}
+	}
+
+	@Override
 	public void write(OsmNode node) throws IOException
 	{
 		bufNodes.add(node);
@@ -174,13 +194,26 @@ public class PbfWriter extends BlockWriter implements OsmOutputStream
 	@Override
 	public void complete() throws IOException
 	{
+		ensureHeader();
+
 		if (counter > 0) {
 			writeBatch();
 		}
 	}
 
+	private void writeHeader(OsmBounds bounds) throws IOException
+	{
+		HeaderBlock header = PbfUtil.createHeader(Constants.WRITING_PROGRAM,
+				true, bounds);
+		ByteString headerData = header.toByteString();
+		write(Constants.BLOCK_TYPE_HEADER, null, compression, headerData);
+		headerWritten = true;
+	}
+
 	private void writeBatch() throws IOException
 	{
+		ensureHeader();
+
 		Osmformat.PrimitiveBlock.Builder builder = Osmformat.PrimitiveBlock
 				.newBuilder();
 

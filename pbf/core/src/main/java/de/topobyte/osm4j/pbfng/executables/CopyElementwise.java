@@ -23,18 +23,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import com.google.protobuf.ByteString;
-
-import crosby.binary.Osmformat.HeaderBlock;
 import de.topobyte.osm4j.core.access.OsmHandler;
 import de.topobyte.osm4j.core.access.OsmInputException;
+import de.topobyte.osm4j.core.model.iface.OsmBounds;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.osm4j.core.model.iface.OsmRelation;
 import de.topobyte.osm4j.core.model.iface.OsmWay;
-import de.topobyte.osm4j.pbfng.Constants;
 import de.topobyte.osm4j.pbfng.seq.PbfParser;
 import de.topobyte.osm4j.pbfng.seq.PbfWriter;
-import de.topobyte.osm4j.pbfng.util.PbfUtil;
 
 public class CopyElementwise
 {
@@ -54,24 +50,12 @@ public class CopyElementwise
 
 		final PbfWriter writer = new PbfWriter(output, true);
 
-		HeaderBlock header = PbfUtil.createHeader(Constants.WRITING_PROGRAM,
-				true, null);
-		ByteString headerData = header.toByteString();
-		writer.write(Constants.BLOCK_TYPE_HEADER, null,
-				writer.getCompression(), headerData);
-
 		PbfParser parser = new PbfParser(new OsmHandler() {
 
 			@Override
-			public void handle(OsmRelation relation) throws IOException
+			public void handle(OsmBounds bounds) throws IOException
 			{
-				writer.write(relation);
-			}
-
-			@Override
-			public void handle(OsmWay way) throws IOException
-			{
-				writer.write(way);
+				writer.write(bounds);
 			}
 
 			@Override
@@ -81,10 +65,23 @@ public class CopyElementwise
 			}
 
 			@Override
+			public void handle(OsmWay way) throws IOException
+			{
+				writer.write(way);
+			}
+
+			@Override
+			public void handle(OsmRelation relation) throws IOException
+			{
+				writer.write(relation);
+			}
+
+			@Override
 			public void complete() throws IOException
 			{
 				writer.complete();
 			}
+
 		}, true);
 
 		parser.parse(input);

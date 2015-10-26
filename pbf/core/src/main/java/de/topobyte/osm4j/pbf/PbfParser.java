@@ -49,6 +49,7 @@ import crosby.binary.BinaryParser;
 import crosby.binary.Osmformat;
 import crosby.binary.Osmformat.DenseInfo;
 import crosby.binary.Osmformat.DenseNodes;
+import crosby.binary.Osmformat.HeaderBBox;
 import crosby.binary.Osmformat.HeaderBlock;
 import crosby.binary.Osmformat.Info;
 import crosby.binary.Osmformat.Node;
@@ -59,6 +60,7 @@ import de.topobyte.osm4j.core.access.OsmHandler;
 import de.topobyte.osm4j.core.model.iface.EntityType;
 import de.topobyte.osm4j.core.model.iface.OsmMetadata;
 import de.topobyte.osm4j.core.model.iface.OsmTag;
+import de.topobyte.osm4j.core.model.impl.Bounds;
 import de.topobyte.osm4j.core.model.impl.Metadata;
 import de.topobyte.osm4j.core.model.impl.RelationMember;
 import de.topobyte.osm4j.core.model.impl.Tag;
@@ -82,8 +84,16 @@ public class PbfParser extends BinaryParser
 	}
 
 	@Override
-	protected void parse(HeaderBlock header)
+	protected void parse(HeaderBlock header) throws IOException
 	{
+		HeaderBBox bbox = header.getBbox();
+		handler.handle(new Bounds(degrees(bbox.getLeft()), degrees(bbox
+				.getRight()), degrees(bbox.getTop()), degrees(bbox.getBottom())));
+	}
+
+	public double degrees(long value)
+	{
+		return value * .000000001;
 	}
 
 	@Override

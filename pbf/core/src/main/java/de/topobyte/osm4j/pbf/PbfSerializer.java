@@ -46,10 +46,10 @@ import crosby.binary.Osmformat;
 import crosby.binary.file.BlockOutputStream;
 import crosby.binary.file.FileBlock;
 import de.topobyte.osm4j.core.access.OsmOutputStream;
+import de.topobyte.osm4j.core.model.iface.OsmBounds;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.osm4j.core.model.iface.OsmRelation;
 import de.topobyte.osm4j.core.model.iface.OsmWay;
-import de.topobyte.osm4j.core.model.impl.Bound;
 
 /**
  * Receives data from the Osmosis pipeline and stores it in the PBF format.
@@ -98,18 +98,18 @@ public class PbfSerializer extends BinarySerializer implements OsmOutputStream
 	private NodeGroup nodes;
 	private RelationGroup relations;
 
-	public void process(Bound entity)
+	public void process(OsmBounds bounds)
 	{
 		Osmformat.HeaderBlock.Builder headerblock = Osmformat.HeaderBlock
 				.newBuilder();
 
-		if (entity != null) {
+		if (bounds != null) {
 			Osmformat.HeaderBBox.Builder bbox = Osmformat.HeaderBBox
 					.newBuilder();
-			bbox.setLeft(mapRawDegrees(entity.getLeft()));
-			bbox.setBottom(mapRawDegrees(entity.getBottom()));
-			bbox.setRight(mapRawDegrees(entity.getRight()));
-			bbox.setTop(mapRawDegrees(entity.getTop()));
+			bbox.setLeft(mapRawDegrees(bounds.getLeft()));
+			bbox.setBottom(mapRawDegrees(bounds.getBottom()));
+			bbox.setRight(mapRawDegrees(bounds.getRight()));
+			bbox.setTop(mapRawDegrees(bounds.getTop()));
 			headerblock.setBbox(bbox);
 		}
 
@@ -228,6 +228,12 @@ public class PbfSerializer extends BinarySerializer implements OsmOutputStream
 			throw new RuntimeException("Unable to write OSM header.", e);
 		}
 		headerWritten = true;
+	}
+
+	@Override
+	public void write(OsmBounds bounds) throws IOException
+	{
+		process(bounds);
 	}
 
 	@Override

@@ -46,16 +46,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 import crosby.binary.Osmformat;
+import crosby.binary.Osmformat.HeaderBBox;
 import de.topobyte.osm4j.core.access.OsmHandler;
 import de.topobyte.osm4j.core.model.iface.EntityType;
+import de.topobyte.osm4j.core.model.iface.OsmBounds;
 import de.topobyte.osm4j.core.model.iface.OsmMetadata;
 import de.topobyte.osm4j.core.model.iface.OsmTag;
+import de.topobyte.osm4j.core.model.impl.Bounds;
 import de.topobyte.osm4j.core.model.impl.Metadata;
 import de.topobyte.osm4j.core.model.impl.Node;
 import de.topobyte.osm4j.core.model.impl.Relation;
 import de.topobyte.osm4j.core.model.impl.RelationMember;
 import de.topobyte.osm4j.core.model.impl.Tag;
 import de.topobyte.osm4j.core.model.impl.Way;
+import de.topobyte.osm4j.pbfng.util.PbfUtil;
 
 public class PbfParser extends BlockParser
 {
@@ -76,9 +80,15 @@ public class PbfParser extends BlockParser
 	private String[] strings;
 
 	@Override
-	protected void parse(Osmformat.HeaderBlock block)
+	protected void parse(Osmformat.HeaderBlock block) throws IOException
 	{
-		// We're currently ignoring the header
+		HeaderBBox bbox = block.getBbox();
+		double left = PbfUtil.bboxLongToDegrees(bbox.getLeft());
+		double right = PbfUtil.bboxLongToDegrees(bbox.getRight());
+		double top = PbfUtil.bboxLongToDegrees(bbox.getTop());
+		double bottom = PbfUtil.bboxLongToDegrees(bbox.getBottom());
+		OsmBounds bounds = new Bounds(left, right, top, bottom);
+		handler.handle(bounds);
 	}
 
 	@Override
