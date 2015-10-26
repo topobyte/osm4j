@@ -33,21 +33,41 @@ import de.topobyte.osm4j.pbf.util.PbfUtil;
 public class CopyBlockwise
 {
 
+	private static DataInputStream data;
+	private static BlockWriter blockWriter;
+
 	public static void main(String[] args) throws IOException
 	{
-		if (args.length != 2) {
+		if (args.length != 2 && args.length != 3) {
 			System.out.println("usage: " + CopyBlockwise.class.getSimpleName()
-					+ " <input> <output>");
+					+ " <input> <output> [<num blocks>]");
 			System.exit(1);
 		}
 
 		InputStream input = new FileInputStream(args[0]);
 		OutputStream output = new FileOutputStream(args[1]);
 
-		DataInputStream data = new DataInputStream(input);
+		boolean nBlocksSpecified = false;
+		int nBlocks = 0;
+		if (args.length == 3) {
+			nBlocksSpecified = true;
+			nBlocks = Integer.parseInt(args[2]);
+		}
 
-		BlockWriter blockWriter = new BlockWriter(output);
+		data = new DataInputStream(input);
+		blockWriter = new BlockWriter(output);
 
+		if (nBlocksSpecified) {
+			copyBlocks(nBlocks);
+		} else {
+			copyAllBlocks();
+		}
+
+		output.close();
+	}
+
+	private static void copyAllBlocks() throws IOException
+	{
 		while (true) {
 			try {
 				BlobHeader header = PbfUtil.parseHeader(data);
@@ -61,8 +81,23 @@ public class CopyBlockwise
 				break;
 			}
 		}
+	}
 
-		output.close();
+	private static void copyBlocks(int nBlocks) throws IOException
+	{
+		for (int i = 0; i < nBlocks; i++) {
+			try {
+				BlobHeader header = PbfUtil.parseHeader(data);
+
+				Fileformat.Blob blob = PbfUtil.parseBlock(data,
+						header.getDataLength());
+
+				blockWriter.write(header.getType(), null, blob);
+
+			} catch (EOFException eof) {
+				break;
+			}
+		}
 	}
 
 }
