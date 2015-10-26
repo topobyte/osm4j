@@ -15,53 +15,45 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with osm4j. If not, see <http://www.gnu.org/licenses/>.
 
-package de.topobyte.osm4j.pbf.test;
+package de.topobyte.osm4j.pbf.executables;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.Iterator;
 
-import de.topobyte.osm4j.core.model.iface.EntityContainer;
-import de.topobyte.osm4j.pbf.seq.PbfIterator;
+import de.topobyte.osm4j.core.model.iface.EntityType;
+import de.topobyte.osm4j.pbf.raf.FileStructure;
+import de.topobyte.osm4j.pbf.raf.FileStructureAnalyzer;
+import de.topobyte.osm4j.pbf.raf.Interval;
+import de.topobyte.osm4j.pbf.raf.PbfFile;
 
-public class TestCountIterator
+public class FindEntityBlockIntervals
 {
 
 	public static void main(String[] args) throws IOException
 	{
 		if (args.length != 1) {
 			System.out.println("usage: "
-					+ TestCountIterator.class.getSimpleName() + " <filename>");
+					+ FindEntityBlockIntervals.class.getSimpleName()
+					+ " <filename>");
 			System.exit(1);
 		}
 
 		File file = new File(args[0]);
 
-		FileInputStream input = new FileInputStream(file);
+		PbfFile pbfFile = new PbfFile(file);
+		pbfFile.buildBlockIndex();
 
-		Iterator<EntityContainer> iterator = new PbfIterator(input, false);
+		FileStructure fileStructure = FileStructureAnalyzer.analyze(pbfFile);
 
-		long nc = 0, wc = 0, rc = 0;
-
-		while (iterator.hasNext()) {
-			EntityContainer entityContainer = iterator.next();
-			switch (entityContainer.getType()) {
-			case Node:
-				nc++;
-				break;
-			case Way:
-				wc++;
-				break;
-			case Relation:
-				rc++;
-				break;
+		for (EntityType type : EntityType.values()) {
+			if (!fileStructure.hasType(type)) {
+				System.out.println(type + ": none");
+			} else {
+				Interval blocks = fileStructure.getBlocks(type);
+				System.out.println(String.format(type + ": [%d, %d]",
+						blocks.getStart(), blocks.getEnd()));
 			}
 		}
-
-		System.out.println("nodes: " + nc);
-		System.out.println("ways: " + wc);
-		System.out.println("relations: " + rc);
 	}
 
 }

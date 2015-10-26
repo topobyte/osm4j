@@ -13,8 +13,8 @@ import de.topobyte.osm4j.core.model.iface.EntityContainer;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.osm4j.core.model.iface.OsmRelation;
 import de.topobyte.osm4j.core.model.iface.OsmWay;
-import de.topobyte.osm4j.pbfng.seq.PbfIterator;
-import de.topobyte.osm4j.pbfng.seq.PbfWriter;
+import de.topobyte.osm4j.pbf.seq.PbfIterator;
+import de.topobyte.osm4j.pbf.seq.PbfWriter;
 
 public class Util
 {

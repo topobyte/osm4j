@@ -15,53 +15,44 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with osm4j. If not, see <http://www.gnu.org/licenses/>.
 
-package de.topobyte.osm4j.pbf.test;
+package de.topobyte.osm4j.pbf.executables;
 
-import java.io.File;
+import java.io.DataInputStream;
+import java.io.EOFException;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.Iterator;
+import java.io.InputStream;
 
-import de.topobyte.osm4j.core.model.iface.EntityContainer;
-import de.topobyte.osm4j.pbf.seq.PbfIterator;
+import de.topobyte.osm4j.pbf.util.BlobHeader;
+import de.topobyte.osm4j.pbf.util.PbfUtil;
 
-public class TestCountIterator
+public class CountBlocks
 {
 
 	public static void main(String[] args) throws IOException
 	{
 		if (args.length != 1) {
-			System.out.println("usage: "
-					+ TestCountIterator.class.getSimpleName() + " <filename>");
+			System.out.println("usage: " + CountBlocks.class.getSimpleName()
+					+ " <filename>");
 			System.exit(1);
 		}
 
-		File file = new File(args[0]);
+		InputStream input = new FileInputStream(args[0]);
+		DataInputStream data = new DataInputStream(input);
 
-		FileInputStream input = new FileInputStream(file);
+		long nBlocks = 0;
 
-		Iterator<EntityContainer> iterator = new PbfIterator(input, false);
-
-		long nc = 0, wc = 0, rc = 0;
-
-		while (iterator.hasNext()) {
-			EntityContainer entityContainer = iterator.next();
-			switch (entityContainer.getType()) {
-			case Node:
-				nc++;
-				break;
-			case Way:
-				wc++;
-				break;
-			case Relation:
-				rc++;
+		while (true) {
+			try {
+				BlobHeader blockHeader = PbfUtil.parseHeader(data);
+				input.skip(blockHeader.getDataLength());
+				nBlocks++;
+			} catch (EOFException eof) {
 				break;
 			}
 		}
 
-		System.out.println("nodes: " + nc);
-		System.out.println("ways: " + wc);
-		System.out.println("relations: " + rc);
+		System.out.println("Number of blocks: " + nBlocks);
 	}
 
 }

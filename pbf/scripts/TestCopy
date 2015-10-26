@@ -1,7 +1,0 @@
-#!/bin/bash
-
-DIR=$(dirname $0)
-CMD="$DIR/osm4j-pbf-testing.sh"
-CLASS="de.topobyte.osm4j.pbf.test.TestCopy"
-
-exec "$CMD" "$CLASS" "$@"

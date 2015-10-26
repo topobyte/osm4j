@@ -21,13 +21,12 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 
-import crosby.binary.file.BlockInputStream;
 import de.topobyte.osm4j.core.access.OsmHandler;
 import de.topobyte.osm4j.core.model.iface.OsmBounds;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.osm4j.core.model.iface.OsmRelation;
 import de.topobyte.osm4j.core.model.iface.OsmWay;
-import de.topobyte.osm4j.pbf.PbfParser;
+import de.topobyte.osm4j.pbf.seq.PbfParser;
 
 public class TestCountCallback implements OsmHandler
 {
@@ -47,8 +46,7 @@ public class TestCountCallback implements OsmHandler
 		PbfParser parser = new PbfParser(test, false);
 
 		FileInputStream input = new FileInputStream(file);
-		BlockInputStream blockInputStream = new BlockInputStream(input, parser);
-		blockInputStream.process();
+		parser.parse(input);
 	}
 
 	private int nc = 0, wc = 0, rc = 0;
