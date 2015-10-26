@@ -2,6 +2,6 @@
 
 DIR=$(dirname $0)
 CMD="$DIR/osm4j-pbf.sh"
-CLASS="de.topobyte.osm4j.pbfng.executables.BlockElementCountInfo"
+CLASS="de.topobyte.osm4j.pbf.executables.BlockElementCountInfo"
 
 exec "$CMD" "$CLASS" "$@"

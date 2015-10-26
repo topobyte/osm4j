@@ -2,6 +2,6 @@
 
 DIR=$(dirname $0)
 CMD="$DIR/osm4j-pbf.sh"
-CLASS="de.topobyte.osm4j.pbfng.executables.CopyGroupwise"
+CLASS="de.topobyte.osm4j.pbf.executables.CopyGroupwise"
 
 exec "$CMD" "$CLASS" "$@"

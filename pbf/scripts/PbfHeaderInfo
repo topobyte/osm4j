@@ -2,6 +2,6 @@
 
 DIR=$(dirname $0)
 CMD="$DIR/osm4j-pbf.sh"
-CLASS="de.topobyte.osm4j.pbfng.executables.HeaderInfo"
+CLASS="de.topobyte.osm4j.pbf.executables.HeaderInfo"
 
 exec "$CMD" "$CLASS" "$@"
