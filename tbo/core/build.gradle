@@ -4,7 +4,7 @@ if (project.hasProperty("topobyte")) {
 }
 
 dependencies {
-    compile 'de.topobyte:osm4j-core:0.0.1'
+    compile 'de.topobyte:osm4j-core:0.0.2'
 
     compile 'org.apache.commons:commons-lang3:3.3.2'
     compile 'org.slf4j:slf4j-api:1.6.1'

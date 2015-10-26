@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 import de.topobyte.osm4j.core.access.OsmOutputStream;
+import de.topobyte.osm4j.core.model.iface.OsmBounds;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.osm4j.core.model.iface.OsmRelation;
 import de.topobyte.osm4j.core.model.iface.OsmWay;
@@ -87,6 +88,12 @@ public class TboWriter extends BlockWriter implements OsmOutputStream
 	public void writeMetadata(Metadata metadata) throws IOException
 	{
 		writeBlock(metadata, Definitions.BLOCK_TYPE_METADATA, 0);
+	}
+
+	@Override
+	public void write(OsmBounds bounds) throws IOException
+	{
+		// not supported at them moment
 	}
 
 	@Override

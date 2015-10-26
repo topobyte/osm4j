@@ -26,6 +26,7 @@ import java.util.List;
 import de.topobyte.osm4j.core.access.OsmIterator;
 import de.topobyte.osm4j.core.model.iface.EntityContainer;
 import de.topobyte.osm4j.core.model.iface.EntityType;
+import de.topobyte.osm4j.core.model.iface.OsmBounds;
 import de.topobyte.osm4j.core.model.iface.OsmEntity;
 import de.topobyte.osm4j.tbo.data.Definitions;
 import de.topobyte.osm4j.tbo.data.FileBlock;
@@ -126,6 +127,18 @@ public class TboIterator extends BlockReader implements OsmIterator
 	public Iterator<EntityContainer> iterator()
 	{
 		return this;
+	}
+
+	@Override
+	public boolean hasBounds()
+	{
+		return false;
+	}
+
+	@Override
+	public OsmBounds getBounds()
+	{
+		return null;
 	}
 
 }
