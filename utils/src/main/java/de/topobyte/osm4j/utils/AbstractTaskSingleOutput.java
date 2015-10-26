@@ -31,7 +31,7 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
 import de.topobyte.osm4j.core.access.OsmOutputStream;
-import de.topobyte.osm4j.pbf.access.PbfWriter;
+import de.topobyte.osm4j.pbf.seq.PbfWriter;
 import de.topobyte.osm4j.tbo.access.TboWriter;
 import de.topobyte.osm4j.utils.config.PbfConfig;
 import de.topobyte.osm4j.utils.config.PbfOptions;
@@ -120,8 +120,10 @@ public abstract class AbstractTaskSingleOutput
 			osmOutputStream = new TboWriter(out);
 			break;
 		case PBF:
-			osmOutputStream = new PbfWriter(out, writeMetadata,
-					pbfConfig.isUseCompression(), pbfConfig.isUseDenseNodes());
+			PbfWriter pbfWriter = new PbfWriter(out, writeMetadata);
+			pbfWriter.setCompression(pbfConfig.getCompression());
+			pbfWriter.setUseDense(pbfConfig.isUseDenseNodes());
+			osmOutputStream = pbfWriter;
 			break;
 		}
 	}

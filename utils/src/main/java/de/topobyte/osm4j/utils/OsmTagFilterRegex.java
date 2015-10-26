@@ -23,6 +23,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import de.topobyte.osm4j.core.access.OsmInputException;
+import de.topobyte.osm4j.core.model.iface.OsmBounds;
 import de.topobyte.osm4j.core.model.iface.OsmEntity;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.osm4j.core.model.iface.OsmRelation;
@@ -82,6 +83,12 @@ public class OsmTagFilterRegex extends
 		key = line.getOptionValue(OPTION_KEY);
 		String value = line.getOptionValue(OPTION_VALUE);
 		pattern = Pattern.compile(value);
+	}
+
+	@Override
+	public void handle(OsmBounds bounds) throws IOException
+	{
+		osmOutputStream.write(bounds);
 	}
 
 	@Override

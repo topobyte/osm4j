@@ -27,19 +27,16 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import javax.xml.parsers.ParserConfigurationException;
-
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.GnuParser;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
-import org.xml.sax.SAXException;
 
 import de.topobyte.osm4j.core.access.OsmIterator;
 import de.topobyte.osm4j.core.access.OsmOutputStream;
-import de.topobyte.osm4j.pbf.access.PbfIterator;
-import de.topobyte.osm4j.pbf.access.PbfWriter;
+import de.topobyte.osm4j.pbf.seq.PbfIterator;
+import de.topobyte.osm4j.pbf.seq.PbfWriter;
 import de.topobyte.osm4j.tbo.access.TboIterator;
 import de.topobyte.osm4j.tbo.access.TboWriter;
 import de.topobyte.osm4j.utils.config.PbfConfig;
@@ -154,17 +151,7 @@ public abstract class AbstractTaskSingleInputIteratorSingleOutput
 
 		switch (inputFormat) {
 		case XML:
-			try {
-				inputIterator = new OsmXmlIterator(in, readMetadata);
-			} catch (ParserConfigurationException e) {
-				System.out.println("unable to"
-						+ " create xml reader (ParserConfigurationException): "
-						+ e.getMessage());
-			} catch (SAXException e) {
-				System.out.println("unable to"
-						+ " create xml reader (SAXException): "
-						+ e.getMessage());
-			}
+			inputIterator = new OsmXmlIterator(in, readMetadata);
 			break;
 		case TBO:
 			inputIterator = new TboIterator(in);
@@ -182,8 +169,10 @@ public abstract class AbstractTaskSingleInputIteratorSingleOutput
 			osmOutputStream = new TboWriter(out);
 			break;
 		case PBF:
-			osmOutputStream = new PbfWriter(out, writeMetadata,
-					pbfConfig.isUseCompression(), pbfConfig.isUseDenseNodes());
+			PbfWriter pbfWriter = new PbfWriter(out, writeMetadata);
+			pbfWriter.setCompression(pbfConfig.getCompression());
+			pbfWriter.setUseDense(pbfConfig.isUseDenseNodes());
+			osmOutputStream = pbfWriter;
 			break;
 		}
 	}

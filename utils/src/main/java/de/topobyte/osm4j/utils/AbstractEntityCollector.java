@@ -30,10 +30,11 @@ import java.util.Iterator;
 
 import de.topobyte.osm4j.core.access.OsmInputException;
 import de.topobyte.osm4j.core.model.iface.EntityContainer;
+import de.topobyte.osm4j.core.model.iface.OsmBounds;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.osm4j.core.model.iface.OsmRelation;
 import de.topobyte.osm4j.core.model.iface.OsmWay;
-import de.topobyte.osm4j.pbf.access.PbfIterator;
+import de.topobyte.osm4j.pbf.seq.PbfIterator;
 import de.topobyte.osm4j.tbo.access.TboIterator;
 import de.topobyte.osm4j.xml.dynsax.OsmXmlIterator;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
@@ -75,12 +76,7 @@ public abstract class AbstractEntityCollector extends
 
 		switch (inputFormat) {
 		case XML:
-			try {
-				iteratorReferences = new OsmXmlIterator(inRefs, readMetadata);
-			} catch (Exception e) {
-				System.out.println("unable to create xml input iterator");
-				System.exit(1);
-			}
+			iteratorReferences = new OsmXmlIterator(inRefs, readMetadata);
 			break;
 		case TBO:
 			iteratorReferences = new TboIterator(inRefs);
@@ -104,6 +100,12 @@ public abstract class AbstractEntityCollector extends
 		}
 
 		super.run();
+	}
+
+	@Override
+	public void handle(OsmBounds bounds) throws IOException
+	{
+		// ignore bounds
 	}
 
 	@Override

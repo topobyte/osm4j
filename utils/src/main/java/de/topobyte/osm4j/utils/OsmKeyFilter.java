@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.util.Map;
 
 import de.topobyte.osm4j.core.access.OsmInputException;
+import de.topobyte.osm4j.core.model.iface.OsmBounds;
 import de.topobyte.osm4j.core.model.iface.OsmEntity;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.osm4j.core.model.iface.OsmRelation;
@@ -74,6 +75,12 @@ public class OsmKeyFilter extends AbstractTaskSingleInputReaderSingleOutput
 	{
 		super.setup(args);
 		key = line.getOptionValue(OPTION_KEY);
+	}
+
+	@Override
+	public void handle(OsmBounds bounds) throws IOException
+	{
+		osmOutputStream.write(bounds);
 	}
 
 	@Override

@@ -37,8 +37,8 @@ import de.topobyte.osm4j.core.access.OsmHandler;
 import de.topobyte.osm4j.core.access.OsmInputException;
 import de.topobyte.osm4j.core.access.OsmOutputStream;
 import de.topobyte.osm4j.core.access.OsmReader;
-import de.topobyte.osm4j.pbf.access.PbfReader;
-import de.topobyte.osm4j.pbf.access.PbfWriter;
+import de.topobyte.osm4j.pbf.seq.PbfReader;
+import de.topobyte.osm4j.pbf.seq.PbfWriter;
 import de.topobyte.osm4j.tbo.access.TboReader;
 import de.topobyte.osm4j.tbo.access.TboWriter;
 import de.topobyte.osm4j.utils.config.PbfConfig;
@@ -172,8 +172,10 @@ public abstract class AbstractTaskSingleInputReaderSingleOutput implements
 			osmOutputStream = new TboWriter(out);
 			break;
 		case PBF:
-			osmOutputStream = new PbfWriter(out, writeMetadata,
-					pbfConfig.isUseCompression(), pbfConfig.isUseDenseNodes());
+			PbfWriter pbfWriter = new PbfWriter(out, writeMetadata);
+			pbfWriter.setCompression(pbfConfig.getCompression());
+			pbfWriter.setUseDense(pbfConfig.isUseDenseNodes());
+			osmOutputStream = pbfWriter;
 			break;
 		}
 

@@ -29,20 +29,18 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import javax.xml.parsers.ParserConfigurationException;
-
-import org.xml.sax.SAXException;
-
 import de.topobyte.osm4j.core.model.iface.EntityContainer;
 import de.topobyte.osm4j.core.model.iface.EntityType;
 import de.topobyte.osm4j.core.model.iface.OsmEntity;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.osm4j.core.model.iface.OsmRelation;
 import de.topobyte.osm4j.core.model.iface.OsmWay;
-import de.topobyte.osm4j.pbf.access.PbfIterator;
+import de.topobyte.osm4j.pbf.seq.PbfIterator;
 import de.topobyte.osm4j.tbo.access.TboIterator;
 import de.topobyte.osm4j.xml.dynsax.OsmXmlIterator;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
+
+// TODO: implement merging of OsmBounds
 
 public class OsmMerge extends AbstractTaskSingleOutput
 {
@@ -130,18 +128,7 @@ public class OsmMerge extends AbstractTaskSingleOutput
 			Iterator<EntityContainer> inputIterator = null;
 			switch (inputFormat) {
 			case XML:
-				try {
-					inputIterator = new OsmXmlIterator(in, readMetadata);
-				} catch (ParserConfigurationException e) {
-					System.out
-							.println("unable to"
-									+ " create xml reader (ParserConfigurationException): "
-									+ e.getMessage());
-				} catch (SAXException e) {
-					System.out.println("unable to"
-							+ " create xml reader (SAXException): "
-							+ e.getMessage());
-				}
+				inputIterator = new OsmXmlIterator(in, readMetadata);
 				break;
 			case TBO:
 				inputIterator = new TboIterator(in);

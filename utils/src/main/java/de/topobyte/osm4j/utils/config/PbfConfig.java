@@ -1,19 +1,21 @@
 package de.topobyte.osm4j.utils.config;
 
+import de.topobyte.osm4j.pbf.Compression;
+
 public class PbfConfig
 {
 
-	private boolean useCompression = true;
+	private Compression compression = Compression.DEFLATE;
 	private boolean useDenseNodes = true;
 
-	public boolean isUseCompression()
+	public Compression getCompression()
 	{
-		return useCompression;
+		return compression;
 	}
 
-	public void setUseCompression(boolean useCompression)
+	public void setCompression(Compression compression)
 	{
-		this.useCompression = useCompression;
+		this.compression = compression;
 	}
 
 	public boolean isUseDenseNodes()

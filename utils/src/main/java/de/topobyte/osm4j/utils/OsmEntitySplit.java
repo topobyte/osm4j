@@ -31,7 +31,7 @@ import de.topobyte.osm4j.core.model.iface.EntityContainer;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.osm4j.core.model.iface.OsmRelation;
 import de.topobyte.osm4j.core.model.iface.OsmWay;
-import de.topobyte.osm4j.pbf.access.PbfWriter;
+import de.topobyte.osm4j.pbf.seq.PbfWriter;
 import de.topobyte.osm4j.tbo.access.TboWriter;
 import de.topobyte.osm4j.utils.config.PbfConfig;
 import de.topobyte.osm4j.utils.config.PbfOptions;
@@ -166,8 +166,10 @@ public class OsmEntitySplit extends AbstractTaskSingleInputIterator
 		case XML:
 			return new OsmXmlOutputStream(out, writeMetadata);
 		case PBF:
-			return new PbfWriter(out, writeMetadata,
-					pbfConfig.isUseCompression(), pbfConfig.isUseDenseNodes());
+			PbfWriter pbfWriter = new PbfWriter(out, writeMetadata);
+			pbfWriter.setCompression(pbfConfig.getCompression());
+			pbfWriter.setUseDense(pbfConfig.isUseDenseNodes());
+			return pbfWriter;
 		}
 	}
 

@@ -20,6 +20,7 @@ package de.topobyte.osm4j.utils;
 import java.io.IOException;
 
 import de.topobyte.osm4j.core.access.OsmInputException;
+import de.topobyte.osm4j.core.model.iface.OsmBounds;
 import de.topobyte.osm4j.core.model.iface.OsmEntity;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.osm4j.core.model.iface.OsmRelation;
@@ -78,6 +79,12 @@ public class OsmIdFilter extends AbstractTaskSingleInputReaderSingleOutput
 			System.out.println("unable to parse id value: '" + value + "'");
 			System.exit(1);
 		}
+	}
+
+	@Override
+	public void handle(OsmBounds bounds) throws IOException
+	{
+		// ignore bounds
 	}
 
 	@Override

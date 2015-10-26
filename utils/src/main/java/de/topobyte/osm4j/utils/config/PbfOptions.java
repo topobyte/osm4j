@@ -20,12 +20,13 @@ package de.topobyte.osm4j.utils.config;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Options;
 
+import de.topobyte.osm4j.pbf.Compression;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
 public class PbfOptions
 {
 
-	public static final String POSSIBLE_COMPRESSION_ARGUMENTS = "none, deflate";
+	public static final String POSSIBLE_COMPRESSION_ARGUMENTS = "none, deflate, lz4";
 
 	private static final String OPTION_PBF_COMPRESSION = "pbf_compression";
 	private static final String OPTION_PBF_NONE_DENSE = "pbf_none_dense";
@@ -46,9 +47,11 @@ public class PbfOptions
 		if (line.hasOption(OPTION_PBF_COMPRESSION)) {
 			String compressionArg = line.getOptionValue(OPTION_PBF_COMPRESSION);
 			if (compressionArg.equals("none")) {
-				config.setUseCompression(false);
+				config.setCompression(Compression.NONE);
 			} else if (compressionArg.equals("deflate")) {
-				config.setUseCompression(true);
+				config.setCompression(Compression.DEFLATE);
+			} else if (compressionArg.equals("lz4")) {
+				config.setCompression(Compression.LZ4);
 			} else {
 				System.out.println("invalid compression value");
 				System.out.println("please specify one of: "

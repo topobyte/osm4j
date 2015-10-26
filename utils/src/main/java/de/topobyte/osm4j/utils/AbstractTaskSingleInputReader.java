@@ -33,7 +33,7 @@ import org.apache.commons.cli.ParseException;
 import de.topobyte.osm4j.core.access.OsmHandler;
 import de.topobyte.osm4j.core.access.OsmInputException;
 import de.topobyte.osm4j.core.access.OsmReader;
-import de.topobyte.osm4j.pbf.access.PbfReader;
+import de.topobyte.osm4j.pbf.seq.PbfReader;
 import de.topobyte.osm4j.tbo.access.TboReader;
 import de.topobyte.osm4j.xml.dynsax.OsmXmlReader;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;

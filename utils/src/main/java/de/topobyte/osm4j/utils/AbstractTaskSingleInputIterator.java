@@ -24,17 +24,14 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
-import javax.xml.parsers.ParserConfigurationException;
-
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.GnuParser;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
-import org.xml.sax.SAXException;
 
 import de.topobyte.osm4j.core.access.OsmIterator;
-import de.topobyte.osm4j.pbf.access.PbfIterator;
+import de.topobyte.osm4j.pbf.seq.PbfIterator;
 import de.topobyte.osm4j.tbo.access.TboIterator;
 import de.topobyte.osm4j.xml.dynsax.OsmXmlIterator;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
@@ -109,17 +106,7 @@ public abstract class AbstractTaskSingleInputIterator
 
 		switch (inputFormat) {
 		case XML:
-			try {
-				inputIterator = new OsmXmlIterator(in, readMetadata);
-			} catch (ParserConfigurationException e) {
-				System.out.println("unable to"
-						+ " create xml reader (ParserConfigurationException): "
-						+ e.getMessage());
-			} catch (SAXException e) {
-				System.out.println("unable to"
-						+ " create xml reader (SAXException): "
-						+ e.getMessage());
-			}
+			inputIterator = new OsmXmlIterator(in, readMetadata);
 			break;
 		case TBO:
 			inputIterator = new TboIterator(in);
