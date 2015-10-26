@@ -27,7 +27,7 @@ import java.io.OutputStream;
 
 import crosby.binary.Fileformat;
 import de.topobyte.osm4j.pbfng.seq.BlockWriter;
-import de.topobyte.osm4j.pbfng.util.BlockHeader;
+import de.topobyte.osm4j.pbfng.util.BlobHeader;
 import de.topobyte.osm4j.pbfng.util.PbfUtil;
 
 public class CopyBlockwise
@@ -50,7 +50,7 @@ public class CopyBlockwise
 
 		while (true) {
 			try {
-				BlockHeader header = PbfUtil.parseHeader(data);
+				BlobHeader header = PbfUtil.parseHeader(data);
 
 				Fileformat.Blob blob = PbfUtil.parseBlock(data,
 						header.getDataLength());

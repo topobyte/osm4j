@@ -29,7 +29,9 @@ import com.google.protobuf.ByteString;
 
 import crosby.binary.Fileformat;
 import crosby.binary.Osmformat;
+import crosby.binary.Osmformat.HeaderBBox;
 import de.topobyte.osm4j.core.model.iface.OsmBounds;
+import de.topobyte.osm4j.core.model.impl.Bounds;
 import de.topobyte.osm4j.pbfng.Compression;
 import de.topobyte.osm4j.pbfng.Constants;
 
@@ -70,20 +72,20 @@ public class PbfUtil
 		return value * .000000001;
 	}
 
-	public static BlockHeader parseHeader(DataInput input) throws IOException
+	public static BlobHeader parseHeader(DataInput input) throws IOException
 	{
 		int lengthHeader = input.readInt();
 		return parseHeader(input, lengthHeader);
 	}
 
-	public static BlockHeader parseHeader(DataInput input, int lengthHeader)
+	public static BlobHeader parseHeader(DataInput input, int lengthHeader)
 			throws IOException
 	{
 		byte buf[] = new byte[lengthHeader];
 		input.readFully(buf);
 
 		Fileformat.BlobHeader header = Fileformat.BlobHeader.parseFrom(buf);
-		BlockHeader h = new BlockHeader(header.getType(), header.getDatasize(),
+		BlobHeader h = new BlobHeader(header.getType(), header.getDatasize(),
 				header.getIndexdata());
 
 		return h;
@@ -146,6 +148,15 @@ public class PbfUtil
 		}
 
 		return new BlockData(blobData, compression);
+	}
+
+	public static OsmBounds bounds(HeaderBBox bbox)
+	{
+		double left = PbfUtil.bboxLongToDegrees(bbox.getLeft());
+		double right = PbfUtil.bboxLongToDegrees(bbox.getRight());
+		double top = PbfUtil.bboxLongToDegrees(bbox.getTop());
+		double bottom = PbfUtil.bboxLongToDegrees(bbox.getBottom());
+		return new Bounds(left, right, top, bottom);
 	}
 
 }

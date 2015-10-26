@@ -46,8 +46,8 @@ import de.topobyte.osm4j.core.model.iface.EntityType;
 import de.topobyte.osm4j.pbfng.Compression;
 import de.topobyte.osm4j.pbfng.Constants;
 import de.topobyte.osm4j.pbfng.seq.BlockWriter;
+import de.topobyte.osm4j.pbfng.util.BlobHeader;
 import de.topobyte.osm4j.pbfng.util.BlockData;
-import de.topobyte.osm4j.pbfng.util.BlockHeader;
 import de.topobyte.osm4j.pbfng.util.PbfMeta;
 import de.topobyte.osm4j.pbfng.util.PbfUtil;
 import de.topobyte.osm4j.pbfng.util.copy.EntityGroups;
@@ -166,7 +166,7 @@ public class EntitySplit
 	{
 		while (true) {
 			try {
-				BlockHeader header = PbfUtil.parseHeader(input);
+				BlobHeader header = PbfUtil.parseHeader(input);
 
 				Fileformat.Blob blob = PbfUtil.parseBlock(input,
 						header.getDataLength());

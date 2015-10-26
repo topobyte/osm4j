@@ -24,7 +24,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import crosby.binary.Fileformat;
-import de.topobyte.osm4j.pbfng.util.BlockHeader;
+import de.topobyte.osm4j.pbfng.util.BlobHeader;
 import de.topobyte.osm4j.pbfng.util.PbfUtil;
 
 public abstract class BlobParser
@@ -44,13 +44,13 @@ public abstract class BlobParser
 
 	private void parseBlob(DataInput data) throws IOException
 	{
-		BlockHeader header = PbfUtil.parseHeader(data);
+		BlobHeader header = PbfUtil.parseHeader(data);
 		Fileformat.Blob blob = PbfUtil.parseBlock(data, header.getDataLength());
 
 		parse(header, blob);
 	}
 
-	protected abstract void parse(BlockHeader header, Fileformat.Blob blob)
+	protected abstract void parse(BlobHeader header, Fileformat.Blob blob)
 			throws IOException;
 
 }

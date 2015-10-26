@@ -51,7 +51,6 @@ import crosby.binary.Osmformat;
 import crosby.binary.Osmformat.HeaderBlock;
 import crosby.binary.Osmformat.PrimitiveBlock;
 import crosby.binary.Osmformat.PrimitiveGroup;
-import crosby.binary.StringTable;
 import de.topobyte.osm4j.core.access.OsmOutputStream;
 import de.topobyte.osm4j.core.model.iface.EntityType;
 import de.topobyte.osm4j.core.model.iface.OsmBounds;
@@ -66,6 +65,7 @@ import de.topobyte.osm4j.core.model.impl.Metadata;
 import de.topobyte.osm4j.pbfng.Compression;
 import de.topobyte.osm4j.pbfng.Constants;
 import de.topobyte.osm4j.pbfng.util.PbfUtil;
+import de.topobyte.osm4j.pbfng.util.StringTable;
 
 public class PbfWriter extends BlockWriter implements OsmOutputStream
 {

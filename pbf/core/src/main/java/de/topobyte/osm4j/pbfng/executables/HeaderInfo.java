@@ -26,8 +26,8 @@ import java.io.InputStream;
 import crosby.binary.Fileformat;
 import crosby.binary.Osmformat;
 import de.topobyte.osm4j.pbfng.Constants;
+import de.topobyte.osm4j.pbfng.util.BlobHeader;
 import de.topobyte.osm4j.pbfng.util.BlockData;
-import de.topobyte.osm4j.pbfng.util.BlockHeader;
 import de.topobyte.osm4j.pbfng.util.PbfUtil;
 
 public class HeaderInfo
@@ -54,7 +54,7 @@ public class HeaderInfo
 				warningShown = true;
 			}
 			try {
-				BlockHeader header = PbfUtil.parseHeader(data);
+				BlobHeader header = PbfUtil.parseHeader(data);
 
 				Fileformat.Blob blob = PbfUtil.parseBlock(data,
 						header.getDataLength());

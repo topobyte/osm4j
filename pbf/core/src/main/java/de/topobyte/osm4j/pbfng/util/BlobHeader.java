@@ -19,14 +19,14 @@ package de.topobyte.osm4j.pbfng.util;
 
 import com.google.protobuf.ByteString;
 
-public class BlockHeader
+public class BlobHeader
 {
 
 	private String type;
 	private int dataLength;
 	private ByteString indexData;
 
-	public BlockHeader(String type, int dataLength, ByteString indexData)
+	public BlobHeader(String type, int dataLength, ByteString indexData)
 	{
 		this.type = type;
 		this.dataLength = dataLength;

@@ -23,7 +23,7 @@ import java.io.InputStream;
 
 import crosby.binary.Fileformat.Blob;
 import de.topobyte.osm4j.pbfng.seq.BlobParser;
-import de.topobyte.osm4j.pbfng.util.BlockHeader;
+import de.topobyte.osm4j.pbfng.util.BlobHeader;
 
 public class BlockSizeInfo extends BlobParser
 {
@@ -48,7 +48,7 @@ public class BlockSizeInfo extends BlobParser
 	private long nBlocks = 0;
 
 	@Override
-	protected void parse(BlockHeader header, Blob blob) throws IOException
+	protected void parse(BlobHeader header, Blob blob) throws IOException
 	{
 		int rawSize = blob.getRawSize();
 		if (!blob.hasZlibData()) {

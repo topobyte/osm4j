@@ -23,7 +23,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import de.topobyte.osm4j.pbfng.util.BlockHeader;
+import de.topobyte.osm4j.pbfng.util.BlobHeader;
 import de.topobyte.osm4j.pbfng.util.PbfUtil;
 
 public class CountBlocks
@@ -44,7 +44,7 @@ public class CountBlocks
 
 		while (true) {
 			try {
-				BlockHeader blockHeader = PbfUtil.parseHeader(data);
+				BlobHeader blockHeader = PbfUtil.parseHeader(data);
 				input.skip(blockHeader.getDataLength());
 				nBlocks++;
 			} catch (EOFException eof) {

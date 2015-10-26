@@ -138,7 +138,7 @@ public class StringTable
 
 	public void clear()
 	{
-		counts.clear();
+		counts = new TObjectIntHashMap<>(100);
 		stringMap = null;
 		set = null;
 	}

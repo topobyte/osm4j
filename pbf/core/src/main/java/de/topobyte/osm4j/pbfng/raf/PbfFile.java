@@ -28,8 +28,8 @@ import java.util.List;
 import crosby.binary.Fileformat;
 import crosby.binary.Osmformat;
 import de.topobyte.osm4j.pbfng.Constants;
+import de.topobyte.osm4j.pbfng.util.BlobHeader;
 import de.topobyte.osm4j.pbfng.util.BlockData;
-import de.topobyte.osm4j.pbfng.util.BlockHeader;
 import de.topobyte.osm4j.pbfng.util.PbfUtil;
 
 public class PbfFile
@@ -62,7 +62,7 @@ public class PbfFile
 			try {
 				long pos = file.getFilePointer();
 				int headerSize = file.readInt();
-				BlockHeader header = PbfUtil.parseHeader(file, headerSize);
+				BlobHeader header = PbfUtil.parseHeader(file, headerSize);
 				file.skipBytes(header.getDataLength());
 				BlockInfo info = new BlockInfo(pos, headerSize,
 						header.getDataLength());
@@ -143,7 +143,7 @@ public class PbfFile
 		return Osmformat.HeaderBlock.parseFrom(blockData.getBlobData());
 	}
 
-	public BlockHeader getDataBlockHeader(int i) throws IOException
+	public BlobHeader getDataBlockHeader(int i) throws IOException
 	{
 		BlockInfo info = dataBlockInfos.get(i);
 		// seek just after the int for header length

@@ -22,15 +22,15 @@ import java.io.IOException;
 import crosby.binary.Fileformat;
 import crosby.binary.Osmformat;
 import de.topobyte.osm4j.pbfng.Constants;
+import de.topobyte.osm4j.pbfng.util.BlobHeader;
 import de.topobyte.osm4j.pbfng.util.BlockData;
-import de.topobyte.osm4j.pbfng.util.BlockHeader;
 import de.topobyte.osm4j.pbfng.util.PbfUtil;
 
 public abstract class BlockParser extends BlobParser
 {
 
 	@Override
-	protected void parse(BlockHeader header, Fileformat.Blob blob)
+	protected void parse(BlobHeader header, Fileformat.Blob blob)
 			throws IOException
 	{
 		BlockData blockData = PbfUtil.getBlockData(blob);
