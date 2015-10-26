@@ -57,6 +57,10 @@ public class OsmCat extends AbstractTaskSingleInputIteratorSingleOutput
 
 	private void run() throws IOException
 	{
+		if (inputIterator.hasBounds()) {
+			osmOutputStream.write(inputIterator.getBounds());
+		}
+
 		while (inputIterator.hasNext()) {
 			EntityContainer entityContainer = inputIterator.next();
 			switch (entityContainer.getType()) {
