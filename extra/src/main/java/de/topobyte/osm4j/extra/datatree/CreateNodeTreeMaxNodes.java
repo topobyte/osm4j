@@ -56,6 +56,10 @@ public class CreateNodeTreeMaxNodes extends AbstractTaskSingleInputIterator
 	private static final String OPTION_OUTPUT_FORMAT = "output_format";
 	private static final String OPTION_MAX_NODES = "max_nodes";
 
+	private static final String OPTION_PRE_SPLIT_FORMAT = "pre_split_format";
+	private static final String OPTION_PRE_SPLIT_DATA = "pre_split_data";
+	private static final String OPTION_PRE_SPLIT_MAX = "pre_split_max";
+
 	@Override
 	protected String getHelpMessage()
 	{
@@ -89,6 +93,10 @@ public class CreateNodeTreeMaxNodes extends AbstractTaskSingleInputIterator
 	private File dirOutput;
 	private Map<Node, Output> outputs = new HashMap<>();
 
+	private int preSplitMaxNodes;
+	private FileFormat preSplitFormat;
+	private String preSplitPath;
+
 	private class Output
 	{
 
@@ -113,6 +121,10 @@ public class CreateNodeTreeMaxNodes extends AbstractTaskSingleInputIterator
 		OptionHelper.add(options, OPTION_OUTPUT, true, true, "directory to store output in");
 		OptionHelper.add(options, OPTION_MAX_NODES, true, true, "the maximum number of nodes per file");
 		PbfOptions.add(options);
+
+		OptionHelper.add(options, OPTION_PRE_SPLIT_FORMAT, true, false, "file format of pre split data");
+		OptionHelper.add(options, OPTION_PRE_SPLIT_DATA, true, false, "path to pre split data");
+		OptionHelper.add(options, OPTION_PRE_SPLIT_MAX, true, false, "max nodes per file pre split");
 		// @formatter:on
 	}
 
@@ -139,6 +151,37 @@ public class CreateNodeTreeMaxNodes extends AbstractTaskSingleInputIterator
 		if (maxNodes < 1) {
 			System.out.println("Please specify a max nodes >= 1");
 			System.exit(1);
+		}
+
+		boolean hasPreSplitFormat = line.hasOption(OPTION_PRE_SPLIT_FORMAT);
+		boolean hasPreSplitData = line.hasOption(OPTION_PRE_SPLIT_DATA);
+		boolean hasPreSplitMax = line.hasOption(OPTION_PRE_SPLIT_MAX);
+
+		if (hasPreSplitData || hasPreSplitFormat || hasPreSplitMax) {
+			if (!hasPreSplitData || !hasPreSplitFormat || !hasPreSplitMax) {
+				System.out
+						.println("Please specifiy all or none options for pre splitting");
+				System.exit(1);
+			}
+
+			preSplitMaxNodes = Integer.parseInt(line
+					.getOptionValue(OPTION_PRE_SPLIT_MAX));
+			if (preSplitMaxNodes < 1) {
+				System.out.println("Please specify a pre split max nodes >= 1");
+				System.exit(1);
+			}
+
+			String preSplitFormatName = line
+					.getOptionValue(OPTION_PRE_SPLIT_FORMAT);
+			preSplitFormat = FileFormat.parseFileFormat(preSplitFormatName);
+			if (outputFormat == null) {
+				System.out.println("invalid pre split format");
+				System.out.println("please specify one of: "
+						+ FileFormat.getHumanReadableListOfSupportedFormats());
+				System.exit(1);
+			}
+
+			preSplitPath = line.getOptionValue(OPTION_PRE_SPLIT_DATA);
 		}
 	}
 
@@ -170,12 +213,22 @@ public class CreateNodeTreeMaxNodes extends AbstractTaskSingleInputIterator
 	protected void initOutputs() throws IOException
 	{
 		OsmBounds bounds = inputIterator.getBounds();
+		System.out.println("bounds: " + bounds);
+
 		Envelope envelope = new Envelope(bounds.getLeft(), bounds.getRight(),
 				bounds.getBottom(), bounds.getTop());
 
 		tree = new DataTree(envelope);
 
-		System.out.println("bounds: " + bounds);
+		if (preSplitPath != null) {
+			System.out.println("Splitting tree with warm up data");
+			TreeSplitter splitter = new TreeSplitter(tree);
+			InputStream input = new FileInputStream(preSplitPath);
+			OsmIterator iterator = setupOsmInput(input, preSplitFormat);
+			splitter.split(iterator, preSplitMaxNodes);
+			System.out.println("Number of leafs: " + tree.getLeafs().size());
+		}
+
 		tree.print();
 
 		List<Node> leafs = tree.getLeafs();
@@ -190,7 +243,7 @@ public class CreateNodeTreeMaxNodes extends AbstractTaskSingleInputIterator
 		File file = new File(dirOutput, filename);
 		System.out.println(file + ": " + leaf.getEnvelope());
 		OutputStream os = new FileOutputStream(file);
-		OsmOutputStream osmOutput = setupOsmOutput(os);
+		OsmOutputStream osmOutput = setupOsmOutput(os, outputFormat);
 		Output output = new Output(file, os, osmOutput);
 		outputs.put(leaf, output);
 
@@ -201,9 +254,9 @@ public class CreateNodeTreeMaxNodes extends AbstractTaskSingleInputIterator
 		return output;
 	}
 
-	private OsmIterator setupOsmInput(InputStream in)
+	private OsmIterator setupOsmInput(InputStream in, FileFormat format)
 	{
-		switch (outputFormat) {
+		switch (format) {
 		default:
 		case TBO:
 			return new TboIterator(in);
@@ -214,9 +267,9 @@ public class CreateNodeTreeMaxNodes extends AbstractTaskSingleInputIterator
 		}
 	}
 
-	private OsmOutputStream setupOsmOutput(OutputStream out)
+	private OsmOutputStream setupOsmOutput(OutputStream out, FileFormat format)
 	{
-		switch (outputFormat) {
+		switch (format) {
 		default:
 		case TBO:
 			return new TboWriter(out);
@@ -283,7 +336,7 @@ public class CreateNodeTreeMaxNodes extends AbstractTaskSingleInputIterator
 		Output outRight = init(right);
 
 		FileInputStream input = new FileInputStream(output.file);
-		OsmIterator iterator = setupOsmInput(input);
+		OsmIterator iterator = setupOsmInput(input, outputFormat);
 		while (iterator.hasNext()) {
 			EntityContainer container = iterator.next();
 			if (container.getType() != EntityType.Node) {
