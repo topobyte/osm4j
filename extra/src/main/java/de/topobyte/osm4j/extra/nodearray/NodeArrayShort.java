@@ -29,7 +29,7 @@ import de.topobyte.osm4j.extra.io.ra.RandomAccess;
 public class NodeArrayShort implements NodeArray
 {
 
-	final static short NULL = 0;
+	final static short NULL = Coding.SHORT_NULL;
 
 	private RandomAccess f;
 
