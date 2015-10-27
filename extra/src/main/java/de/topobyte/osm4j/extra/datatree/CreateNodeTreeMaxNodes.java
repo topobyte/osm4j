@@ -17,37 +17,24 @@
 
 package de.topobyte.osm4j.extra.datatree;
 
-import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import com.vividsolutions.jts.geom.Envelope;
 
 import de.topobyte.osm4j.core.access.OsmIterator;
-import de.topobyte.osm4j.core.access.OsmOutputStream;
 import de.topobyte.osm4j.core.model.iface.EntityContainer;
 import de.topobyte.osm4j.core.model.iface.EntityType;
 import de.topobyte.osm4j.core.model.iface.OsmBounds;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
-import de.topobyte.osm4j.core.model.impl.Bounds;
-import de.topobyte.osm4j.utils.AbstractTaskSingleInputIterator;
 import de.topobyte.osm4j.utils.FileFormat;
-import de.topobyte.osm4j.utils.config.PbfConfig;
-import de.topobyte.osm4j.utils.config.PbfOptions;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
-public class CreateNodeTreeMaxNodes extends AbstractTaskSingleInputIterator
+public class CreateNodeTreeMaxNodes extends BaseNodeTreeCreator
 {
 
-	private static final String OPTION_OUTPUT = "output";
-	private static final String OPTION_OUTPUT_FORMAT = "output_format";
 	private static final String OPTION_MAX_NODES = "max_nodes";
 
 	private static final String OPTION_PRE_SPLIT_FORMAT = "pre_split_format";
@@ -78,43 +65,15 @@ public class CreateNodeTreeMaxNodes extends AbstractTaskSingleInputIterator
 	}
 
 	private int maxNodes;
-	private String pathOutput;
-	private FileFormat outputFormat;
-	private PbfConfig pbfConfig;
-	private DataTree tree;
-	private boolean writeMetadata = true;
-
-	private File dirOutput;
-	private Map<Node, Output> outputs = new HashMap<>();
 
 	private int preSplitMaxNodes;
 	private FileFormat preSplitFormat;
 	private String preSplitPath;
 
-	private class Output
-	{
-
-		private File file;
-		private OutputStream output;
-		private OsmOutputStream osmOutput;
-		private int count = 0;
-
-		Output(File file, OutputStream output, OsmOutputStream osmOutput)
-		{
-			this.file = file;
-			this.output = output;
-			this.osmOutput = osmOutput;
-		}
-
-	}
-
 	public CreateNodeTreeMaxNodes()
 	{
 		// @formatter:off
-		OptionHelper.add(options, OPTION_OUTPUT_FORMAT, true, true, "the file format of the output");
-		OptionHelper.add(options, OPTION_OUTPUT, true, true, "directory to store output in");
 		OptionHelper.add(options, OPTION_MAX_NODES, true, true, "the maximum number of nodes per file");
-		PbfOptions.add(options);
 
 		OptionHelper.add(options, OPTION_PRE_SPLIT_FORMAT, true, false, "file format of pre split data");
 		OptionHelper.add(options, OPTION_PRE_SPLIT_DATA, true, false, "path to pre split data");
@@ -127,18 +86,6 @@ public class CreateNodeTreeMaxNodes extends AbstractTaskSingleInputIterator
 	{
 		super.setup(args);
 
-		String outputFormatName = line.getOptionValue(OPTION_OUTPUT_FORMAT);
-		outputFormat = FileFormat.parseFileFormat(outputFormatName);
-		if (outputFormat == null) {
-			System.out.println("invalid output format");
-			System.out.println("please specify one of: "
-					+ FileFormat.getHumanReadableListOfSupportedFormats());
-			System.exit(1);
-		}
-
-		pbfConfig = PbfOptions.parse(line);
-
-		pathOutput = line.getOptionValue(OPTION_OUTPUT);
 		String argMaxNodes = line.getOptionValue(OPTION_MAX_NODES);
 
 		maxNodes = Integer.parseInt(argMaxNodes);
@@ -179,31 +126,6 @@ public class CreateNodeTreeMaxNodes extends AbstractTaskSingleInputIterator
 		}
 	}
 
-	@Override
-	protected void init() throws FileNotFoundException
-	{
-		super.init();
-
-		dirOutput = new File(pathOutput);
-		if (!dirOutput.exists()) {
-			System.out.println("Creating output directory");
-			dirOutput.mkdirs();
-		}
-		if (!dirOutput.isDirectory()) {
-			System.out.println("Output path is not a directory");
-			System.exit(1);
-		}
-		if (dirOutput.list().length != 0) {
-			System.out.println("Output directory is not empty");
-			System.exit(1);
-		}
-
-		if (!inputIterator.hasBounds()) {
-			System.out.println("Input does not provide bounds");
-			System.exit(1);
-		}
-	}
-
 	protected void initOutputs() throws IOException
 	{
 		OsmBounds bounds = inputIterator.getBounds();
@@ -232,50 +154,17 @@ public class CreateNodeTreeMaxNodes extends AbstractTaskSingleInputIterator
 		}
 	}
 
-	private Output init(Node leaf) throws IOException
-	{
-		String filename = Integer.toHexString(leaf.getPath()) + ".pbf";
-		File file = new File(dirOutput, filename);
-		System.out.println(file + ": " + leaf.getEnvelope());
-		OutputStream os = new FileOutputStream(file);
-		OsmOutputStream osmOutput = Util.setupOsmOutput(os, outputFormat,
-				writeMetadata, pbfConfig);
-		Output output = new Output(file, os, osmOutput);
-		outputs.put(leaf, output);
-
-		Envelope box = leaf.getEnvelope();
-		osmOutput.write(new Bounds(box.getMinX(), box.getMaxX(), box.getMaxY(),
-				box.getMinY()));
-
-		return output;
-	}
-
-	protected void run() throws IOException
-	{
-		loop: while (inputIterator.hasNext()) {
-			EntityContainer entityContainer = inputIterator.next();
-			switch (entityContainer.getType()) {
-			case Node:
-				handle((OsmNode) entityContainer.getEntity());
-				break;
-			case Way:
-				break loop;
-			case Relation:
-				break loop;
-			}
-		}
-	}
-
-	private void handle(OsmNode node) throws IOException
+	@Override
+	protected void handle(OsmNode node) throws IOException
 	{
 		List<Node> leafs = tree.query(node.getLongitude(), node.getLatitude());
 		for (Node leaf : leafs) {
 			if (leaf.getEnvelope().contains(node.getLongitude(),
 					node.getLatitude())) {
 				Output output = outputs.get(leaf);
-				output.count++;
-				output.osmOutput.write(node);
-				if (output.count > maxNodes) {
+				output.incrementCounter();
+				output.getOsmOutput().write(node);
+				if (output.getCount() > maxNodes) {
 					split(leaf);
 				}
 			}
@@ -295,14 +184,14 @@ public class CreateNodeTreeMaxNodes extends AbstractTaskSingleInputIterator
 				Integer.toHexString(right.getPath())));
 
 		Output output = outputs.get(leaf);
-		output.osmOutput.complete();
-		output.output.close();
+		output.getOsmOutput().complete();
+		output.getOutputStream().close();
 		outputs.remove(leaf);
 
 		Output outLeft = init(left);
 		Output outRight = init(right);
 
-		FileInputStream input = new FileInputStream(output.file);
+		FileInputStream input = new FileInputStream(output.getFile());
 		OsmIterator iterator = Util.setupOsmInput(input, outputFormat,
 				writeMetadata);
 		while (iterator.hasNext()) {
@@ -314,28 +203,17 @@ public class CreateNodeTreeMaxNodes extends AbstractTaskSingleInputIterator
 			double lon = node.getLongitude();
 			double lat = node.getLatitude();
 			if (left.getEnvelope().contains(lon, lat)) {
-				outLeft.count++;
-				outLeft.osmOutput.write(node);
+				outLeft.incrementCounter();
+				outLeft.getOsmOutput().write(node);
 			}
 			if (right.getEnvelope().contains(lon, lat)) {
-				outRight.count++;
-				outRight.osmOutput.write(node);
+				outRight.incrementCounter();
+				outRight.getOsmOutput().write(node);
 			}
 		}
 
 		System.out.println("Deleting " + Integer.toHexString(leaf.getPath()));
-		output.file.delete();
-	}
-
-	@Override
-	protected void finish() throws IOException
-	{
-		super.finish();
-
-		for (Output output : outputs.values()) {
-			output.osmOutput.complete();
-			output.output.close();
-		}
+		output.getFile().delete();
 	}
 
 }
