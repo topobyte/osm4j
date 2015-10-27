@@ -108,7 +108,8 @@ public abstract class BaseNodeTreeCreator extends
 
 	protected Output init(Node leaf) throws IOException
 	{
-		String filename = Integer.toHexString(leaf.getPath()) + ".pbf";
+		String filename = Integer.toHexString(leaf.getPath())
+				+ Util.extension(outputFormat);
 		File file = new File(dirOutput, filename);
 		System.out.println(file + ": " + leaf.getEnvelope());
 		OutputStream os = new FileOutputStream(file);

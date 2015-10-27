@@ -65,4 +65,18 @@ public class Util
 		}
 	}
 
+	public static String extension(FileFormat format)
+	{
+		switch (format) {
+		default:
+			return null;
+		case XML:
+			return ".xml";
+		case PBF:
+			return ".pbf";
+		case TBO:
+			return ".tbo";
+		}
+	}
+
 }
