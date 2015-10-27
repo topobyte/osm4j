@@ -37,16 +37,10 @@ import de.topobyte.osm4j.core.model.iface.EntityType;
 import de.topobyte.osm4j.core.model.iface.OsmBounds;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.osm4j.core.model.impl.Bounds;
-import de.topobyte.osm4j.pbf.seq.PbfIterator;
-import de.topobyte.osm4j.pbf.seq.PbfWriter;
-import de.topobyte.osm4j.tbo.access.TboIterator;
-import de.topobyte.osm4j.tbo.access.TboWriter;
 import de.topobyte.osm4j.utils.AbstractTaskSingleInputIterator;
 import de.topobyte.osm4j.utils.FileFormat;
 import de.topobyte.osm4j.utils.config.PbfConfig;
 import de.topobyte.osm4j.utils.config.PbfOptions;
-import de.topobyte.osm4j.xml.dynsax.OsmXmlIterator;
-import de.topobyte.osm4j.xml.output.OsmXmlOutputStream;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
 public class CreateNodeTreeMaxNodes extends AbstractTaskSingleInputIterator
@@ -224,7 +218,8 @@ public class CreateNodeTreeMaxNodes extends AbstractTaskSingleInputIterator
 			System.out.println("Splitting tree with warm up data");
 			TreeSplitter splitter = new TreeSplitter(tree);
 			InputStream input = new FileInputStream(preSplitPath);
-			OsmIterator iterator = setupOsmInput(input, preSplitFormat);
+			OsmIterator iterator = Util.setupOsmInput(input, preSplitFormat,
+					false);
 			splitter.split(iterator, preSplitMaxNodes);
 			System.out.println("Number of leafs: " + tree.getLeafs().size());
 		}
@@ -243,7 +238,8 @@ public class CreateNodeTreeMaxNodes extends AbstractTaskSingleInputIterator
 		File file = new File(dirOutput, filename);
 		System.out.println(file + ": " + leaf.getEnvelope());
 		OutputStream os = new FileOutputStream(file);
-		OsmOutputStream osmOutput = setupOsmOutput(os, outputFormat);
+		OsmOutputStream osmOutput = Util.setupOsmOutput(os, outputFormat,
+				writeMetadata, pbfConfig);
 		Output output = new Output(file, os, osmOutput);
 		outputs.put(leaf, output);
 
@@ -252,35 +248,6 @@ public class CreateNodeTreeMaxNodes extends AbstractTaskSingleInputIterator
 				box.getMinY()));
 
 		return output;
-	}
-
-	private OsmIterator setupOsmInput(InputStream in, FileFormat format)
-	{
-		switch (format) {
-		default:
-		case TBO:
-			return new TboIterator(in);
-		case XML:
-			return new OsmXmlIterator(in, writeMetadata);
-		case PBF:
-			return new PbfIterator(in, writeMetadata);
-		}
-	}
-
-	private OsmOutputStream setupOsmOutput(OutputStream out, FileFormat format)
-	{
-		switch (format) {
-		default:
-		case TBO:
-			return new TboWriter(out);
-		case XML:
-			return new OsmXmlOutputStream(out, writeMetadata);
-		case PBF:
-			PbfWriter pbfWriter = new PbfWriter(out, writeMetadata);
-			pbfWriter.setCompression(pbfConfig.getCompression());
-			pbfWriter.setUseDense(pbfConfig.isUseDenseNodes());
-			return pbfWriter;
-		}
 	}
 
 	protected void run() throws IOException
@@ -336,7 +303,8 @@ public class CreateNodeTreeMaxNodes extends AbstractTaskSingleInputIterator
 		Output outRight = init(right);
 
 		FileInputStream input = new FileInputStream(output.file);
-		OsmIterator iterator = setupOsmInput(input, outputFormat);
+		OsmIterator iterator = Util.setupOsmInput(input, outputFormat,
+				writeMetadata);
 		while (iterator.hasNext()) {
 			EntityContainer container = iterator.next();
 			if (container.getType() != EntityType.Node) {

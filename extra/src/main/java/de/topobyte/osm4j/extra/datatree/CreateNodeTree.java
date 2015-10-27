@@ -33,13 +33,10 @@ import de.topobyte.osm4j.core.model.iface.EntityContainer;
 import de.topobyte.osm4j.core.model.iface.OsmBounds;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.osm4j.core.model.impl.Bounds;
-import de.topobyte.osm4j.pbf.seq.PbfWriter;
-import de.topobyte.osm4j.tbo.access.TboWriter;
 import de.topobyte.osm4j.utils.AbstractTaskSingleInputIterator;
 import de.topobyte.osm4j.utils.FileFormat;
 import de.topobyte.osm4j.utils.config.PbfConfig;
 import de.topobyte.osm4j.utils.config.PbfOptions;
-import de.topobyte.osm4j.xml.output.OsmXmlOutputStream;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
 public class CreateNodeTree extends AbstractTaskSingleInputIterator
@@ -175,28 +172,13 @@ public class CreateNodeTree extends AbstractTaskSingleInputIterator
 			File file = new File(dirOutput, filename);
 			System.out.println(file + ": " + leaf.getEnvelope());
 			OutputStream output = new FileOutputStream(file);
-			OsmOutputStream osmOutput = setupOsmOutput(output);
+			OsmOutputStream osmOutput = Util.setupOsmOutput(output,
+					outputFormat, writeMetadata, pbfConfig);
 			outputs.put(leaf, new Output(output, osmOutput));
 
 			Envelope box = leaf.getEnvelope();
 			osmOutput.write(new Bounds(box.getMinX(), box.getMaxX(), box
 					.getMaxY(), box.getMinY()));
-		}
-	}
-
-	private OsmOutputStream setupOsmOutput(OutputStream out)
-	{
-		switch (outputFormat) {
-		default:
-		case TBO:
-			return new TboWriter(out);
-		case XML:
-			return new OsmXmlOutputStream(out, writeMetadata);
-		case PBF:
-			PbfWriter pbfWriter = new PbfWriter(out, writeMetadata);
-			pbfWriter.setCompression(pbfConfig.getCompression());
-			pbfWriter.setUseDense(pbfConfig.isUseDenseNodes());
-			return pbfWriter;
 		}
 	}
 
