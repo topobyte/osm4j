@@ -33,6 +33,11 @@ public class NodeArrayDouble implements NodeArray
 
 	private RandomAccess f;
 
+	public NodeArrayDouble(RandomAccess f)
+	{
+		this.f = f;
+	}
+
 	public NodeArrayDouble(File file) throws IOException
 	{
 		f = new NormalRandomAccessFile(file);

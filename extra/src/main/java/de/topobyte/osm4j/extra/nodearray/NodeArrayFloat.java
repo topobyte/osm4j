@@ -33,6 +33,11 @@ public class NodeArrayFloat implements NodeArray
 
 	private RandomAccess f;
 
+	public NodeArrayFloat(RandomAccess f)
+	{
+		this.f = f;
+	}
+
 	public NodeArrayFloat(File file) throws IOException
 	{
 		f = new NormalRandomAccessFile(file);

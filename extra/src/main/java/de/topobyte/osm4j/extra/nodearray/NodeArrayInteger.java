@@ -33,6 +33,11 @@ public class NodeArrayInteger implements NodeArray
 
 	private RandomAccess f;
 
+	public NodeArrayInteger(RandomAccess f)
+	{
+		this.f = f;
+	}
+
 	public NodeArrayInteger(File file) throws IOException
 	{
 		f = new NormalRandomAccessFile(file);

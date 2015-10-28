@@ -33,6 +33,11 @@ public class NodeArrayShort implements NodeArray
 
 	private RandomAccess f;
 
+	public NodeArrayShort(RandomAccess f)
+	{
+		this.f = f;
+	}
+
 	public NodeArrayShort(File file) throws IOException
 	{
 		f = new NormalRandomAccessFile(file);
