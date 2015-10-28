@@ -22,11 +22,14 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
 
 import com.vividsolutions.jts.geom.Envelope;
 
+import de.topobyte.adt.geo.BBox;
+import de.topobyte.adt.geo.BBoxString;
 import de.topobyte.osm4j.core.access.OsmOutputStream;
 import de.topobyte.osm4j.core.model.iface.EntityContainer;
 import de.topobyte.osm4j.core.model.iface.OsmBounds;
@@ -117,6 +120,14 @@ public abstract class BaseNodeTreeCreator extends
 
 	protected void initTree() throws IOException
 	{
+		String filename = "tree.info";
+		File file = new File(dirOutput, filename);
+
+		BBox bbox = new BBox(envelope);
+		PrintWriter pw = new PrintWriter(file);
+		pw.println("bbox: " + BBoxString.create(bbox));
+		pw.close();
+
 		tree = new DataTree(envelope);
 	}
 
