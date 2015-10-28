@@ -67,13 +67,16 @@ public class NodeArrayInteger implements NodeArray
 	@Override
 	public boolean supportsContainment()
 	{
-		return false;
+		return true;
 	}
 
 	@Override
 	public boolean contains(long id) throws IOException
 	{
-		return true;
+		f.seek(id * 8);
+		double lon = Coding.decodeLonFromInt(f.readInt());
+		double lat = Coding.decodeLatFromInt(f.readInt());
+		return lon != NULL && lat != NULL;
 	}
 
 }
