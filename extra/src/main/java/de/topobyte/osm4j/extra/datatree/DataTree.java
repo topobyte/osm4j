@@ -25,6 +25,9 @@ import com.vividsolutions.jts.geom.Envelope;
 public class DataTree
 {
 
+	public static final String FILENAME_INFO = "tree.info";
+	public static final String PROPERTY_BBOX = "bbox";
+
 	private Node root;
 
 	public DataTree(Envelope envelope)

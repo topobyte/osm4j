@@ -120,12 +120,11 @@ public abstract class BaseNodeTreeCreator extends
 
 	protected void initTree() throws IOException
 	{
-		String filename = "tree.info";
-		File file = new File(dirOutput, filename);
+		File file = new File(dirOutput, DataTree.FILENAME_INFO);
 
 		BBox bbox = new BBox(envelope);
 		PrintWriter pw = new PrintWriter(file);
-		pw.println("bbox: " + BBoxString.create(bbox));
+		pw.println(DataTree.PROPERTY_BBOX + ": " + BBoxString.create(bbox));
 		pw.close();
 
 		tree = new DataTree(envelope);
