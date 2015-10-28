@@ -20,9 +20,6 @@ package de.topobyte.osm4j.extra.datatree;
 import java.io.IOException;
 import java.util.List;
 
-import com.vividsolutions.jts.geom.Envelope;
-
-import de.topobyte.osm4j.core.model.iface.OsmBounds;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
@@ -46,6 +43,8 @@ public class CreateNodeTree extends BaseNodeTreeCreator
 		task.readMetadata = true;
 
 		task.init();
+
+		task.initTree();
 
 		task.initOutputs();
 
@@ -77,18 +76,17 @@ public class CreateNodeTree extends BaseNodeTreeCreator
 		}
 	}
 
+	@Override
+	protected void initTree() throws IOException
+	{
+		super.initTree();
+
+		tree.getRoot().split(splitDepth);
+		tree.print();
+	}
+
 	protected void initOutputs() throws IOException
 	{
-		OsmBounds bounds = inputIterator.getBounds();
-		Envelope envelope = new Envelope(bounds.getLeft(), bounds.getRight(),
-				bounds.getBottom(), bounds.getTop());
-
-		tree = new DataTree(envelope);
-		tree.getRoot().split(splitDepth);
-
-		System.out.println("bounds: " + bounds);
-		tree.print();
-
 		List<Node> leafs = tree.getLeafs();
 		for (Node leaf : leafs) {
 			init(leaf);

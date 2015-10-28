@@ -29,6 +29,7 @@ import com.vividsolutions.jts.geom.Envelope;
 
 import de.topobyte.osm4j.core.access.OsmOutputStream;
 import de.topobyte.osm4j.core.model.iface.EntityContainer;
+import de.topobyte.osm4j.core.model.iface.OsmBounds;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.osm4j.core.model.impl.Bounds;
 import de.topobyte.osm4j.utils.AbstractTaskSingleInputIterator;
@@ -47,11 +48,13 @@ public abstract class BaseNodeTreeCreator extends
 	protected String pathOutput;
 	protected FileFormat outputFormat;
 	protected PbfConfig pbfConfig;
-	protected DataTree tree;
 	protected boolean writeMetadata = true;
 
 	protected File dirOutput;
 	protected Map<Node, Output> outputs = new HashMap<>();
+
+	protected Envelope envelope;
+	protected DataTree tree;
 
 	public BaseNodeTreeCreator()
 	{
@@ -104,6 +107,17 @@ public abstract class BaseNodeTreeCreator extends
 			System.out.println("Input does not provide bounds");
 			System.exit(1);
 		}
+
+		OsmBounds bounds = inputIterator.getBounds();
+		System.out.println("bounds: " + bounds);
+
+		envelope = new Envelope(bounds.getLeft(), bounds.getRight(),
+				bounds.getBottom(), bounds.getTop());
+	}
+
+	protected void initTree() throws IOException
+	{
+		tree = new DataTree(envelope);
 	}
 
 	protected Output init(Node leaf) throws IOException

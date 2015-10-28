@@ -22,12 +22,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
-import com.vividsolutions.jts.geom.Envelope;
-
 import de.topobyte.osm4j.core.access.OsmIterator;
 import de.topobyte.osm4j.core.model.iface.EntityContainer;
 import de.topobyte.osm4j.core.model.iface.EntityType;
-import de.topobyte.osm4j.core.model.iface.OsmBounds;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.osm4j.utils.FileFormat;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
@@ -56,6 +53,8 @@ public class CreateNodeTreeMaxNodes extends BaseNodeTreeCreator
 		task.readMetadata = true;
 
 		task.init();
+
+		task.initTree();
 
 		task.initOutputs();
 
@@ -126,15 +125,10 @@ public class CreateNodeTreeMaxNodes extends BaseNodeTreeCreator
 		}
 	}
 
-	protected void initOutputs() throws IOException
+	@Override
+	protected void initTree() throws IOException
 	{
-		OsmBounds bounds = inputIterator.getBounds();
-		System.out.println("bounds: " + bounds);
-
-		Envelope envelope = new Envelope(bounds.getLeft(), bounds.getRight(),
-				bounds.getBottom(), bounds.getTop());
-
-		tree = new DataTree(envelope);
+		super.initTree();
 
 		if (preSplitPath != null) {
 			System.out.println("Splitting tree with warm up data");
@@ -147,7 +141,10 @@ public class CreateNodeTreeMaxNodes extends BaseNodeTreeCreator
 		}
 
 		tree.print();
+	}
 
+	protected void initOutputs() throws IOException
+	{
 		List<Node> leafs = tree.getLeafs();
 		for (Node leaf : leafs) {
 			init(leaf);
