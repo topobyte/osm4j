@@ -82,6 +82,10 @@ public class DataTreeOpener
 			}
 		}
 
+		if (dataFiles.isEmpty()) {
+			throw new IOException("No data available");
+		}
+
 		/*
 		 * Rebuild the tree bottom up
 		 */
