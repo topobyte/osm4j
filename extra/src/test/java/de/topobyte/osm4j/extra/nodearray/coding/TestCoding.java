@@ -42,10 +42,10 @@ public class TestCoding
 		nameToCoder.put("short lat", Coders.CODER_SHORT_LAT);
 
 		Map<String, Double> deltas = new HashMap<>();
-		deltas.put("int lon", 0.00000005);
-		deltas.put("int lat", 0.000000025);
-		deltas.put("short lon", 0.003);
-		deltas.put("short lat", 0.002);
+		deltas.put("int lon", ErrorDeltas.DELTA_INT_LON);
+		deltas.put("int lat", ErrorDeltas.DELTA_INT_LAT);
+		deltas.put("short lon", ErrorDeltas.DELTA_SHORT_LON);
+		deltas.put("short lat", ErrorDeltas.DELTA_SHORT_LAT);
 
 		int steps = 10000;
 		int random = 10000;
