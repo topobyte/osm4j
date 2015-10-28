@@ -51,14 +51,19 @@ public class BlockSizeInfo extends BlobParser
 	protected void parse(BlobHeader header, Blob blob) throws IOException
 	{
 		int rawSize = blob.getRawSize();
-		if (!blob.hasZlibData()) {
-			System.out.println(String.format("Block %d: raw size: %d", nBlocks,
-					rawSize));
-		} else {
+		if (blob.hasRaw()) {
+			System.out.println(String.format(
+					"Block %d (uncompressed): raw size: %d", nBlocks, rawSize));
+		} else if (blob.hasZlibData()) {
 			int zlibSize = blob.getZlibData().size();
 			System.out.println(String.format(
-					"Block %d: raw size: %d, compressed: %d", nBlocks, rawSize,
-					zlibSize));
+					"Block %d (gzip): raw size: %d, compressed: %d", nBlocks,
+					rawSize, zlibSize));
+		} else if (blob.hasLz4Data()) {
+			int lz4Size = blob.getLz4Data().size();
+			System.out.println(String.format(
+					"Block %d (lz4): raw size: %d, compressed: %d", nBlocks,
+					rawSize, lz4Size));
 		}
 		nBlocks++;
 	}
