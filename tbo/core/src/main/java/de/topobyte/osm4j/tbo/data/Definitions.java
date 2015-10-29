@@ -32,4 +32,13 @@ public class Definitions
 
 	public static final String KEY_CREATION_TIME = "creation-time";
 
+	// Metadata situation of a whole block
+	public static final int METADATA_NONE = 1;
+	public static final int METADATA_ALL = 2;
+	public static final int METADATA_MIXED = 3;
+
+	// In case of METADATA_MIXED: for each element
+	public static final int METADATA_NO = 0;
+	public static final int METADATA_YES = 1;
+
 }

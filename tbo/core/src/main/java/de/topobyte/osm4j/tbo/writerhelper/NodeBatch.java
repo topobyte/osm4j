@@ -44,6 +44,8 @@ public class NodeBatch extends EntityBatch<OsmNode>
 		for (OsmNode node : elements) {
 			writeTags(writer, node);
 		}
+
+		writeMetadata(writer);
 	}
 
 	private long idOffset = 0;

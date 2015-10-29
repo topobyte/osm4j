@@ -22,7 +22,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.topobyte.osm4j.core.model.iface.OsmEntity;
+import de.topobyte.osm4j.core.model.iface.OsmMetadata;
 import de.topobyte.osm4j.core.model.iface.OsmTag;
+import de.topobyte.osm4j.tbo.data.Definitions;
 import de.topobyte.osm4j.tbo.data.StringPool;
 import de.topobyte.osm4j.tbo.data.StringPoolBuilder;
 import de.topobyte.osm4j.tbo.io.CompactWriter;
@@ -35,6 +37,7 @@ public abstract class EntityBatch<T extends OsmEntity> implements Blockable
 	protected List<T> elements;
 
 	protected StringPool stringPoolTags;
+	protected StringPool stringPoolUsernames;
 
 	public EntityBatch(boolean writeMetadata)
 	{
@@ -76,6 +79,23 @@ public abstract class EntityBatch<T extends OsmEntity> implements Blockable
 		writePool(writer, stringPoolTags);
 	}
 
+	public void writeUsernameStringPool(CompactWriter writer)
+			throws IOException
+	{
+		StringPoolBuilder poolBuilder = new StringPoolBuilder();
+		for (OsmEntity object : elements) {
+			// add user names
+			OsmMetadata metadata = object.getMetadata();
+			if (metadata == null) {
+				continue;
+			}
+			poolBuilder.add(metadata.getUser());
+		}
+		stringPoolUsernames = poolBuilder.buildStringPool();
+
+		writePool(writer, stringPoolUsernames);
+	}
+
 	protected void writePool(CompactWriter writer, StringPool stringPool)
 			throws IOException
 	{
@@ -100,6 +120,131 @@ public abstract class EntityBatch<T extends OsmEntity> implements Blockable
 			int v = stringPoolTags.getId(value);
 			writer.writeVariableLengthUnsignedInteger(k);
 			writer.writeVariableLengthUnsignedInteger(v);
+		}
+	}
+
+	protected void writeMetadata(CompactWriter writer) throws IOException
+	{
+		if (!writeMetadata) {
+			return;
+		}
+
+		// Determine the situation among all elements
+		boolean none = true;
+		boolean all = true;
+		for (OsmEntity element : elements) {
+			if (element.getMetadata() == null) {
+				all = false;
+			} else {
+				none = false;
+			}
+			if (!all && !none) {
+				// mixed
+				break;
+			}
+		}
+
+		int situation;
+		if (all) {
+			situation = Definitions.METADATA_ALL;
+		} else if (none) {
+			situation = Definitions.METADATA_NONE;
+		} else {
+			situation = Definitions.METADATA_MIXED;
+		}
+
+		writer.writeByte(situation);
+
+		if (none) {
+			return;
+		}
+
+		writeUsernameStringPool(writer);
+
+		if (!all) {
+			writeFlags(writer);
+		}
+
+		writeVersions(writer);
+		writeTimestamps(writer);
+		writeChangesets(writer);
+		writerUserIds(writer);
+		writeUsernames(writer);
+	}
+
+	private void writeFlags(CompactWriter writer) throws IOException
+	{
+		// write flags for each element
+		for (OsmEntity element : elements) {
+			if (element.getMetadata() == null) {
+				writer.writeByte(Definitions.METADATA_NO);
+			} else {
+				writer.writeByte(Definitions.METADATA_YES);
+			}
+		}
+	}
+
+	private void writeVersions(CompactWriter writer) throws IOException
+	{
+		int offset = 0;
+		for (OsmEntity element : elements) {
+			OsmMetadata metadata = element.getMetadata();
+			if (metadata != null) {
+				int version = metadata.getVersion();
+				writer.writeVariableLengthSignedInteger(version - offset);
+				offset = version;
+			}
+		}
+	}
+
+	private void writeTimestamps(CompactWriter writer) throws IOException
+	{
+		long offset = 0;
+		for (OsmEntity element : elements) {
+			OsmMetadata metadata = element.getMetadata();
+			if (metadata != null) {
+				long timestamp = metadata.getTimestamp();
+				writer.writeVariableLengthSignedInteger(timestamp - offset);
+				offset = timestamp;
+			}
+		}
+	}
+
+	private void writeChangesets(CompactWriter writer) throws IOException
+	{
+		long offset = 0;
+		for (OsmEntity element : elements) {
+			OsmMetadata metadata = element.getMetadata();
+			if (metadata != null) {
+				long changeset = metadata.getChangeset();
+				writer.writeVariableLengthSignedInteger(changeset - offset);
+				offset = changeset;
+			}
+		}
+	}
+
+	private void writerUserIds(CompactWriter writer) throws IOException
+	{
+		long offset = 0;
+		for (OsmEntity element : elements) {
+			OsmMetadata metadata = element.getMetadata();
+			if (metadata != null) {
+				long userId = metadata.getUid();
+				writer.writeVariableLengthSignedInteger(userId - offset);
+				offset = userId;
+			}
+		}
+	}
+
+	private void writeUsernames(CompactWriter writer) throws IOException
+	{
+		for (OsmEntity element : elements) {
+			OsmMetadata metadata = element.getMetadata();
+			if (metadata != null) {
+				String user = metadata.getUser();
+				int index = stringPoolUsernames.getId(user);
+				writer.writeVariableLengthUnsignedInteger(index);
+			}
 		}
 	}
 

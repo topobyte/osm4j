@@ -38,6 +38,8 @@ public class WayBatch extends EntityBatch<OsmWay>
 		for (OsmWay way : elements) {
 			write(writer, way);
 		}
+
+		writeMetadata(writer);
 	}
 
 	private long idOffset = 0;

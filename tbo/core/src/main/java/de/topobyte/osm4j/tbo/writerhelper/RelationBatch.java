@@ -46,6 +46,8 @@ public class RelationBatch extends EntityBatch<OsmRelation>
 		for (OsmRelation relation : elements) {
 			write(writer, relation);
 		}
+
+		writeMetadata(writer);
 	}
 
 	private long idOffset = 0;
