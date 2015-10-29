@@ -106,6 +106,9 @@ public abstract class CompactReader
 	public String readString() throws IOException
 	{
 		int length = (int) readVariableLengthSignedInteger();
+		if (length < 0) {
+			throw new IOException("Unable to parse string with negative length");
+		}
 		byte[] buffer = new byte[length];
 		readFully(buffer);
 		return new String(buffer, charset);
