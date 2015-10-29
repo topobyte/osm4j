@@ -28,7 +28,8 @@ public class WayBatch extends EntityBatch<OsmWay>
 	@Override
 	public void write(CompactWriter writer) throws IOException
 	{
-		super.writeStringPool(writer);
+		writeTagStringPool(writer);
+
 		for (OsmWay way : elements) {
 			write(writer, way);
 		}

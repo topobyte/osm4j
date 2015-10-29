@@ -28,7 +28,8 @@ public class NodeBatch extends EntityBatch<OsmNode>
 	@Override
 	public void write(CompactWriter writer) throws IOException
 	{
-		super.writeStringPool(writer);
+		writeTagStringPool(writer);
+
 		for (OsmNode node : elements) {
 			writeIds(writer, node);
 		}

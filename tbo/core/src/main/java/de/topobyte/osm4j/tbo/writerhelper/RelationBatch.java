@@ -18,19 +18,26 @@
 package de.topobyte.osm4j.tbo.writerhelper;
 
 import java.io.IOException;
+import java.util.List;
 
 import de.topobyte.osm4j.core.model.iface.EntityType;
 import de.topobyte.osm4j.core.model.iface.OsmRelation;
 import de.topobyte.osm4j.core.model.iface.OsmRelationMember;
+import de.topobyte.osm4j.tbo.data.StringPool;
+import de.topobyte.osm4j.tbo.data.StringPoolBuilder;
 import de.topobyte.osm4j.tbo.io.CompactWriter;
 
 public class RelationBatch extends EntityBatch<OsmRelation>
 {
 
+	protected StringPool stringPoolMembers;
+
 	@Override
 	public void write(CompactWriter writer) throws IOException
 	{
-		super.writeStringPool(writer, elements);
+		writeTagStringPool(writer);
+		writeMemberStringPool(writer, elements);
+
 		for (OsmRelation relation : elements) {
 			write(writer, relation);
 		}
@@ -54,7 +61,7 @@ public class RelationBatch extends EntityBatch<OsmRelation>
 			long mid = member.getId();
 			EntityType type = member.getType();
 			int t = EntityTypeHelper.getByte(type);
-			int index = stringPool.getId(member.getRole());
+			int index = stringPoolMembers.getId(member.getRole());
 			writer.writeByte(t);
 			writer.writeVariableLengthSignedInteger(mid - midOffset);
 			writer.writeVariableLengthUnsignedInteger(index);
@@ -62,6 +69,23 @@ public class RelationBatch extends EntityBatch<OsmRelation>
 		}
 
 		writeTags(writer, relation);
+	}
+
+	public void writeMemberStringPool(CompactWriter writer,
+			List<OsmRelation> objects) throws IOException
+	{
+		StringPoolBuilder poolBuilder = new StringPoolBuilder();
+		for (OsmRelation object : objects) {
+			// add roles
+			int nMembers = object.getNumberOfMembers();
+			for (int i = 0; i < nMembers; i++) {
+				OsmRelationMember member = object.getMember(i);
+				poolBuilder.add(member.getRole());
+			}
+		}
+		stringPoolMembers = poolBuilder.buildStringPool();
+
+		writePool(writer, stringPoolMembers);
 	}
 
 	@Override

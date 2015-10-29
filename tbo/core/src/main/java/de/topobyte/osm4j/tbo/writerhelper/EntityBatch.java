@@ -22,8 +22,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.topobyte.osm4j.core.model.iface.OsmEntity;
-import de.topobyte.osm4j.core.model.iface.OsmRelation;
-import de.topobyte.osm4j.core.model.iface.OsmRelationMember;
 import de.topobyte.osm4j.core.model.iface.OsmTag;
 import de.topobyte.osm4j.tbo.data.StringPool;
 import de.topobyte.osm4j.tbo.data.StringPoolBuilder;
@@ -34,7 +32,7 @@ public abstract class EntityBatch<T extends OsmEntity> implements Blockable
 
 	protected List<T> elements;
 
-	protected StringPool stringPool;
+	protected StringPool stringPoolTags;
 
 	public EntityBatch()
 	{
@@ -56,7 +54,7 @@ public abstract class EntityBatch<T extends OsmEntity> implements Blockable
 		return elements.size();
 	}
 
-	public void writeStringPool(CompactWriter writer) throws IOException
+	public void writeTagStringPool(CompactWriter writer) throws IOException
 	{
 		StringPoolBuilder poolBuilder = new StringPoolBuilder();
 		for (OsmEntity object : elements) {
@@ -70,39 +68,14 @@ public abstract class EntityBatch<T extends OsmEntity> implements Blockable
 				poolBuilder.add(value);
 			}
 		}
-		stringPool = poolBuilder.buildStringPool();
+		stringPoolTags = poolBuilder.buildStringPool();
 
-		int size = stringPool.size();
-		writer.writeVariableLengthUnsignedInteger(size);
-		for (int i = 0; i < size; i++) {
-			String string = stringPool.getString(i);
-			writer.writeString(string);
-		}
+		writePool(writer, stringPoolTags);
 	}
 
-	public void writeStringPool(CompactWriter writer, List<OsmRelation> objects)
+	protected void writePool(CompactWriter writer, StringPool stringPool)
 			throws IOException
 	{
-		StringPoolBuilder poolBuilder = new StringPoolBuilder();
-		for (OsmRelation object : objects) {
-			// add roles
-			int nMembers = object.getNumberOfMembers();
-			for (int i = 0; i < nMembers; i++) {
-				OsmRelationMember member = object.getMember(i);
-				poolBuilder.add(member.getRole());
-			}
-			// add tags
-			int nTags = object.getNumberOfTags();
-			for (int i = 0; i < nTags; i++) {
-				OsmTag tag = object.getTag(i);
-				String key = tag.getKey();
-				String value = tag.getValue();
-				poolBuilder.add(key);
-				poolBuilder.add(value);
-			}
-		}
-		stringPool = poolBuilder.buildStringPool();
-
 		int size = stringPool.size();
 		writer.writeVariableLengthUnsignedInteger(size);
 		for (int i = 0; i < size; i++) {
@@ -120,8 +93,8 @@ public abstract class EntityBatch<T extends OsmEntity> implements Blockable
 			OsmTag tag = entity.getTag(i);
 			String key = tag.getKey();
 			String value = tag.getValue();
-			int k = stringPool.getId(key);
-			int v = stringPool.getId(value);
+			int k = stringPoolTags.getId(key);
+			int v = stringPoolTags.getId(value);
 			writer.writeVariableLengthUnsignedInteger(k);
 			writer.writeVariableLengthUnsignedInteger(v);
 		}
