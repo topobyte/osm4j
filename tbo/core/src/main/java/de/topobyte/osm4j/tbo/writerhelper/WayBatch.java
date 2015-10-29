@@ -25,6 +25,11 @@ import de.topobyte.osm4j.tbo.io.CompactWriter;
 public class WayBatch extends EntityBatch<OsmWay>
 {
 
+	public WayBatch(boolean writeMetadata)
+	{
+		super(writeMetadata);
+	}
+
 	@Override
 	public void write(CompactWriter writer) throws IOException
 	{

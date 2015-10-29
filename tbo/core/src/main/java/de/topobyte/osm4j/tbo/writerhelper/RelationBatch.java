@@ -32,6 +32,11 @@ public class RelationBatch extends EntityBatch<OsmRelation>
 
 	protected StringPool stringPoolMembers;
 
+	public RelationBatch(boolean writeMetadata)
+	{
+		super(writeMetadata);
+	}
+
 	@Override
 	public void write(CompactWriter writer) throws IOException
 	{

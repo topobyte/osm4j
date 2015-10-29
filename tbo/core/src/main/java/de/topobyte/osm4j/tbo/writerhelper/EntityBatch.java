@@ -30,12 +30,15 @@ import de.topobyte.osm4j.tbo.io.CompactWriter;
 public abstract class EntityBatch<T extends OsmEntity> implements Blockable
 {
 
+	private boolean writeMetadata;
+
 	protected List<T> elements;
 
 	protected StringPool stringPoolTags;
 
-	public EntityBatch()
+	public EntityBatch(boolean writeMetadata)
 	{
+		this.writeMetadata = writeMetadata;
 		elements = new ArrayList<>();
 	}
 

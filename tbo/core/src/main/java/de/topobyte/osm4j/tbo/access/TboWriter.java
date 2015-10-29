@@ -79,9 +79,9 @@ public class TboWriter extends BlockWriter implements OsmOutputStream
 		super(writer, lowMemoryFootPrint);
 		this.writeMetadata = writeMetadata;
 
-		nodeBatch = new NodeBatch();
-		wayBatch = new WayBatch();
-		relationBatch = new RelationBatch();
+		nodeBatch = new NodeBatch(writeMetadata);
+		wayBatch = new WayBatch(writeMetadata);
+		relationBatch = new RelationBatch(writeMetadata);
 	}
 
 	public Compression getCompression()

@@ -25,6 +25,11 @@ import de.topobyte.osm4j.tbo.io.CompactWriter;
 public class NodeBatch extends EntityBatch<OsmNode>
 {
 
+	public NodeBatch(boolean writeMetadata)
+	{
+		super(writeMetadata);
+	}
+
 	@Override
 	public void write(CompactWriter writer) throws IOException
 	{
