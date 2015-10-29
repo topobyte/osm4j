@@ -18,32 +18,18 @@
 package de.topobyte.osm4j.tbo.writerhelper;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import de.topobyte.osm4j.core.model.iface.OsmWay;
 import de.topobyte.osm4j.tbo.io.CompactWriter;
 
-public class WayBag extends EntityBag
+public class WayBag extends EntityBag<OsmWay>
 {
-
-	private List<OsmWay> ways;
-
-	public WayBag(int batchSize)
-	{
-		ways = new ArrayList<OsmWay>(batchSize);
-	}
-
-	public void put(OsmWay way)
-	{
-		ways.add(way);
-	}
 
 	@Override
 	public void write(CompactWriter writer) throws IOException
 	{
-		super.write(writer, ways);
-		for (OsmWay way : ways) {
+		super.writeStringPool(writer);
+		for (OsmWay way : elements) {
 			write(writer, way);
 		}
 	}
@@ -69,11 +55,12 @@ public class WayBag extends EntityBag
 		writeTags(writer, way);
 	}
 
+	@Override
 	public void clear()
 	{
+		super.clear();
 		idOffset = 0;
 		nidOffset = 0;
-		ways.clear();
 	}
 
 }

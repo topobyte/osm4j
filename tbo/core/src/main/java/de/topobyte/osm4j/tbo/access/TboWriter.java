@@ -22,10 +22,15 @@ import java.io.OutputStream;
 
 import de.topobyte.osm4j.core.access.OsmOutputStream;
 import de.topobyte.osm4j.core.model.iface.OsmBounds;
+import de.topobyte.osm4j.core.model.iface.OsmEntity;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.osm4j.core.model.iface.OsmRelation;
 import de.topobyte.osm4j.core.model.iface.OsmWay;
 import de.topobyte.osm4j.tbo.Compression;
+import de.topobyte.osm4j.tbo.batching.BatchBuilder;
+import de.topobyte.osm4j.tbo.batching.ElementCountBatchBuilder;
+import de.topobyte.osm4j.tbo.batching.MemberCountBatchBuilder;
+import de.topobyte.osm4j.tbo.batching.WayNodeCountBatchBuilder;
 import de.topobyte.osm4j.tbo.data.Definitions;
 import de.topobyte.osm4j.tbo.data.FileHeader;
 import de.topobyte.osm4j.tbo.io.CompactWriter;
@@ -37,9 +42,12 @@ import de.topobyte.osm4j.tbo.writerhelper.WayBag;
 public class TboWriter extends BlockWriter implements OsmOutputStream
 {
 
-	private int batchSizeNodes = Definitions.DEFAULT_BATCH_SIZE;
-	private int batchSizeWays = Definitions.DEFAULT_BATCH_SIZE;
-	private int batchSizeRelations = Definitions.DEFAULT_BATCH_SIZE;
+	private BatchBuilder<OsmNode> batchBuilderNodes = new ElementCountBatchBuilder<>(
+			Definitions.DEFAULT_BATCH_SIZE_NODES);
+	private BatchBuilder<OsmWay> batchBuilderWays = new WayNodeCountBatchBuilder(
+			Definitions.DEFAULT_BATCH_SIZE_WAY_NODES);
+	private BatchBuilder<OsmRelation> batchBuilderRelations = new MemberCountBatchBuilder(
+			Definitions.DEFAULT_BATCH_SIZE_RELATION_MEMBERS);
 
 	private Compression compression = Compression.NONE;
 	private boolean writeMetadata;
@@ -71,7 +79,9 @@ public class TboWriter extends BlockWriter implements OsmOutputStream
 		super(writer, lowMemoryFootPrint);
 		this.writeMetadata = writeMetadata;
 
-		initBags();
+		nodeBag = new NodeBag();
+		wayBag = new WayBag();
+		relationBag = new RelationBag();
 	}
 
 	public Compression getCompression()
@@ -94,61 +104,45 @@ public class TboWriter extends BlockWriter implements OsmOutputStream
 		this.writeMetadata = writeMetadata;
 	}
 
-	public void setBatchSize(int batchSize)
+	public void setBatchSizeByElementCount(int batchSize)
 	{
-		this.batchSizeNodes = batchSize;
-		this.batchSizeWays = batchSize;
-		this.batchSizeRelations = batchSize;
-		initBags();
+		batchBuilderNodes = new ElementCountBatchBuilder<>(batchSize);
+		batchBuilderWays = new ElementCountBatchBuilder<>(batchSize);
+		batchBuilderRelations = new ElementCountBatchBuilder<>(batchSize);
 	}
 
-	public void setBatchSize(int batchSizeNodes, int batchSizeWays,
-			int batchSizeRelations)
+	public void setBatchSizeByElementCount(int batchSizeNodes,
+			int batchSizeWays, int batchSizeRelations)
 	{
-		this.batchSizeNodes = batchSizeNodes;
-		this.batchSizeWays = batchSizeWays;
-		this.batchSizeRelations = batchSizeRelations;
-		initBags();
+		batchBuilderNodes = new ElementCountBatchBuilder<>(batchSizeNodes);
+		batchBuilderWays = new ElementCountBatchBuilder<>(batchSizeWays);
+		batchBuilderRelations = new ElementCountBatchBuilder<>(
+				batchSizeRelations);
 	}
 
-	public int getBatchSizeNodes()
+	public void setBatchSizeNodesByElementCount(int batchSize)
 	{
-		return batchSizeNodes;
+		batchBuilderNodes = new ElementCountBatchBuilder<>(batchSize);
 	}
 
-	public void setBatchSizeNodes(int batchSizeNodes)
+	public void setBatchSizeWaysByElementCount(int batchSize)
 	{
-		this.batchSizeNodes = batchSizeNodes;
-		initBags();
+		batchBuilderWays = new ElementCountBatchBuilder<>(batchSize);
 	}
 
-	public int getBatchSizeWays()
+	public void setBatchSizeRelationsByElementCount(int batchSize)
 	{
-		return batchSizeWays;
+		batchBuilderRelations = new ElementCountBatchBuilder<>(batchSize);
 	}
 
-	public void setBatchSizeWays(int batchSizeWays)
+	public void setBatchSizeWaysByNodes(int batchSize)
 	{
-		this.batchSizeWays = batchSizeWays;
-		initBags();
+		batchBuilderWays = new WayNodeCountBatchBuilder(batchSize);
 	}
 
-	public int getBatchSizeRelations()
+	public void setBatchSizeRelationsByMembers(int batchSize)
 	{
-		return batchSizeRelations;
-	}
-
-	public void setBatchSizeRelations(int batchSizeRelations)
-	{
-		this.batchSizeRelations = batchSizeRelations;
-		initBags();
-	}
-
-	private void initBags()
-	{
-		nodeBag = new NodeBag(batchSizeNodes);
-		wayBag = new WayBag(batchSizeWays);
-		relationBag = new RelationBag(batchSizeRelations);
+		batchBuilderRelations = new MemberCountBatchBuilder(batchSize);
 	}
 
 	private enum Mode {
@@ -159,9 +153,6 @@ public class TboWriter extends BlockWriter implements OsmOutputStream
 	}
 
 	private Mode mode = Mode.HEADER;
-	private int counterNodes = 0;
-	private int counterWays = 0;
-	private int counterRelations = 0;
 
 	private FileHeader header = null;
 
@@ -228,14 +219,9 @@ public class TboWriter extends BlockWriter implements OsmOutputStream
 			}
 		}
 		nodeBag.put(node);
-		counterNodes++;
-		if (counterNodes == batchSizeNodes) {
-			writeBlock(nodeBag, Definitions.BLOCK_TYPE_NODES, counterNodes,
-					compression);
-			nodeBag.clear();
-			counterNodes = 0;
+		if (checkBatch(node, batchBuilderNodes)) {
+			writeNodeBatch();
 		}
-
 	}
 
 	private void writeWay(OsmWay way) throws IOException
@@ -249,12 +235,8 @@ public class TboWriter extends BlockWriter implements OsmOutputStream
 			}
 		}
 		wayBag.put(way);
-		counterWays++;
-		if (counterWays == batchSizeWays) {
-			writeBlock(wayBag, Definitions.BLOCK_TYPE_WAYS, counterWays,
-					compression);
-			wayBag.clear();
-			counterWays = 0;
+		if (checkBatch(way, batchBuilderWays)) {
+			writeWayBatch();
 		}
 	}
 
@@ -269,13 +251,41 @@ public class TboWriter extends BlockWriter implements OsmOutputStream
 			}
 		}
 		relationBag.put(relation);
-		counterRelations++;
-		if (counterRelations == batchSizeRelations) {
-			writeBlock(relationBag, Definitions.BLOCK_TYPE_RELATIONS,
-					counterRelations, compression);
-			relationBag.clear();
-			counterRelations = 0;
+		if (checkBatch(relation, batchBuilderRelations)) {
+			writeRelationBatch();
 		}
+	}
+
+	private static <T extends OsmEntity> boolean checkBatch(T element,
+			BatchBuilder<T> batchBuilder) throws IOException
+	{
+		batchBuilder.add(element);
+		boolean full = batchBuilder.full();
+		if (full) {
+			batchBuilder.clear();
+		}
+		return full;
+	}
+
+	private void writeNodeBatch() throws IOException
+	{
+		writeBlock(nodeBag, Definitions.BLOCK_TYPE_NODES, nodeBag.size(),
+				compression);
+		nodeBag.clear();
+	}
+
+	private void writeWayBatch() throws IOException
+	{
+		writeBlock(wayBag, Definitions.BLOCK_TYPE_WAYS, wayBag.size(),
+				compression);
+		wayBag.clear();
+	}
+
+	private void writeRelationBatch() throws IOException
+	{
+		writeBlock(relationBag, Definitions.BLOCK_TYPE_RELATIONS,
+				relationBag.size(), compression);
+		relationBag.clear();
 	}
 
 	@Override
@@ -298,11 +308,8 @@ public class TboWriter extends BlockWriter implements OsmOutputStream
 	private void finishNodes() throws IOException
 	{
 		if (mode == Mode.NODE) {
-			if (counterNodes > 0) {
-				writeBlock(nodeBag, Definitions.BLOCK_TYPE_NODES, counterNodes,
-						compression);
-				nodeBag.clear();
-				counterNodes = 0;
+			if (nodeBag.size() > 0) {
+				writeNodeBatch();
 			}
 			mode = Mode.WAY;
 		}
@@ -311,11 +318,8 @@ public class TboWriter extends BlockWriter implements OsmOutputStream
 	private void finishWays() throws IOException
 	{
 		if (mode == Mode.WAY) {
-			if (counterWays > 0) {
-				writeBlock(wayBag, Definitions.BLOCK_TYPE_WAYS, counterWays,
-						compression);
-				wayBag.clear();
-				counterWays = 0;
+			if (wayBag.size() > 0) {
+				writeWayBatch();
 			}
 			mode = Mode.RELATION;
 		}
@@ -324,11 +328,8 @@ public class TboWriter extends BlockWriter implements OsmOutputStream
 	private void finishRelations() throws IOException
 	{
 		if (mode == Mode.RELATION) {
-			if (counterRelations > 0) {
-				writeBlock(relationBag, Definitions.BLOCK_TYPE_RELATIONS,
-						counterRelations, compression);
-				relationBag.clear();
-				counterRelations = 0;
+			if (relationBag.size() > 0) {
+				writeRelationBatch();
 			}
 		}
 	}

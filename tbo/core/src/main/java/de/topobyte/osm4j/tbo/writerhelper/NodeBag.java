@@ -18,38 +18,24 @@
 package de.topobyte.osm4j.tbo.writerhelper;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.osm4j.tbo.io.CompactWriter;
 
-public class NodeBag extends EntityBag
+public class NodeBag extends EntityBag<OsmNode>
 {
-
-	private List<OsmNode> nodes;
-
-	public NodeBag(int batchSize)
-	{
-		nodes = new ArrayList<OsmNode>(batchSize);
-	}
-
-	public void put(OsmNode node)
-	{
-		nodes.add(node);
-	}
 
 	@Override
 	public void write(CompactWriter writer) throws IOException
 	{
-		super.write(writer, nodes);
-		for (OsmNode node : nodes) {
+		super.writeStringPool(writer);
+		for (OsmNode node : elements) {
 			writeIds(writer, node);
 		}
-		for (OsmNode node : nodes) {
+		for (OsmNode node : elements) {
 			writeCoords(writer, node);
 		}
-		for (OsmNode node : nodes) {
+		for (OsmNode node : elements) {
 			writeTags(writer, node);
 		}
 	}
@@ -87,9 +73,10 @@ public class NodeBag extends EntityBag
 		return (long) (degrees / .0000001);
 	}
 
+	@Override
 	public void clear()
 	{
-		nodes.clear();
+		super.clear();
 		idOffset = 0;
 		latOffset = 0;
 		lonOffset = 0;

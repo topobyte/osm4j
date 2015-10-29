@@ -18,34 +18,20 @@
 package de.topobyte.osm4j.tbo.writerhelper;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import de.topobyte.osm4j.core.model.iface.EntityType;
 import de.topobyte.osm4j.core.model.iface.OsmRelation;
 import de.topobyte.osm4j.core.model.iface.OsmRelationMember;
 import de.topobyte.osm4j.tbo.io.CompactWriter;
 
-public class RelationBag extends EntityBag
+public class RelationBag extends EntityBag<OsmRelation>
 {
-
-	private List<OsmRelation> relations;
-
-	public RelationBag(int batchSize)
-	{
-		relations = new ArrayList<OsmRelation>(batchSize);
-	}
-
-	public void put(OsmRelation relation)
-	{
-		relations.add(relation);
-	}
 
 	@Override
 	public void write(CompactWriter writer) throws IOException
 	{
-		super.writeRelations(writer, relations);
-		for (OsmRelation relation : relations) {
+		super.writeStringPool(writer, elements);
+		for (OsmRelation relation : elements) {
 			write(writer, relation);
 		}
 	}
@@ -78,9 +64,10 @@ public class RelationBag extends EntityBag
 		writeTags(writer, relation);
 	}
 
+	@Override
 	public void clear()
 	{
-		relations.clear();
+		super.clear();
 		idOffset = 0;
 		midOffset = 0;
 	}

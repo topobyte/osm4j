@@ -15,21 +15,19 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with osm4j. If not, see <http://www.gnu.org/licenses/>.
 
-package de.topobyte.osm4j.tbo.data;
+package de.topobyte.osm4j.tbo.batching;
 
-public class Definitions
+public interface BatchBuilder<T>
 {
 
-	public static final int BLOCK_TYPE_NODES = 1;
-	public static final int BLOCK_TYPE_WAYS = 2;
-	public static final int BLOCK_TYPE_RELATIONS = 3;
+	public void add(T element);
 
-	public static final int DEFAULT_BATCH_SIZE_NODES = 4096;
-	public static final int DEFAULT_BATCH_SIZE_WAY_NODES = 6144;
-	public static final int DEFAULT_BATCH_SIZE_RELATION_MEMBERS = 8192;
+	public boolean full();
 
-	public static final int VERSION = 1;
+	public boolean fits(T element);
 
-	public static final String KEY_CREATION_TIME = "creation-time";
+	public void clear();
+
+	public int bufferSizeHint();
 
 }

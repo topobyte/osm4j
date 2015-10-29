@@ -18,6 +18,7 @@
 package de.topobyte.osm4j.tbo.writerhelper;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import de.topobyte.osm4j.core.model.iface.OsmEntity;
@@ -28,16 +29,37 @@ import de.topobyte.osm4j.tbo.data.StringPool;
 import de.topobyte.osm4j.tbo.data.StringPoolBuilder;
 import de.topobyte.osm4j.tbo.io.CompactWriter;
 
-public abstract class EntityBag implements Blockable
+public abstract class EntityBag<T extends OsmEntity> implements Blockable
 {
+
+	protected List<T> elements;
 
 	protected StringPool stringPool;
 
-	public void write(CompactWriter writer, List<? extends OsmEntity> objects)
-			throws IOException
+	public EntityBag()
+	{
+		elements = new ArrayList<>();
+	}
+
+	public void put(T node)
+	{
+		elements.add(node);
+	}
+
+	public void clear()
+	{
+		elements.clear();
+	}
+
+	public int size()
+	{
+		return elements.size();
+	}
+
+	public void writeStringPool(CompactWriter writer) throws IOException
 	{
 		StringPoolBuilder poolBuilder = new StringPoolBuilder();
-		for (OsmEntity object : objects) {
+		for (OsmEntity object : elements) {
 			// add tags
 			int nTags = object.getNumberOfTags();
 			for (int i = 0; i < nTags; i++) {
@@ -58,7 +80,7 @@ public abstract class EntityBag implements Blockable
 		}
 	}
 
-	public void writeRelations(CompactWriter writer, List<OsmRelation> objects)
+	public void writeStringPool(CompactWriter writer, List<OsmRelation> objects)
 			throws IOException
 	{
 		StringPoolBuilder poolBuilder = new StringPoolBuilder();
