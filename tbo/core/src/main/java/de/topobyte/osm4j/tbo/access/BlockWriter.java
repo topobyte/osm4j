@@ -54,15 +54,32 @@ public class BlockWriter
 
 	public void writeBlock(FileBlock block) throws IOException
 	{
+		// Determine the total block length (meta info + data, excluding type
+		// byte and the length field)
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		writeBlockInfo(new OutputStreamCompactWriter(baos), block);
+		int total = baos.size() + block.getLength();
+
+		// Type of the block
 		writer.writeByte(block.getType());
+		// Length of chunk
+		writer.writeVariableLengthUnsignedInteger(total);
+
+		// meta info
+		writeBlockInfo(writer, block);
+		// data
+		writer.write(block.getBuffer(), 0, block.getLength());
+	}
+
+	private void writeBlockInfo(CompactWriter writer, FileBlock block)
+			throws IOException
+	{
 		writer.writeByte(block.getCompression().getId());
-		writer.writeVariableLengthUnsignedInteger(block.getLength());
 		if (block.getCompression() != Compression.NONE) {
 			writer.writeVariableLengthUnsignedInteger(block
 					.getUncompressedLength());
 		}
 		writer.writeVariableLengthUnsignedInteger(block.getNumObjects());
-		writer.write(block.getBuffer(), 0, block.getLength());
 	}
 
 	public void writeBlock(Blockable blockable, int type, int count,

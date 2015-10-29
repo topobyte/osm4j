@@ -28,6 +28,7 @@ import de.topobyte.osm4j.tbo.Compression;
 import de.topobyte.osm4j.tbo.data.FileBlock;
 import de.topobyte.osm4j.tbo.data.FileHeader;
 import de.topobyte.osm4j.tbo.io.CompactReader;
+import de.topobyte.osm4j.tbo.io.CompactWriter;
 import de.topobyte.osm4j.tbo.io.InputStreamCompactReader;
 
 public class BlockReader
@@ -59,6 +60,7 @@ public class BlockReader
 
 	public FileBlock readBlock() throws IOException
 	{
+		// Type of the block
 		int typeByte = 0;
 		try {
 			typeByte = reader.readByte();
@@ -66,26 +68,45 @@ public class BlockReader
 			return null;
 		}
 
+		// Length of the chunk
+		int length = (int) reader.readVariableLengthUnsignedInteger();
+		// Keep track of the length of meta data to determine the data size
+		int lengthMeta = 0;
+
 		int compressionByte = reader.readByte();
+		lengthMeta += 1;
 		Compression compression = compressions.get(compressionByte);
 		if (compression == null) {
 			throw new IOException("Unsupported compression method");
 		}
 
-		int length = (int) reader.readVariableLengthUnsignedInteger();
-		int uncompressedLength = length;
+		// The uncompressed length is either stored here, because data is
+		// actually compressed
+		int uncompressedLength = 0;
 		if (compression != Compression.NONE) {
 			uncompressedLength = (int) reader
 					.readVariableLengthUnsignedInteger();
+			lengthMeta += CompactWriter
+					.getNumberOfBytesUnsigned(uncompressedLength);
 		}
 
 		int numObjects = (int) reader.readVariableLengthUnsignedInteger();
+		lengthMeta += CompactWriter.getNumberOfBytesUnsigned(numObjects);
 
-		byte[] buffer = new byte[length];
+		// Now we can calculate the length of the data part
+		int compressedLength = length - lengthMeta;
+
+		// In case of no compression, the uncompressed length is the same as the
+		// compressed length
+		if (compression == Compression.NONE) {
+			uncompressedLength = compressedLength;
+		}
+
+		byte[] buffer = new byte[compressedLength];
 		reader.readFully(buffer);
 
 		return new FileBlock(typeByte, compression, uncompressedLength,
-				numObjects, buffer, length);
+				numObjects, buffer, compressedLength);
 	}
 
 }
