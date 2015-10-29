@@ -44,7 +44,13 @@ public class NodeBag extends EntityBag
 	{
 		super.write(writer, nodes);
 		for (OsmNode node : nodes) {
-			write(writer, node);
+			writeIds(writer, node);
+		}
+		for (OsmNode node : nodes) {
+			writeCoords(writer, node);
+		}
+		for (OsmNode node : nodes) {
+			writeTags(writer, node);
 		}
 	}
 
@@ -53,23 +59,27 @@ public class NodeBag extends EntityBag
 	private long latOffset = 0;
 	private long lonOffset = 0;
 
-	private void write(CompactWriter writer, OsmNode node) throws IOException
+	private void writeIds(CompactWriter writer, OsmNode node)
+			throws IOException
 	{
 		long id = node.getId();
+
+		writer.writeVariableLengthSignedInteger(id - idOffset);
+		idOffset = id;
+	}
+
+	private void writeCoords(CompactWriter writer, OsmNode node)
+			throws IOException
+	{
 		double lat = node.getLatitude();
 		double lon = node.getLongitude();
 		long mlat = toLong(lat);
 		long mlon = toLong(lon);
 
-		writer.writeVariableLengthSignedInteger(id - idOffset);
-		idOffset = id;
-
 		writer.writeVariableLengthSignedInteger(mlat - latOffset);
 		writer.writeVariableLengthSignedInteger(mlon - lonOffset);
 		latOffset = mlat;
 		lonOffset = mlon;
-
-		writeTags(writer, node);
 	}
 
 	private long toLong(double degrees)

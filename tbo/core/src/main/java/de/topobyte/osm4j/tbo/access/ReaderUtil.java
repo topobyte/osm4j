@@ -122,22 +122,28 @@ public class ReaderUtil
 		long latOffset = 0;
 		long lonOffset = 0;
 
-		for (int i = 0; i < block.getNumObjects(); i++) {
+		int n = block.getNumObjects();
+		long[] ids = new long[n];
+		double[] lats = new double[n];
+		double[] lons = new double[n];
+
+		for (int i = 0; i < n; i++) {
 			long id = idOffset + reader.readVariableLengthSignedInteger();
+			ids[i] = idOffset = id;
+		}
+
+		for (int i = 0; i < n; i++) {
 			long mlat = latOffset + reader.readVariableLengthSignedInteger();
 			long mlon = lonOffset + reader.readVariableLengthSignedInteger();
-			double lat = fromLong(mlat);
-			double lon = fromLong(mlon);
-
-			idOffset = id;
+			lats[i] = fromLong(mlat);
+			lons[i] = fromLong(mlon);
 			latOffset = mlat;
 			lonOffset = mlon;
+		}
 
-			// System.out.println(String.format("id: %d lon: %.10f, lat: %.10f",
-			// id, lon, lat));
-
+		for (int i = 0; i < n; i++) {
 			List<Tag> tags = parseTags(reader, pool);
-			Node node = new Node(id, lon, lat);
+			Node node = new Node(ids[i], lons[i], lats[i]);
 			nodes.add(node);
 			node.setTags(tags);
 		}
