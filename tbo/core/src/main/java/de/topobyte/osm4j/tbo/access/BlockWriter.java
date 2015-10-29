@@ -56,12 +56,12 @@ public class BlockWriter
 	{
 		writer.writeByte(block.getType());
 		writer.writeByte(block.getCompression().getId());
-		writer.writeVariableLengthSignedInteger(block.getLength());
+		writer.writeVariableLengthUnsignedInteger(block.getLength());
 		if (block.getCompression() != Compression.NONE) {
-			writer.writeVariableLengthSignedInteger(block
+			writer.writeVariableLengthUnsignedInteger(block
 					.getUncompressedLength());
 		}
-		writer.writeVariableLengthSignedInteger(block.getNumObjects());
+		writer.writeVariableLengthUnsignedInteger(block.getNumObjects());
 		writer.write(block.getBuffer(), 0, block.getLength());
 	}
 

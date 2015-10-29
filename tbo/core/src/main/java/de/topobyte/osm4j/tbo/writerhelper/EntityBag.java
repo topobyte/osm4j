@@ -51,7 +51,7 @@ public abstract class EntityBag implements Blockable
 		stringPool = poolBuilder.buildStringPool();
 
 		int size = stringPool.size();
-		writer.writeVariableLengthSignedInteger(size);
+		writer.writeVariableLengthUnsignedInteger(size);
 		for (int i = 0; i < size; i++) {
 			String string = stringPool.getString(i);
 			writer.writeString(string);
@@ -82,7 +82,7 @@ public abstract class EntityBag implements Blockable
 		stringPool = poolBuilder.buildStringPool();
 
 		int size = stringPool.size();
-		writer.writeVariableLengthSignedInteger(size);
+		writer.writeVariableLengthUnsignedInteger(size);
 		for (int i = 0; i < size; i++) {
 			String string = stringPool.getString(i);
 			writer.writeString(string);
@@ -93,15 +93,15 @@ public abstract class EntityBag implements Blockable
 			throws IOException
 	{
 		int nTags = entity.getNumberOfTags();
-		writer.writeVariableLengthSignedInteger(nTags);
+		writer.writeVariableLengthUnsignedInteger(nTags);
 		for (int i = 0; i < nTags; i++) {
 			OsmTag tag = entity.getTag(i);
 			String key = tag.getKey();
 			String value = tag.getValue();
 			int k = stringPool.getId(key);
 			int v = stringPool.getId(value);
-			writer.writeVariableLengthSignedInteger(k);
-			writer.writeVariableLengthSignedInteger(v);
+			writer.writeVariableLengthUnsignedInteger(k);
+			writer.writeVariableLengthUnsignedInteger(v);
 		}
 	}
 

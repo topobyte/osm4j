@@ -62,7 +62,7 @@ public class RelationBag extends EntityBag
 		writer.writeVariableLengthSignedInteger(id - idOffset);
 		idOffset = id;
 
-		writer.writeVariableLengthSignedInteger(nMembers);
+		writer.writeVariableLengthUnsignedInteger(nMembers);
 		for (int i = 0; i < nMembers; i++) {
 			OsmRelationMember member = relation.getMember(i);
 			long mid = member.getId();
@@ -71,7 +71,7 @@ public class RelationBag extends EntityBag
 			int index = stringPool.getId(member.getRole());
 			writer.writeByte(t);
 			writer.writeVariableLengthSignedInteger(mid - midOffset);
-			writer.writeVariableLengthSignedInteger(index);
+			writer.writeVariableLengthUnsignedInteger(index);
 			midOffset = mid;
 		}
 

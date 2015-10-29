@@ -74,7 +74,7 @@ public class NodeBag extends EntityBag
 
 	private long toLong(double degrees)
 	{
-		return (long) ((degrees / .000000001));
+		return (long) (degrees / .0000001);
 	}
 
 	public void clear()

@@ -59,7 +59,7 @@ public class WayBag extends EntityBag
 		writer.writeVariableLengthSignedInteger(id - idOffset);
 		idOffset = id;
 
-		writer.writeVariableLengthSignedInteger(nNodes);
+		writer.writeVariableLengthUnsignedInteger(nNodes);
 		for (int i = 0; i < nNodes; i++) {
 			long nid = way.getNodeId(i);
 			writer.writeVariableLengthSignedInteger(nid - nidOffset);

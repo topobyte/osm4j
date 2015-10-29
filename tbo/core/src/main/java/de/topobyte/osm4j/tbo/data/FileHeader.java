@@ -94,8 +94,8 @@ public class FileHeader implements Blockable
 	public void write(CompactWriter writer) throws IOException
 	{
 		writer.write(MAGIC);
-		writer.writeVariableLengthSignedInteger(version);
-		writer.writeVariableLengthSignedInteger(tags.size());
+		writer.writeVariableLengthUnsignedInteger(version);
+		writer.writeVariableLengthUnsignedInteger(tags.size());
 		for (Entry<String, String> entry : tags.entrySet()) {
 			writer.writeString(entry.getKey());
 			writer.writeString(entry.getValue());

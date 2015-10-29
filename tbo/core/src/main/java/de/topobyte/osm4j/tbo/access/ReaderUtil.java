@@ -52,10 +52,10 @@ public class ReaderUtil
 			throw new IOException("Not a TBO file: wrong magic code");
 		}
 
-		int version = (int) reader.readVariableLengthSignedInteger();
+		int version = (int) reader.readVariableLengthUnsignedInteger();
 
 		Map<String, String> tags = new TreeMap<String, String>();
-		int numTags = (int) reader.readVariableLengthSignedInteger();
+		int numTags = (int) reader.readVariableLengthUnsignedInteger();
 		for (int i = 0; i < numTags; i++) {
 			String key = reader.readString();
 			String value = reader.readString();
@@ -82,7 +82,7 @@ public class ReaderUtil
 			throws IOException
 	{
 		List<String> pool = new ArrayList<String>();
-		long size = reader.readVariableLengthSignedInteger();
+		long size = reader.readVariableLengthUnsignedInteger();
 		for (int i = 0; i < size; i++) {
 			String string = reader.readString();
 			pool.add(string);
@@ -92,17 +92,17 @@ public class ReaderUtil
 
 	private static double fromLong(long value)
 	{
-		return value * .000000001;
+		return value * .0000001;
 	}
 
 	private static List<Tag> parseTags(CompactReader reader, List<String> pool)
 			throws IOException
 	{
-		int num = (int) reader.readVariableLengthSignedInteger();
+		int num = (int) reader.readVariableLengthUnsignedInteger();
 		List<Tag> tags = new ArrayList<Tag>();
 		for (int i = 0; i < num; i++) {
-			int k = (int) reader.readVariableLengthSignedInteger();
-			int v = (int) reader.readVariableLengthSignedInteger();
+			int k = (int) reader.readVariableLengthUnsignedInteger();
+			int v = (int) reader.readVariableLengthUnsignedInteger();
 			String key = pool.get(k);
 			String value = pool.get(v);
 			Tag tag = new Tag(key, value);
@@ -160,7 +160,7 @@ public class ReaderUtil
 			idOffset = id;
 
 			TLongArrayList nodeIds = new TLongArrayList();
-			long numNodes = reader.readVariableLengthSignedInteger();
+			long numNodes = reader.readVariableLengthUnsignedInteger();
 			for (int k = 0; k < numNodes; k++) {
 				long nid = nidOffset + reader.readVariableLengthSignedInteger();
 				nodeIds.add(nid);
@@ -196,12 +196,13 @@ public class ReaderUtil
 			idOffset = id;
 
 			List<RelationMember> members = new ArrayList<RelationMember>();
-			long numMembers = reader.readVariableLengthSignedInteger();
+			long numMembers = reader.readVariableLengthUnsignedInteger();
 			for (int k = 0; k < numMembers; k++) {
 				int typeByte = reader.readByte();
 				long mid = midOffset + reader.readVariableLengthSignedInteger();
 				midOffset = mid;
-				int roleIndex = (int) reader.readVariableLengthSignedInteger();
+				int roleIndex = (int) reader
+						.readVariableLengthUnsignedInteger();
 				String role = pool.get(roleIndex);
 				EntityType type = EntityTypeHelper.getType(typeByte);
 				members.add(new RelationMember(mid, type, role));

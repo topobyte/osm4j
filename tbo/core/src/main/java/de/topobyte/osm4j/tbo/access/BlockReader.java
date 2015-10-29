@@ -72,13 +72,14 @@ public class BlockReader
 			throw new IOException("Unsupported compression method");
 		}
 
-		int length = (int) reader.readVariableLengthSignedInteger();
+		int length = (int) reader.readVariableLengthUnsignedInteger();
 		int uncompressedLength = length;
 		if (compression != Compression.NONE) {
-			uncompressedLength = (int) reader.readVariableLengthSignedInteger();
+			uncompressedLength = (int) reader
+					.readVariableLengthUnsignedInteger();
 		}
 
-		int numObjects = (int) reader.readVariableLengthSignedInteger();
+		int numObjects = (int) reader.readVariableLengthUnsignedInteger();
 
 		byte[] buffer = new byte[length];
 		reader.readFully(buffer);
