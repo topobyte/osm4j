@@ -15,37 +15,24 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with osm4j. If not, see <http://www.gnu.org/licenses/>.
 
-package de.topobyte.osm4j.tbo.io;
+package de.topobyte.osm4j.tbo;
 
-import java.io.IOException;
-import java.io.OutputStream;
+public enum Compression {
 
-public class OutputStreamCompactWriter extends CompactWriter
-{
+	NONE(0),
+	DEFLATE(1),
+	LZ4(2);
 
-	private final OutputStream os;
+	private int id;
 
-	public OutputStreamCompactWriter(OutputStream os)
+	private Compression(int id)
 	{
-		this.os = os;
+		this.id = id;
 	}
 
-	@Override
-	public void writeByte(int b) throws IOException
+	public int getId()
 	{
-		os.write(b);
-	}
-
-	@Override
-	public void write(byte[] bytes) throws IOException
-	{
-		os.write(bytes);
-	}
-
-	@Override
-	public void write(byte[] bytes, int off, int len) throws IOException
-	{
-		os.write(bytes, off, len);
+		return id;
 	}
 
 }

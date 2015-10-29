@@ -25,6 +25,7 @@ import de.topobyte.osm4j.core.model.iface.OsmBounds;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.osm4j.core.model.iface.OsmRelation;
 import de.topobyte.osm4j.core.model.iface.OsmWay;
+import de.topobyte.osm4j.tbo.Compression;
 import de.topobyte.osm4j.tbo.data.Definitions;
 import de.topobyte.osm4j.tbo.data.FileHeader;
 import de.topobyte.osm4j.tbo.io.CompactWriter;
@@ -40,6 +41,7 @@ public class TboWriter extends BlockWriter implements OsmOutputStream
 	private int batchSizeWays = Definitions.DEFAULT_BATCH_SIZE;
 	private int batchSizeRelations = Definitions.DEFAULT_BATCH_SIZE;
 
+	private Compression compression = Compression.NONE;
 	private boolean writeMetadata;
 
 	private NodeBag nodeBag;
@@ -70,6 +72,26 @@ public class TboWriter extends BlockWriter implements OsmOutputStream
 		this.writeMetadata = writeMetadata;
 
 		initBags();
+	}
+
+	public Compression getCompression()
+	{
+		return compression;
+	}
+
+	public void setCompression(Compression compression)
+	{
+		this.compression = compression;
+	}
+
+	public boolean isWriteMetadata()
+	{
+		return writeMetadata;
+	}
+
+	public void setWriteMetadata(boolean writeMetadata)
+	{
+		this.writeMetadata = writeMetadata;
 	}
 
 	public void setBatchSize(int batchSize)
@@ -208,7 +230,8 @@ public class TboWriter extends BlockWriter implements OsmOutputStream
 		nodeBag.put(node);
 		counterNodes++;
 		if (counterNodes == batchSizeNodes) {
-			writeBlock(nodeBag, Definitions.BLOCK_TYPE_NODES, counterNodes);
+			writeBlock(nodeBag, Definitions.BLOCK_TYPE_NODES, counterNodes,
+					compression);
 			nodeBag.clear();
 			counterNodes = 0;
 		}
@@ -228,7 +251,8 @@ public class TboWriter extends BlockWriter implements OsmOutputStream
 		wayBag.put(way);
 		counterWays++;
 		if (counterWays == batchSizeWays) {
-			writeBlock(wayBag, Definitions.BLOCK_TYPE_WAYS, counterWays);
+			writeBlock(wayBag, Definitions.BLOCK_TYPE_WAYS, counterWays,
+					compression);
 			wayBag.clear();
 			counterWays = 0;
 		}
@@ -248,7 +272,7 @@ public class TboWriter extends BlockWriter implements OsmOutputStream
 		counterRelations++;
 		if (counterRelations == batchSizeRelations) {
 			writeBlock(relationBag, Definitions.BLOCK_TYPE_RELATIONS,
-					counterRelations);
+					counterRelations, compression);
 			relationBag.clear();
 			counterRelations = 0;
 		}
@@ -275,7 +299,8 @@ public class TboWriter extends BlockWriter implements OsmOutputStream
 	{
 		if (mode == Mode.NODE) {
 			if (counterNodes > 0) {
-				writeBlock(nodeBag, Definitions.BLOCK_TYPE_NODES, counterNodes);
+				writeBlock(nodeBag, Definitions.BLOCK_TYPE_NODES, counterNodes,
+						compression);
 				nodeBag.clear();
 				counterNodes = 0;
 			}
@@ -287,7 +312,8 @@ public class TboWriter extends BlockWriter implements OsmOutputStream
 	{
 		if (mode == Mode.WAY) {
 			if (counterWays > 0) {
-				writeBlock(wayBag, Definitions.BLOCK_TYPE_WAYS, counterWays);
+				writeBlock(wayBag, Definitions.BLOCK_TYPE_WAYS, counterWays,
+						compression);
 				wayBag.clear();
 				counterWays = 0;
 			}
@@ -300,7 +326,7 @@ public class TboWriter extends BlockWriter implements OsmOutputStream
 		if (mode == Mode.RELATION) {
 			if (counterRelations > 0) {
 				writeBlock(relationBag, Definitions.BLOCK_TYPE_RELATIONS,
-						counterRelations);
+						counterRelations, compression);
 				relationBag.clear();
 				counterRelations = 0;
 			}

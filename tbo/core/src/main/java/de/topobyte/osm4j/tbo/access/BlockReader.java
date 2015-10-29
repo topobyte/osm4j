@@ -17,9 +17,13 @@
 
 package de.topobyte.osm4j.tbo.access;
 
+import gnu.trove.map.TIntObjectMap;
+import gnu.trove.map.hash.TIntObjectHashMap;
+
 import java.io.EOFException;
 import java.io.IOException;
 
+import de.topobyte.osm4j.tbo.Compression;
 import de.topobyte.osm4j.tbo.data.FileBlock;
 import de.topobyte.osm4j.tbo.io.CompactReader;
 
@@ -27,6 +31,13 @@ public class BlockReader
 {
 
 	protected final CompactReader reader;
+
+	private static TIntObjectMap<Compression> compressions = new TIntObjectHashMap<>();
+	static {
+		for (Compression compression : Compression.values()) {
+			compressions.put(compression.getId(), compression);
+		}
+	}
 
 	public BlockReader(CompactReader reader)
 	{
@@ -41,13 +52,26 @@ public class BlockReader
 		} catch (EOFException e) {
 			return null;
 		}
-		int numBytes = (int) reader.readVariableLengthSignedInteger();
+
+		int compressionByte = reader.readByte();
+		Compression compression = compressions.get(compressionByte);
+		if (compression == null) {
+			throw new IOException("Unsupported compression method");
+		}
+
+		int length = (int) reader.readVariableLengthSignedInteger();
+		int uncompressedLength = length;
+		if (compression != Compression.NONE) {
+			uncompressedLength = (int) reader.readVariableLengthSignedInteger();
+		}
+
 		int numObjects = (int) reader.readVariableLengthSignedInteger();
 
-		byte[] buffer = new byte[numBytes];
+		byte[] buffer = new byte[length];
 		reader.readFully(buffer);
 
-		return new FileBlock(typeByte, numObjects, buffer);
+		return new FileBlock(typeByte, compression, uncompressedLength,
+				numObjects, buffer, length);
 	}
 
 }

@@ -19,7 +19,11 @@ package de.topobyte.osm4j.tbo.access;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.zip.DeflaterOutputStream;
 
+import net.jpountz.lz4.LZ4Compressor;
+import net.jpountz.lz4.LZ4Factory;
+import de.topobyte.osm4j.tbo.Compression;
 import de.topobyte.osm4j.tbo.data.FileBlock;
 import de.topobyte.osm4j.tbo.io.CompactWriter;
 import de.topobyte.osm4j.tbo.io.OutputStreamCompactWriter;
@@ -51,44 +55,70 @@ public class BlockWriter
 	public void writeBlock(FileBlock block) throws IOException
 	{
 		writer.writeByte(block.getType());
-		writer.writeVariableLengthSignedInteger(block.getBuffer().length);
+		writer.writeByte(block.getCompression().getId());
+		writer.writeVariableLengthSignedInteger(block.getLength());
+		if (block.getCompression() != Compression.NONE) {
+			writer.writeVariableLengthSignedInteger(block
+					.getUncompressedLength());
+		}
 		writer.writeVariableLengthSignedInteger(block.getNumObjects());
-		writer.write(block.getBuffer());
+		writer.write(block.getBuffer(), 0, block.getLength());
 	}
 
-	public void writeBlock(Blockable blockable, int type, int count)
-			throws IOException
+	public void writeBlock(Blockable blockable, int type, int count,
+			Compression compression) throws IOException
 	{
-		/* with compression */
-		// baos.reset();
-		// GZIPOutputStream out = new GZIPOutputStream(baos);
-		// // DeflaterOutputStream out = new DeflaterOutputStream(baos);
-		// OutputStreamCompactWriter bufferWriter = new
-		// OutputStreamCompactWriter(
-		// out);
-		// blockable.write(bufferWriter);
-		// out.close();
-
-		/* without compression */
 		if (lowMemoryFootprint) {
 			baos = new ByteArrayOutputStream(1024 * 1024 * 16);
 		} else {
 			baos.reset();
 		}
 
-		OutputStreamCompactWriter bufferWriter = new OutputStreamCompactWriter(
-				baos);
+		CompactWriter bufferWriter = new OutputStreamCompactWriter(baos);
 		blockable.write(bufferWriter);
+		byte[] uncompressed = baos.toByteArray();
+		byte[] compressed = null;
+		int length = 0;
+		baos.reset();
 
-		/* common code */
-		byte[] bytes = baos.toByteArray();
-		writer.writeByte(type);
-		writer.writeVariableLengthSignedInteger(bytes.length);
-		writer.writeVariableLengthSignedInteger(count);
-		writer.write(bytes);
+		switch (compression) {
+		default:
+		case NONE:
+			compressed = uncompressed;
+			length = compressed.length;
+			break;
+		case DEFLATE:
+			DeflaterOutputStream out = new DeflaterOutputStream(baos);
+			out.write(uncompressed);
+			out.close();
+			compressed = baos.toByteArray();
+			length = compressed.length;
+			break;
+		case LZ4:
+			initLz4();
+			int estimate = lz4Compressor
+					.maxCompressedLength(uncompressed.length);
+			compressed = new byte[estimate];
+			length = lz4Compressor.compress(uncompressed, compressed);
+			break;
+		}
+
+		FileBlock block = new FileBlock(type, compression, uncompressed.length,
+				count, compressed, length);
+		writeBlock(block);
 
 		if (lowMemoryFootprint) {
 			baos = null;
+		}
+	}
+
+	private LZ4Compressor lz4Compressor = null;
+
+	private void initLz4()
+	{
+		if (lz4Compressor == null) {
+			LZ4Factory factory = LZ4Factory.fastestInstance();
+			lz4Compressor = factory.fastCompressor();
 		}
 	}
 
