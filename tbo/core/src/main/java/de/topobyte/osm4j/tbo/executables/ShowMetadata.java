@@ -58,7 +58,7 @@ public class ShowMetadata extends BlockReader
 		try {
 			header = ReaderUtil.parseHeader(reader);
 		} catch (IOException e) {
-			System.out.println("First block is not a metadata block");
+			System.out.println("Unable to parse file header");
 			System.out.println("Error: " + e.getMessage());
 			return;
 		}
