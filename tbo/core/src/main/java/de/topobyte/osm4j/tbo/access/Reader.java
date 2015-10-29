@@ -26,7 +26,7 @@ import de.topobyte.osm4j.core.model.impl.Relation;
 import de.topobyte.osm4j.core.model.impl.Way;
 import de.topobyte.osm4j.tbo.data.Definitions;
 import de.topobyte.osm4j.tbo.data.FileBlock;
-import de.topobyte.osm4j.tbo.data.Metadata;
+import de.topobyte.osm4j.tbo.data.FileHeader;
 import de.topobyte.osm4j.tbo.io.CompactReader;
 import de.topobyte.osm4j.tbo.io.InputStreamCompactReader;
 
@@ -43,6 +43,9 @@ public class Reader extends BlockReader
 
 	public void run() throws IOException
 	{
+		FileHeader header = ReaderUtil.parseHeader(reader);
+		handler.handle(header);
+
 		long notifysize = 100 * 1024 * 1024;
 		long processed = 0;
 		long lastMessage = 0;
@@ -104,9 +107,6 @@ public class Reader extends BlockReader
 			for (Relation relation : relations) {
 				handler.handle(relation);
 			}
-		} else if (block.getType() == Definitions.BLOCK_TYPE_METADATA) {
-			Metadata metadata = ReaderUtil.parseMetadata(reader);
-			handler.handle(metadata);
 		}
 	}
 

@@ -21,18 +21,21 @@ import gnu.trove.list.array.TLongArrayList;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
 import de.topobyte.osm4j.core.model.iface.EntityType;
+import de.topobyte.osm4j.core.model.iface.OsmBounds;
+import de.topobyte.osm4j.core.model.impl.Bounds;
 import de.topobyte.osm4j.core.model.impl.Node;
 import de.topobyte.osm4j.core.model.impl.Relation;
 import de.topobyte.osm4j.core.model.impl.RelationMember;
 import de.topobyte.osm4j.core.model.impl.Tag;
 import de.topobyte.osm4j.core.model.impl.Way;
 import de.topobyte.osm4j.tbo.data.FileBlock;
-import de.topobyte.osm4j.tbo.data.Metadata;
+import de.topobyte.osm4j.tbo.data.FileHeader;
 import de.topobyte.osm4j.tbo.io.CompactReader;
 import de.topobyte.osm4j.tbo.io.InputStreamCompactReader;
 import de.topobyte.osm4j.tbo.writerhelper.EntityTypeHelper;
@@ -40,10 +43,17 @@ import de.topobyte.osm4j.tbo.writerhelper.EntityTypeHelper;
 public class ReaderUtil
 {
 
-	public static Metadata parseMetadata(CompactReader reader)
+	public static FileHeader parseHeader(CompactReader reader)
 			throws IOException
 	{
-		String version = reader.readString();
+		byte[] magic = new byte[FileHeader.MAGIC.length];
+		reader.readFully(magic);
+		if (!Arrays.equals(magic, FileHeader.MAGIC)) {
+			throw new IOException("Not a TBO file: wrong magic code");
+		}
+
+		int version = (int) reader.readVariableLengthSignedInteger();
+
 		Map<String, String> tags = new TreeMap<String, String>();
 		int numTags = (int) reader.readVariableLengthSignedInteger();
 		for (int i = 0; i < numTags; i++) {
@@ -51,7 +61,21 @@ public class ReaderUtil
 			String value = reader.readString();
 			tags.put(key, value);
 		}
-		return new Metadata(version, tags);
+
+		int flags = reader.readByte();
+		boolean hasMetadata = (flags & FileHeader.FLAG_HAS_METADATA) != 0;
+		boolean hasBounds = (flags & FileHeader.FLAG_HAS_BOUNDS) != 0;
+
+		OsmBounds bounds = null;
+		if (hasBounds) {
+			double left = Double.longBitsToDouble(reader.readLong());
+			double right = Double.longBitsToDouble(reader.readLong());
+			double bottom = Double.longBitsToDouble(reader.readLong());
+			double top = Double.longBitsToDouble(reader.readLong());
+			bounds = new Bounds(left, right, top, bottom);
+		}
+
+		return new FileHeader(version, tags, hasMetadata, bounds);
 	}
 
 	private static List<String> parsePool(CompactReader reader)

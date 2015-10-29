@@ -28,9 +28,9 @@ import de.topobyte.osm4j.tbo.writerhelper.Blockable;
 public class BlockWriter
 {
 
-	private ByteArrayOutputStream baos;
+	protected final CompactWriter writer;
 
-	private final CompactWriter writer;
+	private ByteArrayOutputStream baos;
 
 	private boolean lowMemoryFootprint;
 

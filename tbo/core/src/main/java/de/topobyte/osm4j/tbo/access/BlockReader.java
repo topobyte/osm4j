@@ -26,7 +26,7 @@ import de.topobyte.osm4j.tbo.io.CompactReader;
 public class BlockReader
 {
 
-	private final CompactReader reader;
+	protected final CompactReader reader;
 
 	public BlockReader(CompactReader reader)
 	{

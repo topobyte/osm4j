@@ -22,23 +22,35 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 
+import de.topobyte.osm4j.core.model.iface.OsmBounds;
 import de.topobyte.osm4j.tbo.io.CompactWriter;
 import de.topobyte.osm4j.tbo.writerhelper.Blockable;
 
-public class Metadata implements Blockable
+public class FileHeader implements Blockable
 {
 
-	private String version = null;
+	public static final byte[] MAGIC = "tbo!".getBytes();
+
+	public static final int FLAG_HAS_METADATA = 0x1;
+	public static final int FLAG_HAS_BOUNDS = 0x2;
+
+	private int version;
 
 	private Map<String, String> tags = new TreeMap<>();
 
-	public Metadata(String version, Map<String, String> tags)
+	private boolean hasMetadata;
+	private OsmBounds bounds;
+
+	public FileHeader(int version, Map<String, String> tags,
+			boolean hasMetadata, OsmBounds bounds)
 	{
 		this.version = version;
 		this.tags = tags;
+		this.hasMetadata = hasMetadata;
+		this.bounds = bounds;
 	}
 
-	public String getVersion()
+	public int getVersion()
 	{
 		return version;
 	}
@@ -58,14 +70,49 @@ public class Metadata implements Blockable
 		return tags.get(key);
 	}
 
+	public boolean hasMetadata()
+	{
+		return hasMetadata;
+	}
+
+	public boolean hasBounds()
+	{
+		return bounds != null;
+	}
+
+	public OsmBounds getBounds()
+	{
+		return bounds;
+	}
+
+	public void setBounds(OsmBounds bounds)
+	{
+		this.bounds = bounds;
+	}
+
 	@Override
 	public void write(CompactWriter writer) throws IOException
 	{
-		writer.writeString(version);
+		writer.write(MAGIC);
+		writer.writeVariableLengthSignedInteger(version);
 		writer.writeVariableLengthSignedInteger(tags.size());
 		for (Entry<String, String> entry : tags.entrySet()) {
 			writer.writeString(entry.getKey());
 			writer.writeString(entry.getValue());
+		}
+		int flags = 0;
+		if (hasMetadata) {
+			flags |= FLAG_HAS_METADATA;
+		}
+		if (hasBounds()) {
+			flags |= FLAG_HAS_BOUNDS;
+		}
+		writer.writeByte(flags);
+		if (hasBounds()) {
+			writer.writeLong(Double.doubleToLongBits(bounds.getLeft()));
+			writer.writeLong(Double.doubleToLongBits(bounds.getRight()));
+			writer.writeLong(Double.doubleToLongBits(bounds.getBottom()));
+			writer.writeLong(Double.doubleToLongBits(bounds.getTop()));
 		}
 	}
 

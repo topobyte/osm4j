@@ -17,24 +17,32 @@
 
 package de.topobyte.osm4j.tbo.access;
 
-import java.io.IOException;
+import java.text.DateFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 
-import de.topobyte.osm4j.core.model.impl.Node;
-import de.topobyte.osm4j.core.model.impl.Relation;
-import de.topobyte.osm4j.core.model.impl.Way;
+import de.topobyte.osm4j.core.model.iface.OsmBounds;
+import de.topobyte.osm4j.tbo.data.Definitions;
 import de.topobyte.osm4j.tbo.data.FileHeader;
 
-public interface Handler
+public class WriterUtil
 {
 
-	public void handle(FileHeader header) throws IOException;
+	public static FileHeader createHeader(boolean hasMetadata, OsmBounds bounds)
+	{
+		Map<String, String> tags = new HashMap<String, String>();
+		FileHeader header = new FileHeader(Definitions.VERSION, tags,
+				hasMetadata, bounds);
 
-	public void handle(Node node) throws IOException;
+		Date date = new Date();
+		DateFormat dateFormat = DateFormat.getDateTimeInstance(
+				DateFormat.MEDIUM, DateFormat.MEDIUM, Locale.US);
+		String formattedDate = dateFormat.format(date);
+		tags.put(Definitions.KEY_CREATION_TIME, formattedDate);
 
-	public void handle(Way way) throws IOException;
-
-	public void handle(Relation relation) throws IOException;
-
-	public void complete() throws IOException;
+		return header;
+	}
 
 }

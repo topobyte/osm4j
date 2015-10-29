@@ -20,14 +20,13 @@ package de.topobyte.osm4j.tbo.data;
 public class Definitions
 {
 
-	public static final int BLOCK_TYPE_METADATA = 0;
 	public static final int BLOCK_TYPE_NODES = 1;
 	public static final int BLOCK_TYPE_WAYS = 2;
 	public static final int BLOCK_TYPE_RELATIONS = 3;
 
 	public static final int DEFAULT_BATCH_SIZE = 4096;
 
-	public static final String VERSION = "0.000.001";
+	public static final int VERSION = 1;
 
 	public static final String KEY_CREATION_TIME = "creation-time";
 

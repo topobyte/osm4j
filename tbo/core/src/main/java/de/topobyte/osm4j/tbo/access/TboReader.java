@@ -30,6 +30,7 @@ import de.topobyte.osm4j.core.model.impl.Relation;
 import de.topobyte.osm4j.core.model.impl.Way;
 import de.topobyte.osm4j.tbo.data.Definitions;
 import de.topobyte.osm4j.tbo.data.FileBlock;
+import de.topobyte.osm4j.tbo.data.FileHeader;
 import de.topobyte.osm4j.tbo.io.CompactReader;
 import de.topobyte.osm4j.tbo.io.InputStreamCompactReader;
 
@@ -57,6 +58,15 @@ public class TboReader extends BlockReader implements OsmReader
 	@Override
 	public void read() throws OsmInputException
 	{
+		try {
+			FileHeader header = ReaderUtil.parseHeader(reader);
+			if (header.hasBounds()) {
+				handler.handle(header.getBounds());
+			}
+		} catch (IOException e) {
+			throw new OsmInputException("error while reading header", e);
+		}
+
 		long notifysize = 100 * 1024 * 1024;
 		long processed = 0;
 		long lastMessage = 0;
@@ -114,7 +124,6 @@ public class TboReader extends BlockReader implements OsmReader
 	private void parseBlock(InputStreamCompactReader reader, FileBlock block)
 			throws IOException
 	{
-
 		// read objects
 		if (block.getType() == Definitions.BLOCK_TYPE_NODES) {
 			List<Node> nodes = ReaderUtil.parseNodes(reader, block);
@@ -131,8 +140,6 @@ public class TboReader extends BlockReader implements OsmReader
 			for (Relation relation : relations) {
 				handler.handle(relation);
 			}
-		} else if (block.getType() == Definitions.BLOCK_TYPE_METADATA) {
-			// ignore metadata
 		}
 	}
 

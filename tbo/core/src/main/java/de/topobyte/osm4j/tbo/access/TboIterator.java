@@ -30,11 +30,14 @@ import de.topobyte.osm4j.core.model.iface.OsmBounds;
 import de.topobyte.osm4j.core.model.iface.OsmEntity;
 import de.topobyte.osm4j.tbo.data.Definitions;
 import de.topobyte.osm4j.tbo.data.FileBlock;
+import de.topobyte.osm4j.tbo.data.FileHeader;
 import de.topobyte.osm4j.tbo.io.CompactReader;
 import de.topobyte.osm4j.tbo.io.InputStreamCompactReader;
 
 public class TboIterator extends BlockReader implements OsmIterator
 {
+
+	private FileHeader header;
 
 	private int available = 0;
 	private int pointer = 0;
@@ -42,25 +45,19 @@ public class TboIterator extends BlockReader implements OsmIterator
 
 	private boolean valid = true;
 	private FileBlock block = null;
-	private int type = Definitions.BLOCK_TYPE_METADATA;
 	private EntityType entityType = EntityType.Node;
 	private List<? extends OsmEntity> entities = null;
 
-	public TboIterator(InputStream input)
+	public TboIterator(InputStream input) throws IOException
 	{
 		this(new InputStreamCompactReader(input));
 	}
 
-	public TboIterator(CompactReader reader)
+	public TboIterator(CompactReader reader) throws IOException
 	{
 		super(reader);
-		while (type == Definitions.BLOCK_TYPE_METADATA) {
-			try {
-				advanceBlock();
-			} catch (IOException e) {
-				break;
-			}
-		}
+
+		header = ReaderUtil.parseHeader(reader);
 	}
 
 	@Override
@@ -98,7 +95,6 @@ public class TboIterator extends BlockReader implements OsmIterator
 			valid = false;
 			return;
 		}
-		type = block.getType();
 		pointer = 0;
 		total = block.getNumObjects();
 		available = total;
@@ -107,7 +103,7 @@ public class TboIterator extends BlockReader implements OsmIterator
 		ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
 		InputStreamCompactReader reader = new InputStreamCompactReader(bais);
 
-		switch (type) {
+		switch (block.getType()) {
 		case Definitions.BLOCK_TYPE_NODES:
 			entityType = EntityType.Node;
 			entities = ReaderUtil.parseNodes(reader, block);
@@ -132,13 +128,13 @@ public class TboIterator extends BlockReader implements OsmIterator
 	@Override
 	public boolean hasBounds()
 	{
-		return false;
+		return header.hasBounds();
 	}
 
 	@Override
 	public OsmBounds getBounds()
 	{
-		return null;
+		return header.getBounds();
 	}
 
 }

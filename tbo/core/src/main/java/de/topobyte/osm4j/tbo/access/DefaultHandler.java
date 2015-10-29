@@ -22,13 +22,13 @@ import java.io.IOException;
 import de.topobyte.osm4j.core.model.impl.Node;
 import de.topobyte.osm4j.core.model.impl.Relation;
 import de.topobyte.osm4j.core.model.impl.Way;
-import de.topobyte.osm4j.tbo.data.Metadata;
+import de.topobyte.osm4j.tbo.data.FileHeader;
 
 public abstract class DefaultHandler implements Handler
 {
 
 	@Override
-	public void handle(Metadata metadata) throws IOException
+	public void handle(FileHeader header) throws IOException
 	{
 		// ignore
 	}

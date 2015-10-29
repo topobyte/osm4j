@@ -114,4 +114,24 @@ public abstract class CompactWriter
 		write(bytes);
 	}
 
+	public void writeInt(int value) throws IOException
+	{
+		writeByte((value >>> 24) & 0xFF);
+		writeByte((value >>> 16) & 0xFF);
+		writeByte((value >>> 8) & 0xFF);
+		writeByte((value) & 0xFF);
+	}
+
+	public void writeLong(long value) throws IOException
+	{
+		writeByte((int) (value >>> 56) & 0xFF);
+		writeByte((int) (value >>> 48) & 0xFF);
+		writeByte((int) (value >>> 40) & 0xFF);
+		writeByte((int) (value >>> 32) & 0xFF);
+		writeByte((int) (value >>> 24) & 0xFF);
+		writeByte((int) (value >>> 16) & 0xFF);
+		writeByte((int) (value >>> 8) & 0xFF);
+		writeByte((int) (value) & 0xFF);
+	}
+
 }

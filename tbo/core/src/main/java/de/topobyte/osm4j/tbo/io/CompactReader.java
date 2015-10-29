@@ -113,4 +113,20 @@ public abstract class CompactReader
 		}
 	}
 
+	public int readInt() throws IOException
+	{
+		int b1 = readByte();
+		int b2 = readByte();
+		int b3 = readByte();
+		int b4 = readByte();
+		return (b1 << 24) | (b2 << 16) | (b3 << 8) | b4;
+	}
+
+	public long readLong() throws IOException
+	{
+		long i1 = readInt();
+		long i2 = readInt();
+		return (i1 << 32) | i2;
+	}
+
 }

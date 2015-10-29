@@ -26,7 +26,7 @@ import de.topobyte.osm4j.core.model.impl.Relation;
 import de.topobyte.osm4j.core.model.impl.Way;
 import de.topobyte.osm4j.tbo.access.Handler;
 import de.topobyte.osm4j.tbo.access.Reader;
-import de.topobyte.osm4j.tbo.data.Metadata;
+import de.topobyte.osm4j.tbo.data.FileHeader;
 import de.topobyte.osm4j.tbo.io.InputStreamCompactReader;
 
 public class TestCountCallback implements Handler
@@ -55,7 +55,7 @@ public class TestCountCallback implements Handler
 	private long nc = 0, wc = 0, rc = 0;
 
 	@Override
-	public void handle(Metadata metadata) throws IOException
+	public void handle(FileHeader header) throws IOException
 	{
 		// ignore
 	}

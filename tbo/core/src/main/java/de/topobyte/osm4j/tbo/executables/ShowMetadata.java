@@ -17,17 +17,15 @@
 
 package de.topobyte.osm4j.tbo.executables;
 
-import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
 
+import de.topobyte.osm4j.core.model.iface.OsmBounds;
 import de.topobyte.osm4j.tbo.access.BlockReader;
 import de.topobyte.osm4j.tbo.access.ReaderUtil;
-import de.topobyte.osm4j.tbo.data.Definitions;
-import de.topobyte.osm4j.tbo.data.FileBlock;
-import de.topobyte.osm4j.tbo.data.Metadata;
+import de.topobyte.osm4j.tbo.data.FileHeader;
 import de.topobyte.osm4j.tbo.io.CompactReader;
 import de.topobyte.osm4j.tbo.io.InputStreamCompactReader;
 
@@ -54,21 +52,35 @@ public class ShowMetadata extends BlockReader
 		super(reader);
 	}
 
-	private void parse() throws IOException
+	private void parse()
 	{
-		FileBlock block = readBlock();
-		if (block.getType() == Definitions.BLOCK_TYPE_METADATA) {
-			byte[] buffer = block.getBuffer();
-			ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
-			CompactReader reader = new InputStreamCompactReader(bais);
-			Metadata metadata = ReaderUtil.parseMetadata(reader);
-			System.out.println("tbo version: " + metadata.getVersion());
-			Map<String, String> tags = metadata.getTags();
+		FileHeader header;
+		try {
+			header = ReaderUtil.parseHeader(reader);
+		} catch (IOException e) {
+			System.out.println("First block is not a metadata block");
+			System.out.println("Error: " + e.getMessage());
+			return;
+		}
+
+		System.out.println("tbo version: " + header.getVersion());
+		Map<String, String> tags = header.getTags();
+		if (tags.size() == 0) {
+			System.out.println("no tags");
+		} else {
+			System.out.println("number of tags: " + tags.size());
 			for (String key : tags.keySet()) {
 				System.out.println(key + ": " + tags.get(key));
 			}
+		}
+		System.out.println("has metadata: " + header.hasMetadata());
+		if (!header.hasBounds()) {
+			System.out.println("no bounds");
 		} else {
-			System.out.println("First block is not a metadata block");
+			OsmBounds bounds = header.getBounds();
+			System.out.println(String.format("Bounding box: %f,%f,%f,%f",
+					bounds.getLeft(), bounds.getBottom(), bounds.getRight(),
+					bounds.getTop()));
 		}
 	}
 
