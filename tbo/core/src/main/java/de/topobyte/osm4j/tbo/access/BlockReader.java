@@ -22,10 +22,13 @@ import gnu.trove.map.hash.TIntObjectHashMap;
 
 import java.io.EOFException;
 import java.io.IOException;
+import java.io.InputStream;
 
 import de.topobyte.osm4j.tbo.Compression;
 import de.topobyte.osm4j.tbo.data.FileBlock;
+import de.topobyte.osm4j.tbo.data.FileHeader;
 import de.topobyte.osm4j.tbo.io.CompactReader;
+import de.topobyte.osm4j.tbo.io.InputStreamCompactReader;
 
 public class BlockReader
 {
@@ -39,9 +42,19 @@ public class BlockReader
 		}
 	}
 
+	public BlockReader(InputStream input)
+	{
+		this(new InputStreamCompactReader(input));
+	}
+
 	public BlockReader(CompactReader reader)
 	{
 		this.reader = reader;
+	}
+
+	public FileHeader parseHeader() throws IOException
+	{
+		return ReaderUtil.parseHeader(reader);
 	}
 
 	public FileBlock readBlock() throws IOException
