@@ -28,6 +28,7 @@ import de.topobyte.osm4j.tbo.data.Definitions;
 import de.topobyte.osm4j.tbo.data.FileBlock;
 import de.topobyte.osm4j.tbo.data.FileHeader;
 import de.topobyte.osm4j.tbo.io.CompactReader;
+import de.topobyte.osm4j.tbo.io.Decompression;
 import de.topobyte.osm4j.tbo.io.InputStreamCompactReader;
 
 public class Reader extends BlockReader
@@ -79,8 +80,9 @@ public class Reader extends BlockReader
 
 	private void parseBlock(FileBlock block) throws IOException
 	{
-		byte[] buffer = block.getBuffer();
-		ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
+		byte[] uncompressed = Decompression.decompress(block);
+
+		ByteArrayInputStream bais = new ByteArrayInputStream(uncompressed);
 		InputStreamCompactReader compactReader = new InputStreamCompactReader(
 				bais);
 
