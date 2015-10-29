@@ -19,58 +19,49 @@ package de.topobyte.osm4j.tbo.writerhelper;
 
 import java.io.IOException;
 
-import de.topobyte.osm4j.core.model.iface.OsmNode;
+import de.topobyte.osm4j.core.model.iface.EntityType;
+import de.topobyte.osm4j.core.model.iface.OsmRelation;
+import de.topobyte.osm4j.core.model.iface.OsmRelationMember;
 import de.topobyte.osm4j.tbo.io.CompactWriter;
 
-public class NodeBag extends EntityBag<OsmNode>
+public class RelationBatch extends EntityBatch<OsmRelation>
 {
 
 	@Override
 	public void write(CompactWriter writer) throws IOException
 	{
-		super.writeStringPool(writer);
-		for (OsmNode node : elements) {
-			writeIds(writer, node);
-		}
-		for (OsmNode node : elements) {
-			writeCoords(writer, node);
-		}
-		for (OsmNode node : elements) {
-			writeTags(writer, node);
+		super.writeStringPool(writer, elements);
+		for (OsmRelation relation : elements) {
+			write(writer, relation);
 		}
 	}
 
 	private long idOffset = 0;
+	private long midOffset = 0;
 
-	private long latOffset = 0;
-	private long lonOffset = 0;
-
-	private void writeIds(CompactWriter writer, OsmNode node)
+	private void write(CompactWriter writer, OsmRelation relation)
 			throws IOException
 	{
-		long id = node.getId();
+		long id = relation.getId();
+		int nMembers = relation.getNumberOfMembers();
 
 		writer.writeVariableLengthSignedInteger(id - idOffset);
 		idOffset = id;
-	}
 
-	private void writeCoords(CompactWriter writer, OsmNode node)
-			throws IOException
-	{
-		double lat = node.getLatitude();
-		double lon = node.getLongitude();
-		long mlat = toLong(lat);
-		long mlon = toLong(lon);
+		writer.writeVariableLengthUnsignedInteger(nMembers);
+		for (int i = 0; i < nMembers; i++) {
+			OsmRelationMember member = relation.getMember(i);
+			long mid = member.getId();
+			EntityType type = member.getType();
+			int t = EntityTypeHelper.getByte(type);
+			int index = stringPool.getId(member.getRole());
+			writer.writeByte(t);
+			writer.writeVariableLengthSignedInteger(mid - midOffset);
+			writer.writeVariableLengthUnsignedInteger(index);
+			midOffset = mid;
+		}
 
-		writer.writeVariableLengthSignedInteger(mlat - latOffset);
-		writer.writeVariableLengthSignedInteger(mlon - lonOffset);
-		latOffset = mlat;
-		lonOffset = mlon;
-	}
-
-	private long toLong(double degrees)
-	{
-		return (long) (degrees / .0000001);
+		writeTags(writer, relation);
 	}
 
 	@Override
@@ -78,8 +69,7 @@ public class NodeBag extends EntityBag<OsmNode>
 	{
 		super.clear();
 		idOffset = 0;
-		latOffset = 0;
-		lonOffset = 0;
+		midOffset = 0;
 	}
 
 }

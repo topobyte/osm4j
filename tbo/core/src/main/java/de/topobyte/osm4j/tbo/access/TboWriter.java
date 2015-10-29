@@ -35,9 +35,9 @@ import de.topobyte.osm4j.tbo.data.Definitions;
 import de.topobyte.osm4j.tbo.data.FileHeader;
 import de.topobyte.osm4j.tbo.io.CompactWriter;
 import de.topobyte.osm4j.tbo.io.OutputStreamCompactWriter;
-import de.topobyte.osm4j.tbo.writerhelper.NodeBag;
-import de.topobyte.osm4j.tbo.writerhelper.RelationBag;
-import de.topobyte.osm4j.tbo.writerhelper.WayBag;
+import de.topobyte.osm4j.tbo.writerhelper.NodeBatch;
+import de.topobyte.osm4j.tbo.writerhelper.RelationBatch;
+import de.topobyte.osm4j.tbo.writerhelper.WayBatch;
 
 public class TboWriter extends BlockWriter implements OsmOutputStream
 {
@@ -52,9 +52,9 @@ public class TboWriter extends BlockWriter implements OsmOutputStream
 	private Compression compression = Compression.NONE;
 	private boolean writeMetadata;
 
-	private NodeBag nodeBag;
-	private WayBag wayBag;
-	private RelationBag relationBag;
+	private NodeBatch nodeBatch;
+	private WayBatch wayBatch;
+	private RelationBatch relationBatch;
 
 	public TboWriter(OutputStream output, boolean writeMetadata)
 	{
@@ -79,9 +79,9 @@ public class TboWriter extends BlockWriter implements OsmOutputStream
 		super(writer, lowMemoryFootPrint);
 		this.writeMetadata = writeMetadata;
 
-		nodeBag = new NodeBag();
-		wayBag = new WayBag();
-		relationBag = new RelationBag();
+		nodeBatch = new NodeBatch();
+		wayBatch = new WayBatch();
+		relationBatch = new RelationBatch();
 	}
 
 	public Compression getCompression()
@@ -218,7 +218,7 @@ public class TboWriter extends BlockWriter implements OsmOutputStream
 						"wrong entity order while processing node");
 			}
 		}
-		nodeBag.put(node);
+		nodeBatch.put(node);
 		if (checkBatch(node, batchBuilderNodes)) {
 			writeNodeBatch();
 		}
@@ -234,7 +234,7 @@ public class TboWriter extends BlockWriter implements OsmOutputStream
 						"wrong entity order while processing way");
 			}
 		}
-		wayBag.put(way);
+		wayBatch.put(way);
 		if (checkBatch(way, batchBuilderWays)) {
 			writeWayBatch();
 		}
@@ -250,7 +250,7 @@ public class TboWriter extends BlockWriter implements OsmOutputStream
 				finishWays();
 			}
 		}
-		relationBag.put(relation);
+		relationBatch.put(relation);
 		if (checkBatch(relation, batchBuilderRelations)) {
 			writeRelationBatch();
 		}
@@ -269,23 +269,23 @@ public class TboWriter extends BlockWriter implements OsmOutputStream
 
 	private void writeNodeBatch() throws IOException
 	{
-		writeBlock(nodeBag, Definitions.BLOCK_TYPE_NODES, nodeBag.size(),
+		writeBlock(nodeBatch, Definitions.BLOCK_TYPE_NODES, nodeBatch.size(),
 				compression);
-		nodeBag.clear();
+		nodeBatch.clear();
 	}
 
 	private void writeWayBatch() throws IOException
 	{
-		writeBlock(wayBag, Definitions.BLOCK_TYPE_WAYS, wayBag.size(),
+		writeBlock(wayBatch, Definitions.BLOCK_TYPE_WAYS, wayBatch.size(),
 				compression);
-		wayBag.clear();
+		wayBatch.clear();
 	}
 
 	private void writeRelationBatch() throws IOException
 	{
-		writeBlock(relationBag, Definitions.BLOCK_TYPE_RELATIONS,
-				relationBag.size(), compression);
-		relationBag.clear();
+		writeBlock(relationBatch, Definitions.BLOCK_TYPE_RELATIONS,
+				relationBatch.size(), compression);
+		relationBatch.clear();
 	}
 
 	@Override
@@ -308,7 +308,7 @@ public class TboWriter extends BlockWriter implements OsmOutputStream
 	private void finishNodes() throws IOException
 	{
 		if (mode == Mode.NODE) {
-			if (nodeBag.size() > 0) {
+			if (nodeBatch.size() > 0) {
 				writeNodeBatch();
 			}
 			mode = Mode.WAY;
@@ -318,7 +318,7 @@ public class TboWriter extends BlockWriter implements OsmOutputStream
 	private void finishWays() throws IOException
 	{
 		if (mode == Mode.WAY) {
-			if (wayBag.size() > 0) {
+			if (wayBatch.size() > 0) {
 				writeWayBatch();
 			}
 			mode = Mode.RELATION;
@@ -328,7 +328,7 @@ public class TboWriter extends BlockWriter implements OsmOutputStream
 	private void finishRelations() throws IOException
 	{
 		if (mode == Mode.RELATION) {
-			if (relationBag.size() > 0) {
+			if (relationBatch.size() > 0) {
 				writeRelationBatch();
 			}
 		}

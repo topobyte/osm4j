@@ -29,14 +29,14 @@ import de.topobyte.osm4j.tbo.data.StringPool;
 import de.topobyte.osm4j.tbo.data.StringPoolBuilder;
 import de.topobyte.osm4j.tbo.io.CompactWriter;
 
-public abstract class EntityBag<T extends OsmEntity> implements Blockable
+public abstract class EntityBatch<T extends OsmEntity> implements Blockable
 {
 
 	protected List<T> elements;
 
 	protected StringPool stringPool;
 
-	public EntityBag()
+	public EntityBatch()
 	{
 		elements = new ArrayList<>();
 	}

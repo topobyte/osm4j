@@ -22,7 +22,7 @@ import java.io.IOException;
 import de.topobyte.osm4j.core.model.iface.OsmWay;
 import de.topobyte.osm4j.tbo.io.CompactWriter;
 
-public class WayBag extends EntityBag<OsmWay>
+public class WayBatch extends EntityBatch<OsmWay>
 {
 
 	@Override
