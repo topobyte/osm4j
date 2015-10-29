@@ -101,6 +101,31 @@ public abstract class CompactWriter
 	}
 
 	// Adapted from the protocol buffers library. See copyright above
+	public static int getNumberOfBytesUnsigned(final long value)
+	{
+		long store = value;
+		if ((store & (0xffffffffffffffffL << 7)) == 0)
+			return 1;
+		if ((store & (0xffffffffffffffffL << 14)) == 0)
+			return 2;
+		if ((store & (0xffffffffffffffffL << 21)) == 0)
+			return 3;
+		if ((store & (0xffffffffffffffffL << 28)) == 0)
+			return 4;
+		if ((store & (0xffffffffffffffffL << 35)) == 0)
+			return 5;
+		if ((store & (0xffffffffffffffffL << 42)) == 0)
+			return 6;
+		if ((store & (0xffffffffffffffffL << 49)) == 0)
+			return 7;
+		if ((store & (0xffffffffffffffffL << 56)) == 0)
+			return 8;
+		if ((store & (0xffffffffffffffffL << 63)) == 0)
+			return 9;
+		return 10;
+	}
+
+	// Adapted from the protocol buffers library. See copyright above
 	public static int getNumberOfBytesSigned(final long value)
 	{
 		long store = encodeZigZag(value);
