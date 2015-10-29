@@ -65,6 +65,21 @@ public abstract class CompactWriter
 	public abstract void write(byte[] bytes, int off, int len)
 			throws IOException;
 
+	public void writeVariableLengthUnsignedInteger(long value)
+			throws IOException
+	{
+		long store = value;
+		while (true) {
+			if ((store & ~0x7FL) == 0) {
+				writeByte((int) store);
+				return;
+			} else {
+				writeByte(((int) store & 0x7F) | 0x80);
+				store >>>= 7;
+			}
+		}
+	}
+
 	public void writeVariableLengthSignedInteger(long value) throws IOException
 	{
 		long store = encodeZigZag(value);

@@ -65,6 +65,21 @@ public abstract class CompactReader
 	public abstract int read(byte[] buffer, int off, int len)
 			throws IOException;
 
+	public long readVariableLengthUnsignedInteger() throws IOException
+	{
+		int shift = 0;
+		long result = 0;
+		while (shift < 64) {
+			final int b = readByte();
+			result |= (long) (b & 0x7F) << shift;
+			if ((b & 0x80) == 0) {
+				return result;
+			}
+			shift += 7;
+		}
+		throw new IOException("invalid encoding for a long value");
+	}
+
 	public long readVariableLengthSignedInteger() throws IOException
 	{
 		int shift = 0;
