@@ -114,7 +114,7 @@ public class ReaderUtil
 	public static List<Node> parseNodes(CompactReader reader, FileBlock block,
 			boolean hasMetadata) throws IOException
 	{
-		List<String> pool = parsePool(reader);
+		List<String> poolTags = parsePool(reader);
 
 		List<Node> nodes = new ArrayList<Node>(block.getNumObjects());
 
@@ -142,7 +142,7 @@ public class ReaderUtil
 		}
 
 		for (int i = 0; i < n; i++) {
-			List<Tag> tags = parseTags(reader, pool);
+			List<Tag> tags = parseTags(reader, poolTags);
 			Node node = new Node(ids[i], lons[i], lats[i]);
 			nodes.add(node);
 			node.setTags(tags);
@@ -154,7 +154,7 @@ public class ReaderUtil
 	public static List<Way> parseWays(InputStreamCompactReader reader,
 			FileBlock block, boolean hasMetadata) throws IOException
 	{
-		List<String> pool = parsePool(reader);
+		List<String> poolTags = parsePool(reader);
 
 		List<Way> ways = new ArrayList<Way>(block.getNumObjects());
 
@@ -173,7 +173,7 @@ public class ReaderUtil
 				nidOffset = nid;
 			}
 
-			List<Tag> tags = parseTags(reader, pool);
+			List<Tag> tags = parseTags(reader, poolTags);
 
 			Way way = new Way(id, nodeIds);
 			ways.add(way);
@@ -187,7 +187,8 @@ public class ReaderUtil
 			InputStreamCompactReader reader, FileBlock block,
 			boolean hasMetadata) throws IOException
 	{
-		List<String> pool = parsePool(reader);
+		List<String> poolTags = parsePool(reader);
+		List<String> poolMembers = parsePool(reader);
 
 		List<Relation> relations = new ArrayList<Relation>(
 				block.getNumObjects());
@@ -207,12 +208,12 @@ public class ReaderUtil
 				midOffset = mid;
 				int roleIndex = (int) reader
 						.readVariableLengthUnsignedInteger();
-				String role = pool.get(roleIndex);
+				String role = poolMembers.get(roleIndex);
 				EntityType type = EntityTypeHelper.getType(typeByte);
 				members.add(new RelationMember(mid, type, role));
 			}
 
-			List<Tag> tags = parseTags(reader, pool);
+			List<Tag> tags = parseTags(reader, poolTags);
 			Relation relation = new Relation(id, members);
 			relations.add(relation);
 			relation.setTags(tags);
