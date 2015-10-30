@@ -17,6 +17,7 @@
 
 package de.topobyte.osm4j.tbo.access;
 
+import gnu.trove.list.TLongList;
 import gnu.trove.list.array.TLongArrayList;
 
 import java.io.IOException;
@@ -160,6 +161,26 @@ public class ReaderUtil
 		return nodes;
 	}
 
+	public static TLongList parseNodeIds(InputStreamCompactReader reader,
+			FileBlock block) throws IOException
+	{
+		parsePool(reader);
+
+		TLongList ids = new TLongArrayList();
+
+		long idOffset = 0;
+
+		int n = block.getNumObjects();
+
+		for (int i = 0; i < n; i++) {
+			long id = idOffset + reader.readVariableLengthSignedInteger();
+			ids.add(id);
+			idOffset = id;
+		}
+
+		return ids;
+	}
+
 	public static List<Way> parseWays(InputStreamCompactReader reader,
 			FileBlock block, boolean hasMetadata) throws IOException
 	{
@@ -197,6 +218,29 @@ public class ReaderUtil
 		}
 
 		return ways;
+	}
+
+	public static TLongList parseWayIds(InputStreamCompactReader reader,
+			FileBlock block) throws IOException
+	{
+		parsePool(reader);
+
+		TLongList ids = new TLongArrayList();
+
+		long idOffset = 0;
+
+		for (int i = 0; i < block.getNumObjects(); i++) {
+			long id = idOffset + reader.readVariableLengthSignedInteger();
+			ids.add(id);
+			idOffset = id;
+
+			long numNodes = reader.readVariableLengthUnsignedInteger();
+			for (int k = 0; k < numNodes; k++) {
+				reader.readVariableLengthSignedInteger();
+			}
+		}
+
+		return ids;
 	}
 
 	public static List<Relation> parseRelations(
@@ -243,6 +287,32 @@ public class ReaderUtil
 		}
 
 		return relations;
+	}
+
+	public static TLongList parseRelationIds(InputStreamCompactReader reader,
+			FileBlock block) throws IOException
+	{
+		parsePool(reader);
+		parsePool(reader);
+
+		TLongList ids = new TLongArrayList();
+
+		long idOffset = 0;
+
+		for (int i = 0; i < block.getNumObjects(); i++) {
+			long id = idOffset + reader.readVariableLengthSignedInteger();
+			ids.add(id);
+			idOffset = id;
+
+			long numMembers = reader.readVariableLengthUnsignedInteger();
+			for (int k = 0; k < numMembers; k++) {
+				reader.readByte();
+				reader.readVariableLengthSignedInteger();
+				reader.readVariableLengthUnsignedInteger();
+			}
+		}
+
+		return ids;
 	}
 
 	private static void parseMetadata(CompactReader reader,
