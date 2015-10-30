@@ -20,12 +20,12 @@ package de.topobyte.osm4j.tbo.writerhelper;
 import java.io.IOException;
 import java.util.List;
 
+import de.topobyte.compactio.CompactWriter;
 import de.topobyte.osm4j.core.model.iface.EntityType;
 import de.topobyte.osm4j.core.model.iface.OsmRelation;
 import de.topobyte.osm4j.core.model.iface.OsmRelationMember;
 import de.topobyte.osm4j.tbo.data.StringPool;
 import de.topobyte.osm4j.tbo.data.StringPoolBuilder;
-import de.topobyte.osm4j.tbo.io.CompactWriter;
 
 public class RelationBatch extends EntityBatch<OsmRelation>
 {

@@ -22,8 +22,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 
+import de.topobyte.compactio.CompactWriter;
 import de.topobyte.osm4j.core.model.iface.OsmBounds;
-import de.topobyte.osm4j.tbo.io.CompactWriter;
 import de.topobyte.osm4j.tbo.writerhelper.Blockable;
 
 public class FileHeader implements Blockable

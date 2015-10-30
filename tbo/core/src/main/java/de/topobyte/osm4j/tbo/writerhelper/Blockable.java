@@ -19,7 +19,7 @@ package de.topobyte.osm4j.tbo.writerhelper;
 
 import java.io.IOException;
 
-import de.topobyte.osm4j.tbo.io.CompactWriter;
+import de.topobyte.compactio.CompactWriter;
 
 public interface Blockable
 {

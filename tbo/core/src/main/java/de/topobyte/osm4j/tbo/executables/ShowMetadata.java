@@ -22,12 +22,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
 
+import de.topobyte.compactio.CompactReader;
+import de.topobyte.compactio.InputStreamCompactReader;
 import de.topobyte.osm4j.core.model.iface.OsmBounds;
 import de.topobyte.osm4j.tbo.access.BlockReader;
 import de.topobyte.osm4j.tbo.access.ReaderUtil;
 import de.topobyte.osm4j.tbo.data.FileHeader;
-import de.topobyte.osm4j.tbo.io.CompactReader;
-import de.topobyte.osm4j.tbo.io.InputStreamCompactReader;
 
 public class ShowMetadata extends BlockReader
 {

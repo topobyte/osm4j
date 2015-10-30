@@ -23,10 +23,10 @@ import java.util.zip.DeflaterOutputStream;
 
 import net.jpountz.lz4.LZ4Compressor;
 import net.jpountz.lz4.LZ4Factory;
+import de.topobyte.compactio.CompactWriter;
+import de.topobyte.compactio.OutputStreamCompactWriter;
 import de.topobyte.osm4j.tbo.Compression;
 import de.topobyte.osm4j.tbo.data.FileBlock;
-import de.topobyte.osm4j.tbo.io.CompactWriter;
-import de.topobyte.osm4j.tbo.io.OutputStreamCompactWriter;
 import de.topobyte.osm4j.tbo.writerhelper.Blockable;
 
 public class BlockWriter

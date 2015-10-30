@@ -20,6 +20,8 @@ package de.topobyte.osm4j.tbo.access;
 import java.io.IOException;
 import java.io.OutputStream;
 
+import de.topobyte.compactio.CompactWriter;
+import de.topobyte.compactio.OutputStreamCompactWriter;
 import de.topobyte.osm4j.core.access.OsmOutputStream;
 import de.topobyte.osm4j.core.model.iface.OsmBounds;
 import de.topobyte.osm4j.core.model.iface.OsmEntity;
@@ -33,8 +35,6 @@ import de.topobyte.osm4j.tbo.batching.MemberCountBatchBuilder;
 import de.topobyte.osm4j.tbo.batching.WayNodeCountBatchBuilder;
 import de.topobyte.osm4j.tbo.data.Definitions;
 import de.topobyte.osm4j.tbo.data.FileHeader;
-import de.topobyte.osm4j.tbo.io.CompactWriter;
-import de.topobyte.osm4j.tbo.io.OutputStreamCompactWriter;
 import de.topobyte.osm4j.tbo.writerhelper.NodeBatch;
 import de.topobyte.osm4j.tbo.writerhelper.RelationBatch;
 import de.topobyte.osm4j.tbo.writerhelper.WayBatch;

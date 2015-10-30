@@ -22,6 +22,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
+import de.topobyte.compactio.CompactReader;
+import de.topobyte.compactio.InputStreamCompactReader;
 import de.topobyte.osm4j.core.access.OsmHandler;
 import de.topobyte.osm4j.core.access.OsmInputException;
 import de.topobyte.osm4j.core.access.OsmReader;
@@ -31,9 +33,7 @@ import de.topobyte.osm4j.core.model.impl.Way;
 import de.topobyte.osm4j.tbo.data.Definitions;
 import de.topobyte.osm4j.tbo.data.FileBlock;
 import de.topobyte.osm4j.tbo.data.FileHeader;
-import de.topobyte.osm4j.tbo.io.CompactReader;
 import de.topobyte.osm4j.tbo.io.Decompression;
-import de.topobyte.osm4j.tbo.io.InputStreamCompactReader;
 
 public class TboReader extends BlockReader implements OsmReader
 {
@@ -120,13 +120,12 @@ public class TboReader extends BlockReader implements OsmReader
 		byte[] uncompressed = Decompression.decompress(block);
 
 		ByteArrayInputStream bais = new ByteArrayInputStream(uncompressed);
-		InputStreamCompactReader compactReader = new InputStreamCompactReader(
-				bais);
+		CompactReader compactReader = new InputStreamCompactReader(bais);
 
 		parseBlock(compactReader, block);
 	}
 
-	private void parseBlock(InputStreamCompactReader reader, FileBlock block)
+	private void parseBlock(CompactReader reader, FileBlock block)
 			throws IOException
 	{
 		// read objects

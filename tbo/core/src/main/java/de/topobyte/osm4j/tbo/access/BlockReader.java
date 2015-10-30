@@ -24,12 +24,12 @@ import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 
+import de.topobyte.compactio.CompactReader;
+import de.topobyte.compactio.CompactWriter;
+import de.topobyte.compactio.InputStreamCompactReader;
 import de.topobyte.osm4j.tbo.Compression;
 import de.topobyte.osm4j.tbo.data.FileBlock;
 import de.topobyte.osm4j.tbo.data.FileHeader;
-import de.topobyte.osm4j.tbo.io.CompactReader;
-import de.topobyte.osm4j.tbo.io.CompactWriter;
-import de.topobyte.osm4j.tbo.io.InputStreamCompactReader;
 
 public class BlockReader
 {

@@ -21,13 +21,14 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 
+import de.topobyte.compactio.CompactReader;
+import de.topobyte.compactio.InputStreamCompactReader;
 import de.topobyte.osm4j.core.model.impl.Node;
 import de.topobyte.osm4j.core.model.impl.Relation;
 import de.topobyte.osm4j.core.model.impl.Way;
 import de.topobyte.osm4j.tbo.access.Handler;
 import de.topobyte.osm4j.tbo.access.Reader;
 import de.topobyte.osm4j.tbo.data.FileHeader;
-import de.topobyte.osm4j.tbo.io.InputStreamCompactReader;
 
 public class TestCountCallback implements Handler
 {
@@ -45,8 +46,7 @@ public class TestCountCallback implements Handler
 		TestCountCallback count = new TestCountCallback();
 
 		FileInputStream input = new FileInputStream(file);
-		InputStreamCompactReader compactReader = new InputStreamCompactReader(
-				input);
+		CompactReader compactReader = new InputStreamCompactReader(input);
 
 		Reader reader = new Reader(compactReader, count);
 		reader.run();

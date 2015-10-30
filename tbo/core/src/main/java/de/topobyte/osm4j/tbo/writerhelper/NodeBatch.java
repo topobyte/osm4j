@@ -19,8 +19,8 @@ package de.topobyte.osm4j.tbo.writerhelper;
 
 import java.io.IOException;
 
+import de.topobyte.compactio.CompactWriter;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
-import de.topobyte.osm4j.tbo.io.CompactWriter;
 
 public class NodeBatch extends EntityBatch<OsmNode>
 {

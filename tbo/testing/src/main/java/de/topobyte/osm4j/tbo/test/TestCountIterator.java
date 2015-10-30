@@ -21,9 +21,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 
+import de.topobyte.compactio.CompactReader;
+import de.topobyte.compactio.InputStreamCompactReader;
 import de.topobyte.osm4j.core.model.iface.EntityContainer;
 import de.topobyte.osm4j.tbo.access.TboIterator;
-import de.topobyte.osm4j.tbo.io.InputStreamCompactReader;
 
 public class TestCountIterator
 {
@@ -41,8 +42,7 @@ public class TestCountIterator
 		File file = new File(args[0]);
 
 		FileInputStream input = new FileInputStream(file);
-		InputStreamCompactReader compactReader = new InputStreamCompactReader(
-				input);
+		CompactReader compactReader = new InputStreamCompactReader(input);
 
 		TboIterator iterator = new TboIterator(compactReader);
 		while (iterator.hasNext()) {

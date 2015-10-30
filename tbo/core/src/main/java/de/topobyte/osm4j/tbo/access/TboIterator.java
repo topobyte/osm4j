@@ -23,6 +23,8 @@ import java.io.InputStream;
 import java.util.Iterator;
 import java.util.List;
 
+import de.topobyte.compactio.CompactReader;
+import de.topobyte.compactio.InputStreamCompactReader;
 import de.topobyte.osm4j.core.access.OsmIterator;
 import de.topobyte.osm4j.core.model.iface.EntityContainer;
 import de.topobyte.osm4j.core.model.iface.EntityType;
@@ -31,9 +33,7 @@ import de.topobyte.osm4j.core.model.iface.OsmEntity;
 import de.topobyte.osm4j.tbo.data.Definitions;
 import de.topobyte.osm4j.tbo.data.FileBlock;
 import de.topobyte.osm4j.tbo.data.FileHeader;
-import de.topobyte.osm4j.tbo.io.CompactReader;
 import de.topobyte.osm4j.tbo.io.Decompression;
-import de.topobyte.osm4j.tbo.io.InputStreamCompactReader;
 
 public class TboIterator extends BlockReader implements OsmIterator
 {
@@ -103,7 +103,7 @@ public class TboIterator extends BlockReader implements OsmIterator
 		byte[] uncompressed = Decompression.decompress(block);
 
 		ByteArrayInputStream bais = new ByteArrayInputStream(uncompressed);
-		InputStreamCompactReader reader = new InputStreamCompactReader(bais);
+		CompactReader reader = new InputStreamCompactReader(bais);
 
 		switch (block.getType()) {
 		case Definitions.BLOCK_TYPE_NODES:

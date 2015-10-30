@@ -21,13 +21,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.topobyte.compactio.CompactWriter;
 import de.topobyte.osm4j.core.model.iface.OsmEntity;
 import de.topobyte.osm4j.core.model.iface.OsmMetadata;
 import de.topobyte.osm4j.core.model.iface.OsmTag;
 import de.topobyte.osm4j.tbo.data.Definitions;
 import de.topobyte.osm4j.tbo.data.StringPool;
 import de.topobyte.osm4j.tbo.data.StringPoolBuilder;
-import de.topobyte.osm4j.tbo.io.CompactWriter;
 
 public abstract class EntityBatch<T extends OsmEntity> implements Blockable
 {

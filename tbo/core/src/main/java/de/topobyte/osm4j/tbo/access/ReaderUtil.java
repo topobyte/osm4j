@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import de.topobyte.compactio.CompactReader;
 import de.topobyte.osm4j.core.model.iface.EntityType;
 import de.topobyte.osm4j.core.model.iface.OsmBounds;
 import de.topobyte.osm4j.core.model.iface.OsmMetadata;
@@ -42,8 +43,6 @@ import de.topobyte.osm4j.tbo.data.BlockMetadataInfo;
 import de.topobyte.osm4j.tbo.data.Definitions;
 import de.topobyte.osm4j.tbo.data.FileBlock;
 import de.topobyte.osm4j.tbo.data.FileHeader;
-import de.topobyte.osm4j.tbo.io.CompactReader;
-import de.topobyte.osm4j.tbo.io.InputStreamCompactReader;
 import de.topobyte.osm4j.tbo.writerhelper.EntityTypeHelper;
 
 public class ReaderUtil
@@ -161,8 +160,8 @@ public class ReaderUtil
 		return nodes;
 	}
 
-	public static TLongList parseNodeIds(InputStreamCompactReader reader,
-			FileBlock block) throws IOException
+	public static TLongList parseNodeIds(CompactReader reader, FileBlock block)
+			throws IOException
 	{
 		parsePool(reader);
 
@@ -181,8 +180,8 @@ public class ReaderUtil
 		return ids;
 	}
 
-	public static List<Way> parseWays(InputStreamCompactReader reader,
-			FileBlock block, boolean hasMetadata) throws IOException
+	public static List<Way> parseWays(CompactReader reader, FileBlock block,
+			boolean hasMetadata) throws IOException
 	{
 		List<String> poolTags = parsePool(reader);
 
@@ -220,8 +219,8 @@ public class ReaderUtil
 		return ways;
 	}
 
-	public static TLongList parseWayIds(InputStreamCompactReader reader,
-			FileBlock block) throws IOException
+	public static TLongList parseWayIds(CompactReader reader, FileBlock block)
+			throws IOException
 	{
 		parsePool(reader);
 
@@ -243,9 +242,8 @@ public class ReaderUtil
 		return ids;
 	}
 
-	public static List<Relation> parseRelations(
-			InputStreamCompactReader reader, FileBlock block,
-			boolean hasMetadata) throws IOException
+	public static List<Relation> parseRelations(CompactReader reader,
+			FileBlock block, boolean hasMetadata) throws IOException
 	{
 		List<String> poolTags = parsePool(reader);
 		List<String> poolMembers = parsePool(reader);
@@ -289,7 +287,7 @@ public class ReaderUtil
 		return relations;
 	}
 
-	public static TLongList parseRelationIds(InputStreamCompactReader reader,
+	public static TLongList parseRelationIds(CompactReader reader,
 			FileBlock block) throws IOException
 	{
 		parsePool(reader);
