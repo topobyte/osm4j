@@ -28,12 +28,17 @@ import java.util.TreeMap;
 
 import de.topobyte.osm4j.core.model.iface.EntityType;
 import de.topobyte.osm4j.core.model.iface.OsmBounds;
+import de.topobyte.osm4j.core.model.iface.OsmMetadata;
 import de.topobyte.osm4j.core.model.impl.Bounds;
+import de.topobyte.osm4j.core.model.impl.Entity;
+import de.topobyte.osm4j.core.model.impl.Metadata;
 import de.topobyte.osm4j.core.model.impl.Node;
 import de.topobyte.osm4j.core.model.impl.Relation;
 import de.topobyte.osm4j.core.model.impl.RelationMember;
 import de.topobyte.osm4j.core.model.impl.Tag;
 import de.topobyte.osm4j.core.model.impl.Way;
+import de.topobyte.osm4j.tbo.data.BlockMetadataInfo;
+import de.topobyte.osm4j.tbo.data.Definitions;
 import de.topobyte.osm4j.tbo.data.FileBlock;
 import de.topobyte.osm4j.tbo.data.FileHeader;
 import de.topobyte.osm4j.tbo.io.CompactReader;
@@ -148,6 +153,10 @@ public class ReaderUtil
 			node.setTags(tags);
 		}
 
+		if (hasMetadata) {
+			parseMetadata(reader, nodes);
+		}
+
 		return nodes;
 	}
 
@@ -178,6 +187,10 @@ public class ReaderUtil
 			Way way = new Way(id, nodeIds);
 			ways.add(way);
 			way.setTags(tags);
+		}
+
+		if (hasMetadata) {
+			parseMetadata(reader, ways);
 		}
 
 		return ways;
@@ -219,7 +232,132 @@ public class ReaderUtil
 			relation.setTags(tags);
 		}
 
+		if (hasMetadata) {
+			parseMetadata(reader, relations);
+		}
+
 		return relations;
+	}
+
+	private static void parseMetadata(CompactReader reader,
+			List<? extends Entity> elements) throws IOException
+	{
+		int situationByte = reader.readByte();
+		BlockMetadataInfo situation = null;
+		if (situationByte == Definitions.METADATA_ALL) {
+			situation = BlockMetadataInfo.ALL;
+		} else if (situationByte == Definitions.METADATA_NONE) {
+			situation = BlockMetadataInfo.NONE;
+		} else if (situationByte == Definitions.METADATA_MIXED) {
+			situation = BlockMetadataInfo.MIXED;
+		}
+
+		if (situation == null || situation == BlockMetadataInfo.NONE) {
+			return;
+		}
+
+		List<String> poolUsernames = parsePool(reader);
+
+		// number of elements in the block
+		int numElements = elements.size();
+		// number of meta data entries to follow
+		int numMetaData;
+
+		// Determine the number of meta data entries and which entries do have
+		// data in case of MIXED
+		boolean[] hasMeta = null;
+		if (situation == BlockMetadataInfo.MIXED) {
+			// parse flags, increment the number of entries and store flags for
+			// later being able to map meta data to entities.
+			numMetaData = 0;
+			hasMeta = new boolean[numElements];
+			for (int i = 0; i < numElements; i++) {
+				int flag = reader.readByte();
+				boolean thisHasMeta = flag == Definitions.METADATA_YES;
+				hasMeta[i] = thisHasMeta;
+				if (thisHasMeta) {
+					numMetaData++;
+				}
+			}
+		} else {
+			// all entries have meta data
+			numMetaData = elements.size();
+		}
+
+		// parse data entries
+		int[] versions = parseDeltaInts(reader, numMetaData);
+		long[] timestamps = parseDeltaLongs(reader, numMetaData);
+		long[] changesets = parseDeltaLongs(reader, numMetaData);
+		long[] userIds = parseDeltaLongs(reader, numMetaData);
+		int[] userNameIds = parseInts(reader, numMetaData);
+
+		// Create meta data objects and add to entity objects
+		if (situation == BlockMetadataInfo.ALL) {
+			// simple loop since every element has meta data
+			for (int i = 0; i < numElements; i++) {
+				Entity entity = elements.get(i);
+				String user = poolUsernames.get(userNameIds[i]);
+				OsmMetadata metadata = new Metadata(versions[i], timestamps[i],
+						userIds[i], user, changesets[i]);
+
+				entity.setMetadata(metadata);
+			}
+		} else {
+			// a bit more complicated loop since only some elements have meta
+			// data
+			int i = 0;
+			for (int k = 0; k < numElements; k++) {
+				if (!hasMeta[k]) {
+					continue;
+				}
+				Entity entity = elements.get(k);
+				String user = poolUsernames.get(userNameIds[i]);
+				OsmMetadata metadata = new Metadata(versions[i], timestamps[i],
+						userIds[i], user, changesets[i]);
+				i += 1;
+
+				entity.setMetadata(metadata);
+			}
+		}
+	}
+
+	private static int[] parseDeltaInts(CompactReader reader, int n)
+			throws IOException
+	{
+		int[] values = new int[n];
+		long offset = 0;
+		for (int i = 0; i < n; i++) {
+			long delta = reader.readVariableLengthSignedInteger();
+			long value = offset + delta;
+			values[i] = (int) value;
+			offset = value;
+		}
+		return values;
+	}
+
+	private static long[] parseDeltaLongs(CompactReader reader, int n)
+			throws IOException
+	{
+		long[] values = new long[n];
+		long offset = 0;
+		for (int i = 0; i < n; i++) {
+			long delta = reader.readVariableLengthSignedInteger();
+			long value = offset + delta;
+			values[i] = value;
+			offset = value;
+		}
+		return values;
+	}
+
+	private static int[] parseInts(CompactReader reader, int n)
+			throws IOException
+	{
+		int[] values = new int[n];
+		for (int i = 0; i < n; i++) {
+			long v = reader.readVariableLengthUnsignedInteger();
+			values[i] = (int) v;
+		}
+		return values;
 	}
 
 }
