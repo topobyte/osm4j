@@ -79,4 +79,9 @@ public class Entity implements OsmEntity
 		return metadata;
 	}
 
+	public void setMetadata(OsmMetadata metadata)
+	{
+		this.metadata = metadata;
+	}
+
 }
