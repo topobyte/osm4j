@@ -43,7 +43,6 @@ public class TboIterator extends BlockReader implements OsmIterator
 
 	private int available = 0;
 	private int pointer = 0;
-	private int total = 0;
 
 	private boolean valid = true;
 	private FileBlock block = null;
@@ -99,8 +98,7 @@ public class TboIterator extends BlockReader implements OsmIterator
 			return;
 		}
 		pointer = 0;
-		total = block.getNumObjects();
-		available = total;
+		available = block.getNumObjects();
 
 		byte[] uncompressed = Decompression.decompress(block);
 
