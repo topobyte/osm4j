@@ -39,6 +39,7 @@ public class TboIterator extends BlockReader implements OsmIterator
 {
 
 	private FileHeader header;
+	private boolean hasMetadata;
 
 	private int available = 0;
 	private int pointer = 0;
@@ -59,6 +60,7 @@ public class TboIterator extends BlockReader implements OsmIterator
 		super(reader);
 
 		header = ReaderUtil.parseHeader(reader);
+		hasMetadata = header.hasMetadata();
 	}
 
 	@Override
@@ -108,15 +110,15 @@ public class TboIterator extends BlockReader implements OsmIterator
 		switch (block.getType()) {
 		case Definitions.BLOCK_TYPE_NODES:
 			entityType = EntityType.Node;
-			entities = ReaderUtil.parseNodes(reader, block);
+			entities = ReaderUtil.parseNodes(reader, block, hasMetadata);
 			break;
 		case Definitions.BLOCK_TYPE_WAYS:
 			entityType = EntityType.Way;
-			entities = ReaderUtil.parseWays(reader, block);
+			entities = ReaderUtil.parseWays(reader, block, hasMetadata);
 			break;
 		case Definitions.BLOCK_TYPE_RELATIONS:
 			entityType = EntityType.Relation;
-			entities = ReaderUtil.parseRelations(reader, block);
+			entities = ReaderUtil.parseRelations(reader, block, hasMetadata);
 			break;
 		}
 	}

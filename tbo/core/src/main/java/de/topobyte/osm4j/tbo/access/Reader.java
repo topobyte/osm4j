@@ -34,6 +34,8 @@ import de.topobyte.osm4j.tbo.io.InputStreamCompactReader;
 public class Reader extends BlockReader
 {
 
+	private boolean hasMetadata;
+
 	private final Handler handler;
 
 	public Reader(CompactReader reader, Handler handler)
@@ -45,6 +47,7 @@ public class Reader extends BlockReader
 	public void run() throws IOException
 	{
 		FileHeader header = ReaderUtil.parseHeader(reader);
+		hasMetadata = header.hasMetadata();
 		handler.handle(header);
 
 		long notifysize = 100 * 1024 * 1024;
@@ -95,17 +98,19 @@ public class Reader extends BlockReader
 
 		// read objects
 		if (block.getType() == Definitions.BLOCK_TYPE_NODES) {
-			List<Node> nodes = ReaderUtil.parseNodes(reader, block);
+			List<Node> nodes = ReaderUtil
+					.parseNodes(reader, block, hasMetadata);
 			for (Node node : nodes) {
 				handler.handle(node);
 			}
 		} else if (block.getType() == Definitions.BLOCK_TYPE_WAYS) {
-			List<Way> ways = ReaderUtil.parseWays(reader, block);
+			List<Way> ways = ReaderUtil.parseWays(reader, block, hasMetadata);
 			for (Way way : ways) {
 				handler.handle(way);
 			}
 		} else if (block.getType() == Definitions.BLOCK_TYPE_RELATIONS) {
-			List<Relation> relations = ReaderUtil.parseRelations(reader, block);
+			List<Relation> relations = ReaderUtil.parseRelations(reader, block,
+					hasMetadata);
 			for (Relation relation : relations) {
 				handler.handle(relation);
 			}

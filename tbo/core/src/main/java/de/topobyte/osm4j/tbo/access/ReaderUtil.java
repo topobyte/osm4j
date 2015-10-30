@@ -111,8 +111,8 @@ public class ReaderUtil
 		return tags;
 	}
 
-	public static List<Node> parseNodes(CompactReader reader, FileBlock block)
-			throws IOException
+	public static List<Node> parseNodes(CompactReader reader, FileBlock block,
+			boolean hasMetadata) throws IOException
 	{
 		List<String> pool = parsePool(reader);
 
@@ -152,7 +152,7 @@ public class ReaderUtil
 	}
 
 	public static List<Way> parseWays(InputStreamCompactReader reader,
-			FileBlock block) throws IOException
+			FileBlock block, boolean hasMetadata) throws IOException
 	{
 		List<String> pool = parsePool(reader);
 
@@ -186,8 +186,8 @@ public class ReaderUtil
 	}
 
 	public static List<Relation> parseRelations(
-			InputStreamCompactReader reader, FileBlock block)
-			throws IOException
+			InputStreamCompactReader reader, FileBlock block,
+			boolean hasMetadata) throws IOException
 	{
 		List<String> pool = parsePool(reader);
 
