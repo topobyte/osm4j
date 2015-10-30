@@ -121,13 +121,13 @@ public class ReaderUtil
 	{
 		List<String> poolTags = parsePool(reader);
 
-		List<Node> nodes = new ArrayList<Node>(block.getNumObjects());
+		int n = block.getNumObjects();
+		List<Node> nodes = new ArrayList<Node>(n);
 
 		long idOffset = 0;
 		long latOffset = 0;
 		long lonOffset = 0;
 
-		int n = block.getNumObjects();
 		long[] ids = new long[n];
 		double[] lats = new double[n];
 		double[] lons = new double[n];
@@ -165,12 +165,13 @@ public class ReaderUtil
 	{
 		List<String> poolTags = parsePool(reader);
 
-		List<Way> ways = new ArrayList<Way>(block.getNumObjects());
+		int n = block.getNumObjects();
+		List<Way> ways = new ArrayList<Way>(n);
 
 		long idOffset = 0;
 		long nidOffset = 0;
 
-		for (int i = 0; i < block.getNumObjects(); i++) {
+		for (int i = 0; i < n; i++) {
 			long id = idOffset + reader.readVariableLengthSignedInteger();
 			idOffset = id;
 
@@ -182,11 +183,13 @@ public class ReaderUtil
 				nidOffset = nid;
 			}
 
-			List<Tag> tags = parseTags(reader, poolTags);
-
 			Way way = new Way(id, nodeIds);
 			ways.add(way);
-			way.setTags(tags);
+		}
+
+		for (int i = 0; i < n; i++) {
+			List<Tag> tags = parseTags(reader, poolTags);
+			ways.get(i).setTags(tags);
 		}
 
 		if (hasMetadata) {
@@ -203,13 +206,13 @@ public class ReaderUtil
 		List<String> poolTags = parsePool(reader);
 		List<String> poolMembers = parsePool(reader);
 
-		List<Relation> relations = new ArrayList<Relation>(
-				block.getNumObjects());
+		int n = block.getNumObjects();
+		List<Relation> relations = new ArrayList<Relation>(n);
 
 		long idOffset = 0;
 		long midOffset = 0;
 
-		for (int i = 0; i < block.getNumObjects(); i++) {
+		for (int i = 0; i < n; i++) {
 			long id = idOffset + reader.readVariableLengthSignedInteger();
 			idOffset = id;
 
@@ -226,10 +229,13 @@ public class ReaderUtil
 				members.add(new RelationMember(mid, type, role));
 			}
 
-			List<Tag> tags = parseTags(reader, poolTags);
 			Relation relation = new Relation(id, members);
 			relations.add(relation);
-			relation.setTags(tags);
+		}
+
+		for (int i = 0; i < n; i++) {
+			List<Tag> tags = parseTags(reader, poolTags);
+			relations.get(i).setTags(tags);
 		}
 
 		if (hasMetadata) {

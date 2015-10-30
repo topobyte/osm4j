@@ -38,6 +38,9 @@ public class WayBatch extends EntityBatch<OsmWay>
 		for (OsmWay way : elements) {
 			write(writer, way);
 		}
+		for (OsmWay way : elements) {
+			writeTags(writer, way);
+		}
 
 		writeMetadata(writer);
 	}
@@ -59,8 +62,6 @@ public class WayBatch extends EntityBatch<OsmWay>
 			writer.writeVariableLengthSignedInteger(nid - nidOffset);
 			nidOffset = nid;
 		}
-
-		writeTags(writer, way);
 	}
 
 	@Override

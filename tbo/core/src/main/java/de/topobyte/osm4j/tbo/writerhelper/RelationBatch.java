@@ -46,6 +46,9 @@ public class RelationBatch extends EntityBatch<OsmRelation>
 		for (OsmRelation relation : elements) {
 			write(writer, relation);
 		}
+		for (OsmRelation relation : elements) {
+			writeTags(writer, relation);
+		}
 
 		writeMetadata(writer);
 	}
@@ -74,8 +77,6 @@ public class RelationBatch extends EntityBatch<OsmRelation>
 			writer.writeVariableLengthUnsignedInteger(index);
 			midOffset = mid;
 		}
-
-		writeTags(writer, relation);
 	}
 
 	public void writeMemberStringPool(CompactWriter writer,
