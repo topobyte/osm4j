@@ -173,8 +173,6 @@ public class ReaderUtil
 				nidOffset = nid;
 			}
 
-			// System.out.println(String.format("way id: %d", id));
-
 			List<Tag> tags = parseTags(reader, pool);
 
 			Way way = new Way(id, nodeIds);
@@ -213,8 +211,6 @@ public class ReaderUtil
 				EntityType type = EntityTypeHelper.getType(typeByte);
 				members.add(new RelationMember(mid, type, role));
 			}
-
-			// System.out.println(String.format("relation id: %d", id));
 
 			List<Tag> tags = parseTags(reader, pool);
 			Relation relation = new Relation(id, members);
