@@ -22,8 +22,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import de.topobyte.osm4j.core.access.OsmOutputStream;
 import de.topobyte.osm4j.core.model.iface.OsmEntity;
+import de.topobyte.osm4j.core.model.iface.OsmMetadata;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.osm4j.core.model.iface.OsmRelation;
 import de.topobyte.osm4j.core.model.iface.OsmRelationMember;
@@ -32,6 +36,8 @@ import de.topobyte.osm4j.core.model.util.OsmModelUtil;
 
 public class DataSetHelper
 {
+
+	final static Logger logger = LoggerFactory.getLogger(DataSetHelper.class);
 
 	public static void write(DataSet data, OsmOutputStream output)
 			throws IOException
@@ -61,7 +67,8 @@ public class DataSetHelper
 		return true;
 	}
 
-	public static boolean nodesEqual(List<OsmNode> nodes1, List<OsmNode> nodes2)
+	public static boolean nodesEqual(List<? extends OsmNode> nodes1,
+			List<? extends OsmNode> nodes2)
 	{
 		if (nodes1.size() != nodes2.size()) {
 			return false;
@@ -77,7 +84,8 @@ public class DataSetHelper
 		return true;
 	}
 
-	public static boolean waysEqual(List<OsmWay> ways1, List<OsmWay> ways2)
+	public static boolean waysEqual(List<? extends OsmWay> ways1,
+			List<? extends OsmWay> ways2)
 	{
 		if (ways1.size() != ways2.size()) {
 			return false;
@@ -93,8 +101,9 @@ public class DataSetHelper
 		return true;
 	}
 
-	public static boolean relationsEqual(List<OsmRelation> relations1,
-			List<OsmRelation> relations2)
+	public static boolean relationsEqual(
+			List<? extends OsmRelation> relations1,
+			List<? extends OsmRelation> relations2)
 	{
 		if (relations1.size() != relations2.size()) {
 			return false;
@@ -113,19 +122,22 @@ public class DataSetHelper
 	public static boolean equals(OsmNode a, OsmNode b)
 	{
 		if (a.getId() != b.getId()) {
-			System.out.println("Node ids not equal");
+			logger.debug("Node ids not equal");
 			return false;
 		}
 		if (Math.abs(a.getLongitude() - b.getLongitude()) > 0.0001) {
-			System.out.println("Longitudes not equal");
+			logger.debug("Longitudes not equal");
 			return false;
 		}
 		if (Math.abs(a.getLatitude() - b.getLatitude()) > 0.0001) {
-			System.out.println("Latitudes not equal");
+			logger.debug("Latitudes not equal");
 			return false;
 		}
 		if (!tagsEqual(a, b)) {
-			System.out.println("Node tags not equal");
+			logger.debug("Node tags not equal");
+			return false;
+		}
+		if (!metadataEqual(a, b)) {
 			return false;
 		}
 		return true;
@@ -134,15 +146,18 @@ public class DataSetHelper
 	public static boolean equals(OsmWay a, OsmWay b)
 	{
 		if (a.getId() != b.getId()) {
-			System.out.println("Way ids not equal");
+			logger.debug("Way ids not equal");
 			return false;
 		}
 		if (!nodeRefsEqual(a, b)) {
-			System.out.println("Node references not equal");
+			logger.debug("Node references not equal");
 			return false;
 		}
 		if (!tagsEqual(a, b)) {
-			System.out.println("Way tags not equal");
+			logger.debug("Way tags not equal");
+			return false;
+		}
+		if (!metadataEqual(a, b)) {
 			return false;
 		}
 		return true;
@@ -151,15 +166,18 @@ public class DataSetHelper
 	public static boolean equals(OsmRelation a, OsmRelation b)
 	{
 		if (a.getId() != b.getId()) {
-			System.out.println("Relation ids not equal");
+			logger.debug("Relation ids not equal");
 			return false;
 		}
 		if (!membersEqual(a, b)) {
-			System.out.println("Members not equal");
+			logger.debug("Members not equal");
 			return false;
 		}
 		if (!tagsEqual(a, b)) {
-			System.out.println("Relation tags not equal");
+			logger.debug("Relation tags not equal");
+			return false;
+		}
+		if (!metadataEqual(a, b)) {
 			return false;
 		}
 		return true;
@@ -187,10 +205,27 @@ public class DataSetHelper
 		return true;
 	}
 
+	public static boolean metadataEqual(OsmEntity a, OsmEntity b)
+	{
+		OsmMetadata ma = a.getMetadata();
+		OsmMetadata mb = b.getMetadata();
+		if (ma == null && mb == null) {
+			return true;
+		}
+		if (ma == null || mb == null) {
+			return false;
+		}
+		return ma.getChangeset() == mb.getChangeset()
+				&& ma.getTimestamp() == mb.getTimestamp()
+				&& ma.getUid() == mb.getUid()
+				&& ma.getUser().equals(mb.getUser())
+				&& ma.getVersion() == mb.getVersion();
+	}
+
 	public static boolean nodeRefsEqual(OsmWay a, OsmWay b)
 	{
 		if (a.getNumberOfNodes() != b.getNumberOfNodes()) {
-			System.out.println("Number of node references not equal");
+			logger.debug("Number of node references not equal");
 			return false;
 		}
 		int n = a.getNumberOfNodes();
