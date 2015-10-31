@@ -17,9 +17,9 @@
 
 package de.topobyte.osm4j.testing;
 
-import de.topobyte.osm4j.core.model.iface.OsmNode;
-import de.topobyte.osm4j.core.model.iface.OsmRelation;
-import de.topobyte.osm4j.core.model.iface.OsmWay;
+import de.topobyte.osm4j.testing.model.TestNode;
+import de.topobyte.osm4j.testing.model.TestRelation;
+import de.topobyte.osm4j.testing.model.TestWay;
 
 public class DataSetGenerator
 {
@@ -35,16 +35,16 @@ public class DataSetGenerator
 	{
 		DataSet dataSet = new DataSet();
 		for (int i = 0; i < numNodes; i++) {
-			OsmNode node = entityGenerator.generateNode();
+			TestNode node = entityGenerator.generateNode();
 			dataSet.getNodes().add(node);
 		}
 		for (int i = 0; i < numWays; i++) {
-			OsmWay way = entityGenerator.generateWay();
+			TestWay way = entityGenerator.generateWay();
 			dataSet.getWays().add(way);
 		}
 
 		for (int i = 0; i < numRelations; i++) {
-			OsmRelation relation = entityGenerator.generateRelation();
+			TestRelation relation = entityGenerator.generateRelation();
 			dataSet.getRelations().add(relation);
 		}
 		return dataSet;

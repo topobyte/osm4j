@@ -25,18 +25,13 @@ import java.util.List;
 import java.util.Random;
 
 import de.topobyte.osm4j.core.model.iface.EntityType;
-import de.topobyte.osm4j.core.model.iface.OsmNode;
-import de.topobyte.osm4j.core.model.iface.OsmRelation;
-import de.topobyte.osm4j.core.model.iface.OsmRelationMember;
-import de.topobyte.osm4j.core.model.iface.OsmTag;
-import de.topobyte.osm4j.core.model.iface.OsmWay;
-import de.topobyte.osm4j.core.model.impl.Entity;
-import de.topobyte.osm4j.core.model.impl.Metadata;
-import de.topobyte.osm4j.core.model.impl.Node;
-import de.topobyte.osm4j.core.model.impl.Relation;
-import de.topobyte.osm4j.core.model.impl.RelationMember;
-import de.topobyte.osm4j.core.model.impl.Tag;
-import de.topobyte.osm4j.core.model.impl.Way;
+import de.topobyte.osm4j.testing.model.TestEntity;
+import de.topobyte.osm4j.testing.model.TestMetadata;
+import de.topobyte.osm4j.testing.model.TestNode;
+import de.topobyte.osm4j.testing.model.TestRelation;
+import de.topobyte.osm4j.testing.model.TestRelationMember;
+import de.topobyte.osm4j.testing.model.TestTag;
+import de.topobyte.osm4j.testing.model.TestWay;
 
 public class EntityGenerator
 {
@@ -75,12 +70,12 @@ public class EntityGenerator
 		this.generateMetadata = generateMetadata;
 	}
 
-	public OsmNode generateNode()
+	public TestNode generateNode()
 	{
 		long id = nodeId();
 		double lon = lon();
 		double lat = lat();
-		Node node = new Node(id, lon, lat);
+		TestNode node = new TestNode(id, lon, lat);
 		generateTags(node);
 		if (generateMetadata) {
 			generateMetadata(node);
@@ -88,7 +83,7 @@ public class EntityGenerator
 		return node;
 	}
 
-	public OsmWay generateWay()
+	public TestWay generateWay()
 	{
 		long id = wayId();
 		TLongList nodes = new TLongArrayList();
@@ -97,7 +92,7 @@ public class EntityGenerator
 			long node = positiveLong();
 			nodes.add(node);
 		}
-		Way way = new Way(id, nodes);
+		TestWay way = new TestWay(id, nodes);
 		generateTags(way);
 		if (generateMetadata) {
 			generateMetadata(way);
@@ -105,18 +100,18 @@ public class EntityGenerator
 		return way;
 	}
 
-	public OsmRelation generateRelation()
+	public TestRelation generateRelation()
 	{
 		long id = relationId();
-		List<OsmRelationMember> members = new ArrayList<>();
+		List<TestRelationMember> members = new ArrayList<>();
 		int numMembers = minMembers + random.nextInt(maxMembers - minMembers);
 		for (int i = 0; i < numMembers; i++) {
 			long member = positiveLong();
 			EntityType type = type();
 			String role = role();
-			members.add(new RelationMember(member, type, role));
+			members.add(new TestRelationMember(member, type, role));
 		}
-		Relation relation = new Relation(id, members);
+		TestRelation relation = new TestRelation(id, members);
 		generateTags(relation);
 		if (generateMetadata) {
 			generateMetadata(relation);
@@ -209,24 +204,24 @@ public class EntityGenerator
 		return CHARS.charAt(random.nextInt(CHARS.length()));
 	}
 
-	private void generateTags(Entity entity)
+	private void generateTags(TestEntity entity)
 	{
-		List<OsmTag> tags = new ArrayList<>();
+		List<TestTag> tags = new ArrayList<>();
 		long num = minTags + random.nextInt(maxTags - minTags);
 		for (int i = 0; i < num; i++) {
-			tags.add(new Tag(key(), value()));
+			tags.add(new TestTag(key(), value()));
 		}
 		entity.setTags(tags);
 	}
 
-	private void generateMetadata(Entity entity)
+	private void generateMetadata(TestEntity entity)
 	{
 		int version = random.nextInt();
 		long timestamp = positiveLong() * 1000;
 		long uid = positiveLong();
 		String user = username();
 		long changeset = positiveLong();
-		Metadata metadata = new Metadata(version, timestamp, uid, user,
+		TestMetadata metadata = new TestMetadata(version, timestamp, uid, user,
 				changeset);
 		entity.setMetadata(metadata);
 	}

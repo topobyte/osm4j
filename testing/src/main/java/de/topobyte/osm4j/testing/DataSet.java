@@ -24,15 +24,17 @@ import java.util.List;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.osm4j.core.model.iface.OsmRelation;
 import de.topobyte.osm4j.core.model.iface.OsmWay;
-import de.topobyte.osm4j.core.model.util.ImplUtil;
 import de.topobyte.osm4j.core.resolve.InMemoryDataSet;
+import de.topobyte.osm4j.testing.model.TestNode;
+import de.topobyte.osm4j.testing.model.TestRelation;
+import de.topobyte.osm4j.testing.model.TestWay;
 
 public class DataSet
 {
 
-	private List<OsmNode> nodes = new ArrayList<>();
-	private List<OsmWay> ways = new ArrayList<>();
-	private List<OsmRelation> relations = new ArrayList<>();
+	private List<TestNode> nodes = new ArrayList<>();
+	private List<TestWay> ways = new ArrayList<>();
+	private List<TestRelation> relations = new ArrayList<>();
 
 	public DataSet()
 	{
@@ -41,13 +43,13 @@ public class DataSet
 	public DataSet(DataSet data)
 	{
 		for (OsmNode node : data.getNodes()) {
-			nodes.add(ImplUtil.clone(node));
+			nodes.add(EntityHelper.clone(node));
 		}
 		for (OsmWay way : data.getWays()) {
-			ways.add(ImplUtil.clone(way));
+			ways.add(EntityHelper.clone(way));
 		}
 		for (OsmRelation relation : data.getRelations()) {
-			relations.add(ImplUtil.clone(relation));
+			relations.add(EntityHelper.clone(relation));
 		}
 	}
 
@@ -56,48 +58,49 @@ public class DataSet
 		long[] nodeIds = data.getNodes().keys();
 		Arrays.sort(nodeIds);
 		for (int i = 0; i < nodeIds.length; i++) {
-			nodes.add(data.getNodes().get(nodeIds[i]));
+			nodes.add(EntityHelper.clone(data.getNodes().get(nodeIds[i])));
 		}
 
 		long[] wayIds = data.getWays().keys();
 		Arrays.sort(wayIds);
 		for (int i = 0; i < wayIds.length; i++) {
-			ways.add(data.getWays().get(wayIds[i]));
+			ways.add(EntityHelper.clone(data.getWays().get(wayIds[i])));
 		}
 
 		long[] relationIds = data.getRelations().keys();
 		Arrays.sort(relationIds);
 		for (int i = 0; i < relationIds.length; i++) {
-			relations.add(data.getRelations().get(relationIds[i]));
+			relations.add(EntityHelper.clone(data.getRelations().get(
+					relationIds[i])));
 		}
 	}
 
-	public List<OsmNode> getNodes()
+	public List<TestNode> getNodes()
 	{
 		return nodes;
 	}
 
-	public void setNodes(List<OsmNode> nodes)
+	public void setNodes(List<TestNode> nodes)
 	{
 		this.nodes = nodes;
 	}
 
-	public List<OsmWay> getWays()
+	public List<TestWay> getWays()
 	{
 		return ways;
 	}
 
-	public void setWays(List<OsmWay> ways)
+	public void setWays(List<TestWay> ways)
 	{
 		this.ways = ways;
 	}
 
-	public List<OsmRelation> getRelations()
+	public List<TestRelation> getRelations()
 	{
 		return relations;
 	}
 
-	public void setRelations(List<OsmRelation> relations)
+	public void setRelations(List<TestRelation> relations)
 	{
 		this.relations = relations;
 	}
