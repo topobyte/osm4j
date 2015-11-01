@@ -17,6 +17,7 @@
 
 package de.topobyte.osm4j.extra.datatree;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
@@ -35,12 +36,12 @@ public class Util
 {
 
 	public static OsmIterator setupOsmInput(InputStream in, FileFormat format,
-			boolean readMetadata)
+			boolean readMetadata) throws IOException
 	{
 		switch (format) {
 		default:
 		case TBO:
-			return new TboIterator(in);
+			return new TboIterator(in, readMetadata);
 		case XML:
 			return new OsmXmlIterator(in, readMetadata);
 		case PBF:
@@ -54,7 +55,7 @@ public class Util
 		switch (format) {
 		default:
 		case TBO:
-			return new TboWriter(out);
+			return new TboWriter(out, writeMetadata);
 		case XML:
 			return new OsmXmlOutputStream(out, writeMetadata);
 		case PBF:

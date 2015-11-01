@@ -18,7 +18,6 @@
 package de.topobyte.osm4j.extra.datatree;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -39,6 +38,8 @@ import de.topobyte.osm4j.utils.AbstractTaskSingleInputIterator;
 import de.topobyte.osm4j.utils.FileFormat;
 import de.topobyte.osm4j.utils.config.PbfConfig;
 import de.topobyte.osm4j.utils.config.PbfOptions;
+import de.topobyte.osm4j.utils.config.TboConfig;
+import de.topobyte.osm4j.utils.config.TboOptions;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
 public abstract class BaseNodeTreeCreator extends
@@ -51,6 +52,7 @@ public abstract class BaseNodeTreeCreator extends
 	protected String pathOutput;
 	protected FileFormat outputFormat;
 	protected PbfConfig pbfConfig;
+	protected TboConfig tboConfig;
 	protected boolean writeMetadata = true;
 
 	protected File dirOutput;
@@ -65,6 +67,7 @@ public abstract class BaseNodeTreeCreator extends
 		OptionHelper.add(options, OPTION_OUTPUT_FORMAT, true, true, "the file format of the output");
 		OptionHelper.add(options, OPTION_OUTPUT, true, true, "directory to store output in");
 		PbfOptions.add(options);
+		TboOptions.add(options);
 		// @formatter:on
 	}
 
@@ -83,12 +86,14 @@ public abstract class BaseNodeTreeCreator extends
 		}
 
 		pbfConfig = PbfOptions.parse(line);
+		tboConfig = TboOptions.parse(line);
 
 		pathOutput = line.getOptionValue(OPTION_OUTPUT);
+		fileNames = line.getOptionValue(OPTION_FILE_NAMES);
 	}
 
 	@Override
-	protected void init() throws FileNotFoundException
+	protected void init() throws IOException
 	{
 		super.init();
 
