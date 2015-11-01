@@ -83,7 +83,7 @@ public class TestWriteRead
 		Assert.assertTrue(DataSetHelper.equals(generated, read));
 		Assert.assertTrue(DataSetHelper.nodesEqual(generated.getNodes(),
 				read.getNodes()));
-		Assert.assertFalse(DataSetHelper.waysEqual(generated.getWays(),
+		Assert.assertTrue(DataSetHelper.waysEqual(generated.getWays(),
 				read.getWays()));
 		Assert.assertTrue(DataSetHelper.relationsEqual(
 				generated.getRelations(), read.getRelations()));
