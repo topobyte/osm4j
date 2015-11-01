@@ -21,7 +21,6 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -125,7 +124,7 @@ public abstract class AbstractTaskSingleInputIteratorSingleOutput
 		pathOutput = line.getOptionValue(OPTION_OUTPUT);
 	}
 
-	protected void init() throws FileNotFoundException
+	protected void init() throws IOException
 	{
 		in = null;
 		if (pathInput == null) {
@@ -154,7 +153,7 @@ public abstract class AbstractTaskSingleInputIteratorSingleOutput
 			inputIterator = new OsmXmlIterator(in, readMetadata);
 			break;
 		case TBO:
-			inputIterator = new TboIterator(in);
+			inputIterator = new TboIterator(in, readMetadata);
 			break;
 		case PBF:
 			inputIterator = new PbfIterator(in, readMetadata);
@@ -166,7 +165,7 @@ public abstract class AbstractTaskSingleInputIteratorSingleOutput
 			osmOutputStream = new OsmXmlOutputStream(out, writeMetadata);
 			break;
 		case TBO:
-			osmOutputStream = new TboWriter(out);
+			osmOutputStream = new TboWriter(out, writeMetadata);
 			break;
 		case PBF:
 			PbfWriter pbfWriter = new PbfWriter(out, writeMetadata);

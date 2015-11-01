@@ -17,7 +17,6 @@
 
 package de.topobyte.osm4j.utils;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import de.topobyte.adt.geo.BBox;
@@ -78,7 +77,7 @@ public class OsmBboxFilter extends AbstractAreaFilter
 	}
 
 	@Override
-	protected void init() throws FileNotFoundException
+	protected void init() throws IOException
 	{
 		super.init();
 

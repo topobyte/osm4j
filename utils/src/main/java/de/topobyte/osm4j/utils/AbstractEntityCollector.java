@@ -23,7 +23,6 @@ import gnu.trove.set.hash.TLongHashSet;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Iterator;
@@ -68,7 +67,7 @@ public abstract class AbstractEntityCollector extends
 	}
 
 	@Override
-	protected void init() throws FileNotFoundException
+	protected void init() throws IOException
 	{
 		File file = new File(pathReferences);
 		FileInputStream fis = new FileInputStream(file);
@@ -79,7 +78,7 @@ public abstract class AbstractEntityCollector extends
 			iteratorReferences = new OsmXmlIterator(inRefs, readMetadata);
 			break;
 		case TBO:
-			iteratorReferences = new TboIterator(inRefs);
+			iteratorReferences = new TboIterator(inRefs, readMetadata);
 			break;
 		case PBF:
 			iteratorReferences = new PbfIterator(inRefs, readMetadata);

@@ -20,7 +20,6 @@ package de.topobyte.osm4j.utils;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -94,7 +93,7 @@ public abstract class AbstractTaskSingleInputReader implements OsmHandler
 		pathInput = line.getOptionValue(OPTION_INPUT);
 	}
 
-	protected void init() throws FileNotFoundException
+	protected void init() throws IOException
 	{
 		in = null;
 		if (pathInput == null) {
@@ -112,7 +111,7 @@ public abstract class AbstractTaskSingleInputReader implements OsmHandler
 			inputReader = new OsmXmlReader(in, readMetadata);
 			break;
 		case TBO:
-			inputReader = new TboReader(in);
+			inputReader = new TboReader(in, readMetadata);
 			break;
 		case PBF:
 			inputReader = new PbfReader(in, readMetadata);

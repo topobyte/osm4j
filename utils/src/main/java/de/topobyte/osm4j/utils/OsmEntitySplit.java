@@ -18,7 +18,6 @@
 package de.topobyte.osm4j.utils;
 
 import java.io.BufferedOutputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -136,7 +135,7 @@ public class OsmEntitySplit extends AbstractTaskSingleInputIterator
 	}
 
 	@Override
-	public void init() throws FileNotFoundException
+	public void init() throws IOException
 	{
 		super.init();
 
@@ -162,7 +161,7 @@ public class OsmEntitySplit extends AbstractTaskSingleInputIterator
 		switch (outputFormat) {
 		default:
 		case TBO:
-			return new TboWriter(out);
+			return new TboWriter(out, writeMetadata);
 		case XML:
 			return new OsmXmlOutputStream(out, writeMetadata);
 		case PBF:

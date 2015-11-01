@@ -17,7 +17,6 @@
 
 package de.topobyte.osm4j.utils;
 
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
@@ -82,7 +81,7 @@ public class OsmRegionFilter extends AbstractAreaFilter
 	}
 
 	@Override
-	protected void init() throws FileNotFoundException
+	protected void init() throws IOException
 	{
 		super.init();
 

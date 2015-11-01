@@ -19,7 +19,6 @@ package de.topobyte.osm4j.utils;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -99,7 +98,7 @@ public abstract class AbstractTaskSingleOutput
 		pathOutput = line.getOptionValue(OPTION_OUTPUT);
 	}
 
-	protected void init() throws FileNotFoundException
+	protected void init() throws IOException
 	{
 		out = null;
 		if (pathOutput == null) {
@@ -117,7 +116,7 @@ public abstract class AbstractTaskSingleOutput
 			osmOutputStream = new OsmXmlOutputStream(out, writeMetadata);
 			break;
 		case TBO:
-			osmOutputStream = new TboWriter(out);
+			osmOutputStream = new TboWriter(out, writeMetadata);
 			break;
 		case PBF:
 			PbfWriter pbfWriter = new PbfWriter(out, writeMetadata);

@@ -20,7 +20,6 @@ package de.topobyte.osm4j.utils;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -113,7 +112,7 @@ public class OsmMerge extends AbstractTaskSingleOutput
 	private List<Iterator<EntityContainer>> iterators = new ArrayList<Iterator<EntityContainer>>();
 
 	@Override
-	protected void init() throws FileNotFoundException
+	protected void init() throws IOException
 	{
 		super.init();
 
@@ -131,7 +130,7 @@ public class OsmMerge extends AbstractTaskSingleOutput
 				inputIterator = new OsmXmlIterator(in, readMetadata);
 				break;
 			case TBO:
-				inputIterator = new TboIterator(in);
+				inputIterator = new TboIterator(in, readMetadata);
 				break;
 			case PBF:
 				inputIterator = new PbfIterator(in, readMetadata);
