@@ -46,7 +46,7 @@ public class EntityGenerator
 	private long lastRelationId = 0;
 
 	private double minLon = -180;
-	private double maxLon = -180;
+	private double maxLon = 180;
 	private double minLat = -90;
 	private double maxLat = 90;
 	private int minNodes = 2;
