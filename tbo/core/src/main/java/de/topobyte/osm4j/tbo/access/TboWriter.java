@@ -300,6 +300,9 @@ public class TboWriter extends BlockWriter implements OsmOutputStream
 	private void finishHeader() throws IOException
 	{
 		if (mode == Mode.HEADER) {
+			if (header == null) {
+				header = WriterUtil.createHeader(writeMetadata, null);
+			}
 			header.write(writer);
 			mode = Mode.NODE;
 		}
