@@ -27,6 +27,7 @@ import org.slf4j.LoggerFactory;
 
 import de.topobyte.osm4j.core.access.OsmOutputStream;
 import de.topobyte.osm4j.core.model.iface.EntityContainer;
+import de.topobyte.osm4j.core.model.iface.OsmBounds;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.osm4j.core.model.iface.OsmRelation;
 import de.topobyte.osm4j.core.model.iface.OsmWay;
@@ -180,6 +181,13 @@ public class OsmEntitySplit extends AbstractTaskSingleInputIterator
 
 	public void run() throws IOException
 	{
+		if (inputIterator.hasBounds()) {
+			OsmBounds bounds = inputIterator.getBounds();
+			oosNodes.write(bounds);
+			oosWays.write(bounds);
+			oosRelations.write(bounds);
+		}
+
 		loop: while (inputIterator.hasNext()) {
 			EntityContainer entityContainer = inputIterator.next();
 			switch (entityContainer.getType()) {
