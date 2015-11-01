@@ -70,6 +70,26 @@ public class EntityGenerator
 		this.generateMetadata = generateMetadata;
 	}
 
+	public int getIdSpan()
+	{
+		return idSpan;
+	}
+
+	public void setIdSpan(int idSpan)
+	{
+		this.idSpan = idSpan;
+	}
+
+	public boolean isGenerateMetadata()
+	{
+		return generateMetadata;
+	}
+
+	public void setGenerateMetadata(boolean generateMetadata)
+	{
+		this.generateMetadata = generateMetadata;
+	}
+
 	public TestNode generateNode()
 	{
 		long id = nodeId();
