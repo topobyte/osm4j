@@ -34,6 +34,8 @@ import de.topobyte.osm4j.pbf.seq.PbfWriter;
 import de.topobyte.osm4j.tbo.access.TboWriter;
 import de.topobyte.osm4j.utils.config.PbfConfig;
 import de.topobyte.osm4j.utils.config.PbfOptions;
+import de.topobyte.osm4j.utils.config.TboConfig;
+import de.topobyte.osm4j.utils.config.TboOptions;
 import de.topobyte.osm4j.xml.output.OsmXmlOutputStream;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
@@ -69,6 +71,7 @@ public class OsmEntitySplit extends AbstractTaskSingleInputIterator
 
 	private FileFormat outputFormat;
 	private PbfConfig pbfConfig;
+	private TboConfig tboConfig;
 
 	private boolean passNodes = false;
 	private boolean passWays = false;
@@ -94,6 +97,7 @@ public class OsmEntitySplit extends AbstractTaskSingleInputIterator
 		OptionHelper.add(options, OPTION_OUTPUT_WAYS, true, false, "the file to write ways to");
 		OptionHelper.add(options, OPTION_OUTPUT_RELATIONS, true, false, "the file to write relations to");
 		PbfOptions.add(options);
+		TboOptions.add(options);
 		// @formatter:on
 	}
 
@@ -112,6 +116,7 @@ public class OsmEntitySplit extends AbstractTaskSingleInputIterator
 		}
 
 		pbfConfig = PbfOptions.parse(line);
+		tboConfig = TboOptions.parse(line);
 
 		readMetadata = outputFormat != FileFormat.TBO;
 
@@ -162,7 +167,9 @@ public class OsmEntitySplit extends AbstractTaskSingleInputIterator
 		switch (outputFormat) {
 		default:
 		case TBO:
-			return new TboWriter(out, writeMetadata);
+			TboWriter tboWriter = new TboWriter(out, writeMetadata);
+			tboWriter.setCompression(tboConfig.getCompression());
+			return tboWriter;
 		case XML:
 			return new OsmXmlOutputStream(out, writeMetadata);
 		case PBF:

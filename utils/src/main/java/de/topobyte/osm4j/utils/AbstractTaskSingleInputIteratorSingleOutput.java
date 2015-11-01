@@ -40,6 +40,8 @@ import de.topobyte.osm4j.tbo.access.TboIterator;
 import de.topobyte.osm4j.tbo.access.TboWriter;
 import de.topobyte.osm4j.utils.config.PbfConfig;
 import de.topobyte.osm4j.utils.config.PbfOptions;
+import de.topobyte.osm4j.utils.config.TboConfig;
+import de.topobyte.osm4j.utils.config.TboOptions;
 import de.topobyte.osm4j.xml.dynsax.OsmXmlIterator;
 import de.topobyte.osm4j.xml.output.OsmXmlOutputStream;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
@@ -60,6 +62,7 @@ public abstract class AbstractTaskSingleInputIteratorSingleOutput
 	protected FileFormat inputFormat;
 	protected FileFormat outputFormat;
 	protected PbfConfig pbfConfig;
+	protected TboConfig tboConfig;
 	protected String pathInput = null;
 	protected String pathOutput = null;
 
@@ -82,6 +85,7 @@ public abstract class AbstractTaskSingleInputIteratorSingleOutput
 		OptionHelper.add(options, OPTION_OUTPUT, true, false, "the output file");
 		OptionHelper.add(options, OPTION_OUTPUT_FORMAT, true, true, "the file format of the output");
 		PbfOptions.add(options);
+		TboOptions.add(options);
 		// @formatter:on
 	}
 
@@ -119,6 +123,7 @@ public abstract class AbstractTaskSingleInputIteratorSingleOutput
 		}
 
 		pbfConfig = PbfOptions.parse(line);
+		tboConfig = TboOptions.parse(line);
 
 		pathInput = line.getOptionValue(OPTION_INPUT);
 		pathOutput = line.getOptionValue(OPTION_OUTPUT);
@@ -165,7 +170,9 @@ public abstract class AbstractTaskSingleInputIteratorSingleOutput
 			osmOutputStream = new OsmXmlOutputStream(out, writeMetadata);
 			break;
 		case TBO:
-			osmOutputStream = new TboWriter(out, writeMetadata);
+			TboWriter tboWriter = new TboWriter(out, writeMetadata);
+			tboWriter.setCompression(tboConfig.getCompression());
+			osmOutputStream = tboWriter;
 			break;
 		case PBF:
 			PbfWriter pbfWriter = new PbfWriter(out, writeMetadata);

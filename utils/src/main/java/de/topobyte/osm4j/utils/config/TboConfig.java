@@ -17,13 +17,12 @@
 
 package de.topobyte.osm4j.utils.config;
 
-import de.topobyte.osm4j.pbf.Compression;
+import de.topobyte.osm4j.tbo.Compression;
 
-public class PbfConfig
+public class TboConfig
 {
 
-	private Compression compression = Compression.DEFLATE;
-	private boolean useDenseNodes = true;
+	private Compression compression = Compression.LZ4;
 
 	public Compression getCompression()
 	{
@@ -33,16 +32,6 @@ public class PbfConfig
 	public void setCompression(Compression compression)
 	{
 		this.compression = compression;
-	}
-
-	public boolean isUseDenseNodes()
-	{
-		return useDenseNodes;
-	}
-
-	public void setUseDenseNodes(boolean useDenseNodes)
-	{
-		this.useDenseNodes = useDenseNodes;
 	}
 
 }
