@@ -41,11 +41,6 @@ public class OsmFindMostRecentTimestamp extends AbstractTaskSingleInputIterator
 		OsmFindMostRecentTimestamp task = new OsmFindMostRecentTimestamp();
 		task.setup(args);
 
-		if (task.inputFormat == FileFormat.TBO) {
-			System.out.println("Tbo file format does not support metadata");
-			System.exit(1);
-		}
-
 		task.readMetadata = true;
 		task.init();
 

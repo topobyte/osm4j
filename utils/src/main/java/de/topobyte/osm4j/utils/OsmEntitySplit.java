@@ -118,8 +118,6 @@ public class OsmEntitySplit extends AbstractTaskSingleInputIterator
 		pbfConfig = PbfOptions.parse(line);
 		tboConfig = TboOptions.parse(line);
 
-		readMetadata = outputFormat != FileFormat.TBO;
-
 		if (line.hasOption(OPTION_OUTPUT_NODES)) {
 			passNodes = true;
 			pathNodes = line.getOptionValue(OPTION_OUTPUT_NODES);
