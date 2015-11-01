@@ -48,7 +48,7 @@ public class TestCountCallback implements Handler
 		FileInputStream input = new FileInputStream(file);
 		CompactReader compactReader = new InputStreamCompactReader(input);
 
-		Reader reader = new Reader(compactReader, count);
+		Reader reader = new Reader(compactReader, count, false);
 		reader.run();
 	}
 

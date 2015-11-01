@@ -19,6 +19,7 @@ package de.topobyte.osm4j.tbo.access;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 import de.topobyte.compactio.CompactReader;
@@ -35,13 +36,20 @@ public class Reader extends BlockReader
 {
 
 	private boolean hasMetadata;
+	private boolean fetchMetadata;
 
 	private final Handler handler;
 
-	public Reader(CompactReader reader, Handler handler)
+	public Reader(InputStream is, Handler handler, boolean fetchMetadata)
+	{
+		this(new InputStreamCompactReader(is), handler, fetchMetadata);
+	}
+
+	public Reader(CompactReader reader, Handler handler, boolean fetchMetadata)
 	{
 		super(reader);
 		this.handler = handler;
+		this.fetchMetadata = fetchMetadata;
 	}
 
 	public void run() throws IOException
@@ -97,19 +105,20 @@ public class Reader extends BlockReader
 
 		// read objects
 		if (block.getType() == Definitions.BLOCK_TYPE_NODES) {
-			List<Node> nodes = ReaderUtil
-					.parseNodes(reader, block, hasMetadata);
+			List<Node> nodes = ReaderUtil.parseNodes(reader, block,
+					hasMetadata, fetchMetadata);
 			for (Node node : nodes) {
 				handler.handle(node);
 			}
 		} else if (block.getType() == Definitions.BLOCK_TYPE_WAYS) {
-			List<Way> ways = ReaderUtil.parseWays(reader, block, hasMetadata);
+			List<Way> ways = ReaderUtil.parseWays(reader, block, hasMetadata,
+					fetchMetadata);
 			for (Way way : ways) {
 				handler.handle(way);
 			}
 		} else if (block.getType() == Definitions.BLOCK_TYPE_RELATIONS) {
 			List<Relation> relations = ReaderUtil.parseRelations(reader, block,
-					hasMetadata);
+					hasMetadata, fetchMetadata);
 			for (Relation relation : relations) {
 				handler.handle(relation);
 			}

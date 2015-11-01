@@ -40,6 +40,7 @@ public class TboIterator extends BlockReader implements OsmIterator
 
 	private FileHeader header;
 	private boolean hasMetadata;
+	private boolean fetchMetadata;
 
 	private int available = 0;
 	private int pointer = 0;
@@ -49,14 +50,17 @@ public class TboIterator extends BlockReader implements OsmIterator
 	private EntityType entityType = EntityType.Node;
 	private List<? extends OsmEntity> entities = null;
 
-	public TboIterator(InputStream input) throws IOException
+	public TboIterator(InputStream input, boolean fetchMetadata)
+			throws IOException
 	{
-		this(new InputStreamCompactReader(input));
+		this(new InputStreamCompactReader(input), fetchMetadata);
 	}
 
-	public TboIterator(CompactReader reader) throws IOException
+	public TboIterator(CompactReader reader, boolean fetchMetadata)
+			throws IOException
 	{
 		super(reader);
+		this.fetchMetadata = fetchMetadata;
 
 		header = ReaderUtil.parseHeader(reader);
 		hasMetadata = header.hasMetadata();
@@ -108,15 +112,18 @@ public class TboIterator extends BlockReader implements OsmIterator
 		switch (block.getType()) {
 		case Definitions.BLOCK_TYPE_NODES:
 			entityType = EntityType.Node;
-			entities = ReaderUtil.parseNodes(reader, block, hasMetadata);
+			entities = ReaderUtil.parseNodes(reader, block, hasMetadata,
+					fetchMetadata);
 			break;
 		case Definitions.BLOCK_TYPE_WAYS:
 			entityType = EntityType.Way;
-			entities = ReaderUtil.parseWays(reader, block, hasMetadata);
+			entities = ReaderUtil.parseWays(reader, block, hasMetadata,
+					fetchMetadata);
 			break;
 		case Definitions.BLOCK_TYPE_RELATIONS:
 			entityType = EntityType.Relation;
-			entities = ReaderUtil.parseRelations(reader, block, hasMetadata);
+			entities = ReaderUtil.parseRelations(reader, block, hasMetadata,
+					fetchMetadata);
 			break;
 		}
 	}

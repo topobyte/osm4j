@@ -44,7 +44,7 @@ public class TestCountIterator
 		FileInputStream input = new FileInputStream(file);
 		CompactReader compactReader = new InputStreamCompactReader(input);
 
-		TboIterator iterator = new TboIterator(compactReader);
+		TboIterator iterator = new TboIterator(compactReader, false);
 		while (iterator.hasNext()) {
 			EntityContainer container = iterator.next();
 			switch (container.getType()) {

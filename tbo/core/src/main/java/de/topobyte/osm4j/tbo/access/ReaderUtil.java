@@ -117,7 +117,7 @@ public class ReaderUtil
 	}
 
 	public static List<Node> parseNodes(CompactReader reader, FileBlock block,
-			boolean hasMetadata) throws IOException
+			boolean hasMetadata, boolean fetchMetadata) throws IOException
 	{
 		List<String> poolTags = parsePool(reader);
 
@@ -153,7 +153,7 @@ public class ReaderUtil
 			node.setTags(tags);
 		}
 
-		if (hasMetadata) {
+		if (hasMetadata && fetchMetadata) {
 			parseMetadata(reader, nodes);
 		}
 
@@ -181,7 +181,7 @@ public class ReaderUtil
 	}
 
 	public static List<Way> parseWays(CompactReader reader, FileBlock block,
-			boolean hasMetadata) throws IOException
+			boolean hasMetadata, boolean fetchMetadata) throws IOException
 	{
 		List<String> poolTags = parsePool(reader);
 
@@ -212,7 +212,7 @@ public class ReaderUtil
 			ways.get(i).setTags(tags);
 		}
 
-		if (hasMetadata) {
+		if (hasMetadata && fetchMetadata) {
 			parseMetadata(reader, ways);
 		}
 
@@ -243,7 +243,8 @@ public class ReaderUtil
 	}
 
 	public static List<Relation> parseRelations(CompactReader reader,
-			FileBlock block, boolean hasMetadata) throws IOException
+			FileBlock block, boolean hasMetadata, boolean fetchMetadata)
+			throws IOException
 	{
 		List<String> poolTags = parsePool(reader);
 		List<String> poolMembers = parsePool(reader);
@@ -280,7 +281,7 @@ public class ReaderUtil
 			relations.get(i).setTags(tags);
 		}
 
-		if (hasMetadata) {
+		if (hasMetadata && fetchMetadata) {
 			parseMetadata(reader, relations);
 		}
 

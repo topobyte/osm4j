@@ -126,7 +126,7 @@ public class TestWriteRead
 	private DataSet read() throws IOException
 	{
 		InputStream input = new FileInputStream(file);
-		OsmIterator iterator = new TboIterator(input);
+		OsmIterator iterator = new TboIterator(input, true);
 		InMemoryDataSet data = DataSetReader.read(iterator, true, true, true);
 		return new DataSet(data);
 	}

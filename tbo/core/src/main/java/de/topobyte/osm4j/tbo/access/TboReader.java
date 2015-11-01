@@ -39,17 +39,19 @@ public class TboReader extends BlockReader implements OsmReader
 {
 
 	private boolean hasMetadata;
+	private boolean fetchMetadata;
 
 	private OsmHandler handler;
 
-	public TboReader(InputStream is)
+	public TboReader(InputStream is, boolean fetchMetadata)
 	{
-		this(new InputStreamCompactReader(is));
+		this(new InputStreamCompactReader(is), fetchMetadata);
 	}
 
-	public TboReader(CompactReader reader)
+	public TboReader(CompactReader reader, boolean fetchMetadata)
 	{
 		super(reader);
+		this.fetchMetadata = fetchMetadata;
 	}
 
 	@Override
@@ -130,19 +132,20 @@ public class TboReader extends BlockReader implements OsmReader
 	{
 		// read objects
 		if (block.getType() == Definitions.BLOCK_TYPE_NODES) {
-			List<Node> nodes = ReaderUtil
-					.parseNodes(reader, block, hasMetadata);
+			List<Node> nodes = ReaderUtil.parseNodes(reader, block,
+					hasMetadata, fetchMetadata);
 			for (Node node : nodes) {
 				handler.handle(node);
 			}
 		} else if (block.getType() == Definitions.BLOCK_TYPE_WAYS) {
-			List<Way> ways = ReaderUtil.parseWays(reader, block, hasMetadata);
+			List<Way> ways = ReaderUtil.parseWays(reader, block, hasMetadata,
+					fetchMetadata);
 			for (Way way : ways) {
 				handler.handle(way);
 			}
 		} else if (block.getType() == Definitions.BLOCK_TYPE_RELATIONS) {
 			List<Relation> relations = ReaderUtil.parseRelations(reader, block,
-					hasMetadata);
+					hasMetadata, fetchMetadata);
 			for (Relation relation : relations) {
 				handler.handle(relation);
 			}
