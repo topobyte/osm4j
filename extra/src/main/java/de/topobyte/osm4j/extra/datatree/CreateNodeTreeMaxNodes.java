@@ -211,6 +211,7 @@ public class CreateNodeTreeMaxNodes extends BaseNodeTreeCreator
 
 		System.out.println("Deleting " + Integer.toHexString(leaf.getPath()));
 		output.getFile().delete();
+		output.getFile().getParentFile().delete();
 	}
 
 }

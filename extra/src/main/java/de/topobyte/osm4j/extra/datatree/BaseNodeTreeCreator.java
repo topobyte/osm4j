@@ -48,8 +48,10 @@ public abstract class BaseNodeTreeCreator extends
 
 	private static final String OPTION_OUTPUT = "output";
 	private static final String OPTION_OUTPUT_FORMAT = "output_format";
+	private static final String OPTION_FILE_NAMES = "filenames";
 
 	protected String pathOutput;
+	protected String fileNames;
 	protected FileFormat outputFormat;
 	protected PbfConfig pbfConfig;
 	protected TboConfig tboConfig;
@@ -66,6 +68,7 @@ public abstract class BaseNodeTreeCreator extends
 		// @formatter:off
 		OptionHelper.add(options, OPTION_OUTPUT_FORMAT, true, true, "the file format of the output");
 		OptionHelper.add(options, OPTION_OUTPUT, true, true, "directory to store output in");
+		OptionHelper.add(options, OPTION_FILE_NAMES, true, true, "names of the data files to create");
 		PbfOptions.add(options);
 		TboOptions.add(options);
 		// @formatter:on
@@ -137,9 +140,11 @@ public abstract class BaseNodeTreeCreator extends
 
 	protected Output init(Node leaf) throws IOException
 	{
-		String filename = Integer.toHexString(leaf.getPath())
-				+ Util.extension(outputFormat);
-		File file = new File(dirOutput, filename);
+		String dirname = Integer.toHexString(leaf.getPath());
+		File dir = new File(dirOutput, dirname);
+		dir.mkdirs();
+		File file = new File(dir, fileNames);
+
 		System.out.println(file + ": " + leaf.getEnvelope());
 		OutputStream os = new FileOutputStream(file);
 		OsmOutputStream osmOutput = Util.setupOsmOutput(os, outputFormat,
