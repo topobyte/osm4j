@@ -93,6 +93,7 @@ public class OsmEntitySplit extends AbstractTaskSingleInputIterator
 		OptionHelper.add(options, OPTION_OUTPUT_NODES, true, false, "the file to write nodes to");
 		OptionHelper.add(options, OPTION_OUTPUT_WAYS, true, false, "the file to write ways to");
 		OptionHelper.add(options, OPTION_OUTPUT_RELATIONS, true, false, "the file to write relations to");
+		PbfOptions.add(options);
 		// @formatter:on
 	}
 
