@@ -43,6 +43,10 @@ import de.topobyte.osm4j.testing.EntityGenerator;
 public class TestWriteRead
 {
 
+	private EntityGenerator entityGenerator = new EntityGenerator(100, true);
+	private DataSetGenerator dataSetGenerator = new DataSetGenerator(
+			entityGenerator);
+
 	private File file;
 
 	@Before
@@ -58,28 +62,77 @@ public class TestWriteRead
 	}
 
 	@Test
-	public void test() throws IOException
+	public void testCompleteMetadata() throws IOException
 	{
 		// Generate some data
-		EntityGenerator entityGenerator = new EntityGenerator(100, true);
-		DataSetGenerator dataSetGenerator = new DataSetGenerator(
-				entityGenerator);
 		DataSet generated = dataSetGenerator.generate(10, 3, 2);
 
 		// Write to file
-		OutputStream output = new FileOutputStream(file);
-		OsmOutputStream osmOutput = new TboWriter(output, true);
-		DataSetHelper.write(generated, osmOutput);
-		osmOutput.complete();
-		output.close();
+		write(generated);
 
 		// Read from file
+		DataSet read = read();
+
+		// Compare data
+		compare(generated, read);
+	}
+
+	@Test
+	public void testNoMetadata() throws IOException
+	{
+		// Generate some data
+		entityGenerator.setGenerateMetadata(false);
+		DataSet generated = dataSetGenerator.generate(10, 3, 2);
+
+		// Write to file
+		write(generated);
+
+		// Read from file
+		DataSet read = read();
+
+		// Compare data
+		compare(generated, read);
+	}
+
+	@Test
+	public void testPartialMetadata() throws IOException
+	{
+		// Generate some data
+		DataSet generated = dataSetGenerator.generate(10, 3, 2);
+
+		generated.getNodes().get(2).setMetadata(null);
+		generated.getWays().get(2).setMetadata(null);
+		generated.getRelations().get(0).setMetadata(null);
+
+		// Write to file
+		write(generated);
+
+		// Read from file
+		DataSet read = read();
+
+		// Compare data
+		compare(generated, read);
+	}
+
+	private void write(DataSet data) throws IOException
+	{
+		OutputStream output = new FileOutputStream(file);
+		OsmOutputStream osmOutput = new TboWriter(output, true);
+		DataSetHelper.write(data, osmOutput);
+		osmOutput.complete();
+		output.close();
+	}
+
+	private DataSet read() throws IOException
+	{
 		InputStream input = new FileInputStream(file);
 		OsmIterator iterator = new TboIterator(input);
 		InMemoryDataSet data = DataSetReader.read(iterator, true, true, true);
-		DataSet read = new DataSet(data);
+		return new DataSet(data);
+	}
 
-		// Compare data
+	private void compare(DataSet generated, DataSet read)
+	{
 		Assert.assertTrue(DataSetHelper.equals(generated, read));
 		Assert.assertTrue(DataSetHelper.nodesEqual(generated.getNodes(),
 				read.getNodes()));
