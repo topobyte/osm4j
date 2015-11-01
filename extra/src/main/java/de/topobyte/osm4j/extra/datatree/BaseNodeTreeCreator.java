@@ -143,7 +143,7 @@ public abstract class BaseNodeTreeCreator extends
 		System.out.println(file + ": " + leaf.getEnvelope());
 		OutputStream os = new FileOutputStream(file);
 		OsmOutputStream osmOutput = Util.setupOsmOutput(os, outputFormat,
-				writeMetadata, pbfConfig);
+				writeMetadata, pbfConfig, tboConfig);
 		Output output = new Output(file, os, osmOutput);
 		outputs.put(leaf, output);
 

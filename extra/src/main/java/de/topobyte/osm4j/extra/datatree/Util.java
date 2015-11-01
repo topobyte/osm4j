@@ -29,6 +29,7 @@ import de.topobyte.osm4j.tbo.access.TboIterator;
 import de.topobyte.osm4j.tbo.access.TboWriter;
 import de.topobyte.osm4j.utils.FileFormat;
 import de.topobyte.osm4j.utils.config.PbfConfig;
+import de.topobyte.osm4j.utils.config.TboConfig;
 import de.topobyte.osm4j.xml.dynsax.OsmXmlIterator;
 import de.topobyte.osm4j.xml.output.OsmXmlOutputStream;
 
@@ -50,12 +51,15 @@ public class Util
 	}
 
 	public static OsmOutputStream setupOsmOutput(OutputStream out,
-			FileFormat format, boolean writeMetadata, PbfConfig pbfConfig)
+			FileFormat format, boolean writeMetadata, PbfConfig pbfConfig,
+			TboConfig tboConfig)
 	{
 		switch (format) {
 		default:
 		case TBO:
-			return new TboWriter(out, writeMetadata);
+			TboWriter tboWriter = new TboWriter(out, writeMetadata, true);
+			tboWriter.setCompression(tboConfig.getCompression());
+			return tboWriter;
 		case XML:
 			return new OsmXmlOutputStream(out, writeMetadata);
 		case PBF:
