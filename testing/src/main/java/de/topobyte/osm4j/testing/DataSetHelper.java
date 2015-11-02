@@ -25,7 +25,10 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import de.topobyte.osm4j.core.access.OsmInputException;
+import de.topobyte.osm4j.core.access.OsmIterator;
 import de.topobyte.osm4j.core.access.OsmOutputStream;
+import de.topobyte.osm4j.core.access.OsmReader;
 import de.topobyte.osm4j.core.model.iface.OsmEntity;
 import de.topobyte.osm4j.core.model.iface.OsmMetadata;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
@@ -33,6 +36,8 @@ import de.topobyte.osm4j.core.model.iface.OsmRelation;
 import de.topobyte.osm4j.core.model.iface.OsmRelationMember;
 import de.topobyte.osm4j.core.model.iface.OsmWay;
 import de.topobyte.osm4j.core.model.util.OsmModelUtil;
+import de.topobyte.osm4j.core.resolve.DataSetReader;
+import de.topobyte.osm4j.core.resolve.InMemoryDataSet;
 
 public class DataSetHelper
 {
@@ -51,6 +56,19 @@ public class DataSetHelper
 		for (OsmRelation relation : data.getRelations()) {
 			output.write(relation);
 		}
+	}
+
+	public static TestDataSet read(OsmIterator iterator) throws IOException
+	{
+		InMemoryDataSet data = DataSetReader.read(iterator, true, true, true);
+		return new TestDataSet(data);
+	}
+
+	public static TestDataSet read(OsmReader reader) throws IOException,
+			OsmInputException
+	{
+		InMemoryDataSet data = DataSetReader.read(reader, true, true, true);
+		return new TestDataSet(data);
 	}
 
 	public static boolean equals(TestDataSet a, TestDataSet b)
