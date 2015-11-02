@@ -48,7 +48,7 @@ public class BlockWriter
 		this.writer = writer;
 		this.lowMemoryFootprint = lowMemoryFootprint;
 		if (!lowMemoryFootprint) {
-			baos = new ByteArrayOutputStream(1024 * 1024 * 16);
+			baos = new ByteArrayOutputStream();
 		}
 	}
 
@@ -86,7 +86,7 @@ public class BlockWriter
 			Compression compression) throws IOException
 	{
 		if (lowMemoryFootprint) {
-			baos = new ByteArrayOutputStream(1024 * 1024 * 16);
+			baos = new ByteArrayOutputStream();
 		} else {
 			baos.reset();
 		}
