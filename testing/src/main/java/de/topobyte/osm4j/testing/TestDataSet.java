@@ -25,6 +25,7 @@ import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.osm4j.core.model.iface.OsmRelation;
 import de.topobyte.osm4j.core.model.iface.OsmWay;
 import de.topobyte.osm4j.core.resolve.InMemoryDataSet;
+import de.topobyte.osm4j.testing.model.TestBounds;
 import de.topobyte.osm4j.testing.model.TestNode;
 import de.topobyte.osm4j.testing.model.TestRelation;
 import de.topobyte.osm4j.testing.model.TestWay;
@@ -32,6 +33,7 @@ import de.topobyte.osm4j.testing.model.TestWay;
 public class TestDataSet
 {
 
+	private TestBounds bounds = null;
 	private List<TestNode> nodes = new ArrayList<>();
 	private List<TestWay> ways = new ArrayList<>();
 	private List<TestRelation> relations = new ArrayList<>();
@@ -73,6 +75,21 @@ public class TestDataSet
 			relations.add(EntityHelper.clone(data.getRelations().get(
 					relationIds[i])));
 		}
+	}
+
+	public boolean hasBounds()
+	{
+		return bounds != null;
+	}
+
+	public TestBounds getBounds()
+	{
+		return bounds;
+	}
+
+	public void setBounds(TestBounds bounds)
+	{
+		this.bounds = bounds;
 	}
 
 	public List<TestNode> getNodes()
