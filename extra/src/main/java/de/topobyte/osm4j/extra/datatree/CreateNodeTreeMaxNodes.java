@@ -17,6 +17,7 @@
 
 package de.topobyte.osm4j.extra.datatree;
 
+import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -188,7 +189,8 @@ public class CreateNodeTreeMaxNodes extends BaseNodeTreeCreator
 		Output outLeft = init(left);
 		Output outRight = init(right);
 
-		FileInputStream input = new FileInputStream(output.getFile());
+		InputStream input = new FileInputStream(output.getFile());
+		input = new BufferedInputStream(input);
 		OsmIterator iterator = Util.setupOsmInput(input, outputFormat,
 				writeMetadata);
 		while (iterator.hasNext()) {
