@@ -30,7 +30,7 @@ public class PrintSomeGeneratedData
 		EntityGenerator entityGenerator = new EntityGenerator(100, true);
 		DataSetGenerator dataSetGenerator = new DataSetGenerator(
 				entityGenerator);
-		DataSet dataSet = dataSetGenerator.generate(10, 3, 2);
+		TestDataSet dataSet = dataSetGenerator.generate(10, 3, 2);
 
 		OsmOutputStream output = new OsmXmlOutputStream(System.out, true);
 

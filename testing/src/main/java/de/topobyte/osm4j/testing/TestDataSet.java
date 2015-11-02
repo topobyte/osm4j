@@ -29,18 +29,18 @@ import de.topobyte.osm4j.testing.model.TestNode;
 import de.topobyte.osm4j.testing.model.TestRelation;
 import de.topobyte.osm4j.testing.model.TestWay;
 
-public class DataSet
+public class TestDataSet
 {
 
 	private List<TestNode> nodes = new ArrayList<>();
 	private List<TestWay> ways = new ArrayList<>();
 	private List<TestRelation> relations = new ArrayList<>();
 
-	public DataSet()
+	public TestDataSet()
 	{
 	}
 
-	public DataSet(DataSet data)
+	public TestDataSet(TestDataSet data)
 	{
 		for (OsmNode node : data.getNodes()) {
 			nodes.add(EntityHelper.clone(node));
@@ -53,7 +53,7 @@ public class DataSet
 		}
 	}
 
-	public DataSet(InMemoryDataSet data)
+	public TestDataSet(InMemoryDataSet data)
 	{
 		long[] nodeIds = data.getNodes().keys();
 		Arrays.sort(nodeIds);

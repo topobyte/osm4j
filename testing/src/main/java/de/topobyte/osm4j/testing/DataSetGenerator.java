@@ -31,9 +31,9 @@ public class DataSetGenerator
 		this.entityGenerator = entityGenerator;
 	}
 
-	public DataSet generate(int numNodes, int numWays, int numRelations)
+	public TestDataSet generate(int numNodes, int numWays, int numRelations)
 	{
-		DataSet dataSet = new DataSet();
+		TestDataSet dataSet = new TestDataSet();
 		for (int i = 0; i < numNodes; i++) {
 			TestNode node = entityGenerator.generateNode();
 			dataSet.getNodes().add(node);

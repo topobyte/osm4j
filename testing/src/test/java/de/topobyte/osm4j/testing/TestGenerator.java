@@ -34,7 +34,7 @@ public class TestGenerator
 		int numWays = 20;
 		int numRelations = 10;
 
-		DataSet data = dataSetGenerator.generate(numNodes, numWays,
+		TestDataSet data = dataSetGenerator.generate(numNodes, numWays,
 				numRelations);
 
 		Assert.assertEquals(data.getNodes().size(), numNodes);

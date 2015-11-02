@@ -34,7 +34,7 @@ public class TestDataInequality
 
 	int n = 10;
 
-	DataSet data = dataSetGenerator.generate(n, n, n);
+	TestDataSet data = dataSetGenerator.generate(n, n, n);
 
 	/*
 	 * Remove any element
@@ -45,7 +45,7 @@ public class TestDataInequality
 	{
 		// Remove any of the nodes
 		for (int i = 0; i < data.getNodes().size(); i++) {
-			DataSet copy = new DataSet(data);
+			TestDataSet copy = new TestDataSet(data);
 			copy.getNodes().remove(i);
 			Assert.assertFalse(DataSetHelper.equals(data, copy));
 		}
@@ -56,7 +56,7 @@ public class TestDataInequality
 	{
 		// Remove any of the ways
 		for (int i = 0; i < data.getWays().size(); i++) {
-			DataSet copy = new DataSet(data);
+			TestDataSet copy = new TestDataSet(data);
 			copy.getWays().remove(i);
 			Assert.assertFalse(DataSetHelper.equals(data, copy));
 		}
@@ -67,7 +67,7 @@ public class TestDataInequality
 	{
 		// Remove any of the relations
 		for (int i = 0; i < data.getRelations().size(); i++) {
-			DataSet copy = new DataSet(data);
+			TestDataSet copy = new TestDataSet(data);
 			copy.getRelations().remove(i);
 			Assert.assertFalse(DataSetHelper.equals(data, copy));
 		}
@@ -82,7 +82,7 @@ public class TestDataInequality
 	{
 		// Remove any of the nodes' meta data
 		for (int i = 0; i < data.getNodes().size(); i++) {
-			DataSet copy = new DataSet(data);
+			TestDataSet copy = new TestDataSet(data);
 			copy.getNodes().get(i).setMetadata(null);
 			Assert.assertFalse(DataSetHelper.equals(data, copy));
 		}
@@ -93,7 +93,7 @@ public class TestDataInequality
 	{
 		// Remove any of the ways' meta data
 		for (int i = 0; i < data.getWays().size(); i++) {
-			DataSet copy = new DataSet(data);
+			TestDataSet copy = new TestDataSet(data);
 			copy.getWays().get(i).setMetadata(null);
 			Assert.assertFalse(DataSetHelper.equals(data, copy));
 		}
@@ -104,7 +104,7 @@ public class TestDataInequality
 	{
 		// Remove any of the relations' meta data
 		for (int i = 0; i < data.getRelations().size(); i++) {
-			DataSet copy = new DataSet(data);
+			TestDataSet copy = new TestDataSet(data);
 			copy.getRelations().get(i).setMetadata(null);
 			Assert.assertFalse(DataSetHelper.equals(data, copy));
 		}
@@ -119,7 +119,7 @@ public class TestDataInequality
 	{
 		// Change longitude
 		for (int i = 0; i < data.getNodes().size(); i++) {
-			DataSet copy = new DataSet(data);
+			TestDataSet copy = new TestDataSet(data);
 			TestNode node = copy.getNodes().get(i);
 			double lon = node.getLongitude();
 			lon = lon < 0 ? lon + 1 : lon - 1;
@@ -133,7 +133,7 @@ public class TestDataInequality
 	{
 		// Change latitude
 		for (int i = 0; i < data.getNodes().size(); i++) {
-			DataSet copy = new DataSet(data);
+			TestDataSet copy = new TestDataSet(data);
 			TestNode node = copy.getNodes().get(i);
 			double lat = node.getLatitude();
 			lat = lat < 0 ? lat + 1 : lat - 1;
@@ -152,7 +152,7 @@ public class TestDataInequality
 		for (int i = 0; i < data.getWays().size(); i++) {
 			TestWay w = data.getWays().get(i);
 			for (int k = 0; k < w.getNumberOfNodes(); k++) {
-				DataSet copy = new DataSet(data);
+				TestDataSet copy = new TestDataSet(data);
 				TestWay way = copy.getWays().get(i);
 				way.getNodes().removeAt(k);
 				Assert.assertFalse(DataSetHelper.equals(data, copy));
@@ -166,7 +166,7 @@ public class TestDataInequality
 		for (int i = 0; i < data.getWays().size(); i++) {
 			TestWay w = data.getWays().get(i);
 			for (int k = 0; k < w.getNumberOfNodes(); k++) {
-				DataSet copy = new DataSet(data);
+				TestDataSet copy = new TestDataSet(data);
 				TestWay way = copy.getWays().get(i);
 				long ref = way.getNodes().get(k);
 				way.getNodes().set(k, ref + 1);
@@ -185,7 +185,7 @@ public class TestDataInequality
 		for (int i = 0; i < data.getRelations().size(); i++) {
 			TestRelation r = data.getRelations().get(i);
 			for (int k = 0; k < r.getNumberOfMembers(); k++) {
-				DataSet copy = new DataSet(data);
+				TestDataSet copy = new TestDataSet(data);
 				TestRelation relation = copy.getRelations().get(i);
 				relation.getMembers().remove(k);
 				Assert.assertFalse(DataSetHelper.equals(data, copy));
@@ -199,7 +199,7 @@ public class TestDataInequality
 		for (int i = 0; i < data.getRelations().size(); i++) {
 			TestRelation r = data.getRelations().get(i);
 			for (int k = 0; k < r.getNumberOfMembers(); k++) {
-				DataSet copy = new DataSet(data);
+				TestDataSet copy = new TestDataSet(data);
 				TestRelation relation = copy.getRelations().get(i);
 				TestRelationMember member = relation.getMembers().get(k);
 				member.setRole(member.getRole() + "_changed");
@@ -214,7 +214,7 @@ public class TestDataInequality
 		for (int i = 0; i < data.getRelations().size(); i++) {
 			TestRelation r = data.getRelations().get(i);
 			for (int k = 0; k < r.getNumberOfMembers(); k++) {
-				DataSet copy = new DataSet(data);
+				TestDataSet copy = new TestDataSet(data);
 				TestRelation relation = copy.getRelations().get(i);
 				TestRelationMember member = relation.getMembers().get(k);
 				EntityType type = member.getType();

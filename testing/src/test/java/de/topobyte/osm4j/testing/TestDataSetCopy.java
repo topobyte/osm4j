@@ -32,8 +32,8 @@ public class TestDataSetCopy
 
 		int n = 10;
 
-		DataSet data = dataSetGenerator.generate(n, n, n);
-		DataSet copy = new DataSet(data);
+		TestDataSet data = dataSetGenerator.generate(n, n, n);
+		TestDataSet copy = new TestDataSet(data);
 
 		Assert.assertEquals(data.getNodes().size(), n);
 		Assert.assertEquals(data.getWays().size(), n);

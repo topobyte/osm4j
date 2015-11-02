@@ -39,7 +39,7 @@ public class DataSetHelper
 
 	final static Logger logger = LoggerFactory.getLogger(DataSetHelper.class);
 
-	public static void write(DataSet data, OsmOutputStream output)
+	public static void write(TestDataSet data, OsmOutputStream output)
 			throws IOException
 	{
 		for (OsmNode node : data.getNodes()) {
@@ -53,7 +53,7 @@ public class DataSetHelper
 		}
 	}
 
-	public static boolean equals(DataSet a, DataSet b)
+	public static boolean equals(TestDataSet a, TestDataSet b)
 	{
 		if (!nodesEqual(a.getNodes(), b.getNodes())) {
 			return false;
