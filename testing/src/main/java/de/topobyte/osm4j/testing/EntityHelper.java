@@ -23,6 +23,7 @@ import gnu.trove.list.array.TLongArrayList;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.topobyte.osm4j.core.model.iface.OsmBounds;
 import de.topobyte.osm4j.core.model.iface.OsmEntity;
 import de.topobyte.osm4j.core.model.iface.OsmMetadata;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
@@ -31,6 +32,7 @@ import de.topobyte.osm4j.core.model.iface.OsmRelationMember;
 import de.topobyte.osm4j.core.model.iface.OsmTag;
 import de.topobyte.osm4j.core.model.iface.OsmWay;
 import de.topobyte.osm4j.core.model.util.OsmModelUtil;
+import de.topobyte.osm4j.testing.model.TestBounds;
 import de.topobyte.osm4j.testing.model.TestMetadata;
 import de.topobyte.osm4j.testing.model.TestNode;
 import de.topobyte.osm4j.testing.model.TestRelation;
@@ -40,6 +42,12 @@ import de.topobyte.osm4j.testing.model.TestWay;
 
 public class EntityHelper
 {
+
+	public static TestBounds clone(OsmBounds bounds)
+	{
+		return new TestBounds(bounds.getLeft(), bounds.getRight(),
+				bounds.getTop(), bounds.getBottom());
+	}
 
 	public static TestNode clone(OsmNode node)
 	{
