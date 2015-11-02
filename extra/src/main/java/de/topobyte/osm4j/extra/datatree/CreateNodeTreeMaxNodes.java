@@ -27,6 +27,7 @@ import de.topobyte.osm4j.core.access.OsmIterator;
 import de.topobyte.osm4j.core.model.iface.EntityContainer;
 import de.topobyte.osm4j.core.model.iface.EntityType;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
+import de.topobyte.osm4j.extra.progress.NodeProgress;
 import de.topobyte.osm4j.utils.FileFormat;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
@@ -126,6 +127,15 @@ public class CreateNodeTreeMaxNodes extends BaseNodeTreeCreator
 		}
 	}
 
+	private NodeProgress counter = new NodeProgress();
+
+	@Override
+	protected void init() throws IOException
+	{
+		super.init();
+		counter.printTimed(1000);
+	}
+
 	@Override
 	protected void initTree() throws IOException
 	{
@@ -153,6 +163,13 @@ public class CreateNodeTreeMaxNodes extends BaseNodeTreeCreator
 	}
 
 	@Override
+	protected void run() throws IOException
+	{
+		super.run();
+		counter.stop();
+	}
+
+	@Override
 	protected void handle(OsmNode node) throws IOException
 	{
 		List<Node> leafs = tree.query(node.getLongitude(), node.getLatitude());
@@ -167,6 +184,7 @@ public class CreateNodeTreeMaxNodes extends BaseNodeTreeCreator
 				}
 			}
 		}
+		counter.increment();
 	}
 
 	private void split(Node leaf) throws IOException
