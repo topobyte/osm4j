@@ -23,14 +23,14 @@ import java.util.Locale;
 public class NodeProgress
 {
 
-	private int num = 0;
+	private long num = 0;
 
 	public void increment()
 	{
 		num++;
 	}
 
-	public void increment(int n)
+	public void increment(long n)
 	{
 		num += n;
 	}
