@@ -75,11 +75,15 @@ public class DataTree
 		}
 	}
 
+	private List<Node> results = new ArrayList<>();
+
 	public List<Node> query(double lon, double lat)
 	{
-		List<Node> nodes = new ArrayList<>();
-		root.query(nodes, lon, lat);
-		return nodes;
+		results.clear();
+		if (root.getEnvelope().contains(lon, lat)) {
+			root.query(results, lon, lat);
+		}
+		return results;
 	}
 
 }

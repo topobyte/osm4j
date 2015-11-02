@@ -201,13 +201,22 @@ public class CreateNodeTreeMaxNodes extends BaseNodeTreeCreator
 			OsmNode node = (OsmNode) container.getEntity();
 			double lon = node.getLongitude();
 			double lat = node.getLatitude();
-			if (left.getEnvelope().contains(lon, lat)) {
+			Side side = leaf.side(lon, lat);
+			switch (side) {
+			case ON:
 				outLeft.incrementCounter();
 				outLeft.getOsmOutput().write(node);
-			}
-			if (right.getEnvelope().contains(lon, lat)) {
 				outRight.incrementCounter();
 				outRight.getOsmOutput().write(node);
+				break;
+			case LEFT:
+				outLeft.incrementCounter();
+				outLeft.getOsmOutput().write(node);
+				break;
+			case RIGHT:
+				outRight.incrementCounter();
+				outRight.getOsmOutput().write(node);
+				break;
 			}
 		}
 

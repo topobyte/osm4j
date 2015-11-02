@@ -24,12 +24,16 @@ import com.vividsolutions.jts.geom.Envelope;
 public class Node
 {
 
+	boolean isLeaf = true;
+
 	private Envelope envelope;
 	private Node parent;
 	private Node left;
 	private Node right;
 	private int path;
+
 	private Direction direction;
+	private double splitPoint = 0;
 
 	Node(Envelope envelope, Node parent, int path)
 	{
@@ -61,7 +65,7 @@ public class Node
 
 	public boolean isLeaf()
 	{
-		return left == null && right == null;
+		return isLeaf;
 	}
 
 	public Node getLeft()
@@ -93,6 +97,7 @@ public class Node
 			double y2 = envelope.getMaxY();
 			envLeft = new Envelope(x1, x2, y1, y2);
 			envRight = new Envelope(x2, x3, y1, y2);
+			splitPoint = x2;
 		} else {
 			double x1 = envelope.getMinX();
 			double x2 = envelope.getMaxX();
@@ -101,7 +106,9 @@ public class Node
 			double y2 = (y1 + y3) / 2;
 			envLeft = new Envelope(x1, x2, y1, y2);
 			envRight = new Envelope(x1, x2, y2, y3);
+			splitPoint = y2;
 		}
+		isLeaf = false;
 		left = new Node(envLeft, this, pathL);
 		right = new Node(envRight, this, pathR);
 	}
@@ -119,14 +126,50 @@ public class Node
 
 	public void query(List<Node> nodes, double lon, double lat)
 	{
-		if (!envelope.contains(lon, lat)) {
-			return;
-		}
 		if (isLeaf()) {
 			nodes.add(this);
+			return;
+		}
+
+		if (direction == Direction.HORIZONTAL) {
+			if (lon < splitPoint) {
+				left.query(nodes, lon, lat);
+			} else if (lon > splitPoint) {
+				right.query(nodes, lon, lat);
+			} else {
+				left.query(nodes, lon, lat);
+				right.query(nodes, lon, lat);
+			}
 		} else {
-			left.query(nodes, lon, lat);
-			right.query(nodes, lon, lat);
+			if (lat < splitPoint) {
+				left.query(nodes, lon, lat);
+			} else if (lat > splitPoint) {
+				right.query(nodes, lon, lat);
+			} else {
+				left.query(nodes, lon, lat);
+				right.query(nodes, lon, lat);
+			}
+		}
+	}
+
+	public Side side(double lon, double lat)
+	{
+		if (direction == Direction.HORIZONTAL) {
+			if (lon < splitPoint) {
+				return Side.LEFT;
+			} else if (lon > splitPoint) {
+				return Side.RIGHT;
+			} else {
+				return Side.ON;
+			}
+		} else {
+			if (lat < splitPoint) {
+				return Side.LEFT;
+			} else if (lat > splitPoint) {
+				return Side.LEFT;
+			} else {
+				return Side.ON;
+			}
 		}
 	}
 
