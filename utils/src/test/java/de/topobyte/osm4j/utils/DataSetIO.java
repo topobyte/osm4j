@@ -53,7 +53,7 @@ public class DataSetIO
 	{
 		InputStream fis = new FileInputStream(file);
 		InputStream bis = new BufferedInputStream(fis);
-		OsmIterator iterator = OsmIoUtils.setupOsmInput(bis, format,
+		OsmIterator iterator = OsmIoUtils.setupOsmIterator(bis, format,
 				readMetadata);
 		InMemoryDataSet data = DataSetReader.read(iterator, true, true, true);
 		bis.close();
