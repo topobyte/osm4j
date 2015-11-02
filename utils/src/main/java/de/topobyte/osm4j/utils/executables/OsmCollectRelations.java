@@ -15,7 +15,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with osm4j. If not, see <http://www.gnu.org/licenses/>.
 
-package de.topobyte.osm4j.utils;
+package de.topobyte.osm4j.utils.executables;
 
 import java.io.IOException;
 
@@ -26,6 +26,7 @@ import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.osm4j.core.model.iface.OsmRelation;
 import de.topobyte.osm4j.core.model.iface.OsmRelationMember;
 import de.topobyte.osm4j.core.model.iface.OsmWay;
+import de.topobyte.osm4j.utils.AbstractEntityCollector;
 
 public class OsmCollectRelations extends AbstractEntityCollector
 {

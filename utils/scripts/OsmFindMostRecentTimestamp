@@ -2,6 +2,6 @@
 
 DIR=$(dirname $0)
 CMD="$DIR/osm4j-utils"
-CLASS="de.topobyte.osm4j.utils.OsmFindMostRecentTimestamp"
+CLASS="de.topobyte.osm4j.utils.executables.OsmFindMostRecentTimestamp"
 
 exec "$CMD" "$CLASS" "$@"

@@ -15,32 +15,30 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with osm4j. If not, see <http://www.gnu.org/licenses/>.
 
-package de.topobyte.osm4j.utils;
+package de.topobyte.osm4j.utils.executables;
 
-import java.io.FileReader;
 import java.io.IOException;
-import java.io.Reader;
 
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.io.WKTReader;
-
-import de.topobyte.jts.utils.predicate.ContainmentTestJtsPrepared;
+import de.topobyte.adt.geo.BBox;
+import de.topobyte.adt.geo.BBoxString;
+import de.topobyte.jts.utils.predicate.ContainmentTestRectangle;
+import de.topobyte.osm4j.utils.AbstractAreaFilter;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
-public class OsmRegionFilter extends AbstractAreaFilter
+public class OsmBboxFilter extends AbstractAreaFilter
 {
 
-	private static final String OPTION_REGION = "region";
+	private static final String OPTION_BBOX = "bbox";
 
 	@Override
 	protected String getHelpMessage()
 	{
-		return OsmRegionFilter.class.getSimpleName() + " [options]";
+		return OsmBboxFilter.class.getSimpleName() + " [options]";
 	}
 
 	public static void main(String[] args) throws IOException
 	{
-		OsmRegionFilter convert = new OsmRegionFilter();
+		OsmBboxFilter convert = new OsmBboxFilter();
 
 		convert.setup(args);
 
@@ -54,12 +52,12 @@ public class OsmRegionFilter extends AbstractAreaFilter
 		convert.finish();
 	}
 
-	private Geometry region;
+	private BBox bbox;
 
-	public OsmRegionFilter()
+	public OsmBboxFilter()
 	{
 		// @formatter:off
-		OptionHelper.add(options, OPTION_REGION, true, true, "a WKT file containing the region to extract");
+		OptionHelper.add(options, OPTION_BBOX, true, true, "the bbox to extract (lon1,lat1,lon2,lat2)");
 		// @formatter:on
 	}
 
@@ -68,14 +66,13 @@ public class OsmRegionFilter extends AbstractAreaFilter
 	{
 		super.setup(args);
 
-		String argRegion = line.getOptionValue(OPTION_REGION);
+		String argBbox = line.getOptionValue(OPTION_BBOX);
+		BBoxString bboxString = BBoxString.parse(argBbox);
+		bbox = bboxString.toBbox();
 
-		try {
-			Reader reader = new FileReader(argRegion);
-			region = new WKTReader().read(reader);
-		} catch (Exception e) {
-			System.out.println("Error while reading region");
-			e.printStackTrace();
+		if (bbox.getLat1() == 0 && bbox.getLat2() == 0 && bbox.getLon1() == 0
+				&& bbox.getLon2() == 0) {
+			System.out.println("invalid bounding box");
 			System.exit(1);
 		}
 	}
@@ -85,7 +82,8 @@ public class OsmRegionFilter extends AbstractAreaFilter
 	{
 		super.init();
 
-		test = new ContainmentTestJtsPrepared(region);
+		test = new ContainmentTestRectangle(bbox.getLon1(), bbox.getLat2(),
+				bbox.getLon2(), bbox.getLat1());
 	}
 
 }

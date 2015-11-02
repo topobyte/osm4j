@@ -15,33 +15,41 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with osm4j. If not, see <http://www.gnu.org/licenses/>.
 
-package de.topobyte.osm4j.utils;
+package de.topobyte.osm4j.utils.executables;
+
+import gnu.trove.list.array.TLongArrayList;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import de.topobyte.osm4j.core.model.iface.EntityContainer;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.osm4j.core.model.iface.OsmRelation;
+import de.topobyte.osm4j.core.model.iface.OsmRelationMember;
 import de.topobyte.osm4j.core.model.iface.OsmWay;
+import de.topobyte.osm4j.core.model.impl.Node;
+import de.topobyte.osm4j.core.model.impl.Relation;
+import de.topobyte.osm4j.core.model.impl.Way;
+import de.topobyte.osm4j.utils.AbstractTaskSingleInputIteratorSingleOutput;
 
-public class OsmDropMetadata extends
-		AbstractTaskSingleInputIteratorSingleOutput
+public class OsmDropTags extends AbstractTaskSingleInputIteratorSingleOutput
 {
 
 	@Override
 	protected String getHelpMessage()
 	{
-		return OsmDropMetadata.class.getSimpleName() + " [options]";
+		return OsmDropTags.class.getSimpleName() + " [options]";
 	}
 
 	public static void main(String[] args) throws IOException
 	{
-		OsmDropMetadata convert = new OsmDropMetadata();
+		OsmDropTags convert = new OsmDropTags();
 
 		convert.setup(args);
 
-		convert.readMetadata = false;
-		convert.writeMetadata = false;
+		convert.readMetadata = true;
+		convert.writeMetadata = true;
 
 		convert.init();
 
@@ -63,18 +71,31 @@ public class OsmDropMetadata extends
 			switch (entityContainer.getType()) {
 			case Node: {
 				OsmNode node = (OsmNode) entityContainer.getEntity();
-				osmOutputStream.write(node);
+				OsmNode copy = new Node(node.getId(), node.getLongitude(),
+						node.getLatitude(), node.getMetadata());
+				osmOutputStream.write(copy);
 				break;
 			}
 			case Way: {
 				OsmWay way = (OsmWay) entityContainer.getEntity();
-				osmOutputStream.write(way);
+				TLongArrayList nodes = new TLongArrayList();
+				for (int i = 0; i < way.getNumberOfNodes(); i++) {
+					nodes.add(way.getNodeId(i));
+				}
+				OsmWay copy = new Way(way.getId(), nodes, way.getMetadata());
+				osmOutputStream.write(copy);
 				break;
 			}
 			case Relation: {
 				OsmRelation relation = (OsmRelation) entityContainer
 						.getEntity();
-				osmOutputStream.write(relation);
+				List<OsmRelationMember> members = new ArrayList<OsmRelationMember>();
+				for (int i = 0; i < relation.getNumberOfMembers(); i++) {
+					members.add(relation.getMember(i));
+				}
+				Relation copy = new Relation(relation.getId(), members,
+						relation.getMetadata());
+				osmOutputStream.write(copy);
 				break;
 			}
 			}

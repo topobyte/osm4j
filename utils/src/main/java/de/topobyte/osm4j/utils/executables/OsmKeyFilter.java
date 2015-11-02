@@ -15,7 +15,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with osm4j. If not, see <http://www.gnu.org/licenses/>.
 
-package de.topobyte.osm4j.utils;
+package de.topobyte.osm4j.utils.executables;
 
 import java.io.IOException;
 import java.util.Map;
@@ -27,23 +27,23 @@ import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.osm4j.core.model.iface.OsmRelation;
 import de.topobyte.osm4j.core.model.iface.OsmWay;
 import de.topobyte.osm4j.core.model.util.OsmModelUtil;
+import de.topobyte.osm4j.utils.AbstractTaskSingleInputReaderSingleOutput;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
-public class OsmTagFilter extends AbstractTaskSingleInputReaderSingleOutput
+public class OsmKeyFilter extends AbstractTaskSingleInputReaderSingleOutput
 {
 
 	private static final String OPTION_KEY = "key";
-	private static final String OPTION_VALUE = "value";
 
 	@Override
 	protected String getHelpMessage()
 	{
-		return OsmTagFilter.class.getSimpleName() + " [options]";
+		return OsmKeyFilter.class.getSimpleName() + " [options]";
 	}
 
 	public static void main(String[] args) throws IOException
 	{
-		OsmTagFilter task = new OsmTagFilter();
+		OsmKeyFilter task = new OsmKeyFilter();
 
 		task.setup(args);
 
@@ -63,13 +63,11 @@ public class OsmTagFilter extends AbstractTaskSingleInputReaderSingleOutput
 	}
 
 	private String key;
-	private String value;
 
-	public OsmTagFilter()
+	public OsmKeyFilter()
 	{
 		// @formatter:off
 		OptionHelper.add(options, OPTION_KEY, true, true, "the key that elements have to carry");
-		OptionHelper.add(options, OPTION_VALUE, true, true, "the value of the tag");
 		// @formatter:on
 	}
 
@@ -78,7 +76,6 @@ public class OsmTagFilter extends AbstractTaskSingleInputReaderSingleOutput
 	{
 		super.setup(args);
 		key = line.getOptionValue(OPTION_KEY);
-		value = line.getOptionValue(OPTION_VALUE);
 	}
 
 	@Override
@@ -120,11 +117,7 @@ public class OsmTagFilter extends AbstractTaskSingleInputReaderSingleOutput
 	private boolean take(OsmEntity entity)
 	{
 		Map<String, String> tags = OsmModelUtil.getTagsAsMap(entity);
-		if (!tags.containsKey(key)) {
-			return false;
-		}
-		String v = tags.get(key);
-		return v.equals(value);
+		return tags.containsKey(key);
 	}
 
 }

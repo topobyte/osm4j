@@ -15,7 +15,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with osm4j. If not, see <http://www.gnu.org/licenses/>.
 
-package de.topobyte.osm4j.utils;
+package de.topobyte.osm4j.utils.executables;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -23,6 +23,7 @@ import java.text.SimpleDateFormat;
 import de.topobyte.osm4j.core.model.iface.EntityContainer;
 import de.topobyte.osm4j.core.model.iface.OsmEntity;
 import de.topobyte.osm4j.core.model.iface.OsmMetadata;
+import de.topobyte.osm4j.utils.AbstractTaskSingleInputIterator;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
 public class OsmFindMostRecentTimestamp extends AbstractTaskSingleInputIterator

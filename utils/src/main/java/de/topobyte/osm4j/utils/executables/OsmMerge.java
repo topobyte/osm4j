@@ -15,7 +15,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with osm4j. If not, see <http://www.gnu.org/licenses/>.
 
-package de.topobyte.osm4j.utils;
+package de.topobyte.osm4j.utils.executables;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -36,6 +36,8 @@ import de.topobyte.osm4j.core.model.iface.OsmRelation;
 import de.topobyte.osm4j.core.model.iface.OsmWay;
 import de.topobyte.osm4j.pbf.seq.PbfIterator;
 import de.topobyte.osm4j.tbo.access.TboIterator;
+import de.topobyte.osm4j.utils.AbstractTaskSingleOutput;
+import de.topobyte.osm4j.utils.FileFormat;
 import de.topobyte.osm4j.xml.dynsax.OsmXmlIterator;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 

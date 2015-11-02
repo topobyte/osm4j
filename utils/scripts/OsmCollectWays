@@ -2,6 +2,6 @@
 
 DIR=$(dirname $0)
 CMD="$DIR/osm4j-utils"
-CLASS="de.topobyte.osm4j.utils.OsmCollectWays"
+CLASS="de.topobyte.osm4j.utils.executables.OsmCollectWays"
 
 exec "$CMD" "$CLASS" "$@"

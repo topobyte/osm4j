@@ -15,10 +15,9 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with osm4j. If not, see <http://www.gnu.org/licenses/>.
 
-package de.topobyte.osm4j.utils;
+package de.topobyte.osm4j.utils.executables;
 
 import java.io.IOException;
-import java.util.Map;
 
 import de.topobyte.osm4j.core.access.OsmInputException;
 import de.topobyte.osm4j.core.model.iface.OsmBounds;
@@ -26,23 +25,23 @@ import de.topobyte.osm4j.core.model.iface.OsmEntity;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.osm4j.core.model.iface.OsmRelation;
 import de.topobyte.osm4j.core.model.iface.OsmWay;
-import de.topobyte.osm4j.core.model.util.OsmModelUtil;
+import de.topobyte.osm4j.utils.AbstractTaskSingleInputReaderSingleOutput;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
-public class OsmKeyFilter extends AbstractTaskSingleInputReaderSingleOutput
+public class OsmIdFilter extends AbstractTaskSingleInputReaderSingleOutput
 {
 
-	private static final String OPTION_KEY = "key";
+	private static final String OPTION_ID = "id";
 
 	@Override
 	protected String getHelpMessage()
 	{
-		return OsmKeyFilter.class.getSimpleName() + " [options]";
+		return OsmIdFilter.class.getSimpleName() + " [options]";
 	}
 
 	public static void main(String[] args) throws IOException
 	{
-		OsmKeyFilter task = new OsmKeyFilter();
+		OsmIdFilter task = new OsmIdFilter();
 
 		task.setup(args);
 
@@ -61,12 +60,12 @@ public class OsmKeyFilter extends AbstractTaskSingleInputReaderSingleOutput
 		task.finish();
 	}
 
-	private String key;
+	private long id = 0;
 
-	public OsmKeyFilter()
+	public OsmIdFilter()
 	{
 		// @formatter:off
-		OptionHelper.add(options, OPTION_KEY, true, true, "the key that elements have to carry");
+		OptionHelper.add(options, OPTION_ID, true, true, "the id of elements to pass");
 		// @formatter:on
 	}
 
@@ -74,13 +73,19 @@ public class OsmKeyFilter extends AbstractTaskSingleInputReaderSingleOutput
 	protected void setup(String[] args)
 	{
 		super.setup(args);
-		key = line.getOptionValue(OPTION_KEY);
+		String value = line.getOptionValue(OPTION_ID);
+		try {
+			id = Long.parseLong(value);
+		} catch (NumberFormatException e) {
+			System.out.println("unable to parse id value: '" + value + "'");
+			System.exit(1);
+		}
 	}
 
 	@Override
 	public void handle(OsmBounds bounds) throws IOException
 	{
-		osmOutputStream.write(bounds);
+		// ignore bounds
 	}
 
 	@Override
@@ -107,16 +112,15 @@ public class OsmKeyFilter extends AbstractTaskSingleInputReaderSingleOutput
 		}
 	}
 
+	private boolean take(OsmEntity entity)
+	{
+		return entity.getId() == id;
+	}
+
 	@Override
 	public void complete() throws IOException
 	{
 		osmOutputStream.complete();
-	}
-
-	private boolean take(OsmEntity entity)
-	{
-		Map<String, String> tags = OsmModelUtil.getTagsAsMap(entity);
-		return tags.containsKey(key);
 	}
 
 }
