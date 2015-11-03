@@ -22,49 +22,21 @@ import java.nio.file.Path;
 
 import de.topobyte.osm4j.core.access.OsmOutputStream;
 
-class Output
+class NodeOutput extends Output
 {
 
-	private Path file;
-	private OutputStream output;
-	private OsmOutputStream osmOutput;
-	private long count = 0;
+	private Node node;
 
-	Output(Path file, OutputStream output, OsmOutputStream osmOutput)
+	NodeOutput(Node node, Path file, OutputStream output,
+			OsmOutputStream osmOutput)
 	{
-		this.file = file;
-		this.output = output;
-		this.osmOutput = osmOutput;
+		super(file, output, osmOutput);
+		this.node = node;
 	}
 
-	public Path getFile()
+	public Node getNode()
 	{
-		return file;
-	}
-
-	public OutputStream getOutputStream()
-	{
-		return output;
-	}
-
-	public OsmOutputStream getOsmOutput()
-	{
-		return osmOutput;
-	}
-
-	public long getCount()
-	{
-		return count;
-	}
-
-	public void incrementCounter()
-	{
-		count++;
-	}
-
-	public void setCount(long count)
-	{
-		this.count = count;
+		return node;
 	}
 
 }

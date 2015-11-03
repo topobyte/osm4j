@@ -31,15 +31,17 @@ public class Node
 	private Node left;
 	private Node right;
 	private int path;
+	private int level;
 
 	private Direction direction;
 	private double splitPoint = 0;
 
-	Node(Envelope envelope, Node parent, int path)
+	Node(Envelope envelope, Node parent, int path, int level)
 	{
 		this.envelope = envelope;
 		this.parent = parent;
 		this.path = path;
+		this.level = level;
 
 		if (envelope.getWidth() >= envelope.getHeight()) {
 			direction = Direction.HORIZONTAL;
@@ -58,9 +60,26 @@ public class Node
 		return parent;
 	}
 
+	public Node getSibling()
+	{
+		if (parent == null) {
+			return null;
+		}
+		if (parent.getLeft() != this) {
+			return parent.getLeft();
+		} else {
+			return parent.getRight();
+		}
+	}
+
 	public int getPath()
 	{
 		return path;
+	}
+
+	public int getLevel()
+	{
+		return level;
 	}
 
 	public boolean isLeaf()
@@ -109,8 +128,8 @@ public class Node
 			splitPoint = y2;
 		}
 		isLeaf = false;
-		left = new Node(envLeft, this, pathL);
-		right = new Node(envRight, this, pathR);
+		left = new Node(envLeft, this, pathL, level + 1);
+		right = new Node(envRight, this, pathR, level + 1);
 	}
 
 	public void split(int depth)
@@ -166,7 +185,7 @@ public class Node
 			if (lat < splitPoint) {
 				return Side.LEFT;
 			} else if (lat > splitPoint) {
-				return Side.LEFT;
+				return Side.RIGHT;
 			} else {
 				return Side.ON;
 			}

@@ -18,11 +18,13 @@
 package de.topobyte.osm4j.extra.datatree;
 
 import java.io.BufferedOutputStream;
-import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -35,8 +37,10 @@ import de.topobyte.osm4j.core.model.iface.EntityContainer;
 import de.topobyte.osm4j.core.model.iface.OsmBounds;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.osm4j.core.model.impl.Bounds;
+import de.topobyte.osm4j.extra.progress.NodeProgress;
 import de.topobyte.osm4j.utils.AbstractTaskSingleInputIterator;
 import de.topobyte.osm4j.utils.FileFormat;
+import de.topobyte.osm4j.utils.OsmIoUtils;
 import de.topobyte.osm4j.utils.config.PbfConfig;
 import de.topobyte.osm4j.utils.config.PbfOptions;
 import de.topobyte.osm4j.utils.config.TboConfig;
@@ -58,11 +62,13 @@ public abstract class BaseNodeTreeCreator extends
 	protected TboConfig tboConfig;
 	protected boolean writeMetadata = true;
 
-	protected File dirOutput;
-	protected Map<Node, Output> outputs = new HashMap<>();
+	protected Path dirOutput;
+	protected Map<Node, NodeOutput> outputs = new HashMap<>();
 
 	protected Envelope envelope;
 	protected DataTree tree;
+
+	private NodeProgress counter = new NodeProgress();
 
 	public BaseNodeTreeCreator()
 	{
@@ -101,16 +107,16 @@ public abstract class BaseNodeTreeCreator extends
 	{
 		super.init();
 
-		dirOutput = new File(pathOutput);
-		if (!dirOutput.exists()) {
+		dirOutput = Paths.get(pathOutput);
+		if (!Files.exists(dirOutput)) {
 			System.out.println("Creating output directory");
-			dirOutput.mkdirs();
+			Files.createDirectories(dirOutput);
 		}
-		if (!dirOutput.isDirectory()) {
+		if (!Files.isDirectory(dirOutput)) {
 			System.out.println("Output path is not a directory");
 			System.exit(1);
 		}
-		if (dirOutput.list().length != 0) {
+		if (dirOutput.toFile().list().length != 0) {
 			System.out.println("Output directory is not empty");
 			System.exit(1);
 		}
@@ -125,33 +131,35 @@ public abstract class BaseNodeTreeCreator extends
 
 		envelope = new Envelope(bounds.getLeft(), bounds.getRight(),
 				bounds.getBottom(), bounds.getTop());
+
+		counter.printTimed(1000);
 	}
 
 	protected void initTree() throws IOException
 	{
-		File file = new File(dirOutput, DataTree.FILENAME_INFO);
+		Path file = dirOutput.resolve(DataTree.FILENAME_INFO);
 
 		BBox bbox = new BBox(envelope);
-		PrintWriter pw = new PrintWriter(file);
+		PrintWriter pw = new PrintWriter(file.toFile());
 		pw.println(DataTree.PROPERTY_BBOX + ": " + BBoxString.create(bbox));
 		pw.close();
 
 		tree = new DataTree(envelope);
 	}
 
-	protected Output init(Node leaf) throws IOException
+	protected NodeOutput init(Node leaf) throws IOException
 	{
 		String dirname = Integer.toHexString(leaf.getPath());
-		File dir = new File(dirOutput, dirname);
-		dir.mkdirs();
-		File file = new File(dir, fileNames);
+		Path dir = dirOutput.resolve(dirname);
+		Files.createDirectories(dir);
+		Path file = dir.resolve(fileNames);
 
 		System.out.println(file + ": " + leaf.getEnvelope());
-		OutputStream os = new FileOutputStream(file);
+		OutputStream os = new FileOutputStream(file.toFile());
 		OutputStream bos = new BufferedOutputStream(os);
-		OsmOutputStream osmOutput = Util.setupOsmOutput(bos, outputFormat,
-				writeMetadata, pbfConfig, tboConfig);
-		Output output = new Output(file, bos, osmOutput);
+		OsmOutputStream osmOutput = OsmIoUtils.setupOsmOutput(bos,
+				outputFormat, writeMetadata, pbfConfig, tboConfig);
+		NodeOutput output = new NodeOutput(leaf, file, bos, osmOutput);
 		outputs.put(leaf, output);
 
 		Envelope box = leaf.getEnvelope();
@@ -168,6 +176,7 @@ public abstract class BaseNodeTreeCreator extends
 			switch (entityContainer.getType()) {
 			case Node:
 				handle((OsmNode) entityContainer.getEntity());
+				counter.increment();
 				break;
 			case Way:
 				break loop;
@@ -175,6 +184,7 @@ public abstract class BaseNodeTreeCreator extends
 				break loop;
 			}
 		}
+		counter.stop();
 	}
 
 	protected abstract void handle(OsmNode node) throws IOException;
@@ -185,9 +195,14 @@ public abstract class BaseNodeTreeCreator extends
 		super.finish();
 
 		for (Output output : outputs.values()) {
-			output.getOsmOutput().complete();
-			output.getOutputStream().close();
+			close(output);
 		}
+	}
+
+	protected void close(Output output) throws IOException
+	{
+		output.getOsmOutput().complete();
+		output.getOutputStream().close();
 	}
 
 }

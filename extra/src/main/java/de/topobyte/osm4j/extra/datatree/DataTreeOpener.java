@@ -36,6 +36,7 @@ import com.vividsolutions.jts.geom.Envelope;
 import de.topobyte.adt.geo.BBox;
 import de.topobyte.adt.geo.BBoxString;
 import de.topobyte.osm4j.utils.FileFormat;
+import de.topobyte.osm4j.utils.OsmIoUtils;
 
 public class DataTreeOpener
 {
@@ -70,7 +71,7 @@ public class DataTreeOpener
 		Envelope envelope = bbox.toEnvelope();
 		DataTree tree = new DataTree(envelope);
 
-		String extension = Util.extension(format);
+		String extension = OsmIoUtils.extension(format);
 
 		// Find all data files by extension
 		List<File> dataFiles = new ArrayList<>();

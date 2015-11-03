@@ -32,7 +32,7 @@ public class DataTree
 
 	public DataTree(Envelope envelope)
 	{
-		root = new Node(envelope, null, 1);
+		root = new Node(envelope, null, 1, 0);
 	}
 
 	public Node getRoot()
@@ -42,9 +42,14 @@ public class DataTree
 
 	public List<Node> getLeafs()
 	{
+		return getLeafs(root);
+	}
+
+	public List<Node> getLeafs(Node start)
+	{
 		List<Node> leafs = new ArrayList<>();
 
-		getLeafs(root, leafs);
+		getLeafs(start, leafs);
 
 		return leafs;
 	}
@@ -57,6 +62,25 @@ public class DataTree
 			getLeafs(node.getLeft(), leafs);
 			getLeafs(node.getRight(), leafs);
 		}
+	}
+
+	public List<Node> getInner()
+	{
+		List<Node> inner = new ArrayList<>();
+
+		getInner(root, inner);
+
+		return inner;
+	}
+
+	private void getInner(Node node, List<Node> inner)
+	{
+		if (node.isLeaf()) {
+			return;
+		}
+		inner.add(node);
+		getInner(node.getLeft(), inner);
+		getInner(node.getRight(), inner);
 	}
 
 	public void print()
@@ -83,6 +107,13 @@ public class DataTree
 		if (root.getEnvelope().contains(lon, lat)) {
 			root.query(results, lon, lat);
 		}
+		return results;
+	}
+
+	public List<Node> query(Node start, double lon, double lat)
+	{
+		results.clear();
+		start.query(results, lon, lat);
 		return results;
 	}
 
