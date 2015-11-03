@@ -35,6 +35,11 @@ public class NodeProgress
 		num += n;
 	}
 
+	public long getCount()
+	{
+		return num;
+	}
+
 	public void print(long time)
 	{
 		double seconds = time / 1000;
