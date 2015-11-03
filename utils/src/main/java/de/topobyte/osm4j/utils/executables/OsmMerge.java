@@ -23,21 +23,14 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
-import de.topobyte.osm4j.core.model.iface.EntityContainer;
-import de.topobyte.osm4j.core.model.iface.EntityType;
-import de.topobyte.osm4j.core.model.iface.OsmEntity;
-import de.topobyte.osm4j.core.model.iface.OsmNode;
-import de.topobyte.osm4j.core.model.iface.OsmRelation;
-import de.topobyte.osm4j.core.model.iface.OsmWay;
+import de.topobyte.osm4j.core.access.OsmIterator;
 import de.topobyte.osm4j.pbf.seq.PbfIterator;
 import de.topobyte.osm4j.tbo.access.TboIterator;
 import de.topobyte.osm4j.utils.AbstractTaskSingleOutput;
 import de.topobyte.osm4j.utils.FileFormat;
+import de.topobyte.osm4j.utils.Merge;
 import de.topobyte.osm4j.xml.dynsax.OsmXmlIterator;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
@@ -110,8 +103,9 @@ public class OsmMerge extends AbstractTaskSingleOutput
 		}
 	}
 
-	private List<InputStream> ins = new ArrayList<InputStream>();
-	private List<Iterator<EntityContainer>> iterators = new ArrayList<Iterator<EntityContainer>>();
+	private List<InputStream> inputs = new ArrayList<>();
+	private List<OsmIterator> iterators = new ArrayList<>();
+	private Merge merge;
 
 	@Override
 	protected void init() throws IOException
@@ -122,167 +116,35 @@ public class OsmMerge extends AbstractTaskSingleOutput
 			File file = new File(path);
 			FileInputStream fis = new FileInputStream(file);
 			InputStream in = new BufferedInputStream(fis);
-			ins.add(in);
+			inputs.add(in);
 		}
 
-		for (InputStream in : ins) {
-			Iterator<EntityContainer> inputIterator = null;
+		for (InputStream input : inputs) {
+			OsmIterator iterator = null;
 			switch (inputFormat) {
 			case XML:
-				inputIterator = new OsmXmlIterator(in, readMetadata);
+				iterator = new OsmXmlIterator(input, readMetadata);
 				break;
 			case TBO:
-				inputIterator = new TboIterator(in, readMetadata);
+				iterator = new TboIterator(input, readMetadata);
 				break;
 			case PBF:
-				inputIterator = new PbfIterator(in, readMetadata);
+				iterator = new PbfIterator(input, readMetadata);
 				break;
 			}
-			iterators.add(inputIterator);
+			iterators.add(iterator);
 		}
+
+		merge = new Merge(osmOutputStream, iterators);
 	}
-
-	private class Item
-	{
-		Iterator<EntityContainer> iterator;
-		EntityType currentType;
-		long currentId;
-		OsmEntity currentEntity;
-	}
-
-	private long lastId = -1;
-	private List<Item> items = new ArrayList<Item>();
-
-	private Map<Iterator<EntityContainer>, Item> firstWays = new HashMap<Iterator<EntityContainer>, Item>();
-	private Map<Iterator<EntityContainer>, Item> firstRelations = new HashMap<Iterator<EntityContainer>, Item>();
 
 	public void run() throws IOException
 	{
-		prepare();
-		iterate();
-	}
+		merge.run();
 
-	private void prepare() throws IOException
-	{
-		for (Iterator<EntityContainer> iterator : iterators) {
-			if (!iterator.hasNext()) {
-				continue;
-			}
-			EntityContainer container = iterator.next();
-			Item item = createItem(container, iterator);
-			switch (item.currentType) {
-			case Node:
-				items.add(item);
-				break;
-			case Way:
-				firstWays.put(iterator, item);
-				break;
-			case Relation:
-				firstRelations.put(iterator, item);
-				break;
-			}
+		for (InputStream input : inputs) {
+			input.close();
 		}
-	}
-
-	private void iterate() throws IOException
-	{
-		EntityType[] types = new EntityType[] { EntityType.Node,
-				EntityType.Way, EntityType.Relation };
-		for (EntityType type : types) {
-			entities: while (true) {
-				long currentMin = Long.MAX_VALUE;
-				int take = -1;
-				if (items.size() == 0) {
-					break entities;
-				}
-				for (int i = 0; i < items.size(); i++) {
-					Item item = items.get(i);
-					if (item.currentId == lastId) {
-						boolean advanced = advance(item);
-						check(type, item, i, advanced);
-						continue entities;
-					}
-					if (item.currentId < currentMin) {
-						currentMin = item.currentId;
-						take = i;
-					}
-				}
-				Item item = items.get(take);
-				switch (type) {
-				case Node:
-					osmOutputStream.write((OsmNode) item.currentEntity);
-					break;
-				case Way:
-					osmOutputStream.write((OsmWay) item.currentEntity);
-					break;
-				case Relation:
-					osmOutputStream.write((OsmRelation) item.currentEntity);
-					break;
-				}
-				lastId = item.currentId;
-				boolean advanced = advance(item);
-				check(type, item, take, advanced);
-			}
-			lastId = -1;
-			if (type == EntityType.Node) {
-				type = EntityType.Way;
-				for (Iterator<EntityContainer> iterator : iterators) {
-					if (firstWays.containsKey(iterator)) {
-						Item item = firstWays.get(iterator);
-						items.add(item);
-					}
-				}
-			} else if (type == EntityType.Way) {
-				type = EntityType.Relation;
-				for (Iterator<EntityContainer> iterator : iterators) {
-					if (firstRelations.containsKey(iterator)) {
-						Item item = firstRelations.get(iterator);
-						items.add(item);
-					}
-				}
-			}
-		}
-		osmOutputStream.complete();
-		out.close();
-	}
-
-	private boolean advance(Item item)
-	{
-		if (!item.iterator.hasNext()) {
-			return false;
-		}
-		EntityContainer container = item.iterator.next();
-		item.currentEntity = container.getEntity();
-		item.currentType = container.getType();
-		item.currentId = item.currentEntity.getId();
-		return true;
-	}
-
-	private void check(EntityType type, Item item, int i, boolean advanced)
-	{
-		if (!advanced) {
-			items.remove(i);
-			return;
-		}
-		if (type != item.currentType) {
-			items.remove(i);
-			if (item.currentType == EntityType.Way) {
-				firstWays.put(item.iterator, item);
-			} else if (item.currentType == EntityType.Relation) {
-				firstRelations.put(item.iterator, item);
-			}
-		}
-	}
-
-	private Item createItem(EntityContainer container,
-			Iterator<EntityContainer> iterator)
-	{
-		Item item = new Item();
-		item.currentEntity = container.getEntity();
-		item.currentType = container.getType();
-		item.currentId = item.currentEntity.getId();
-		item.iterator = iterator;
-		return item;
 	}
 
 }
