@@ -30,13 +30,13 @@ public class Node
 	private Node parent;
 	private Node left;
 	private Node right;
-	private int path;
+	private long path;
 	private int level;
 
 	private Direction direction;
 	private double splitPoint = 0;
 
-	Node(Envelope envelope, Node parent, int path, int level)
+	Node(Envelope envelope, Node parent, long path, int level)
 	{
 		this.envelope = envelope;
 		this.parent = parent;
@@ -72,7 +72,7 @@ public class Node
 		}
 	}
 
-	public int getPath()
+	public long getPath()
 	{
 		return path;
 	}
@@ -105,8 +105,8 @@ public class Node
 	public void split()
 	{
 		Direction direction = getSplitDirection();
-		int pathL = path << 1 | 0;
-		int pathR = path << 1 | 1;
+		long pathL = path << 1 | 0;
+		long pathR = path << 1 | 1;
 		Envelope envLeft, envRight;
 		if (direction == Direction.HORIZONTAL) {
 			double x1 = envelope.getMinX();

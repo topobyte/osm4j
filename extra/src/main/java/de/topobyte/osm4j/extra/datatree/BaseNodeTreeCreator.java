@@ -149,7 +149,7 @@ public abstract class BaseNodeTreeCreator extends
 
 	protected NodeOutput init(Node leaf) throws IOException
 	{
-		String dirname = Integer.toHexString(leaf.getPath());
+		String dirname = Long.toHexString(leaf.getPath());
 		Path dir = dirOutput.resolve(dirname);
 		Files.createDirectories(dir);
 		Path file = dir.resolve(fileNames);

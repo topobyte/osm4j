@@ -251,9 +251,9 @@ public class CreateNodeTreeMaxNodes extends BaseNodeTreeCreator
 
 		System.out.println("Splitting: " + leaf.getEnvelope());
 		System.out.println(String.format("%s -> %s %s",
-				Integer.toHexString(leaf.getPath()),
-				Integer.toHexString(left.getPath()),
-				Integer.toHexString(right.getPath())));
+				Long.toHexString(leaf.getPath()),
+				Long.toHexString(left.getPath()),
+				Long.toHexString(right.getPath())));
 
 		Output output = outputs.get(leaf);
 		output.getOsmOutput().complete();
@@ -287,7 +287,7 @@ public class CreateNodeTreeMaxNodes extends BaseNodeTreeCreator
 			System.out.println(String.format(
 					"Distributing [%d/%d]: %s. Leafs: %d", i + 1,
 					innerNodesWithData.size(),
-					Integer.toHexString(node.getPath()), leafs.size()));
+					Long.toHexString(node.getPath()), leafs.size()));
 
 			distributeToLeafs(node, leafs);
 		}
@@ -332,15 +332,15 @@ public class CreateNodeTreeMaxNodes extends BaseNodeTreeCreator
 
 		input.close();
 
-		System.out.println("Deleting " + Integer.toHexString(inner.getPath()));
+		System.out.println("Deleting " + Long.toHexString(inner.getPath()));
 		Files.delete(output.getFile());
 		Files.delete(output.getFile().getParent());
 	}
 
 	private Output initExtraOutput(Node inner, Node leaf) throws IOException
 	{
-		String dirname = Integer.toHexString(leaf.getPath());
-		String filename = Integer.toHexString(inner.getPath())
+		String dirname = Long.toHexString(leaf.getPath());
+		String filename = Long.toHexString(inner.getPath())
 				+ OsmIoUtils.extension(outputFormat);
 		Path dirLeaf = dirOutput.resolve(dirname);
 		Path dirExtra = dirLeaf.resolve(SUBDIR_EXTRA);
@@ -391,7 +391,7 @@ public class CreateNodeTreeMaxNodes extends BaseNodeTreeCreator
 		for (int i = 0; i < leafsToMerge.size(); i++) {
 			Node leaf = leafsToMerge.get(i);
 			System.out.println(String.format("Merging [%d/%d]: %s", i + 1,
-					leafsToMerge.size(), Integer.toHexString(leaf.getPath())));
+					leafsToMerge.size(), Long.toHexString(leaf.getPath())));
 			merge(leaf);
 		}
 	}
@@ -495,9 +495,9 @@ public class CreateNodeTreeMaxNodes extends BaseNodeTreeCreator
 
 		System.out.println("Splitting: " + leaf.getEnvelope());
 		System.out.println(String.format("%s -> %s %s",
-				Integer.toHexString(leaf.getPath()),
-				Integer.toHexString(left.getPath()),
-				Integer.toHexString(right.getPath())));
+				Long.toHexString(leaf.getPath()),
+				Long.toHexString(left.getPath()),
+				Long.toHexString(right.getPath())));
 
 		NodeOutput leftOutput = init(left);
 		NodeOutput rightOutput = init(right);
@@ -591,8 +591,8 @@ public class CreateNodeTreeMaxNodes extends BaseNodeTreeCreator
 
 			long sum = counts.get(leaf) + counts.get(sibling);
 			System.out.println(String.format("%s %s: %d + %d = %d",
-					Integer.toHexString(leaf.getPath()),
-					Integer.toHexString(sibling.getPath()), counts.get(leaf),
+					Long.toHexString(leaf.getPath()),
+					Long.toHexString(sibling.getPath()), counts.get(leaf),
 					counts.get(sibling), sum));
 			Node parent = leaf.getParent();
 			counts.put(parent, sum);

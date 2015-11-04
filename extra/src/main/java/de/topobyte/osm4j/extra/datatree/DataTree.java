@@ -91,7 +91,7 @@ public class DataTree
 	private void print(Node node)
 	{
 		if (node.isLeaf()) {
-			System.out.println(Integer.toHexString(node.getPath()) + ": "
+			System.out.println(Long.toHexString(node.getPath()) + ": "
 					+ node.getEnvelope());
 		} else {
 			print(node.getLeft());
