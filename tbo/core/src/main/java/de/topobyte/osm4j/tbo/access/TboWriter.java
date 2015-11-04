@@ -227,7 +227,9 @@ public class TboWriter extends BlockWriter implements OsmOutputStream
 	private void writeWay(OsmWay way) throws IOException
 	{
 		if (mode != Mode.WAY) {
-			if (mode == Mode.NODE) {
+			if (mode == Mode.HEADER) {
+				finishHeader();
+			} else if (mode == Mode.NODE) {
 				finishNodes();
 			} else {
 				throw new RuntimeException(
@@ -243,7 +245,9 @@ public class TboWriter extends BlockWriter implements OsmOutputStream
 	private void writeRelation(OsmRelation relation) throws IOException
 	{
 		if (mode != Mode.RELATION) {
-			if (mode == Mode.NODE) {
+			if (mode == Mode.HEADER) {
+				finishHeader();
+			} else if (mode == Mode.NODE) {
 				finishNodes();
 				finishWays();
 			} else if (mode == Mode.WAY) {

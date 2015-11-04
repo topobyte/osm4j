@@ -114,6 +114,54 @@ public class TestWriteRead
 		compare(generated, read);
 	}
 
+	@Test
+	public void testNodesOnly() throws IOException
+	{
+		// Generate some data
+		DataSet generated = dataSetGenerator.generate(30, 0, 0);
+
+		// Write to file
+		write(generated);
+
+		// Read from file
+		DataSet read = read();
+
+		// Compare data
+		compare(generated, read);
+	}
+
+	@Test
+	public void testWaysOnly() throws IOException
+	{
+		// Generate some data
+		DataSet generated = dataSetGenerator.generate(0, 30, 0);
+
+		// Write to file
+		write(generated);
+
+		// Read from file
+		DataSet read = read();
+
+		// Compare data
+		compare(generated, read);
+	}
+
+	@Test
+	public void testRelationsOnly() throws IOException
+	{
+		// Generate some data
+		DataSet generated = dataSetGenerator.generate(0, 0, 30);
+
+		// Write to file
+		write(generated);
+
+		// Read from file
+		DataSet read = read();
+
+		// Compare data
+		compare(generated, read);
+	}
+
 	private void write(DataSet data) throws IOException
 	{
 		OutputStream output = new FileOutputStream(file);
