@@ -21,7 +21,6 @@ import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -35,7 +34,6 @@ import java.util.Map;
 import com.vividsolutions.jts.geom.Envelope;
 
 import de.topobyte.adt.geo.BBox;
-import de.topobyte.adt.geo.BBoxString;
 import de.topobyte.osm4j.core.access.OsmIterator;
 import de.topobyte.osm4j.core.model.iface.OsmBounds;
 import de.topobyte.osm4j.utils.AbstractTaskSingleInputFile;
@@ -166,12 +164,8 @@ public class CreateNodeTreeMaxNodes extends AbstractTaskSingleInputFile
 
 	private void initTree() throws IOException
 	{
-		Path file = dirOutput.resolve(DataTree.FILENAME_INFO);
-
 		BBox bbox = new BBox(envelope);
-		PrintWriter pw = new PrintWriter(file.toFile());
-		pw.println(DataTree.PROPERTY_BBOX + ": " + BBoxString.create(bbox));
-		pw.close();
+		DataTreeUtil.writeTreeInfo(dirOutput.toFile(), bbox);
 
 		tree = new DataTree(envelope);
 
