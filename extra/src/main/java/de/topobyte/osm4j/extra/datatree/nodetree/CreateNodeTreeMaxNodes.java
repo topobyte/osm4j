@@ -15,28 +15,31 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with osm4j. If not, see <http://www.gnu.org/licenses/>.
 
-package de.topobyte.osm4j.extra.datatree;
+package de.topobyte.osm4j.extra.datatree.nodetree;
 
-import java.io.BufferedOutputStream;
+import java.io.BufferedInputStream;
+import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.OutputStream;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Deque;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 import com.vividsolutions.jts.geom.Envelope;
 
 import de.topobyte.adt.geo.BBox;
-import de.topobyte.osm4j.core.access.OsmOutputStream;
-import de.topobyte.osm4j.core.model.iface.EntityContainer;
+import de.topobyte.osm4j.core.access.OsmIterator;
 import de.topobyte.osm4j.core.model.iface.OsmBounds;
-import de.topobyte.osm4j.core.model.iface.OsmNode;
-import de.topobyte.osm4j.core.model.impl.Bounds;
-import de.topobyte.osm4j.extra.progress.NodeProgress;
-import de.topobyte.osm4j.utils.AbstractTaskSingleInputIterator;
+import de.topobyte.osm4j.extra.datatree.DataTree;
+import de.topobyte.osm4j.extra.datatree.DataTreeUtil;
+import de.topobyte.osm4j.extra.datatree.Node;
+import de.topobyte.osm4j.utils.AbstractTaskSingleInputFile;
 import de.topobyte.osm4j.utils.FileFormat;
 import de.topobyte.osm4j.utils.OsmIoUtils;
 import de.topobyte.osm4j.utils.config.PbfConfig;
@@ -45,14 +48,35 @@ import de.topobyte.osm4j.utils.config.TboConfig;
 import de.topobyte.osm4j.utils.config.TboOptions;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
-public abstract class BaseNodeTreeCreator extends
-		AbstractTaskSingleInputIterator
+public class CreateNodeTreeMaxNodes extends AbstractTaskSingleInputFile
 {
 
 	private static final String OPTION_OUTPUT = "output";
 	private static final String OPTION_OUTPUT_FORMAT = "output_format";
 	private static final String OPTION_FILE_NAMES = "filenames";
+	private static final String OPTION_MAX_NODES = "max_nodes";
 
+	private static final int SPLIT_INITIAL = 20;
+	private static final int SPLIT_ITERATION = 8;
+
+	@Override
+	protected String getHelpMessage()
+	{
+		return CreateNodeTreeMaxNodes.class.getSimpleName() + " [options]";
+	}
+
+	public static void main(String[] args) throws IOException
+	{
+		CreateNodeTreeMaxNodes task = new CreateNodeTreeMaxNodes();
+
+		task.setup(args);
+
+		task.init();
+
+		task.initTree();
+	}
+
+	protected int maxNodes;
 	protected String pathOutput;
 	protected String fileNames;
 	protected FileFormat outputFormat;
@@ -63,17 +87,15 @@ public abstract class BaseNodeTreeCreator extends
 	protected Path dirOutput;
 	protected Map<Node, NodeOutput> outputs = new HashMap<>();
 
+	protected Envelope envelope;
 	protected DataTree tree;
-	protected ClosingFileOutputStreamFactory outputStreamFactory = new ClosingFileOutputStreamPool();
-	protected int idFactory = 0;
 
-	private NodeProgress counter = new NodeProgress();
-
-	public BaseNodeTreeCreator()
+	public CreateNodeTreeMaxNodes()
 	{
 		// @formatter:off
 		OptionHelper.add(options, OPTION_OUTPUT_FORMAT, true, true, "the file format of the output");
 		OptionHelper.add(options, OPTION_OUTPUT, true, true, "directory to store output in");
+		OptionHelper.add(options, OPTION_MAX_NODES, true, true, "the maximum number of nodes per file");
 		OptionHelper.add(options, OPTION_FILE_NAMES, true, true, "names of the data files to create");
 		PbfOptions.add(options);
 		TboOptions.add(options);
@@ -84,6 +106,14 @@ public abstract class BaseNodeTreeCreator extends
 	protected void setup(String[] args)
 	{
 		super.setup(args);
+
+		String argMaxNodes = line.getOptionValue(OPTION_MAX_NODES);
+
+		maxNodes = Integer.parseInt(argMaxNodes);
+		if (maxNodes < 1) {
+			System.out.println("Please specify a max nodes >= 1");
+			System.exit(1);
+		}
 
 		String outputFormatName = line.getOptionValue(OPTION_OUTPUT_FORMAT);
 		outputFormat = FileFormat.parseFileFormat(outputFormatName);
@@ -101,7 +131,7 @@ public abstract class BaseNodeTreeCreator extends
 		fileNames = line.getOptionValue(OPTION_FILE_NAMES);
 	}
 
-	protected void initNewTree() throws IOException
+	private void init() throws IOException
 	{
 		dirOutput = Paths.get(pathOutput);
 		if (!Files.exists(dirOutput)) {
@@ -117,104 +147,84 @@ public abstract class BaseNodeTreeCreator extends
 			System.exit(1);
 		}
 
-		if (!inputIterator.hasBounds()) {
+		InputStream input = new BufferedInputStream(new FileInputStream(
+				getInputFile()));
+		OsmIterator iterator = OsmIoUtils.setupOsmIterator(input, inputFormat,
+				false);
+		if (!iterator.hasBounds()) {
 			System.out.println("Input does not provide bounds");
 			System.exit(1);
 		}
 
-		OsmBounds bounds = inputIterator.getBounds();
+		OsmBounds bounds = iterator.getBounds();
 		System.out.println("bounds: " + bounds);
 
-		Envelope envelope = new Envelope(bounds.getLeft(), bounds.getRight(),
-				bounds.getBottom(), bounds.getTop());
+		input.close();
 
+		envelope = new Envelope(bounds.getLeft(), bounds.getRight(),
+				bounds.getBottom(), bounds.getTop());
+	}
+
+	private void initTree() throws IOException
+	{
 		BBox bbox = new BBox(envelope);
 		DataTreeUtil.writeTreeInfo(dirOutput.toFile(), bbox);
 
 		tree = new DataTree(envelope);
-	}
 
-	protected void openExistingTree() throws IOException
-	{
-		dirOutput = Paths.get(pathOutput);
-		if (!Files.exists(dirOutput)) {
-			System.out.println("Output path does not exist");
-			System.exit(1);
-		}
-		if (!Files.isDirectory(dirOutput)) {
-			System.out.println("Output path is not a directory");
-			System.exit(1);
-		}
+		tree.getRoot().split(SPLIT_INITIAL);
+		NodeTreeDistributer initialDistributer = new NodeTreeDistributer(tree,
+				dirOutput, tree.getRoot(), getInputFile(), maxNodes, fileNames,
+				inputFormat, outputFormat, pbfConfig, tboConfig, writeMetadata);
+		initialDistributer.execute();
 
-		tree = DataTreeOpener.open(dirOutput.toFile());
-	}
+		Deque<NodeTreeDistributer> check = new LinkedList<>();
+		check.add(initialDistributer);
 
-	protected void initOutputs() throws IOException
-	{
-		List<Node> leafs = tree.getLeafs();
-		for (Node leaf : leafs) {
-			init(leaf);
-		}
-	}
+		int iteration = 0;
 
-	protected NodeOutput init(Node leaf) throws IOException
-	{
-		String dirname = Long.toHexString(leaf.getPath());
-		Path dir = dirOutput.resolve(dirname);
-		Files.createDirectories(dir);
-		Path file = dir.resolve(fileNames);
+		while (!check.isEmpty()) {
+			iteration++;
+			System.out.println(String.format("Iteration %d", iteration));
 
-		System.out.println(file + ": " + leaf.getEnvelope());
-		OutputStream os = new ClosingFileOutputStream(outputStreamFactory,
-				file.toFile(), idFactory++);
-		OutputStream bos = new BufferedOutputStream(os);
-		OsmOutputStream osmOutput = OsmIoUtils.setupOsmOutput(bos,
-				outputFormat, writeMetadata, pbfConfig, tboConfig);
-		NodeOutput output = new NodeOutput(leaf, file, bos, osmOutput);
-		outputs.put(leaf, output);
+			Map<Node, Path> paths = new HashMap<>();
+			List<Node> largeNodes = new ArrayList<>();
+			for (NodeTreeDistributer distributer : check) {
+				for (Node node : tree.getLeafs(distributer.getHead())) {
+					long count = distributer.getCounters().get(node.getPath());
+					if (count <= maxNodes) {
+						continue;
+					}
+					System.out.println(String.format(
+							"Node %s has too many nodes: %d",
+							Long.toHexString(node.getPath()), count));
+					largeNodes.add(node);
+					paths.put(node, distributer.getOutputs().get(node)
+							.getFile());
+				}
+			}
+			check.clear();
 
-		Envelope box = leaf.getEnvelope();
-		osmOutput.write(new Bounds(box.getMinX(), box.getMaxX(), box.getMaxY(),
-				box.getMinY()));
+			System.out.println(String.format(
+					"Iteration %d: there are %d large nodes", iteration,
+					largeNodes.size()));
 
-		return output;
-	}
+			for (Node node : largeNodes) {
+				Path path = paths.get(node);
+				System.out.println(String.format("Splitting again: node %s",
+						Long.toHexString(node.getPath())));
+				node.split(SPLIT_ITERATION);
+				NodeTreeDistributer distributer = new NodeTreeDistributer(tree,
+						dirOutput, node, path.toFile(), maxNodes, fileNames,
+						outputFormat, outputFormat, pbfConfig, tboConfig,
+						writeMetadata);
+				distributer.execute();
+				check.add(distributer);
 
-	protected void run() throws IOException
-	{
-		counter.printTimed(1000);
-		loop: while (inputIterator.hasNext()) {
-			EntityContainer entityContainer = inputIterator.next();
-			switch (entityContainer.getType()) {
-			case Node:
-				handle((OsmNode) entityContainer.getEntity());
-				counter.increment();
-				break;
-			case Way:
-				break loop;
-			case Relation:
-				break loop;
+				Files.delete(path);
+				Files.delete(path.getParent());
 			}
 		}
-		counter.stop();
-	}
-
-	protected abstract void handle(OsmNode node) throws IOException;
-
-	@Override
-	protected void finish() throws IOException
-	{
-		super.finish();
-
-		for (Output output : outputs.values()) {
-			close(output);
-		}
-	}
-
-	protected void close(Output output) throws IOException
-	{
-		output.getOsmOutput().complete();
-		output.getOutputStream().close();
 	}
 
 }

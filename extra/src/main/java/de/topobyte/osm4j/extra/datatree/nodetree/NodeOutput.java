@@ -15,12 +15,13 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with osm4j. If not, see <http://www.gnu.org/licenses/>.
 
-package de.topobyte.osm4j.extra.datatree;
+package de.topobyte.osm4j.extra.datatree.nodetree;
 
 import java.io.OutputStream;
 import java.nio.file.Path;
 
 import de.topobyte.osm4j.core.access.OsmOutputStream;
+import de.topobyte.osm4j.extra.datatree.Node;
 
 class NodeOutput extends Output
 {

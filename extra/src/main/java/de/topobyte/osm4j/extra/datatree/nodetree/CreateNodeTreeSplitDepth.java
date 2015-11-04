@@ -15,12 +15,13 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with osm4j. If not, see <http://www.gnu.org/licenses/>.
 
-package de.topobyte.osm4j.extra.datatree;
+package de.topobyte.osm4j.extra.datatree.nodetree;
 
 import java.io.IOException;
 import java.util.List;
 
 import de.topobyte.osm4j.core.model.iface.OsmNode;
+import de.topobyte.osm4j.extra.datatree.Node;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
 public class CreateNodeTreeSplitDepth extends BaseNodeTreeCreator

@@ -15,7 +15,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with osm4j. If not, see <http://www.gnu.org/licenses/>.
 
-package de.topobyte.osm4j.extra.datatree;
+package de.topobyte.osm4j.extra.datatree.nodetree;
 
 import gnu.trove.map.TLongLongMap;
 import gnu.trove.map.TObjectLongMap;
@@ -45,6 +45,10 @@ import de.topobyte.osm4j.core.access.OsmOutputStream;
 import de.topobyte.osm4j.core.model.iface.EntityContainer;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.osm4j.core.model.impl.Bounds;
+import de.topobyte.osm4j.extra.datatree.ClosingFileOutputStreamFactory;
+import de.topobyte.osm4j.extra.datatree.ClosingFileOutputStreamPool;
+import de.topobyte.osm4j.extra.datatree.DataTree;
+import de.topobyte.osm4j.extra.datatree.Node;
 import de.topobyte.osm4j.extra.progress.NodeProgress;
 import de.topobyte.osm4j.utils.FileFormat;
 import de.topobyte.osm4j.utils.OsmIoUtils;
