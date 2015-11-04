@@ -18,7 +18,6 @@
 package de.topobyte.osm4j.extra.datatree;
 
 import java.io.BufferedOutputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Files;
@@ -65,6 +64,8 @@ public abstract class BaseNodeTreeCreator extends
 	protected Map<Node, NodeOutput> outputs = new HashMap<>();
 
 	protected DataTree tree;
+	protected ClosingFileOutputStreamFactory outputStreamFactory = new ClosingFileOutputStreamPool();
+	protected int idFactory = 0;
 
 	private NodeProgress counter = new NodeProgress();
 
@@ -164,7 +165,8 @@ public abstract class BaseNodeTreeCreator extends
 		Path file = dir.resolve(fileNames);
 
 		System.out.println(file + ": " + leaf.getEnvelope());
-		OutputStream os = new FileOutputStream(file.toFile());
+		OutputStream os = new ClosingFileOutputStream(outputStreamFactory,
+				file.toFile(), idFactory++);
 		OutputStream bos = new BufferedOutputStream(os);
 		OsmOutputStream osmOutput = OsmIoUtils.setupOsmOutput(bos,
 				outputFormat, writeMetadata, pbfConfig, tboConfig);

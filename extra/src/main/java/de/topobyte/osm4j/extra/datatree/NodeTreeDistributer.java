@@ -26,7 +26,6 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -67,6 +66,9 @@ public class NodeTreeDistributer
 	private PbfConfig pbfConfig;
 	private TboConfig tboConfig;
 	private boolean writeMetadata;
+
+	private ClosingFileOutputStreamFactory outputStreamFactory = new ClosingFileOutputStreamPool();
+	private int idFactory = 0;
 
 	private Map<Node, NodeOutput> outputs = new HashMap<>();
 
@@ -212,7 +214,8 @@ public class NodeTreeDistributer
 		Files.createDirectories(dir);
 		Path file = dir.resolve(fileNames);
 
-		OutputStream os = new FileOutputStream(file.toFile());
+		OutputStream os = outputStreamFactory
+				.create(file.toFile(), idFactory++);
 		OutputStream bos = new BufferedOutputStream(os);
 		OsmOutputStream osmOutput = OsmIoUtils.setupOsmOutput(bos,
 				outputFormat, writeMetadata, pbfConfig, tboConfig);
