@@ -45,6 +45,7 @@ import de.topobyte.osm4j.core.access.OsmOutputStream;
 import de.topobyte.osm4j.core.model.iface.EntityContainer;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.osm4j.core.model.impl.Bounds;
+import de.topobyte.osm4j.extra.datatree.ClosingFileOutputStream;
 import de.topobyte.osm4j.extra.datatree.ClosingFileOutputStreamFactory;
 import de.topobyte.osm4j.extra.datatree.ClosingFileOutputStreamPool;
 import de.topobyte.osm4j.extra.datatree.DataTree;
@@ -218,8 +219,8 @@ public class NodeTreeDistributer
 		Files.createDirectories(dir);
 		Path file = dir.resolve(fileNames);
 
-		OutputStream os = outputStreamFactory
-				.create(file.toFile(), idFactory++);
+		OutputStream os = new ClosingFileOutputStream(outputStreamFactory,
+				file.toFile(), idFactory++);
 		OutputStream bos = new BufferedOutputStream(os);
 		OsmOutputStream osmOutput = OsmIoUtils.setupOsmOutput(bos,
 				outputFormat, writeMetadata, pbfConfig, tboConfig);
