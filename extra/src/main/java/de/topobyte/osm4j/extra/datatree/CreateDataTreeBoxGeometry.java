@@ -32,13 +32,13 @@ import com.vividsolutions.jts.io.WKTWriter;
 
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
-public class CreateNodeTreeBoxGeometry
+public class CreateDataTreeBoxGeometry
 {
 
 	private static final String OPTION_INPUT = "input";
 	private static final String OPTION_OUTPUT = "output";
 
-	private static final String HELP_MESSAGE = CreateNodeTreeBoxGeometry.class
+	private static final String HELP_MESSAGE = CreateDataTreeBoxGeometry.class
 			.getSimpleName() + " [options]";
 
 	public static void main(String[] args) throws IOException
@@ -66,7 +66,7 @@ public class CreateNodeTreeBoxGeometry
 		File dirTree = new File(pathInput);
 		File fileOutput = new File(pathOutput);
 
-		CreateNodeTreeBoxGeometry task = new CreateNodeTreeBoxGeometry(dirTree,
+		CreateDataTreeBoxGeometry task = new CreateDataTreeBoxGeometry(dirTree,
 				fileOutput);
 		task.execute();
 	}
@@ -74,7 +74,7 @@ public class CreateNodeTreeBoxGeometry
 	private File dirTree;
 	private File fileOutput;
 
-	public CreateNodeTreeBoxGeometry(File dirTree, File fileOutput)
+	public CreateDataTreeBoxGeometry(File dirTree, File fileOutput)
 	{
 		this.dirTree = dirTree;
 		this.fileOutput = fileOutput;
