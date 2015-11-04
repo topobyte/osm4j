@@ -102,6 +102,13 @@ public class Node
 		return direction;
 	}
 
+	public void melt()
+	{
+		isLeaf = true;
+		left = null;
+		right = null;
+	}
+
 	public void split()
 	{
 		Direction direction = getSplitDirection();
