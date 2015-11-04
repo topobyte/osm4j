@@ -21,22 +21,19 @@ import java.io.IOException;
 import java.util.List;
 
 import de.topobyte.osm4j.core.model.iface.OsmNode;
-import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
-public class CreateNodeTreeSplitDepth extends BaseNodeTreeCreator
+public class CreateNodeTree extends BaseNodeTreeCreator
 {
-
-	private static final String OPTION_SPLIT_DEPTH = "split_depth";
 
 	@Override
 	protected String getHelpMessage()
 	{
-		return CreateNodeTreeSplitDepth.class.getSimpleName() + " [options]";
+		return CreateNodeTree.class.getSimpleName() + " [options]";
 	}
 
 	public static void main(String[] args) throws IOException
 	{
-		CreateNodeTreeSplitDepth task = new CreateNodeTreeSplitDepth();
+		CreateNodeTree task = new CreateNodeTree();
 
 		task.setup(args);
 
@@ -44,44 +41,13 @@ public class CreateNodeTreeSplitDepth extends BaseNodeTreeCreator
 
 		task.init();
 
-		task.initNewTree();
-
-		task.initTree();
+		task.openExistingTree();
 
 		task.initOutputs();
 
 		task.run();
 
 		task.finish();
-	}
-
-	private int splitDepth;
-
-	public CreateNodeTreeSplitDepth()
-	{
-		// @formatter:off
-		OptionHelper.add(options, OPTION_SPLIT_DEPTH, true, true, "how often to split the root node");
-		// @formatter:on
-	}
-
-	@Override
-	protected void setup(String[] args)
-	{
-		super.setup(args);
-
-		String argSplitDepth = line.getOptionValue(OPTION_SPLIT_DEPTH);
-
-		splitDepth = Integer.parseInt(argSplitDepth);
-		if (splitDepth < 0) {
-			System.out.println("Please specify a positive split depth");
-			System.exit(1);
-		}
-	}
-
-	protected void initTree() throws IOException
-	{
-		tree.getRoot().split(splitDepth);
-		tree.print();
 	}
 
 	@Override

@@ -21,17 +21,16 @@ import java.io.BufferedOutputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.vividsolutions.jts.geom.Envelope;
 
 import de.topobyte.adt.geo.BBox;
-import de.topobyte.adt.geo.BBoxString;
 import de.topobyte.osm4j.core.access.OsmOutputStream;
 import de.topobyte.osm4j.core.model.iface.EntityContainer;
 import de.topobyte.osm4j.core.model.iface.OsmBounds;
@@ -65,7 +64,6 @@ public abstract class BaseNodeTreeCreator extends
 	protected Path dirOutput;
 	protected Map<Node, NodeOutput> outputs = new HashMap<>();
 
-	protected Envelope envelope;
 	protected DataTree tree;
 
 	private NodeProgress counter = new NodeProgress();
@@ -102,11 +100,8 @@ public abstract class BaseNodeTreeCreator extends
 		fileNames = line.getOptionValue(OPTION_FILE_NAMES);
 	}
 
-	@Override
-	protected void init() throws IOException
+	protected void initNewTree() throws IOException
 	{
-		super.init();
-
 		dirOutput = Paths.get(pathOutput);
 		if (!Files.exists(dirOutput)) {
 			System.out.println("Creating output directory");
@@ -129,20 +124,36 @@ public abstract class BaseNodeTreeCreator extends
 		OsmBounds bounds = inputIterator.getBounds();
 		System.out.println("bounds: " + bounds);
 
-		envelope = new Envelope(bounds.getLeft(), bounds.getRight(),
+		Envelope envelope = new Envelope(bounds.getLeft(), bounds.getRight(),
 				bounds.getBottom(), bounds.getTop());
-	}
-
-	protected void initTree() throws IOException
-	{
-		Path file = dirOutput.resolve(DataTree.FILENAME_INFO);
 
 		BBox bbox = new BBox(envelope);
-		PrintWriter pw = new PrintWriter(file.toFile());
-		pw.println(DataTree.PROPERTY_BBOX + ": " + BBoxString.create(bbox));
-		pw.close();
+		DataTreeUtil.writeTreeInfo(dirOutput.toFile(), bbox);
 
 		tree = new DataTree(envelope);
+	}
+
+	protected void openExistingTree() throws IOException
+	{
+		dirOutput = Paths.get(pathOutput);
+		if (!Files.exists(dirOutput)) {
+			System.out.println("Output path does not exist");
+			System.exit(1);
+		}
+		if (!Files.isDirectory(dirOutput)) {
+			System.out.println("Output path is not a directory");
+			System.exit(1);
+		}
+
+		tree = DataTreeOpener.open(dirOutput.toFile());
+	}
+
+	protected void initOutputs() throws IOException
+	{
+		List<Node> leafs = tree.getLeafs();
+		for (Node leaf : leafs) {
+			init(leaf);
+		}
 	}
 
 	protected NodeOutput init(Node leaf) throws IOException
