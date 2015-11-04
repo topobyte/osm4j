@@ -35,13 +35,11 @@ import com.vividsolutions.jts.geom.Envelope;
 
 import de.topobyte.adt.geo.BBox;
 import de.topobyte.adt.geo.BBoxString;
-import de.topobyte.osm4j.utils.FileFormat;
-import de.topobyte.osm4j.utils.OsmIoUtils;
 
 public class DataTreeOpener
 {
 
-	public static DataTree open(File dir, FileFormat format) throws IOException
+	public static DataTree open(File dir) throws IOException
 	{
 		File fileInfo = new File(dir, DataTree.FILENAME_INFO);
 		if (!fileInfo.exists()) {
@@ -71,15 +69,20 @@ public class DataTreeOpener
 		Envelope envelope = bbox.toEnvelope();
 		DataTree tree = new DataTree(envelope);
 
-		String extension = OsmIoUtils.extension(format);
-
 		// Find all data files by extension
 		List<File> dataFiles = new ArrayList<>();
 
 		File[] files = dir.listFiles();
 		for (File file : files) {
-			if (file.getName().endsWith(extension)) {
+			if (!file.isDirectory()) {
+				continue;
+			}
+			String name = file.getName();
+			try {
+				Long.parseLong(name, 16);
 				dataFiles.add(file);
+			} catch (NumberFormatException e) {
+				System.out.println("Warning: unknown directory: " + file);
 			}
 		}
 
@@ -95,25 +98,22 @@ public class DataTreeOpener
 		// information we can rebuild our tree by starting with a tree with only
 		// a root node and then recursively splitting each node in the tree that
 		// has children.
-		Set<Integer> hasChildren = new HashSet<>();
+		Set<Long> hasChildren = new HashSet<>();
 
 		// First determine each node's level and setup a group of nodes for
 		// each level with at least one node on it.
-		Map<Integer, Set<Integer>> layerMap = new HashMap<>();
+		Map<Integer, Set<Long>> layerMap = new HashMap<>();
 
 		for (File file : dataFiles) {
-			// Each file represents a node
-			String filename = file.getName();
-			// Get the encoded path from the filename
-			String name = filename.substring(0,
-					filename.length() - extension.length());
+			// Each directory represents a node
+			String name = file.getName();
 			// Decode the path
-			int path = Integer.parseInt(name, 16);
+			long path = Long.parseLong(name, 16);
 			// Determine the level from the path
-			int level = Integer.toBinaryString(path).length() - 1;
+			int level = Long.toBinaryString(path).length() - 1;
 
 			// Put node into layer group
-			Set<Integer> layer = layerMap.get(level);
+			Set<Long> layer = layerMap.get(level);
 			if (layer == null) {
 				layer = new HashSet<>();
 				layerMap.put(level, layer);
@@ -129,9 +129,9 @@ public class DataTreeOpener
 		int maxLevel = levels.get(levels.size() - 1);
 		for (int level = maxLevel; level > 0; level--) {
 			// Get a reference to the current layer
-			Set<Integer> layer = layerMap.get(level);
+			Set<Long> layer = layerMap.get(level);
 			// Get the layer above the current, create if necessary
-			Set<Integer> above = layerMap.get(level - 1);
+			Set<Long> above = layerMap.get(level - 1);
 			if (above == null) {
 				above = new HashSet<>();
 				layerMap.put(level - 1, above);
@@ -141,23 +141,23 @@ public class DataTreeOpener
 			// a parent node on the layer above
 			while (!layer.isEmpty()) {
 				// Remove a node from the layer
-				Iterator<Integer> iterator = layer.iterator();
-				int path = iterator.next();
+				Iterator<Long> iterator = layer.iterator();
+				long path = iterator.next();
 				iterator.remove();
 
 				// Determine its sibling node
-				int sibling = sibling(path);
+				long sibling = sibling(path);
 				boolean remove = layer.remove(sibling);
 				if (!remove) {
 					throw new IOException("Missing file for node: "
-							+ Integer.toHexString(sibling));
+							+ Long.toHexString(sibling));
 				}
 
 				// Determine the parent's path
-				int parent = parent(path);
+				long parent = parent(path);
 				if (above.contains(parent)) {
 					throw new IOException("Parent node shouldn't exists: "
-							+ Integer.toHexString(parent));
+							+ Long.toHexString(parent));
 				}
 
 				// Add the parent to the layer above
@@ -189,15 +189,15 @@ public class DataTreeOpener
 		return tree;
 	}
 
-	private static int parent(int path)
+	private static long parent(long path)
 	{
 		return path >> 1;
 	}
 
-	private static int sibling(int path)
+	private static long sibling(long path)
 	{
-		int lastBit = path & 1;
-		int siblingLastBit = (~lastBit) & 1;
+		long lastBit = path & 1;
+		long siblingLastBit = (~lastBit) & 1;
 		return (path & ~1) | siblingLastBit;
 	}
 

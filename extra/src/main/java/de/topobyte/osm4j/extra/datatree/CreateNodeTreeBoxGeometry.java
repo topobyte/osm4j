@@ -30,7 +30,6 @@ import org.apache.commons.cli.ParseException;
 import com.vividsolutions.jts.geom.GeometryCollection;
 import com.vividsolutions.jts.io.WKTWriter;
 
-import de.topobyte.osm4j.utils.FileFormat;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
 public class CreateNodeTreeBoxGeometry
@@ -38,7 +37,6 @@ public class CreateNodeTreeBoxGeometry
 
 	private static final String OPTION_INPUT = "input";
 	private static final String OPTION_OUTPUT = "output";
-	private static final String OPTION_FORMAT = "format";
 
 	private static final String HELP_MESSAGE = CreateNodeTreeBoxGeometry.class
 			.getSimpleName() + " [options]";
@@ -49,7 +47,6 @@ public class CreateNodeTreeBoxGeometry
 
 		// @formatter:off
 		OptionHelper.add(options, OPTION_INPUT, true, true, "directory with node tree");
-		OptionHelper.add(options, OPTION_FORMAT, true, true, "the file format of the data files");
 		OptionHelper.add(options, OPTION_OUTPUT, true, true, "a wkt file to create");
 		// @formatter:on
 
@@ -66,32 +63,20 @@ public class CreateNodeTreeBoxGeometry
 		String pathInput = line.getOptionValue(OPTION_INPUT);
 		String pathOutput = line.getOptionValue(OPTION_OUTPUT);
 
-		String formatName = line.getOptionValue(OPTION_FORMAT);
-		FileFormat format = FileFormat.parseFileFormat(formatName);
-		if (format == null) {
-			System.out.println("invalid input format");
-			System.out.println("please specify one of: "
-					+ FileFormat.getHumanReadableListOfSupportedFormats());
-			System.exit(1);
-		}
-
 		File dirTree = new File(pathInput);
 		File fileOutput = new File(pathOutput);
 
 		CreateNodeTreeBoxGeometry task = new CreateNodeTreeBoxGeometry(dirTree,
-				format, fileOutput);
+				fileOutput);
 		task.execute();
 	}
 
 	private File dirTree;
-	private FileFormat format;
 	private File fileOutput;
 
-	public CreateNodeTreeBoxGeometry(File dirTree, FileFormat format,
-			File fileOutput)
+	public CreateNodeTreeBoxGeometry(File dirTree, File fileOutput)
 	{
 		this.dirTree = dirTree;
-		this.format = format;
 		this.fileOutput = fileOutput;
 	}
 
@@ -99,7 +84,7 @@ public class CreateNodeTreeBoxGeometry
 	{
 		System.out.println("Opening node tree: " + dirTree);
 
-		DataTree tree = DataTreeOpener.open(dirTree, format);
+		DataTree tree = DataTreeOpener.open(dirTree);
 		GeometryCollection geometry = BoxUtil.createBoxesGeometry(tree,
 				BoxUtil.WORLD_BOUNDS);
 
