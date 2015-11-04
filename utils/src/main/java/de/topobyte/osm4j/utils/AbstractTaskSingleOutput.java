@@ -23,12 +23,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.GnuParser;
-import org.apache.commons.cli.HelpFormatter;
-import org.apache.commons.cli.Options;
-import org.apache.commons.cli.ParseException;
-
 import de.topobyte.osm4j.core.access.OsmOutputStream;
 import de.topobyte.osm4j.pbf.seq.PbfWriter;
 import de.topobyte.osm4j.tbo.access.TboWriter;
@@ -39,16 +33,11 @@ import de.topobyte.osm4j.utils.config.TboOptions;
 import de.topobyte.osm4j.xml.output.OsmXmlOutputStream;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
-public abstract class AbstractTaskSingleOutput
+public abstract class AbstractTaskSingleOutput extends AbstractTask
 {
 
 	private static final String OPTION_OUTPUT = "output";
 	private static final String OPTION_OUTPUT_FORMAT = "output_format";
-
-	protected abstract String getHelpMessage();
-
-	protected Options options = new Options();
-	protected CommandLine line = null;
 
 	protected FileFormat outputFormat;
 	protected PbfConfig pbfConfig;
@@ -73,20 +62,10 @@ public abstract class AbstractTaskSingleOutput
 		// @formatter:on
 	}
 
+	@Override
 	protected void setup(String[] args)
 	{
-		try {
-			line = new GnuParser().parse(options, args);
-		} catch (ParseException e) {
-			System.out.println("unable to parse command line: "
-					+ e.getMessage());
-			new HelpFormatter().printHelp(getHelpMessage(), options);
-			System.exit(1);
-		}
-
-		if (line == null) {
-			return;
-		}
+		super.setup(args);
 
 		String outputFormatName = line.getOptionValue(OPTION_OUTPUT_FORMAT);
 		outputFormat = FileFormat.parseFileFormat(outputFormatName);

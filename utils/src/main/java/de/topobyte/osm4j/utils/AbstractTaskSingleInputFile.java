@@ -20,24 +20,13 @@ package de.topobyte.osm4j.utils;
 import java.io.File;
 import java.io.IOException;
 
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.GnuParser;
-import org.apache.commons.cli.HelpFormatter;
-import org.apache.commons.cli.Options;
-import org.apache.commons.cli.ParseException;
-
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
-public abstract class AbstractTaskSingleInputFile
+public abstract class AbstractTaskSingleInputFile extends AbstractTask
 {
 
 	private static final String OPTION_INPUT = "input";
 	private static final String OPTION_INPUT_FORMAT = "input_format";
-
-	protected abstract String getHelpMessage();
-
-	protected Options options = new Options();
-	protected CommandLine line = null;
 
 	protected FileFormat inputFormat;
 	protected String pathInput;
@@ -50,20 +39,10 @@ public abstract class AbstractTaskSingleInputFile
 		// @formatter:on
 	}
 
+	@Override
 	protected void setup(String[] args)
 	{
-		try {
-			line = new GnuParser().parse(options, args);
-		} catch (ParseException e) {
-			System.out.println("unable to parse command line: "
-					+ e.getMessage());
-			new HelpFormatter().printHelp(getHelpMessage(), options);
-			System.exit(1);
-		}
-
-		if (line == null) {
-			return;
-		}
+		super.setup(args);
 
 		String inputFormatName = line.getOptionValue(OPTION_INPUT_FORMAT);
 		inputFormat = FileFormat.parseFileFormat(inputFormatName);
