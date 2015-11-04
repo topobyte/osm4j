@@ -23,7 +23,7 @@ import java.util.List;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
-public class CreateNodeTree extends BaseNodeTreeCreator
+public class CreateNodeTreeSplitDepth extends BaseNodeTreeCreator
 {
 
 	private static final String OPTION_SPLIT_DEPTH = "split_depth";
@@ -31,12 +31,12 @@ public class CreateNodeTree extends BaseNodeTreeCreator
 	@Override
 	protected String getHelpMessage()
 	{
-		return CreateNodeTree.class.getSimpleName() + " [options]";
+		return CreateNodeTreeSplitDepth.class.getSimpleName() + " [options]";
 	}
 
 	public static void main(String[] args) throws IOException
 	{
-		CreateNodeTree task = new CreateNodeTree();
+		CreateNodeTreeSplitDepth task = new CreateNodeTreeSplitDepth();
 
 		task.setup(args);
 
@@ -55,7 +55,7 @@ public class CreateNodeTree extends BaseNodeTreeCreator
 
 	private int splitDepth;
 
-	public CreateNodeTree()
+	public CreateNodeTreeSplitDepth()
 	{
 		// @formatter:off
 		OptionHelper.add(options, OPTION_SPLIT_DEPTH, true, true, "how often to split the root node");

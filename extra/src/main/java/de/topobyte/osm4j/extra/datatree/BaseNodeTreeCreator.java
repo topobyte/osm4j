@@ -131,8 +131,6 @@ public abstract class BaseNodeTreeCreator extends
 
 		envelope = new Envelope(bounds.getLeft(), bounds.getRight(),
 				bounds.getBottom(), bounds.getTop());
-
-		counter.printTimed(1000);
 	}
 
 	protected void initTree() throws IOException
@@ -171,6 +169,7 @@ public abstract class BaseNodeTreeCreator extends
 
 	protected void run() throws IOException
 	{
+		counter.printTimed(1000);
 		loop: while (inputIterator.hasNext()) {
 			EntityContainer entityContainer = inputIterator.next();
 			switch (entityContainer.getType()) {
