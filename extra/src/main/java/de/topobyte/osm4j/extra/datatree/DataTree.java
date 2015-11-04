@@ -73,6 +73,15 @@ public class DataTree
 		return inner;
 	}
 
+	public List<Node> getInner(Node start)
+	{
+		List<Node> inner = new ArrayList<>();
+
+		getInner(start, inner);
+
+		return inner;
+	}
+
 	private void getInner(Node node, List<Node> inner)
 	{
 		if (node.isLeaf()) {
