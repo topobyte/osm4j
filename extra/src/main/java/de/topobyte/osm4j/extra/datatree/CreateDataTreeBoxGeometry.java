@@ -46,7 +46,7 @@ public class CreateDataTreeBoxGeometry
 		Options options = new Options();
 
 		// @formatter:off
-		OptionHelper.add(options, OPTION_INPUT, true, true, "directory with node tree");
+		OptionHelper.add(options, OPTION_INPUT, true, true, "directory with data tree");
 		OptionHelper.add(options, OPTION_OUTPUT, true, true, "a wkt file to create");
 		// @formatter:on
 
@@ -82,7 +82,7 @@ public class CreateDataTreeBoxGeometry
 
 	private void execute() throws IOException
 	{
-		System.out.println("Opening node tree: " + dirTree);
+		System.out.println("Opening data tree: " + dirTree);
 
 		DataTree tree = DataTreeOpener.open(dirTree);
 		GeometryCollection geometry = BoxUtil.createBoxesGeometry(tree,
