@@ -232,6 +232,9 @@ public class MapWaysToTree extends AbstractTaskSingleInputFile
 		bis.close();
 		array.close();
 
+		outputNone.getOsmOutput().complete();
+		outputNone.getOutputStream().close();
+
 		for (Output output : outputs.values()) {
 			output.getOsmOutput().complete();
 			output.getOutputStream().close();
