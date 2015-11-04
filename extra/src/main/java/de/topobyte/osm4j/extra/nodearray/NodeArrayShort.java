@@ -79,4 +79,10 @@ public class NodeArrayShort implements NodeArray
 		return lon != NULL && lat != NULL;
 	}
 
+	@Override
+	public int bytesPerRecord()
+	{
+		return 4;
+	}
+
 }

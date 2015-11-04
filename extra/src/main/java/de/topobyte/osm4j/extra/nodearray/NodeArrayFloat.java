@@ -79,4 +79,10 @@ public class NodeArrayFloat implements NodeArray
 		return lon != NULL && lat != NULL;
 	}
 
+	@Override
+	public int bytesPerRecord()
+	{
+		return 8;
+	}
+
 }

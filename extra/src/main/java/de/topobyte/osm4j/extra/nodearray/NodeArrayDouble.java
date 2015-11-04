@@ -79,4 +79,10 @@ public class NodeArrayDouble implements NodeArray
 		return lon != NULL && lat != NULL;
 	}
 
+	@Override
+	public int bytesPerRecord()
+	{
+		return 16;
+	}
+
 }

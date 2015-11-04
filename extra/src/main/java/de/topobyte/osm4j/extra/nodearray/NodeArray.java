@@ -31,4 +31,6 @@ public interface NodeArray extends Closeable
 
 	public OsmNode get(long id) throws IOException;
 
+	public int bytesPerRecord();
+
 }
