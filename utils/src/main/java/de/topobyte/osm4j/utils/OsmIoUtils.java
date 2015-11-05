@@ -21,12 +21,18 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import de.topobyte.osm4j.core.access.OsmIdIterator;
+import de.topobyte.osm4j.core.access.OsmIdReader;
 import de.topobyte.osm4j.core.access.OsmIterator;
 import de.topobyte.osm4j.core.access.OsmOutputStream;
 import de.topobyte.osm4j.core.access.OsmReader;
+import de.topobyte.osm4j.core.access.wrapper.OsmIdIteratorAdapter;
+import de.topobyte.osm4j.core.access.wrapper.OsmIdReaderAdapter;
 import de.topobyte.osm4j.pbf.seq.PbfIterator;
 import de.topobyte.osm4j.pbf.seq.PbfReader;
 import de.topobyte.osm4j.pbf.seq.PbfWriter;
+import de.topobyte.osm4j.tbo.access.TboIdIterator;
+import de.topobyte.osm4j.tbo.access.TboIdReader;
 import de.topobyte.osm4j.tbo.access.TboIterator;
 import de.topobyte.osm4j.tbo.access.TboReader;
 import de.topobyte.osm4j.tbo.access.TboWriter;
@@ -64,6 +70,38 @@ public class OsmIoUtils
 			return new TboReader(in, readMetadata);
 		case XML:
 			return new OsmXmlReader(in, readMetadata);
+		}
+	}
+
+	public static OsmIdIterator setupOsmIdIterator(InputStream in,
+			FileFormat format) throws IOException
+	{
+		switch (format) {
+		default:
+		case PBF:
+			OsmIterator pbfIterator = new PbfIterator(in, false);
+			return new OsmIdIteratorAdapter(pbfIterator);
+		case TBO:
+			return new TboIdIterator(in);
+		case XML:
+			OsmIterator xmlIterator = new OsmXmlIterator(in, false);
+			return new OsmIdIteratorAdapter(xmlIterator);
+		}
+	}
+
+	public static OsmIdReader setupOsmIdReader(InputStream in, FileFormat format)
+			throws IOException
+	{
+		switch (format) {
+		default:
+		case PBF:
+			OsmReader pbfReader = new PbfReader(in, false);
+			return new OsmIdReaderAdapter(pbfReader);
+		case TBO:
+			return new TboIdReader(in);
+		case XML:
+			OsmReader xmlReader = new OsmXmlReader(in, false);
+			return new OsmIdReaderAdapter(xmlReader);
 		}
 	}
 
