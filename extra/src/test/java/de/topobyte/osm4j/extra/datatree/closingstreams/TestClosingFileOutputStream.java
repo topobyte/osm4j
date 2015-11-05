@@ -20,6 +20,9 @@ package de.topobyte.osm4j.extra.datatree.closingstreams;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
@@ -33,12 +36,13 @@ import de.topobyte.osm4j.extra.datatree.ClosingFileOutputStreamPool;
 public class TestClosingFileOutputStream
 {
 
+	private Set<File> allFiles = new HashSet<>();
 	private File[] files;
 
 	@After
 	public void cleanup() throws IOException
 	{
-		for (File file : files) {
+		for (File file : allFiles) {
 			file.delete();
 		}
 	}
@@ -57,6 +61,7 @@ public class TestClosingFileOutputStream
 		for (int i = 0; i < n; i++) {
 			files[i] = File.createTempFile("closing-fos", ".dat");
 		}
+		allFiles.addAll(Arrays.asList(files));
 
 		ByteArrayGenerator generator = new ByteArrayGenerator();
 		byte[][] bytes = new byte[n][];
