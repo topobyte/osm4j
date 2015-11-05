@@ -17,10 +17,8 @@
 
 package de.topobyte.osm4j.extra.nodearray;
 
-import java.io.BufferedOutputStream;
 import java.io.DataOutputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.HashMap;
@@ -29,6 +27,7 @@ import java.util.Map;
 import de.topobyte.osm4j.core.model.iface.EntityContainer;
 import de.topobyte.osm4j.core.model.iface.EntityType;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
+import de.topobyte.osm4j.extra.StreamUtil;
 import de.topobyte.osm4j.utils.AbstractTaskSingleInputIterator;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
@@ -102,8 +101,7 @@ public class CreateNodeArray extends AbstractTaskSingleInputIterator
 
 	private void initOutput() throws FileNotFoundException
 	{
-		OutputStream fos = new FileOutputStream(outputPath);
-		OutputStream bos = new BufferedOutputStream(fos);
+		OutputStream bos = StreamUtil.bufferedOutputStream(outputPath);
 		DataOutputStream out = new DataOutputStream(bos);
 
 		switch (type) {

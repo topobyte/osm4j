@@ -17,11 +17,8 @@
 
 package de.topobyte.osm4j.extra.datatree.ways;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -40,6 +37,7 @@ import de.topobyte.osm4j.core.model.iface.EntityType;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.osm4j.core.model.iface.OsmWay;
 import de.topobyte.osm4j.core.model.impl.Bounds;
+import de.topobyte.osm4j.extra.StreamUtil;
 import de.topobyte.osm4j.extra.datatree.ClosingFileOutputStream;
 import de.topobyte.osm4j.extra.datatree.ClosingFileOutputStreamFactory;
 import de.topobyte.osm4j.extra.datatree.ClosingFileOutputStreamPool;
@@ -138,8 +136,7 @@ public class MapWaysToTree extends AbstractTaskSingleInputFile
 				4096);
 		DataTree tree = DataTreeOpener.open(dirTree.toFile());
 
-		InputStream fis = new FileInputStream(getInputFile());
-		InputStream bis = new BufferedInputStream(fis);
+		InputStream bis = StreamUtil.bufferedInputStream(getInputFile());
 		OsmIterator iterator = OsmIoUtils.setupOsmIterator(bis, inputFormat,
 				writeMetadata);
 
@@ -147,9 +144,9 @@ public class MapWaysToTree extends AbstractTaskSingleInputFile
 		// within the world bounds
 
 		Path pathNonMatched = dirTree.resolve("non-matched-ways.tbo");
-		OutputStream osNone = new FileOutputStream(pathNonMatched.toFile());
-		OutputStream bosNone = new BufferedOutputStream(osNone);
-		OsmOutputStream osmOutputNone = OsmIoUtils.setupOsmOutput(osNone,
+		OutputStream bosNone = StreamUtil.bufferedOutputStream(pathNonMatched
+				.toFile());
+		OsmOutputStream osmOutputNone = OsmIoUtils.setupOsmOutput(bosNone,
 				outputFormat, writeMetadata, pbfConfig, tboConfig);
 		Output outputNone = new Output(pathNonMatched, bosNone, osmOutputNone);
 

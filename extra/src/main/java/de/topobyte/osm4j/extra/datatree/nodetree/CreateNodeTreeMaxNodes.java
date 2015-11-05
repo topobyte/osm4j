@@ -17,8 +17,6 @@
 
 package de.topobyte.osm4j.extra.datatree.nodetree;
 
-import java.io.BufferedInputStream;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -36,6 +34,7 @@ import com.vividsolutions.jts.geom.Envelope;
 import de.topobyte.adt.geo.BBox;
 import de.topobyte.osm4j.core.access.OsmIterator;
 import de.topobyte.osm4j.core.model.iface.OsmBounds;
+import de.topobyte.osm4j.extra.StreamUtil;
 import de.topobyte.osm4j.extra.datatree.DataTree;
 import de.topobyte.osm4j.extra.datatree.DataTreeUtil;
 import de.topobyte.osm4j.extra.datatree.Node;
@@ -147,8 +146,7 @@ public class CreateNodeTreeMaxNodes extends AbstractTaskSingleInputFile
 			System.exit(1);
 		}
 
-		InputStream input = new BufferedInputStream(new FileInputStream(
-				getInputFile()));
+		InputStream input = StreamUtil.bufferedInputStream(getInputFile());
 		OsmIterator iterator = OsmIoUtils.setupOsmIterator(input, inputFormat,
 				false);
 		if (!iterator.hasBounds()) {

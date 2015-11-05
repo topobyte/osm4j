@@ -24,11 +24,7 @@ import gnu.trove.list.array.TLongArrayList;
 import gnu.trove.set.TLongSet;
 import gnu.trove.set.hash.TLongHashSet;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -42,6 +38,7 @@ import de.topobyte.osm4j.core.model.iface.IdContainer;
 import de.topobyte.osm4j.core.model.iface.OsmWay;
 import de.topobyte.osm4j.core.resolve.DataSetReader;
 import de.topobyte.osm4j.core.resolve.InMemoryDataSet;
+import de.topobyte.osm4j.extra.StreamUtil;
 import de.topobyte.osm4j.extra.datatree.DataTree;
 import de.topobyte.osm4j.extra.datatree.DataTreeFiles;
 import de.topobyte.osm4j.extra.datatree.DataTreeOpener;
@@ -163,10 +160,8 @@ public class FindMissingWayNodes extends AbstractTask
 			File fileWays = filesWays.getFile(leaf);
 			File fileOutput = filesOutput.getFile(leaf);
 
-			InputStream inputNodes = new BufferedInputStream(
-					new FileInputStream(fileNodes));
-			InputStream inputWays = new BufferedInputStream(
-					new FileInputStream(fileWays));
+			InputStream inputNodes = StreamUtil.bufferedInputStream(fileNodes);
+			InputStream inputWays = StreamUtil.bufferedInputStream(fileWays);
 
 			long nodesSize = fileNodes.length();
 			System.out.println(String.format(
@@ -206,8 +201,7 @@ public class FindMissingWayNodes extends AbstractTask
 			missingIdList.sort();
 
 			System.out.println("Writing missing ids");
-			OutputStream fos = new FileOutputStream(fileOutput);
-			OutputStream bos = new BufferedOutputStream(fos);
+			OutputStream bos = StreamUtil.bufferedOutputStream(fileOutput);
 			IdListOutputStream idOutput = new IdListOutputStream(bos);
 			TLongIterator iterator = missingIdList.iterator();
 			while (iterator.hasNext()) {
