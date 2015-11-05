@@ -24,6 +24,7 @@ import gnu.trove.list.array.TLongArrayList;
 import gnu.trove.set.TLongSet;
 import gnu.trove.set.hash.TLongHashSet;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -162,8 +163,10 @@ public class FindMissingWayNodes extends AbstractTask
 			File fileWays = filesWays.getFile(leaf);
 			File fileOutput = filesOutput.getFile(leaf);
 
-			InputStream inputNodes = new FileInputStream(fileNodes);
-			InputStream inputWays = new FileInputStream(fileWays);
+			InputStream inputNodes = new BufferedInputStream(
+					new FileInputStream(fileNodes));
+			InputStream inputWays = new BufferedInputStream(
+					new FileInputStream(fileWays));
 
 			long nodesSize = fileNodes.length();
 			System.out.println(String.format(
