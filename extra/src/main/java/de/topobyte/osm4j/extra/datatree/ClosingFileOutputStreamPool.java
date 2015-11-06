@@ -30,17 +30,18 @@ public class ClosingFileOutputStreamPool implements
 	private int cacheId = -1;
 
 	@Override
-	public OutputStream create(File file, int id) throws IOException
+	public OutputStream create(File file, int id, boolean append)
+			throws IOException
 	{
 		if (cache == null) {
-			cache = new FileOutputStream(file, true);
+			cache = new FileOutputStream(file, append);
 			cacheId = id;
 			return cache;
 		} else if (cacheId == id) {
 			return cache;
 		} else {
 			cache.close();
-			cache = new FileOutputStream(file, true);
+			cache = new FileOutputStream(file, append);
 			cacheId = id;
 			return cache;
 		}

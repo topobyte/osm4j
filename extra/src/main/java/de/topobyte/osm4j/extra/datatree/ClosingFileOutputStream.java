@@ -27,6 +27,7 @@ public class ClosingFileOutputStream extends OutputStream
 	private ClosingFileOutputStreamFactory factory;
 	private File file;
 	private int id;
+	private boolean append = false;
 
 	public ClosingFileOutputStream(ClosingFileOutputStreamFactory factory,
 			File file, int id)
@@ -44,21 +45,24 @@ public class ClosingFileOutputStream extends OutputStream
 	@Override
 	public void write(int b) throws IOException
 	{
-		OutputStream fos = factory.create(file, id);
+		OutputStream fos = factory.create(file, id, append);
+		append = true;
 		fos.write(b);
 	}
 
 	@Override
 	public void write(byte[] b) throws IOException
 	{
-		OutputStream fos = factory.create(file, id);
+		OutputStream fos = factory.create(file, id, append);
+		append = true;
 		fos.write(b);
 	}
 
 	@Override
 	public void write(byte[] b, int off, int len) throws IOException
 	{
-		OutputStream fos = factory.create(file, id);
+		OutputStream fos = factory.create(file, id, append);
+		append = true;
 		fos.write(b, off, len);
 	}
 

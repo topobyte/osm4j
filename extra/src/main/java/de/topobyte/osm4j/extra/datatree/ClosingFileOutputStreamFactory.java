@@ -24,7 +24,8 @@ import java.io.OutputStream;
 public interface ClosingFileOutputStreamFactory
 {
 
-	public OutputStream create(File file, int id) throws IOException;
+	public OutputStream create(File file, int id, boolean append)
+			throws IOException;
 
 	public void flush(int id) throws IOException;
 
