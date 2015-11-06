@@ -22,6 +22,7 @@ repositories {
 }
 
 dependencies {
+    compile 'de.topobyte:osm4j-core:0.0.5'
     compile 'de.topobyte:adt-geo:0.0.2'
     compile 'de.topobyte:osm4j-utils:0.0.6'
     compile 'de.topobyte:compact-io:0.0.2'
