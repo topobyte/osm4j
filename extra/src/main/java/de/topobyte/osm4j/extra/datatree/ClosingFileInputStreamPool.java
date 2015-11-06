@@ -34,7 +34,7 @@ public class ClosingFileInputStreamPool implements
 	{
 		if (cache == null) {
 			cache = new FileInputStream(file);
-			cache.skip(pos);
+			seek(pos);
 			cacheId = id;
 			return cache;
 		} else if (cacheId == id) {
@@ -42,9 +42,21 @@ public class ClosingFileInputStreamPool implements
 		} else {
 			cache.close();
 			cache = new FileInputStream(file);
-			cache.skip(pos);
+			seek(pos);
 			cacheId = id;
 			return cache;
+		}
+	}
+
+	private void seek(long pos) throws IOException
+	{
+		long remaining = pos;
+		while (remaining > 0) {
+			long s = cache.skip(remaining);
+			if (s < 0) {
+				throw new IOException();
+			}
+			remaining -= s;
 		}
 	}
 
