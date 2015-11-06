@@ -20,6 +20,8 @@ package de.topobyte.osm4j.extra.datatree;
 import java.util.List;
 
 import com.vividsolutions.jts.geom.Envelope;
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.GeometryFactory;
 
 public class Node
 {
@@ -36,6 +38,8 @@ public class Node
 	private Direction direction;
 	private double splitPoint = 0;
 
+	private Geometry box;
+
 	Node(Envelope envelope, Node parent, long path, int level)
 	{
 		this.envelope = envelope;
@@ -48,6 +52,8 @@ public class Node
 		} else {
 			direction = Direction.VERTICAL;
 		}
+
+		this.box = new GeometryFactory().toGeometry(envelope);
 	}
 
 	public Envelope getEnvelope()
@@ -197,6 +203,21 @@ public class Node
 				return Side.ON;
 			}
 		}
+	}
+
+	public void query(List<Node> nodes, Geometry geometry)
+	{
+		if (!box.intersects(geometry)) {
+			return;
+		}
+
+		if (isLeaf()) {
+			nodes.add(this);
+			return;
+		}
+
+		left.query(nodes, geometry);
+		right.query(nodes, geometry);
 	}
 
 }

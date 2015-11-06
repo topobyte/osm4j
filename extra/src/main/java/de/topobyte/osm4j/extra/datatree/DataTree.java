@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.vividsolutions.jts.geom.Envelope;
+import com.vividsolutions.jts.geom.Geometry;
 
 public class DataTree
 {
@@ -123,6 +124,13 @@ public class DataTree
 	{
 		results.clear();
 		start.query(results, lon, lat);
+		return results;
+	}
+
+	public List<Node> query(Geometry geometry)
+	{
+		results.clear();
+		root.query(results, geometry);
 		return results;
 	}
 
