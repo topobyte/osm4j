@@ -74,8 +74,8 @@ public class NodeArrayInteger implements NodeArray
 	public boolean contains(long id) throws IOException
 	{
 		f.seek(id * 8);
-		double lon = Coding.decodeLonFromInt(f.readInt());
-		double lat = Coding.decodeLatFromInt(f.readInt());
+		int lon = f.readInt();
+		int lat = f.readInt();
 		return lon != NULL && lat != NULL;
 	}
 

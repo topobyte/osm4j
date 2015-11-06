@@ -74,8 +74,8 @@ public class NodeArrayShort implements NodeArray
 	public boolean contains(long id) throws IOException
 	{
 		f.seek(id * 4);
-		double lon = Coding.decodeLonFromShort(f.readShort());
-		double lat = Coding.decodeLatFromShort(f.readShort());
+		short lon = f.readShort();
+		short lat = f.readShort();
 		return lon != NULL && lat != NULL;
 	}
 
