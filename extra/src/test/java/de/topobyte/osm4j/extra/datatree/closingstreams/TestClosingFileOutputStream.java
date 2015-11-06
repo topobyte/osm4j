@@ -18,6 +18,7 @@
 package de.topobyte.osm4j.extra.datatree.closingstreams;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Arrays;
@@ -50,12 +51,15 @@ public class TestClosingFileOutputStream
 	@Test
 	public void test() throws IOException
 	{
-		test(1);
-		test(2);
-		test(10);
+		test(1, false);
+		test(2, false);
+		test(10, false);
+		test(1, true);
+		test(2, true);
+		test(10, true);
 	}
 
-	public void test(int n) throws IOException
+	public void test(int n, boolean existingFiles) throws IOException
 	{
 		files = new File[n];
 		for (int i = 0; i < n; i++) {
@@ -67,6 +71,12 @@ public class TestClosingFileOutputStream
 		byte[][] bytes = new byte[n][];
 		for (int i = 0; i < n; i++) {
 			bytes[i] = generator.generateBytes(1024);
+		}
+
+		if (existingFiles) {
+			for (int i = 0; i < n; i++) {
+				writeSomeData(files[i], generator);
+			}
 		}
 
 		ClosingFileOutputStreamFactory factory = new ClosingFileOutputStreamPool();
@@ -86,6 +96,15 @@ public class TestClosingFileOutputStream
 			byte[] read = FileUtils.readFileToByteArray(files[i]);
 			Assert.assertArrayEquals(bytes[i], read);
 		}
+	}
+
+	private void writeSomeData(File file, ByteArrayGenerator generator)
+			throws IOException
+	{
+		byte[] bytes = generator.generateBytes(100);
+		FileOutputStream fos = new FileOutputStream(file);
+		fos.write(bytes);
+		fos.close();
 	}
 
 }
