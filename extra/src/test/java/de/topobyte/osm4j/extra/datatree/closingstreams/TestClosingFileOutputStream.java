@@ -98,6 +98,23 @@ public class TestClosingFileOutputStream
 		}
 	}
 
+	@Test
+	@SuppressWarnings("resource")
+	public void testOpenTruncatesFile() throws IOException
+	{
+		File file = File.createTempFile("closing-fos", ".dat");
+		allFiles.add(file);
+
+		ByteArrayGenerator generator = new ByteArrayGenerator();
+		writeSomeData(file, generator);
+
+		ClosingFileOutputStreamPool factory = new ClosingFileOutputStreamPool();
+		new ClosingFileOutputStream(factory, file, 0);
+
+		byte[] read = FileUtils.readFileToByteArray(file);
+		Assert.assertEquals(0, read.length);
+	}
+
 	private void writeSomeData(File file, ByteArrayGenerator generator)
 			throws IOException
 	{

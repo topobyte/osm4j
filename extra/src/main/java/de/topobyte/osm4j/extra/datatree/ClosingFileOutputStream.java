@@ -18,6 +18,7 @@
 package de.topobyte.osm4j.extra.datatree;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
@@ -30,11 +31,16 @@ public class ClosingFileOutputStream extends OutputStream
 	private boolean append = false;
 
 	public ClosingFileOutputStream(ClosingFileOutputStreamFactory factory,
-			File file, int id)
+			File file, int id) throws IOException
 	{
 		this.factory = factory;
 		this.file = file;
 		this.id = id;
+
+		// Open and close the file to emulate FileOutputStream behavior
+		// concerning file truncation
+		FileOutputStream out = new FileOutputStream(file);
+		out.close();
 	}
 
 	public int getId()
