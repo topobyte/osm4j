@@ -167,8 +167,8 @@ public class DistributeWays extends AbstractTask
 	private Map<Node, IdListOutputStream> outputsNonIntersectingWays = new HashMap<>();
 
 	private long counter = 0;
-	private long found = 0;
-	private long notFound = 0;
+	private long noneFound = 0;
+	private long unableToBuild = 0;
 
 	private long start = System.currentTimeMillis();
 
@@ -314,12 +314,21 @@ public class DistributeWays extends AbstractTask
 			}
 		}
 
+		boolean containedInSource = false;
 		for (Node ileaf : leafs) {
 			if (ileaf == leaf) {
-				outputsNonIntersectingWays.get(leaf).write(way.getId());
+				containedInSource = true;
 			} else {
 				outputsIntersectingWays.get(ileaf).getOsmOutput().write(way);
 			}
+		}
+
+		if (!containedInSource) {
+			outputsNonIntersectingWays.get(leaf).write(way.getId());
+		}
+
+		if (leafs.size() == 0) {
+			System.out.println("No leaf found for way: " + way.getId());
 		}
 
 		counter++;
@@ -327,11 +336,10 @@ public class DistributeWays extends AbstractTask
 
 	private void stats(int leafsDone)
 	{
-		double ratio = notFound / (double) (found + notFound);
 		System.out.println(String.format(
-				"ways: %s, found ids: %s, missing ids: %s, ratio: %f",
-				format.format(counter), format.format(found),
-				format.format(notFound), ratio));
+				"ways: %s, no leafs found: %s, unable to build: %s",
+				format.format(counter), format.format(noneFound),
+				format.format(unableToBuild)));
 
 		long now = System.currentTimeMillis();
 		long past = now - start;
