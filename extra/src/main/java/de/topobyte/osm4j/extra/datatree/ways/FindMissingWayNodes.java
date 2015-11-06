@@ -47,8 +47,6 @@ import de.topobyte.osm4j.extra.idlist.IdListOutputStream;
 import de.topobyte.osm4j.utils.AbstractTask;
 import de.topobyte.osm4j.utils.FileFormat;
 import de.topobyte.osm4j.utils.OsmIoUtils;
-import de.topobyte.osm4j.utils.config.PbfOptions;
-import de.topobyte.osm4j.utils.config.TboOptions;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
 public class FindMissingWayNodes extends AbstractTask
@@ -94,8 +92,6 @@ public class FindMissingWayNodes extends AbstractTask
 		OptionHelper.add(options, OPTION_FILE_NAMES_WAYS, true, true, "names of the way files in the tree");
 		OptionHelper.add(options, OPTION_INPUT_FORMAT, true, true, "the file format of the input");
 		OptionHelper.add(options, OPTION_TREE, true, true, "tree directory to work on");
-		PbfOptions.add(options);
-		TboOptions.add(options);
 		// @formatter:on
 	}
 
