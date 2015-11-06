@@ -30,10 +30,11 @@ public class ClosingFileInputStreamPool implements
 	private int cacheId = -1;
 
 	@Override
-	public InputStream create(File file, int id) throws IOException
+	public InputStream create(File file, int id, long pos) throws IOException
 	{
 		if (cache == null) {
 			cache = new FileInputStream(file);
+			cache.skip(pos);
 			cacheId = id;
 			return cache;
 		} else if (cacheId == id) {
@@ -41,6 +42,7 @@ public class ClosingFileInputStreamPool implements
 		} else {
 			cache.close();
 			cache = new FileInputStream(file);
+			cache.skip(pos);
 			cacheId = id;
 			return cache;
 		}

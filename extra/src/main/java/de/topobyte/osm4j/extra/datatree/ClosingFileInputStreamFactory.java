@@ -24,7 +24,7 @@ import java.io.InputStream;
 public interface ClosingFileInputStreamFactory
 {
 
-	public InputStream create(File file, int id) throws IOException;
+	public InputStream create(File file, int id, long pos) throws IOException;
 
 	public void close(int id) throws IOException;
 

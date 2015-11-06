@@ -27,6 +27,7 @@ public class ClosingFileInputStream extends InputStream
 	private ClosingFileInputStreamFactory factory;
 	private File file;
 	private int id;
+	private long pos = 0;
 
 	public ClosingFileInputStream(ClosingFileInputStreamFactory factory,
 			File file, int id)
@@ -50,35 +51,51 @@ public class ClosingFileInputStream extends InputStream
 	@Override
 	public int read() throws IOException
 	{
-		InputStream fis = factory.create(file, id);
-		return fis.read();
+		InputStream fis = factory.create(file, id, pos);
+		int r = fis.read();
+		if (r >= 0) {
+			pos++;
+		}
+		return r;
 	}
 
 	@Override
 	public int read(byte[] b) throws IOException
 	{
-		InputStream fis = factory.create(file, id);
-		return fis.read(b);
+		InputStream fis = factory.create(file, id, pos);
+		int r = fis.read(b);
+		if (r >= 0) {
+			pos += r;
+		}
+		return r;
 	}
 
 	@Override
 	public int read(byte[] b, int off, int len) throws IOException
 	{
-		InputStream fis = factory.create(file, id);
-		return fis.read(b, off, len);
+		InputStream fis = factory.create(file, id, pos);
+		int r = fis.read(b, off, len);
+		if (r >= 0) {
+			pos += r;
+		}
+		return r;
 	}
 
 	@Override
 	public long skip(long n) throws IOException
 	{
-		InputStream fis = factory.create(file, id);
-		return fis.skip(n);
+		InputStream fis = factory.create(file, id, pos);
+		long r = fis.skip(n);
+		if (r >= 0) {
+			pos += r;
+		}
+		return r;
 	}
 
 	@Override
 	public int available() throws IOException
 	{
-		InputStream fis = factory.create(file, id);
+		InputStream fis = factory.create(file, id, pos);
 		return fis.available();
 	}
 
