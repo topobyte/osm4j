@@ -21,14 +21,17 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 
-interface ClosingFileOutputStreamPool
+public class SimpleClosingFileOutputStreamFactory implements
+		ClosingFileOutputStreamFactory
 {
 
-	public OutputStream create(File file, int id, boolean append)
-			throws IOException;
+	private int idFactory = 0;
+	private ClosingFileOutputStreamPool pool = new SimpleClosingFileOutputStreamPool();
 
-	public void flush(int id) throws IOException;
-
-	public void close(int id) throws IOException;
+	@Override
+	public OutputStream create(File file) throws IOException
+	{
+		return new ClosingFileOutputStream(pool, file, idFactory++);
+	}
 
 }

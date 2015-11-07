@@ -21,7 +21,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
-public interface ClosingFileInputStreamPool
+interface ClosingFileInputStreamPool
 {
 
 	public InputStream create(File file, int id, long pos) throws IOException;

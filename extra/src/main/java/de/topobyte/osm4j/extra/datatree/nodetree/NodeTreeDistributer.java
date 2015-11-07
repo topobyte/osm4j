@@ -40,9 +40,8 @@ import java.util.Map;
 
 import com.vividsolutions.jts.geom.Envelope;
 
-import de.topobyte.largescalefileio.ClosingFileOutputStream;
-import de.topobyte.largescalefileio.ClosingFileOutputStreamPool;
-import de.topobyte.largescalefileio.SimpleClosingFileOutputStreamPool;
+import de.topobyte.largescalefileio.ClosingFileOutputStreamFactory;
+import de.topobyte.largescalefileio.SimpleClosingFileOutputStreamFactory;
 import de.topobyte.osm4j.core.access.OsmIterator;
 import de.topobyte.osm4j.core.access.OsmOutputStream;
 import de.topobyte.osm4j.core.model.iface.EntityContainer;
@@ -72,8 +71,7 @@ public class NodeTreeDistributer
 	private TboConfig tboConfig;
 	private boolean writeMetadata;
 
-	private ClosingFileOutputStreamPool outputStreamFactory = new SimpleClosingFileOutputStreamPool();
-	private int idFactory = 0;
+	private ClosingFileOutputStreamFactory outputStreamFactory = new SimpleClosingFileOutputStreamFactory();
 
 	private Map<Node, NodeOutput> outputs = new HashMap<>();
 
@@ -219,8 +217,7 @@ public class NodeTreeDistributer
 		Files.createDirectories(dir);
 		Path file = dir.resolve(fileNames);
 
-		OutputStream os = new ClosingFileOutputStream(outputStreamFactory,
-				file.toFile(), idFactory++);
+		OutputStream os = outputStreamFactory.create(file.toFile());
 		OutputStream bos = new BufferedOutputStream(os);
 		OsmOutputStream osmOutput = OsmIoUtils.setupOsmOutput(bos,
 				outputFormat, writeMetadata, pbfConfig, tboConfig);

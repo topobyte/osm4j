@@ -21,14 +21,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 
-interface ClosingFileOutputStreamPool
+public interface ClosingFileOutputStreamFactory
 {
 
-	public OutputStream create(File file, int id, boolean append)
-			throws IOException;
-
-	public void flush(int id) throws IOException;
-
-	public void close(int id) throws IOException;
+	public OutputStream create(File file) throws IOException;
 
 }

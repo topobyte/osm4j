@@ -18,17 +18,19 @@
 package de.topobyte.largescalefileio;
 
 import java.io.File;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.InputStream;
 
-interface ClosingFileOutputStreamPool
+public class SimpleClosingFileInputStreamFactory implements
+		ClosingFileInputStreamFactory
 {
 
-	public OutputStream create(File file, int id, boolean append)
-			throws IOException;
+	private int idFactory = 0;
+	private ClosingFileInputStreamPool pool = new SimpleClosingFileInputStreamPool();
 
-	public void flush(int id) throws IOException;
-
-	public void close(int id) throws IOException;
+	@Override
+	public InputStream create(File file)
+	{
+		return new ClosingFileInputStream(pool, file, idFactory++);
+	}
 
 }

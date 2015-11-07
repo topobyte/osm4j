@@ -22,8 +22,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class SimpleClosingFileInputStreamPool implements
-		ClosingFileInputStreamPool
+class SimpleClosingFileInputStreamPool implements ClosingFileInputStreamPool
 {
 
 	private InputStream cache = null;

@@ -30,9 +30,8 @@ import java.util.Map;
 import com.vividsolutions.jts.geom.Envelope;
 
 import de.topobyte.adt.geo.BBox;
-import de.topobyte.largescalefileio.ClosingFileOutputStream;
-import de.topobyte.largescalefileio.ClosingFileOutputStreamPool;
-import de.topobyte.largescalefileio.SimpleClosingFileOutputStreamPool;
+import de.topobyte.largescalefileio.ClosingFileOutputStreamFactory;
+import de.topobyte.largescalefileio.SimpleClosingFileOutputStreamFactory;
 import de.topobyte.osm4j.core.access.OsmOutputStream;
 import de.topobyte.osm4j.core.model.iface.EntityContainer;
 import de.topobyte.osm4j.core.model.iface.OsmBounds;
@@ -71,8 +70,7 @@ public abstract class BaseNodeTreeCreator extends
 	protected Map<Node, NodeOutput> outputs = new HashMap<>();
 
 	protected DataTree tree;
-	protected ClosingFileOutputStreamPool outputStreamFactory = new SimpleClosingFileOutputStreamPool();
-	protected int idFactory = 0;
+	protected ClosingFileOutputStreamFactory outputStreamFactory = new SimpleClosingFileOutputStreamFactory();
 
 	private NodeProgress counter = new NodeProgress();
 
@@ -172,8 +170,7 @@ public abstract class BaseNodeTreeCreator extends
 		Path file = dir.resolve(fileNames);
 
 		System.out.println(file + ": " + leaf.getEnvelope());
-		OutputStream os = new ClosingFileOutputStream(outputStreamFactory,
-				file.toFile(), idFactory++);
+		OutputStream os = outputStreamFactory.create(file.toFile());
 		OutputStream bos = new BufferedOutputStream(os);
 		OsmOutputStream osmOutput = OsmIoUtils.setupOsmOutput(bos,
 				outputFormat, writeMetadata, pbfConfig, tboConfig);

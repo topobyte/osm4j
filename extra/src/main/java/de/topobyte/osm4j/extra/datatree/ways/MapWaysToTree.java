@@ -30,9 +30,8 @@ import java.util.Map;
 
 import com.vividsolutions.jts.geom.Envelope;
 
-import de.topobyte.largescalefileio.ClosingFileOutputStream;
-import de.topobyte.largescalefileio.ClosingFileOutputStreamPool;
-import de.topobyte.largescalefileio.SimpleClosingFileOutputStreamPool;
+import de.topobyte.largescalefileio.ClosingFileOutputStreamFactory;
+import de.topobyte.largescalefileio.SimpleClosingFileOutputStreamFactory;
 import de.topobyte.osm4j.core.access.OsmIterator;
 import de.topobyte.osm4j.core.access.OsmOutputStream;
 import de.topobyte.osm4j.core.model.iface.EntityContainer;
@@ -152,8 +151,7 @@ public class MapWaysToTree extends AbstractTaskSingleInputFile
 
 		// Set up outputs
 
-		ClosingFileOutputStreamPool outputStreamFactory = new SimpleClosingFileOutputStreamPool();
-		int idFactory = 0;
+		ClosingFileOutputStreamFactory outputStreamFactory = new SimpleClosingFileOutputStreamFactory();
 
 		Map<Node, Output> outputs = new HashMap<>();
 
@@ -162,10 +160,9 @@ public class MapWaysToTree extends AbstractTaskSingleInputFile
 			Path dir = dirTree.resolve(dirname);
 			Path file = dir.resolve(fileNames);
 
-			ClosingFileOutputStream os = new ClosingFileOutputStream(
-					outputStreamFactory, file.toFile(), idFactory++);
+			OutputStream os = outputStreamFactory.create(file.toFile());
 			OutputStream bos = new BufferedOutputStream(os);
-			OsmOutputStream osmOutput = OsmIoUtils.setupOsmOutput(os,
+			OsmOutputStream osmOutput = OsmIoUtils.setupOsmOutput(bos,
 					outputFormat, writeMetadata, pbfConfig, tboConfig);
 			Output output = new Output(file, bos, osmOutput);
 			outputs.put(leaf, output);

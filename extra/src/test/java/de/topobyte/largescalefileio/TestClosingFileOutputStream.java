@@ -30,10 +30,6 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
 
-import de.topobyte.largescalefileio.ClosingFileOutputStream;
-import de.topobyte.largescalefileio.ClosingFileOutputStreamPool;
-import de.topobyte.largescalefileio.SimpleClosingFileOutputStreamPool;
-
 public class TestClosingFileOutputStream
 {
 
@@ -79,11 +75,11 @@ public class TestClosingFileOutputStream
 			}
 		}
 
-		ClosingFileOutputStreamPool factory = new SimpleClosingFileOutputStreamPool();
+		ClosingFileOutputStreamFactory factory = new SimpleClosingFileOutputStreamFactory();
 
 		OutputStream[] outputs = new OutputStream[n];
 		for (int i = 0; i < n; i++) {
-			outputs[i] = new ClosingFileOutputStream(factory, files[i], i);
+			outputs[i] = factory.create(files[i]);
 		}
 
 		WriterUtil.writeInterleaved(outputs, bytes);

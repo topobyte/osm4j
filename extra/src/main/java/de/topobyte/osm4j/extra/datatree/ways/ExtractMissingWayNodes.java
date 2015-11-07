@@ -29,12 +29,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
 
-import de.topobyte.largescalefileio.ClosingFileInputStream;
-import de.topobyte.largescalefileio.ClosingFileInputStreamPool;
-import de.topobyte.largescalefileio.SimpleClosingFileInputStreamPool;
-import de.topobyte.largescalefileio.ClosingFileOutputStream;
-import de.topobyte.largescalefileio.ClosingFileOutputStreamPool;
-import de.topobyte.largescalefileio.SimpleClosingFileOutputStreamPool;
+import de.topobyte.largescalefileio.ClosingFileInputStreamFactory;
+import de.topobyte.largescalefileio.ClosingFileOutputStreamFactory;
+import de.topobyte.largescalefileio.SimpleClosingFileInputStreamFactory;
+import de.topobyte.largescalefileio.SimpleClosingFileOutputStreamFactory;
 import de.topobyte.osm4j.core.access.OsmIterator;
 import de.topobyte.osm4j.core.access.OsmOutputStream;
 import de.topobyte.osm4j.core.model.iface.EntityContainer;
@@ -155,13 +153,11 @@ public class ExtractMissingWayNodes extends AbstractTaskSingleInputFile
 		outputs = new HashMap<>();
 
 		// Node outputs
-		ClosingFileOutputStreamPool factoryOut = new SimpleClosingFileOutputStreamPool();
-		int idFactoryOut = 0;
+		ClosingFileOutputStreamFactory factoryOut = new SimpleClosingFileOutputStreamFactory();
 
 		for (Node leaf : leafs) {
 			File fileOutput = filesOutput.getFile(leaf);
-			OutputStream output = new ClosingFileOutputStream(factoryOut,
-					fileOutput, idFactoryOut++);
+			OutputStream output = factoryOut.create(fileOutput);
 			output = new BufferedOutputStream(output);
 			OsmOutputStream osmOutput = OsmIoUtils.setupOsmOutput(output,
 					outputFormat, writeMetadata, pbfConfig, tboConfig);
@@ -173,13 +169,11 @@ public class ExtractMissingWayNodes extends AbstractTaskSingleInputFile
 		queue = new PriorityQueue<>(leafs.size(), new IdInputComparator());
 
 		// Id inputs
-		ClosingFileInputStreamPool factoryIn = new SimpleClosingFileInputStreamPool();
-		int idFactoryIn = 0;
+		ClosingFileInputStreamFactory factoryIn = new SimpleClosingFileInputStreamFactory();
 
 		for (Node leaf : leafs) {
 			File fileIds = filesIds.getFile(leaf);
-			InputStream inputIds = new ClosingFileInputStream(factoryIn,
-					fileIds, idFactoryIn++);
+			InputStream inputIds = factoryIn.create(fileIds);
 			inputIds = new BufferedInputStream(inputIds);
 			IdListInputStream idInput = new IdListInputStream(inputIds);
 

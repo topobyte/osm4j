@@ -22,18 +22,18 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
-public class ClosingFileOutputStream extends OutputStream
+class ClosingFileOutputStream extends OutputStream
 {
 
-	private ClosingFileOutputStreamPool factory;
+	private ClosingFileOutputStreamPool pool;
 	private File file;
 	private int id;
 	private boolean append = false;
 
-	public ClosingFileOutputStream(ClosingFileOutputStreamPool factory,
-			File file, int id) throws IOException
+	public ClosingFileOutputStream(ClosingFileOutputStreamPool pool, File file,
+			int id) throws IOException
 	{
-		this.factory = factory;
+		this.pool = pool;
 		this.file = file;
 		this.id = id;
 
@@ -51,7 +51,7 @@ public class ClosingFileOutputStream extends OutputStream
 	@Override
 	public void write(int b) throws IOException
 	{
-		OutputStream fos = factory.create(file, id, append);
+		OutputStream fos = pool.create(file, id, append);
 		append = true;
 		fos.write(b);
 	}
@@ -59,7 +59,7 @@ public class ClosingFileOutputStream extends OutputStream
 	@Override
 	public void write(byte[] b) throws IOException
 	{
-		OutputStream fos = factory.create(file, id, append);
+		OutputStream fos = pool.create(file, id, append);
 		append = true;
 		fos.write(b);
 	}
@@ -67,7 +67,7 @@ public class ClosingFileOutputStream extends OutputStream
 	@Override
 	public void write(byte[] b, int off, int len) throws IOException
 	{
-		OutputStream fos = factory.create(file, id, append);
+		OutputStream fos = pool.create(file, id, append);
 		append = true;
 		fos.write(b, off, len);
 	}
@@ -75,13 +75,13 @@ public class ClosingFileOutputStream extends OutputStream
 	@Override
 	public void flush() throws IOException
 	{
-		factory.flush(id);
+		pool.flush(id);
 	}
 
 	@Override
 	public void close() throws IOException
 	{
-		factory.close(id);
+		pool.close(id);
 	}
 
 }

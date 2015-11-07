@@ -21,18 +21,18 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class ClosingFileInputStream extends InputStream
+class ClosingFileInputStream extends InputStream
 {
 
-	private ClosingFileInputStreamPool factory;
+	private ClosingFileInputStreamPool pool;
 	private File file;
 	private int id;
 	private long pos = 0;
 
-	public ClosingFileInputStream(ClosingFileInputStreamPool factory,
-			File file, int id)
+	public ClosingFileInputStream(ClosingFileInputStreamPool pool, File file,
+			int id)
 	{
-		this.factory = factory;
+		this.pool = pool;
 		this.file = file;
 		this.id = id;
 	}
@@ -45,13 +45,13 @@ public class ClosingFileInputStream extends InputStream
 	@Override
 	public void close() throws IOException
 	{
-		factory.close(id);
+		pool.close(id);
 	}
 
 	@Override
 	public int read() throws IOException
 	{
-		InputStream fis = factory.create(file, id, pos);
+		InputStream fis = pool.create(file, id, pos);
 		int r = fis.read();
 		if (r >= 0) {
 			pos++;
@@ -62,7 +62,7 @@ public class ClosingFileInputStream extends InputStream
 	@Override
 	public int read(byte[] b) throws IOException
 	{
-		InputStream fis = factory.create(file, id, pos);
+		InputStream fis = pool.create(file, id, pos);
 		int r = fis.read(b);
 		if (r >= 0) {
 			pos += r;
@@ -73,7 +73,7 @@ public class ClosingFileInputStream extends InputStream
 	@Override
 	public int read(byte[] b, int off, int len) throws IOException
 	{
-		InputStream fis = factory.create(file, id, pos);
+		InputStream fis = pool.create(file, id, pos);
 		int r = fis.read(b, off, len);
 		if (r >= 0) {
 			pos += r;
@@ -84,7 +84,7 @@ public class ClosingFileInputStream extends InputStream
 	@Override
 	public long skip(long n) throws IOException
 	{
-		InputStream fis = factory.create(file, id, pos);
+		InputStream fis = pool.create(file, id, pos);
 		long r = fis.skip(n);
 		if (r >= 0) {
 			pos += r;
@@ -95,7 +95,7 @@ public class ClosingFileInputStream extends InputStream
 	@Override
 	public int available() throws IOException
 	{
-		InputStream fis = factory.create(file, id, pos);
+		InputStream fis = pool.create(file, id, pos);
 		return fis.available();
 	}
 

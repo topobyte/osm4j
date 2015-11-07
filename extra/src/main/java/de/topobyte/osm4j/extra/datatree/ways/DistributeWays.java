@@ -34,9 +34,8 @@ import java.util.Map;
 
 import com.vividsolutions.jts.geom.LineString;
 
-import de.topobyte.largescalefileio.ClosingFileOutputStream;
-import de.topobyte.largescalefileio.ClosingFileOutputStreamPool;
-import de.topobyte.largescalefileio.SimpleClosingFileOutputStreamPool;
+import de.topobyte.largescalefileio.ClosingFileOutputStreamFactory;
+import de.topobyte.largescalefileio.SimpleClosingFileOutputStreamFactory;
 import de.topobyte.osm4j.core.access.OsmOutputStream;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.osm4j.core.model.iface.OsmWay;
@@ -185,13 +184,11 @@ public class DistributeWays extends AbstractTask
 		DataTreeFiles filesWaysNonIntersecting = new DataTreeFiles(dirTree,
 				fileNamesWaysNonIntersecting);
 
-		ClosingFileOutputStreamPool factory = new SimpleClosingFileOutputStreamPool();
-		int idFactory = 0;
+		ClosingFileOutputStreamFactory factory = new SimpleClosingFileOutputStreamFactory();
 
 		for (Node leaf : leafs) {
 			File file = filesWaysIntersecting.getFile(leaf);
-			OutputStream output = new ClosingFileOutputStream(factory, file,
-					idFactory++);
+			OutputStream output = factory.create(file);
 			output = new BufferedOutputStream(output);
 			OsmOutputStream osmOutput = OsmIoUtils.setupOsmOutput(output,
 					outputFormat, writeMetadata, pbfConfig, tboConfig);
@@ -201,8 +198,7 @@ public class DistributeWays extends AbstractTask
 
 		for (Node leaf : leafs) {
 			File file = filesWaysNonIntersecting.getFile(leaf);
-			OutputStream output = new ClosingFileOutputStream(factory, file,
-					idFactory++);
+			OutputStream output = factory.create(file);
 			output = new BufferedOutputStream(output);
 			IdListOutputStream idOutput = new IdListOutputStream(output);
 			outputsNonIntersectingWays.put(leaf, idOutput);

@@ -29,10 +29,6 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
 
-import de.topobyte.largescalefileio.ClosingFileInputStream;
-import de.topobyte.largescalefileio.ClosingFileInputStreamPool;
-import de.topobyte.largescalefileio.SimpleClosingFileInputStreamPool;
-
 public class TestClosingFileInputStream
 {
 
@@ -73,11 +69,11 @@ public class TestClosingFileInputStream
 			FileUtils.writeByteArrayToFile(files[i], bytes[i]);
 		}
 
-		ClosingFileInputStreamPool factory = new SimpleClosingFileInputStreamPool();
+		ClosingFileInputStreamFactory factory = new SimpleClosingFileInputStreamFactory();
 
 		InputStream[] inputs = new InputStream[n];
 		for (int i = 0; i < n; i++) {
-			inputs[i] = new ClosingFileInputStream(factory, files[i], i);
+			inputs[i] = factory.create(files[i]);
 		}
 
 		byte[][] results = ReaderUtil.readInterleaved(inputs);
