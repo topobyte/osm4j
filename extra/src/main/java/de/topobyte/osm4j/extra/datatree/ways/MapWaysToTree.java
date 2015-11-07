@@ -31,8 +31,8 @@ import java.util.Map;
 import com.vividsolutions.jts.geom.Envelope;
 
 import de.topobyte.largescalefileio.ClosingFileOutputStream;
-import de.topobyte.largescalefileio.ClosingFileOutputStreamFactory;
 import de.topobyte.largescalefileio.ClosingFileOutputStreamPool;
+import de.topobyte.largescalefileio.SimpleClosingFileOutputStreamPool;
 import de.topobyte.osm4j.core.access.OsmIterator;
 import de.topobyte.osm4j.core.access.OsmOutputStream;
 import de.topobyte.osm4j.core.model.iface.EntityContainer;
@@ -152,7 +152,7 @@ public class MapWaysToTree extends AbstractTaskSingleInputFile
 
 		// Set up outputs
 
-		ClosingFileOutputStreamFactory outputStreamFactory = new ClosingFileOutputStreamPool();
+		ClosingFileOutputStreamPool outputStreamFactory = new SimpleClosingFileOutputStreamPool();
 		int idFactory = 0;
 
 		Map<Node, Output> outputs = new HashMap<>();

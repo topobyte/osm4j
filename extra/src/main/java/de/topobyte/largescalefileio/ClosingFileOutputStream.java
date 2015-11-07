@@ -25,12 +25,12 @@ import java.io.OutputStream;
 public class ClosingFileOutputStream extends OutputStream
 {
 
-	private ClosingFileOutputStreamFactory factory;
+	private ClosingFileOutputStreamPool factory;
 	private File file;
 	private int id;
 	private boolean append = false;
 
-	public ClosingFileOutputStream(ClosingFileOutputStreamFactory factory,
+	public ClosingFileOutputStream(ClosingFileOutputStreamPool factory,
 			File file, int id) throws IOException
 	{
 		this.factory = factory;

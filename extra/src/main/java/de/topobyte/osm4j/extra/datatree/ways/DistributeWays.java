@@ -35,8 +35,8 @@ import java.util.Map;
 import com.vividsolutions.jts.geom.LineString;
 
 import de.topobyte.largescalefileio.ClosingFileOutputStream;
-import de.topobyte.largescalefileio.ClosingFileOutputStreamFactory;
 import de.topobyte.largescalefileio.ClosingFileOutputStreamPool;
+import de.topobyte.largescalefileio.SimpleClosingFileOutputStreamPool;
 import de.topobyte.osm4j.core.access.OsmOutputStream;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.osm4j.core.model.iface.OsmWay;
@@ -185,7 +185,7 @@ public class DistributeWays extends AbstractTask
 		DataTreeFiles filesWaysNonIntersecting = new DataTreeFiles(dirTree,
 				fileNamesWaysNonIntersecting);
 
-		ClosingFileOutputStreamFactory factory = new ClosingFileOutputStreamPool();
+		ClosingFileOutputStreamPool factory = new SimpleClosingFileOutputStreamPool();
 		int idFactory = 0;
 
 		for (Node leaf : leafs) {

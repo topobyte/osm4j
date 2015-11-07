@@ -30,11 +30,11 @@ import java.util.Map;
 import java.util.PriorityQueue;
 
 import de.topobyte.largescalefileio.ClosingFileInputStream;
-import de.topobyte.largescalefileio.ClosingFileInputStreamFactory;
 import de.topobyte.largescalefileio.ClosingFileInputStreamPool;
+import de.topobyte.largescalefileio.SimpleClosingFileInputStreamPool;
 import de.topobyte.largescalefileio.ClosingFileOutputStream;
-import de.topobyte.largescalefileio.ClosingFileOutputStreamFactory;
 import de.topobyte.largescalefileio.ClosingFileOutputStreamPool;
+import de.topobyte.largescalefileio.SimpleClosingFileOutputStreamPool;
 import de.topobyte.osm4j.core.access.OsmIterator;
 import de.topobyte.osm4j.core.access.OsmOutputStream;
 import de.topobyte.osm4j.core.model.iface.EntityContainer;
@@ -155,7 +155,7 @@ public class ExtractMissingWayNodes extends AbstractTaskSingleInputFile
 		outputs = new HashMap<>();
 
 		// Node outputs
-		ClosingFileOutputStreamFactory factoryOut = new ClosingFileOutputStreamPool();
+		ClosingFileOutputStreamPool factoryOut = new SimpleClosingFileOutputStreamPool();
 		int idFactoryOut = 0;
 
 		for (Node leaf : leafs) {
@@ -173,7 +173,7 @@ public class ExtractMissingWayNodes extends AbstractTaskSingleInputFile
 		queue = new PriorityQueue<>(leafs.size(), new IdInputComparator());
 
 		// Id inputs
-		ClosingFileInputStreamFactory factoryIn = new ClosingFileInputStreamPool();
+		ClosingFileInputStreamPool factoryIn = new SimpleClosingFileInputStreamPool();
 		int idFactoryIn = 0;
 
 		for (Node leaf : leafs) {

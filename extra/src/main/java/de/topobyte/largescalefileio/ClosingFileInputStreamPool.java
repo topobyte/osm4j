@@ -18,56 +18,14 @@
 package de.topobyte.largescalefileio;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class ClosingFileInputStreamPool implements
-		ClosingFileInputStreamFactory
+public interface ClosingFileInputStreamPool
 {
 
-	private InputStream cache = null;
-	private int cacheId = -1;
+	public InputStream create(File file, int id, long pos) throws IOException;
 
-	@Override
-	public InputStream create(File file, int id, long pos) throws IOException
-	{
-		if (cache == null) {
-			cache = new FileInputStream(file);
-			seek(pos);
-			cacheId = id;
-			return cache;
-		} else if (cacheId == id) {
-			return cache;
-		} else {
-			cache.close();
-			cache = new FileInputStream(file);
-			seek(pos);
-			cacheId = id;
-			return cache;
-		}
-	}
-
-	private void seek(long pos) throws IOException
-	{
-		long remaining = pos;
-		while (remaining > 0) {
-			long s = cache.skip(remaining);
-			if (s < 0) {
-				throw new IOException();
-			}
-			remaining -= s;
-		}
-	}
-
-	@Override
-	public void close(int id) throws IOException
-	{
-		if (id == cacheId) {
-			cache.close();
-			cache = null;
-			cacheId = -1;
-		}
-	}
+	public void close(int id) throws IOException;
 
 }

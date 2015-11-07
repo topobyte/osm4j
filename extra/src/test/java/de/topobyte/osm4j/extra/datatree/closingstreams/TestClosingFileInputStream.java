@@ -30,8 +30,8 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import de.topobyte.largescalefileio.ClosingFileInputStream;
-import de.topobyte.largescalefileio.ClosingFileInputStreamFactory;
 import de.topobyte.largescalefileio.ClosingFileInputStreamPool;
+import de.topobyte.largescalefileio.SimpleClosingFileInputStreamPool;
 
 public class TestClosingFileInputStream
 {
@@ -73,7 +73,7 @@ public class TestClosingFileInputStream
 			FileUtils.writeByteArrayToFile(files[i], bytes[i]);
 		}
 
-		ClosingFileInputStreamFactory factory = new ClosingFileInputStreamPool();
+		ClosingFileInputStreamPool factory = new SimpleClosingFileInputStreamPool();
 
 		InputStream[] inputs = new InputStream[n];
 		for (int i = 0; i < n; i++) {

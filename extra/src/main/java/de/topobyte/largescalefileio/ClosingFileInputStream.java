@@ -24,12 +24,12 @@ import java.io.InputStream;
 public class ClosingFileInputStream extends InputStream
 {
 
-	private ClosingFileInputStreamFactory factory;
+	private ClosingFileInputStreamPool factory;
 	private File file;
 	private int id;
 	private long pos = 0;
 
-	public ClosingFileInputStream(ClosingFileInputStreamFactory factory,
+	public ClosingFileInputStream(ClosingFileInputStreamPool factory,
 			File file, int id)
 	{
 		this.factory = factory;
