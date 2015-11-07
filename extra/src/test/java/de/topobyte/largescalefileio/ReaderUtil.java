@@ -15,50 +15,55 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with osm4j. If not, see <http://www.gnu.org/licenses/>.
 
-package de.topobyte.osm4j.extra.datatree.closingstreams;
+package de.topobyte.largescalefileio;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class WriterUtil
+public class ReaderUtil
 {
 
-	public static void writeInterleaved(OutputStream[] outputs, byte[][] bytes)
+	public static byte[][] readInterleaved(InputStream[] inputs)
 			throws IOException
 	{
+		int n = inputs.length;
+		byte[][] results = new byte[n][];
+		ByteArrayOutputStream[] outputs = new ByteArrayOutputStream[n];
+
 		Random random = new Random();
 
-		int n = outputs.length;
-		List<ByteArrayWriter> writers = new ArrayList<>();
+		List<ByteArrayReader> readers = new ArrayList<>();
 
 		for (int i = 0; i < n; i++) {
-			writers.add(new ByteArrayWriter(bytes[i], outputs[i]));
+			outputs[i] = new ByteArrayOutputStream();
+			readers.add(new ByteArrayReader(outputs[i], inputs[i]));
 		}
 
-		while (!writers.isEmpty()) {
-			int i = random.nextInt(writers.size());
-			ByteArrayWriter writer = writers.get(i);
+		while (!readers.isEmpty()) {
+			int i = random.nextInt(readers.size());
+			ByteArrayReader reader = readers.get(i);
 
-			int mod = random.nextInt(3);
+			int mod = random.nextInt(2);
 			if (mod == 0) {
-				writer.writeByte();
+				reader.read();
 			} else if (mod == 1) {
-				int len = random.nextInt(Math.min(10, writer.remaining() + 1));
-				writer.writeBytes(len);
-			} else if (mod == 2) {
-				int len = random.nextInt(Math.min(10, writer.remaining() + 1));
-				int pad1 = random.nextInt(100);
-				int pad2 = random.nextInt(100);
-				writer.writeBytes(len, pad1, pad2);
+				int len = random.nextInt(10);
+				reader.read(len);
 			}
 
-			if (writer.done()) {
-				writers.remove(i);
+			if (reader.done()) {
+				readers.remove(i);
 			}
 		}
+
+		for (int i = 0; i < n; i++) {
+			results[i] = outputs[i].toByteArray();
+		}
+		return results;
 	}
 
 }
