@@ -34,6 +34,9 @@ import java.util.Map;
 
 import com.vividsolutions.jts.geom.LineString;
 
+import de.topobyte.largescalefileio.ClosingFileOutputStream;
+import de.topobyte.largescalefileio.ClosingFileOutputStreamFactory;
+import de.topobyte.largescalefileio.ClosingFileOutputStreamPool;
 import de.topobyte.osm4j.core.access.OsmOutputStream;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.osm4j.core.model.iface.OsmWay;
@@ -43,9 +46,6 @@ import de.topobyte.osm4j.core.resolve.InMemoryDataSet;
 import de.topobyte.osm4j.core.resolve.OsmEntityProvider;
 import de.topobyte.osm4j.core.resolve.UnionOsmEntityProvider;
 import de.topobyte.osm4j.extra.StreamUtil;
-import de.topobyte.osm4j.extra.datatree.ClosingFileOutputStream;
-import de.topobyte.osm4j.extra.datatree.ClosingFileOutputStreamFactory;
-import de.topobyte.osm4j.extra.datatree.ClosingFileOutputStreamPool;
 import de.topobyte.osm4j.extra.datatree.DataTree;
 import de.topobyte.osm4j.extra.datatree.DataTreeFiles;
 import de.topobyte.osm4j.extra.datatree.DataTreeOpener;

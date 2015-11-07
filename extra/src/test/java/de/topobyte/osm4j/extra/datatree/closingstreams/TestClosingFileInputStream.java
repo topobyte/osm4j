@@ -29,9 +29,9 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
 
-import de.topobyte.osm4j.extra.datatree.ClosingFileInputStream;
-import de.topobyte.osm4j.extra.datatree.ClosingFileInputStreamFactory;
-import de.topobyte.osm4j.extra.datatree.ClosingFileInputStreamPool;
+import de.topobyte.largescalefileio.ClosingFileInputStream;
+import de.topobyte.largescalefileio.ClosingFileInputStreamFactory;
+import de.topobyte.largescalefileio.ClosingFileInputStreamPool;
 
 public class TestClosingFileInputStream
 {

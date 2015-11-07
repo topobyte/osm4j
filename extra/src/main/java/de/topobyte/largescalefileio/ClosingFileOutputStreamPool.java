@@ -15,20 +15,54 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with osm4j. If not, see <http://www.gnu.org/licenses/>.
 
-package de.topobyte.osm4j.extra.datatree;
+package de.topobyte.largescalefileio;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
-public interface ClosingFileOutputStreamFactory
+public class ClosingFileOutputStreamPool implements
+		ClosingFileOutputStreamFactory
 {
 
+	private OutputStream cache = null;
+	private int cacheId = -1;
+
+	@Override
 	public OutputStream create(File file, int id, boolean append)
-			throws IOException;
+			throws IOException
+	{
+		if (cache == null) {
+			cache = new FileOutputStream(file, append);
+			cacheId = id;
+			return cache;
+		} else if (cacheId == id) {
+			return cache;
+		} else {
+			cache.close();
+			cache = new FileOutputStream(file, append);
+			cacheId = id;
+			return cache;
+		}
+	}
 
-	public void flush(int id) throws IOException;
+	@Override
+	public void flush(int id) throws IOException
+	{
+		if (id == cacheId) {
+			cache.flush();
+		}
+	}
 
-	public void close(int id) throws IOException;
+	@Override
+	public void close(int id) throws IOException
+	{
+		if (id == cacheId) {
+			cache.close();
+			cache = null;
+			cacheId = -1;
+		}
+	}
 
 }
