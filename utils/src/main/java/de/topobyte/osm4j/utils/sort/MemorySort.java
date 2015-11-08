@@ -70,7 +70,7 @@ public class MemorySort
 	 * @param input
 	 *            an OsmIterator to retrieve data from.
 	 * @param comparator
-	 *            a Comparator used to sort each list of elements
+	 *            a Comparator used to sort each list of elements.
 	 */
 	public MemorySort(OsmOutputStream output, OsmIterator input,
 			Comparator<OsmEntity> comparator)
@@ -90,11 +90,11 @@ public class MemorySort
 	 * @param input
 	 *            an OsmIterator to retrieve data from.
 	 * @param comparatorNodes
-	 *            a Comparator used to sort the list of nodes
+	 *            a Comparator used to sort the list of nodes.
 	 * @param comparatorWays
-	 *            a Comparator used to sort the list of ways
+	 *            a Comparator used to sort the list of ways.
 	 * @param comparatorRelations
-	 *            a Comparator used to sort the list of relations
+	 *            a Comparator used to sort the list of relations.
 	 */
 	public MemorySort(OsmOutputStream output, OsmIterator input,
 			Comparator<? super OsmNode> comparatorNodes,
