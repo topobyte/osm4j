@@ -44,20 +44,29 @@ public class TestMemorySort
 	@Test
 	public void test() throws IOException
 	{
-		test(100, 100, 100);
-		test(0, 100, 100);
-		test(100, 0, 100);
-		test(100, 100, 0);
-		test(100, 0, 0);
-		test(0, 100, 0);
-		test(0, 0, 100);
+		test(100, 100, 100, 0);
+		test(0, 100, 100, 0);
+		test(100, 0, 100, 0);
+		test(100, 100, 0, 0);
+		test(100, 0, 0, 0);
+		test(0, 100, 0, 0);
+		test(0, 0, 100, 0);
+
+		double p = 0.1;
+		test(100, 100, 100, p);
+		test(0, 100, 100, p);
+		test(100, 0, 100, p);
+		test(100, 100, 0, p);
+		test(100, 0, 0, p);
+		test(0, 100, 0, p);
+		test(0, 0, 100, p);
 	}
 
-	public void test(int numNodes, int numWays, int numRelations)
-			throws IOException
+	public void test(int numNodes, int numWays, int numRelations,
+			double fractionDuplicates) throws IOException
 	{
 		do {
-			setup(numNodes, numWays, numRelations);
+			setup(numNodes, numWays, numRelations, fractionDuplicates);
 		} while (DataSetHelper.equals(data, shuffled));
 
 		TestDataSetOutputStream output = new TestDataSetOutputStream();
@@ -71,8 +80,8 @@ public class TestMemorySort
 		Assert.assertTrue(DataSetHelper.equals(data, sorted));
 	}
 
-	public void setup(int numNodes, int numWays, int numRelations)
-			throws IOException
+	public void setup(int numNodes, int numWays, int numRelations,
+			double fractionDuplicates) throws IOException
 	{
 		// Generate some data
 		entityGenerator = new EntityGenerator(10, true);
@@ -81,9 +90,26 @@ public class TestMemorySort
 
 		// Shuffle data
 		shuffled = new TestDataSet(data);
+
+		int nDupNodes = (int) Math.round(fractionDuplicates * numNodes);
+		int nDupWays = (int) Math.round(fractionDuplicates * numWays);
+		int nDupRelations = (int) Math.round(fractionDuplicates * numRelations);
+
+		for (int i = 0; i < nDupNodes; i++) {
+			int index = random.nextInt(numNodes);
+			shuffled.getNodes().add(data.getNodes().get(index));
+		}
+		for (int i = 0; i < nDupWays; i++) {
+			int index = random.nextInt(numWays);
+			shuffled.getWays().add(data.getWays().get(index));
+		}
+		for (int i = 0; i < nDupRelations; i++) {
+			int index = random.nextInt(numRelations);
+			shuffled.getRelations().add(data.getRelations().get(index));
+		}
+
 		Collections.shuffle(shuffled.getNodes(), random);
 		Collections.shuffle(shuffled.getWays(), random);
 		Collections.shuffle(shuffled.getRelations(), random);
 	}
-
 }
