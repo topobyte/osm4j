@@ -150,15 +150,13 @@ public class MergeIterator extends AbstractMerge implements OsmIterator
 	@Override
 	public boolean hasBounds()
 	{
-		// TODO implement
-		return false;
+		return hasBounds;
 	}
 
 	@Override
 	public OsmBounds getBounds()
 	{
-		// TODO implement
-		return null;
+		return bounds;
 	}
 
 	@Override

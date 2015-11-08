@@ -34,8 +34,6 @@ import de.topobyte.osm4j.utils.merge.Merge;
 import de.topobyte.osm4j.xml.dynsax.OsmXmlIterator;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
-// TODO: implement merging of OsmBounds
-
 public class OsmMerge extends AbstractTaskSingleOutput
 {
 

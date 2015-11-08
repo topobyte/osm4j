@@ -116,6 +116,10 @@ public class Merge extends AbstractMerge
 
 	private void prepare() throws IOException
 	{
+		if (hasBounds) {
+			output.write(bounds);
+		}
+
 		for (OsmIterator iterator : inputs) {
 			if (!iterator.hasNext()) {
 				continue;
