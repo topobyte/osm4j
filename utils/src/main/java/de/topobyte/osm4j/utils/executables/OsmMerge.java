@@ -30,7 +30,7 @@ import de.topobyte.osm4j.pbf.seq.PbfIterator;
 import de.topobyte.osm4j.tbo.access.TboIterator;
 import de.topobyte.osm4j.utils.AbstractTaskSingleOutput;
 import de.topobyte.osm4j.utils.FileFormat;
-import de.topobyte.osm4j.utils.Merge;
+import de.topobyte.osm4j.utils.merge.Merge;
 import de.topobyte.osm4j.xml.dynsax.OsmXmlIterator;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
