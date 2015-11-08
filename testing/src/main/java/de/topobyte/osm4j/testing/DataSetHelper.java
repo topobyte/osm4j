@@ -25,10 +25,13 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import de.topobyte.osm4j.core.access.OsmHandler;
 import de.topobyte.osm4j.core.access.OsmInputException;
 import de.topobyte.osm4j.core.access.OsmIterator;
 import de.topobyte.osm4j.core.access.OsmOutputStream;
 import de.topobyte.osm4j.core.access.OsmReader;
+import de.topobyte.osm4j.core.model.iface.EntityContainer;
+import de.topobyte.osm4j.core.model.iface.OsmBounds;
 import de.topobyte.osm4j.core.model.iface.OsmEntity;
 import de.topobyte.osm4j.core.model.iface.OsmMetadata;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
@@ -36,8 +39,9 @@ import de.topobyte.osm4j.core.model.iface.OsmRelation;
 import de.topobyte.osm4j.core.model.iface.OsmRelationMember;
 import de.topobyte.osm4j.core.model.iface.OsmWay;
 import de.topobyte.osm4j.core.model.util.OsmModelUtil;
-import de.topobyte.osm4j.core.resolve.DataSetReader;
-import de.topobyte.osm4j.core.resolve.InMemoryDataSet;
+import de.topobyte.osm4j.testing.model.TestNode;
+import de.topobyte.osm4j.testing.model.TestRelation;
+import de.topobyte.osm4j.testing.model.TestWay;
 
 public class DataSetHelper
 {
@@ -60,15 +64,79 @@ public class DataSetHelper
 
 	public static TestDataSet read(OsmIterator iterator) throws IOException
 	{
-		InMemoryDataSet data = DataSetReader.read(iterator, true, true, true);
-		return new TestDataSet(data);
+		TestDataSet dataSet = new TestDataSet();
+
+		if (iterator.hasBounds()) {
+			dataSet.setBounds(EntityHelper.clone(iterator.getBounds()));
+		}
+
+		while (iterator.hasNext()) {
+			EntityContainer container = iterator.next();
+			switch (container.getType()) {
+			case Node:
+				OsmNode node = (OsmNode) container.getEntity();
+				dataSet.getNodes().add(EntityHelper.clone(node));
+				break;
+			case Way:
+				OsmWay way = (OsmWay) container.getEntity();
+				dataSet.getWays().add(EntityHelper.clone(way));
+				break;
+			case Relation:
+				OsmRelation relation = (OsmRelation) container.getEntity();
+				dataSet.getRelations().add(EntityHelper.clone(relation));
+				break;
+			}
+		}
+
+		return dataSet;
 	}
 
 	public static TestDataSet read(OsmReader reader) throws IOException,
 			OsmInputException
 	{
-		InMemoryDataSet data = DataSetReader.read(reader, true, true, true);
-		return new TestDataSet(data);
+		final TestDataSet dataSet = new TestDataSet();
+
+		final List<TestNode> nodes = dataSet.getNodes();
+		final List<TestWay> ways = dataSet.getWays();
+		final List<TestRelation> relations = dataSet.getRelations();
+
+		reader.setHandler(new OsmHandler() {
+
+			@Override
+			public void handle(OsmBounds bounds) throws IOException
+			{
+				dataSet.setBounds(EntityHelper.clone(bounds));
+			}
+
+			@Override
+			public void handle(OsmNode node) throws IOException
+			{
+				nodes.add(EntityHelper.clone(node));
+			}
+
+			@Override
+			public void handle(OsmWay way) throws IOException
+			{
+				ways.add(EntityHelper.clone(way));
+			}
+
+			@Override
+			public void handle(OsmRelation relation) throws IOException
+			{
+				relations.add(EntityHelper.clone(relation));
+			}
+
+			@Override
+			public void complete() throws IOException
+			{
+				// nothing to do here
+			}
+
+		});
+
+		reader.read();
+
+		return dataSet;
 	}
 
 	public static boolean equals(TestDataSet a, TestDataSet b)
