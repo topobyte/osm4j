@@ -30,6 +30,7 @@ import de.topobyte.osm4j.core.model.iface.OsmEntity;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.osm4j.core.model.iface.OsmRelation;
 import de.topobyte.osm4j.core.model.iface.OsmWay;
+import de.topobyte.osm4j.utils.sort.IdComparator;
 
 public class Merge
 {
@@ -37,11 +38,15 @@ public class Merge
 	private OsmOutputStream output;
 	private Collection<OsmIterator> inputs;
 
+	private Comparator<? super OsmNode> comparatorNodes;
+	private Comparator<? super OsmWay> comparatorWays;
+	private Comparator<? super OsmRelation> comparatorRelations;
+
 	/**
 	 * Merge the elements from a collection of OSM input sources to a single OSM
 	 * output. The merging algorithm expects the input data to be in default
 	 * order, i.e. a sequence of nodes, followed by a sequence of ways, followed
-	 * by a sequence of relations, each sequence ordered by their object's
+	 * by a sequence of relations. Each sequence ordered by their object's
 	 * identifiers.
 	 * 
 	 * @param output
@@ -51,40 +56,121 @@ public class Merge
 	 */
 	public Merge(OsmOutputStream output, Collection<OsmIterator> inputs)
 	{
+		this(output, inputs, new IdComparator());
+	}
+
+	/**
+	 * Merge the elements from a collection of OSM input sources to a single OSM
+	 * output. The merging algorithm expects the input data to be in default
+	 * order, i.e. a sequence of nodes, followed by a sequence of ways, followed
+	 * by a sequence of relations. Each sequence ordered using the specified
+	 * comparator.
+	 * 
+	 * @param output
+	 *            am OsmOutputStream to write data to.
+	 * @param inputs
+	 *            a collection of iterators to retrieve data from.
+	 * @param comparator
+	 *            a Comparator used to compare elements of the same type.
+	 */
+	public Merge(OsmOutputStream output, Collection<OsmIterator> inputs,
+			Comparator<OsmEntity> comparator)
+	{
+		this(output, inputs, comparator, comparator, comparator);
+	}
+
+	/**
+	 * Merge the elements from a collection of OSM input sources to a single OSM
+	 * output. The merging algorithm expects the input data to be in default
+	 * order, i.e. a sequence of nodes, followed by a sequence of ways, followed
+	 * by a sequence of relations. Each sequence ordered using the respective
+	 * specified comparator.
+	 * 
+	 * @param output
+	 *            am OsmOutputStream to write data to.
+	 * @param inputs
+	 *            a collection of iterators to retrieve data from.
+	 * @param comparatorNodes
+	 *            a Comparator used to compare nodes.
+	 * @param comparatorWays
+	 *            a Comparator used to compare ways.
+	 * @param comparatorRelations
+	 *            a Comparator used to compare relations.
+	 */
+	public Merge(OsmOutputStream output, Collection<OsmIterator> inputs,
+			Comparator<? super OsmNode> comparatorNodes,
+			Comparator<? super OsmWay> comparatorWays,
+			Comparator<? super OsmRelation> comparatorRelations)
+	{
 		this.output = output;
 		this.inputs = inputs;
+		this.comparatorNodes = comparatorNodes;
+		this.comparatorWays = comparatorWays;
+		this.comparatorRelations = comparatorRelations;
 	}
 
 	// This class is used to store the input sources in a priority queue and
 	// stores the next element available on a source
-	private class InputSource
+
+	private class Input<T extends OsmEntity>
 	{
+
 		OsmIterator iterator;
-		EntityType currentType;
+		T currentEntity;
 		long currentId;
-		OsmEntity currentEntity;
+
+		public Input(OsmIterator iterator)
+		{
+			this.iterator = iterator;
+		}
+
 	}
 
-	// This comparator is used to order input sources within the priority
+	// These comparators are used to order input sources within the priority
 	// queues.
-	private class InputComparator implements Comparator<InputSource>
+
+	private class InputComparatorNodes implements Comparator<Input<OsmNode>>
 	{
 
 		@Override
-		public int compare(InputSource o1, InputSource o2)
+		public int compare(Input<OsmNode> o1, Input<OsmNode> o2)
 		{
-			return Long.compare(o1.currentId, o2.currentId);
+			return comparatorNodes.compare(o1.currentEntity, o2.currentEntity);
+		}
+
+	}
+
+	private class InputComparatorWays implements Comparator<Input<OsmWay>>
+	{
+
+		@Override
+		public int compare(Input<OsmWay> o1, Input<OsmWay> o2)
+		{
+			return comparatorWays.compare(o1.currentEntity, o2.currentEntity);
+		}
+
+	}
+
+	private class InputComparatorRelations implements
+			Comparator<Input<OsmRelation>>
+	{
+
+		@Override
+		public int compare(Input<OsmRelation> o1, Input<OsmRelation> o2)
+		{
+			return comparatorRelations.compare(o1.currentEntity,
+					o2.currentEntity);
 		}
 
 	}
 
 	// One priority queue for each entity type
-	private PriorityQueue<InputSource> nodeItems = new PriorityQueue<>(2,
-			new InputComparator());
-	private PriorityQueue<InputSource> wayItems = new PriorityQueue<>(2,
-			new InputComparator());
-	private PriorityQueue<InputSource> relationItems = new PriorityQueue<>(2,
-			new InputComparator());
+	private PriorityQueue<Input<OsmNode>> nodeItems = new PriorityQueue<>(2,
+			new InputComparatorNodes());
+	private PriorityQueue<Input<OsmWay>> wayItems = new PriorityQueue<>(2,
+			new InputComparatorWays());
+	private PriorityQueue<Input<OsmRelation>> relationItems = new PriorityQueue<>(
+			2, new InputComparatorRelations());
 
 	// Remember the last id written per entity type to skip duplicates
 	private long lastId = -1;
@@ -106,16 +192,18 @@ public class Merge
 				continue;
 			}
 			EntityContainer container = iterator.next();
-			InputSource item = createItem(container, iterator);
-			switch (item.currentType) {
+			switch (container.getType()) {
 			case Node:
-				nodeItems.add(item);
+				nodeItems.add(createItem((OsmNode) container.getEntity(),
+						iterator));
 				break;
 			case Way:
-				wayItems.add(item);
+				wayItems.add(createItem((OsmWay) container.getEntity(),
+						iterator));
 				break;
 			case Relation:
-				relationItems.add(item);
+				relationItems.add(createItem(
+						(OsmRelation) container.getEntity(), iterator));
 				break;
 			}
 		}
@@ -126,26 +214,18 @@ public class Merge
 		// More than one node source:
 		// use priority queue
 		while (nodeItems.size() > 1) {
-			InputSource item = nodeItems.poll();
+			Input<OsmNode> item = nodeItems.poll();
 			writeNode(item);
-			if (advance(item)) {
-				putToBucket(item);
-			}
+			advanceNodeItem(item, true);
 		}
 
 		// Just one node source left:
 		// iterate until finished or ways or relations pop up
 		if (nodeItems.size() == 1) {
-			InputSource item = nodeItems.poll();
+			Input<OsmNode> item = nodeItems.poll();
 			while (true) {
 				writeNode(item);
-				if (!advance(item)) {
-					break;
-				}
-				if (item.currentType == EntityType.Node) {
-					continue;
-				} else {
-					putToBucket(item);
+				if (!advanceNodeItem(item, false)) {
 					break;
 				}
 			}
@@ -156,26 +236,18 @@ public class Merge
 		// More than one way source:
 		// use priority queue
 		while (wayItems.size() > 1) {
-			InputSource item = wayItems.poll();
+			Input<OsmWay> item = wayItems.poll();
 			writeWay(item);
-			if (advance(item)) {
-				putToBucket(item);
-			}
+			advanceWayItem(item, true);
 		}
 
 		// Just one way source left:
 		// iterate until finished or relations pop up
 		if (wayItems.size() == 1) {
-			InputSource item = wayItems.poll();
+			Input<OsmWay> item = wayItems.poll();
 			while (true) {
 				writeWay(item);
-				if (!advance(item)) {
-					break;
-				}
-				if (item.currentType == EntityType.Way) {
-					continue;
-				} else {
-					putToBucket(item);
+				if (!advanceWayItem(item, false)) {
 					break;
 				}
 			}
@@ -186,85 +258,124 @@ public class Merge
 		// More than one relation source:
 		// use priority queue
 		while (relationItems.size() > 1) {
-			InputSource item = relationItems.poll();
+			Input<OsmRelation> item = relationItems.poll();
 			writeRelation(item);
-			if (advance(item)) {
-				putToBucket(item);
-			}
+			advanceRelationItem(item, true);
 		}
 
 		// Just one relation source left:
 		// iterate until finished or ways or relations pop up
 		if (relationItems.size() == 1) {
-			InputSource item = relationItems.poll();
+			Input<OsmRelation> item = relationItems.poll();
 			while (true) {
 				writeRelation(item);
-				if (!advance(item)) {
+				if (!advanceRelationItem(item, false)) {
 					break;
-				}
-				if (item.currentType == EntityType.Relation) {
-					continue;
 				}
 			}
 		}
 	}
 
-	private void writeNode(InputSource item) throws IOException
+	private void writeNode(Input<OsmNode> item) throws IOException
 	{
 		if (item.currentId != lastId) {
-			output.write((OsmNode) item.currentEntity);
+			output.write(item.currentEntity);
 			lastId = item.currentId;
 		}
 	}
 
-	private void writeWay(InputSource item) throws IOException
+	private void writeWay(Input<OsmWay> item) throws IOException
 	{
 		if (item.currentId != lastId) {
-			output.write((OsmWay) item.currentEntity);
+			output.write(item.currentEntity);
 			lastId = item.currentId;
 		}
 	}
 
-	private void writeRelation(InputSource item) throws IOException
+	private void writeRelation(Input<OsmRelation> item) throws IOException
 	{
 		if (item.currentId != lastId) {
-			output.write((OsmRelation) item.currentEntity);
+			output.write(item.currentEntity);
 			lastId = item.currentId;
 		}
 	}
 
-	private void putToBucket(InputSource item)
-	{
-		if (item.currentType == EntityType.Node) {
-			nodeItems.add(item);
-		} else if (item.currentType == EntityType.Way) {
-			wayItems.add(item);
-		} else if (item.currentType == EntityType.Relation) {
-			relationItems.add(item);
-		}
-	}
-
-	private InputSource createItem(EntityContainer container,
+	private <T extends OsmEntity> Input<T> createItem(T element,
 			OsmIterator iterator)
 	{
-		InputSource item = new InputSource();
-		item.currentEntity = container.getEntity();
-		item.currentType = container.getType();
+		Input<T> item = new Input<T>(iterator);
+		item.currentEntity = element;
 		item.currentId = item.currentEntity.getId();
-		item.iterator = iterator;
 		return item;
 	}
 
-	private boolean advance(InputSource item)
+	private boolean advanceNodeItem(Input<OsmNode> item, boolean putBack)
 	{
 		if (!item.iterator.hasNext()) {
 			return false;
 		}
 		EntityContainer container = item.iterator.next();
-		item.currentEntity = container.getEntity();
-		item.currentType = container.getType();
-		item.currentId = item.currentEntity.getId();
-		return true;
+		OsmEntity entity = container.getEntity();
+		if (container.getType() == EntityType.Node) {
+			item.currentEntity = (OsmNode) entity;
+			item.currentId = entity.getId();
+			if (putBack) {
+				nodeItems.add(item);
+			}
+			return true;
+		} else if (container.getType() == EntityType.Way) {
+			Input<OsmWay> newItem = new Input<>(item.iterator);
+			newItem.currentEntity = (OsmWay) entity;
+			newItem.currentId = entity.getId();
+			wayItems.add(newItem);
+		} else if (container.getType() == EntityType.Relation) {
+			Input<OsmRelation> newItem = new Input<>(item.iterator);
+			newItem.currentEntity = (OsmRelation) entity;
+			newItem.currentId = entity.getId();
+			relationItems.add(newItem);
+		}
+		return false;
+	}
+
+	private boolean advanceWayItem(Input<OsmWay> item, boolean putBack)
+	{
+		if (!item.iterator.hasNext()) {
+			return false;
+		}
+		EntityContainer container = item.iterator.next();
+		OsmEntity entity = container.getEntity();
+		if (container.getType() == EntityType.Way) {
+			item.currentEntity = (OsmWay) entity;
+			item.currentId = entity.getId();
+			if (putBack) {
+				wayItems.add(item);
+			}
+			return true;
+		} else if (container.getType() == EntityType.Relation) {
+			Input<OsmRelation> newItem = new Input<>(item.iterator);
+			newItem.currentEntity = (OsmRelation) entity;
+			newItem.currentId = entity.getId();
+			relationItems.add(newItem);
+		}
+		return false;
+	}
+
+	private boolean advanceRelationItem(Input<OsmRelation> item, boolean putBack)
+	{
+		if (!item.iterator.hasNext()) {
+			return false;
+		}
+		EntityContainer container = item.iterator.next();
+		OsmEntity entity = container.getEntity();
+		if (container.getType() == EntityType.Relation) {
+			item.currentEntity = (OsmRelation) entity;
+			item.currentId = entity.getId();
+			if (putBack) {
+				relationItems.add(item);
+			}
+			return true;
+		}
+		return false;
 	}
 
 }
