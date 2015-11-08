@@ -38,6 +38,8 @@ public class MemorySort
 	private OsmOutputStream output;
 	private OsmIterator input;
 
+	private boolean ignoreDuplicates = true;
+
 	private Comparator<? super OsmNode> comparatorNodes;
 	private Comparator<? super OsmWay> comparatorWays;
 	private Comparator<? super OsmRelation> comparatorRelations;
@@ -108,6 +110,26 @@ public class MemorySort
 		this.comparatorRelations = comparatorRelations;
 	}
 
+	/**
+	 * Whether objects that have the same type and id as a previously
+	 * encountered element will be discarded from output.
+	 */
+	public boolean isIgnoreDuplicates()
+	{
+		return ignoreDuplicates;
+	}
+
+	/**
+	 * When set to false, elements with the same id can appear multiple times in
+	 * the output. When set to true, for each entity type, if there are multiple
+	 * objects with the same id, only the first one will be passed to the
+	 * output. Default value: true.
+	 */
+	public void setIgnoreDuplicates(boolean ignoreDuplicates)
+	{
+		this.ignoreDuplicates = ignoreDuplicates;
+	}
+
 	private List<OsmNode> nodes = new ArrayList<>();
 	private List<OsmWay> ways = new ArrayList<>();
 	private List<OsmRelation> relations = new ArrayList<>();
@@ -148,9 +170,7 @@ public class MemorySort
 		// sort
 		Collections.sort(nodes, comparatorNodes);
 		// write
-		for (OsmNode node : nodes) {
-			output.write(node);
-		}
+		writeNodes();
 
 		// release node resources
 		nodes.clear();
@@ -163,9 +183,7 @@ public class MemorySort
 		// sort
 		Collections.sort(ways, comparatorWays);
 		// write
-		for (OsmWay way : ways) {
-			output.write(way);
-		}
+		writeWays();
 
 		// release way resources
 		ways.clear();
@@ -178,12 +196,91 @@ public class MemorySort
 		// sort
 		Collections.sort(relations, comparatorRelations);
 		// write
-		for (OsmRelation relation : relations) {
-			output.write(relation);
-		}
+		writeRelations();
 
 		// release relation resources
 		relations.clear();
+	}
+
+	private void writeNodes() throws IOException
+	{
+		EntityWriter<OsmNode> writer = new EntityWriter<OsmNode>() {
+
+			@Override
+			public void write(OsmNode node) throws IOException
+			{
+				output.write(node);
+			}
+		};
+		writer.write(nodes);
+	}
+
+	private void writeWays() throws IOException
+	{
+		EntityWriter<OsmWay> writer = new EntityWriter<OsmWay>() {
+
+			@Override
+			public void write(OsmWay way) throws IOException
+			{
+				output.write(way);
+			}
+		};
+		writer.write(ways);
+	}
+
+	private void writeRelations() throws IOException
+	{
+		EntityWriter<OsmRelation> writer = new EntityWriter<OsmRelation>() {
+
+			@Override
+			public void write(OsmRelation relation) throws IOException
+			{
+				output.write(relation);
+			}
+		};
+		writer.write(relations);
+	}
+
+	private abstract class EntityWriter<T extends OsmEntity>
+	{
+
+		public abstract void write(T entity) throws IOException;
+
+		public void write(List<T> elements) throws IOException
+		{
+			if (!ignoreDuplicates) {
+				writeAll(elements);
+			} else {
+				writeUnique(elements);
+			}
+		}
+
+		public void writeAll(List<T> elements) throws IOException
+		{
+			for (T element : elements) {
+				write(element);
+			}
+		}
+
+		private void writeUnique(List<T> elements) throws IOException
+		{
+			if (elements.isEmpty()) {
+				return;
+			}
+			T element = elements.get(0);
+			write(element);
+			long last = element.getId();
+
+			for (int i = 1; i < elements.size(); i++) {
+				element = elements.get(i);
+				if (last == element.getId()) {
+					continue;
+				}
+				write(element);
+				last = element.getId();
+			}
+		}
+
 	}
 
 }
