@@ -57,6 +57,9 @@ public class TestMerge
 		test(100, 100, 100, 10, 0.1);
 		test(100, 100, 100, 1, 0.5);
 		test(100, 100, 100, 2, 0.5);
+		test(100, 0, 0, 5, 0.5);
+		test(0, 100, 0, 5, 0.5);
+		test(0, 0, 100, 5, 0.5);
 	}
 
 	public void test(int numNodes, int numWays, int numRelations, int numFiles,
