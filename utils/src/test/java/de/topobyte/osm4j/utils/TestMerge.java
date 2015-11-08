@@ -76,14 +76,13 @@ public class TestMerge
 
 		Merge merge = new Merge(output, inputs);
 		merge.run();
+		TestDataSet merged = output.getData();
 
-		Assert.assertEquals(data.getRelations().size(), output.getData()
-				.getRelations().size());
-		Assert.assertEquals(data.getWays().size(), output.getData().getWays()
+		Assert.assertEquals(data.getNodes().size(), merged.getNodes().size());
+		Assert.assertEquals(data.getWays().size(), merged.getWays().size());
+		Assert.assertEquals(data.getRelations().size(), merged.getRelations()
 				.size());
-		Assert.assertEquals(data.getNodes().size(), output.getData().getNodes()
-				.size());
-		Assert.assertTrue(DataSetHelper.equals(data, output.getData()));
+		Assert.assertTrue(DataSetHelper.equals(data, merged));
 	}
 
 	public void setup(int numNodes, int numWays, int numRelations,
