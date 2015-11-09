@@ -15,7 +15,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with osm4j. If not, see <http://www.gnu.org/licenses/>.
 
-package de.topobyte.osm4j.utils.merge;
+package de.topobyte.osm4j.utils.merge.sorted;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -33,7 +33,7 @@ import de.topobyte.osm4j.core.model.iface.OsmRelation;
 import de.topobyte.osm4j.core.model.iface.OsmWay;
 import de.topobyte.osm4j.utils.sort.IdComparator;
 
-public class MergeIterator extends AbstractMerge implements OsmIterator
+public class SortedMergeIterator extends AbstractSortedMerge implements OsmIterator
 {
 
 	/**
@@ -46,7 +46,7 @@ public class MergeIterator extends AbstractMerge implements OsmIterator
 	 * @param inputs
 	 *            a collection of iterators to retrieve data from.
 	 */
-	public MergeIterator(Collection<OsmIterator> inputs) throws IOException
+	public SortedMergeIterator(Collection<OsmIterator> inputs) throws IOException
 	{
 		this(inputs, new IdComparator());
 	}
@@ -63,7 +63,7 @@ public class MergeIterator extends AbstractMerge implements OsmIterator
 	 * @param comparator
 	 *            a Comparator used to compare elements of the same type.
 	 */
-	public MergeIterator(Collection<OsmIterator> inputs,
+	public SortedMergeIterator(Collection<OsmIterator> inputs,
 			Comparator<OsmEntity> comparator) throws IOException
 	{
 		this(inputs, comparator, comparator, comparator);
@@ -85,7 +85,7 @@ public class MergeIterator extends AbstractMerge implements OsmIterator
 	 * @param comparatorRelations
 	 *            a Comparator used to compare relations.
 	 */
-	public MergeIterator(Collection<OsmIterator> inputs,
+	public SortedMergeIterator(Collection<OsmIterator> inputs,
 			Comparator<? super OsmNode> comparatorNodes,
 			Comparator<? super OsmWay> comparatorWays,
 			Comparator<? super OsmRelation> comparatorRelations)

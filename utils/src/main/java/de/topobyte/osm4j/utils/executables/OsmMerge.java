@@ -30,7 +30,7 @@ import de.topobyte.osm4j.pbf.seq.PbfIterator;
 import de.topobyte.osm4j.tbo.access.TboIterator;
 import de.topobyte.osm4j.utils.AbstractTaskSingleOutput;
 import de.topobyte.osm4j.utils.FileFormat;
-import de.topobyte.osm4j.utils.merge.Merge;
+import de.topobyte.osm4j.utils.merge.sorted.SortedMerge;
 import de.topobyte.osm4j.xml.dynsax.OsmXmlIterator;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
@@ -103,7 +103,7 @@ public class OsmMerge extends AbstractTaskSingleOutput
 
 	private List<InputStream> inputs = new ArrayList<>();
 	private List<OsmIterator> iterators = new ArrayList<>();
-	private Merge merge;
+	private SortedMerge merge;
 
 	@Override
 	protected void init() throws IOException
@@ -133,7 +133,7 @@ public class OsmMerge extends AbstractTaskSingleOutput
 			iterators.add(iterator);
 		}
 
-		merge = new Merge(osmOutputStream, iterators);
+		merge = new SortedMerge(osmOutputStream, iterators);
 	}
 
 	public void run() throws IOException

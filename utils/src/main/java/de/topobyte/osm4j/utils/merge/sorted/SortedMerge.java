@@ -15,7 +15,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with osm4j. If not, see <http://www.gnu.org/licenses/>.
 
-package de.topobyte.osm4j.utils.merge;
+package de.topobyte.osm4j.utils.merge.sorted;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -30,7 +30,7 @@ import de.topobyte.osm4j.core.model.iface.OsmRelation;
 import de.topobyte.osm4j.core.model.iface.OsmWay;
 import de.topobyte.osm4j.utils.sort.IdComparator;
 
-public class Merge extends AbstractMerge
+public class SortedMerge extends AbstractSortedMerge
 {
 
 	private OsmOutputStream output;
@@ -48,7 +48,7 @@ public class Merge extends AbstractMerge
 	 * @param inputs
 	 *            a collection of iterators to retrieve data from.
 	 */
-	public Merge(OsmOutputStream output, Collection<OsmIterator> inputs)
+	public SortedMerge(OsmOutputStream output, Collection<OsmIterator> inputs)
 	{
 		this(output, inputs, new IdComparator());
 	}
@@ -67,7 +67,7 @@ public class Merge extends AbstractMerge
 	 * @param comparator
 	 *            a Comparator used to compare elements of the same type.
 	 */
-	public Merge(OsmOutputStream output, Collection<OsmIterator> inputs,
+	public SortedMerge(OsmOutputStream output, Collection<OsmIterator> inputs,
 			Comparator<OsmEntity> comparator)
 	{
 		this(output, inputs, comparator, comparator, comparator);
@@ -91,7 +91,7 @@ public class Merge extends AbstractMerge
 	 * @param comparatorRelations
 	 *            a Comparator used to compare relations.
 	 */
-	public Merge(OsmOutputStream output, Collection<OsmIterator> inputs,
+	public SortedMerge(OsmOutputStream output, Collection<OsmIterator> inputs,
 			Comparator<? super OsmNode> comparatorNodes,
 			Comparator<? super OsmWay> comparatorWays,
 			Comparator<? super OsmRelation> comparatorRelations)

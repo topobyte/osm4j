@@ -15,7 +15,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with osm4j. If not, see <http://www.gnu.org/licenses/>.
 
-package de.topobyte.osm4j.utils.merge;
+package de.topobyte.osm4j.utils.merge.sorted;
 
 import gnu.trove.set.TIntSet;
 import gnu.trove.set.hash.TIntHashSet;
@@ -37,9 +37,8 @@ import de.topobyte.osm4j.testing.TestDataSetIterator;
 import de.topobyte.osm4j.testing.model.TestNode;
 import de.topobyte.osm4j.testing.model.TestRelation;
 import de.topobyte.osm4j.testing.model.TestWay;
-import de.topobyte.osm4j.utils.merge.MergeIterator;
 
-public class TestMergeIterator
+public class TestSortedMergeIterator
 {
 
 	private Random random = new Random();
@@ -72,7 +71,7 @@ public class TestMergeIterator
 			inputs.add(new TestDataSetIterator(dataSet));
 		}
 
-		MergeIterator merger = new MergeIterator(inputs);
+		SortedMergeIterator merger = new SortedMergeIterator(inputs);
 		TestDataSet merged = DataSetHelper.read(merger);
 
 		Assert.assertEquals(data.getNodes().size(), merged.getNodes().size());

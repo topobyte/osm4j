@@ -15,7 +15,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with osm4j. If not, see <http://www.gnu.org/licenses/>.
 
-package de.topobyte.osm4j.utils.merge;
+package de.topobyte.osm4j.utils.merge.sorted;
 
 import java.util.Collection;
 import java.util.Comparator;
@@ -33,7 +33,7 @@ import de.topobyte.osm4j.core.model.iface.OsmRelation;
 import de.topobyte.osm4j.core.model.iface.OsmWay;
 import de.topobyte.osm4j.core.model.impl.Bounds;
 
-public class AbstractMerge
+public class AbstractSortedMerge
 {
 
 	protected Collection<OsmIterator> inputs;
@@ -41,7 +41,7 @@ public class AbstractMerge
 	private Comparator<? super OsmWay> comparatorWays;
 	private Comparator<? super OsmRelation> comparatorRelations;
 
-	public AbstractMerge(Collection<OsmIterator> inputs,
+	public AbstractSortedMerge(Collection<OsmIterator> inputs,
 			Comparator<? super OsmNode> comparatorNodes,
 			Comparator<? super OsmWay> comparatorWays,
 			Comparator<? super OsmRelation> comparatorRelations)
