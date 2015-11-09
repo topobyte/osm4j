@@ -49,7 +49,6 @@ import de.topobyte.osm4j.extra.datatree.DataTree;
 import de.topobyte.osm4j.extra.datatree.DataTreeFiles;
 import de.topobyte.osm4j.extra.datatree.DataTreeOpener;
 import de.topobyte.osm4j.extra.datatree.Node;
-import de.topobyte.osm4j.extra.idlist.IdListOutputStream;
 import de.topobyte.osm4j.geometry.GeometryBuilder;
 import de.topobyte.osm4j.utils.AbstractTask;
 import de.topobyte.osm4j.utils.FileFormat;
@@ -70,7 +69,6 @@ public class DistributeWays extends AbstractTask
 	private static final String OPTION_FILE_NAMES_WAYS = "ways";
 	private static final String OPTION_OUTPUT_FORMAT = "output_format";
 	private static final String OPTION_FILE_NAMES_INTERSECTING_WAYS = "ways_in";
-	private static final String OPTION_FILE_NAMES_NON_INTERSECTING_WAYS = "ways_out";
 
 	@Override
 	protected String getHelpMessage()
@@ -95,7 +93,6 @@ public class DistributeWays extends AbstractTask
 	private String fileNamesNodes2;
 	private String fileNamesWays;
 	private String fileNamesWaysIntersecting;
-	private String fileNamesWaysNonIntersecting;
 
 	private FileFormat inputFormatNodes;
 	private FileFormat inputFormatWays;
@@ -114,7 +111,6 @@ public class DistributeWays extends AbstractTask
 		OptionHelper.add(options, OPTION_TREE, true, true, "tree directory to work on");
 		OptionHelper.add(options, OPTION_OUTPUT_FORMAT, true, true, "the file format of the output");
 		OptionHelper.add(options, OPTION_FILE_NAMES_INTERSECTING_WAYS, true, true, "name of intersecting ways files");
-		OptionHelper.add(options, OPTION_FILE_NAMES_NON_INTERSECTING_WAYS, true, true, "name of non-intersecting ways files");
 		PbfOptions.add(options);
 		TboOptions.add(options);
 		// @formatter:on
@@ -153,8 +149,6 @@ public class DistributeWays extends AbstractTask
 		fileNamesWays = line.getOptionValue(OPTION_FILE_NAMES_WAYS);
 		fileNamesWaysIntersecting = line
 				.getOptionValue(OPTION_FILE_NAMES_INTERSECTING_WAYS);
-		fileNamesWaysNonIntersecting = line
-				.getOptionValue(OPTION_FILE_NAMES_NON_INTERSECTING_WAYS);
 
 		pathTree = line.getOptionValue(OPTION_TREE);
 	}
@@ -163,7 +157,6 @@ public class DistributeWays extends AbstractTask
 	private File dirTree;
 	private List<Node> leafs;
 	private Map<Node, Output> outputsIntersectingWays = new HashMap<>();
-	private Map<Node, IdListOutputStream> outputsNonIntersectingWays = new HashMap<>();
 
 	private long counter = 0;
 	private long noneFound = 0;
@@ -181,8 +174,6 @@ public class DistributeWays extends AbstractTask
 
 		DataTreeFiles filesWaysIntersecting = new DataTreeFiles(dirTree,
 				fileNamesWaysIntersecting);
-		DataTreeFiles filesWaysNonIntersecting = new DataTreeFiles(dirTree,
-				fileNamesWaysNonIntersecting);
 
 		ClosingFileOutputStreamFactory factory = new SimpleClosingFileOutputStreamFactory();
 
@@ -194,14 +185,6 @@ public class DistributeWays extends AbstractTask
 					outputFormat, writeMetadata, pbfConfig, tboConfig);
 			outputsIntersectingWays.put(leaf, new Output(file.toPath(), output,
 					osmOutput));
-		}
-
-		for (Node leaf : leafs) {
-			File file = filesWaysNonIntersecting.getFile(leaf);
-			OutputStream output = factory.create(file);
-			output = new BufferedOutputStream(output);
-			IdListOutputStream idOutput = new IdListOutputStream(output);
-			outputsNonIntersectingWays.put(leaf, idOutput);
 		}
 	}
 
@@ -280,9 +263,6 @@ public class DistributeWays extends AbstractTask
 			output.getOsmOutput().complete();
 			output.getOutputStream().close();
 		}
-		for (IdListOutputStream output : outputsNonIntersectingWays.values()) {
-			output.close();
-		}
 	}
 
 	private void build(Node leaf, OsmWay way,
@@ -310,17 +290,10 @@ public class DistributeWays extends AbstractTask
 			}
 		}
 
-		boolean containedInSource = false;
 		for (Node ileaf : leafs) {
-			if (ileaf == leaf) {
-				containedInSource = true;
-			} else {
+			if (ileaf != leaf) {
 				outputsIntersectingWays.get(ileaf).getOsmOutput().write(way);
 			}
-		}
-
-		if (!containedInSource) {
-			outputsNonIntersectingWays.get(leaf).write(way.getId());
 		}
 
 		if (leafs.size() == 0) {
