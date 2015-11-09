@@ -55,7 +55,7 @@ import de.topobyte.osm4j.utils.config.TboConfig;
 import de.topobyte.osm4j.utils.config.TboOptions;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
-public class MapWaysToTree extends AbstractTaskSingleInputFile
+public class MapWaysToTreeUsingArray extends AbstractTaskSingleInputFile
 {
 
 	private static final String OPTION_FILE_NAMES = "filenames";
@@ -66,12 +66,12 @@ public class MapWaysToTree extends AbstractTaskSingleInputFile
 	@Override
 	protected String getHelpMessage()
 	{
-		return MapWaysToTree.class.getSimpleName() + " [options]";
+		return MapWaysToTreeUsingArray.class.getSimpleName() + " [options]";
 	}
 
 	public static void main(String[] args) throws IOException
 	{
-		MapWaysToTree task = new MapWaysToTree();
+		MapWaysToTreeUsingArray task = new MapWaysToTreeUsingArray();
 
 		task.setup(args);
 
@@ -88,7 +88,7 @@ public class MapWaysToTree extends AbstractTaskSingleInputFile
 
 	private boolean writeMetadata = true;
 
-	public MapWaysToTree()
+	public MapWaysToTreeUsingArray()
 	{
 		// @formatter:off
 		OptionHelper.add(options, OPTION_FILE_NAMES, true, true, "names of the data files to create");
