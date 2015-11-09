@@ -193,9 +193,10 @@ public class MapWaysToTree extends AbstractTaskSingleInputFile
 
 			way = (OsmWay) c.getEntity();
 			next = way.getNodeId(0);
-			progress.increment();
 			return true;
 		}
+		way = null;
+		next = -1;
 		return false;
 	}
 
@@ -211,8 +212,8 @@ public class MapWaysToTree extends AbstractTaskSingleInputFile
 				break;
 			}
 			OsmNode node = (OsmNode) container.getEntity();
-
 			long id = node.getId();
+			progress.increment();
 
 			if (next > id) {
 				// We don't need this node
@@ -230,6 +231,9 @@ public class MapWaysToTree extends AbstractTaskSingleInputFile
 				while (advanceWay() && next < id) {
 					query(node);
 				}
+			}
+			if (way == null) {
+				break;
 			}
 		}
 
