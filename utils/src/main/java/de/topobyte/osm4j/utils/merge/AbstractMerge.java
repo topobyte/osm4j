@@ -33,6 +33,8 @@ public class AbstractMerge
 	public AbstractMerge(Collection<OsmIterator> inputs)
 	{
 		this.inputs = inputs;
+
+		initBounds();
 	}
 
 	protected boolean hasBounds;
