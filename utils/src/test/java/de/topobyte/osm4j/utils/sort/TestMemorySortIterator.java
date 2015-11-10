@@ -25,9 +25,8 @@ import org.junit.Test;
 import de.topobyte.osm4j.testing.DataSetHelper;
 import de.topobyte.osm4j.testing.TestDataSet;
 import de.topobyte.osm4j.testing.TestDataSetIterator;
-import de.topobyte.osm4j.testing.TestDataSetOutputStream;
 
-public class TestMemorySort extends BaseTest
+public class TestMemorySortIterator extends BaseTest
 {
 
 	@Test
@@ -58,13 +57,9 @@ public class TestMemorySort extends BaseTest
 			setup(numNodes, numWays, numRelations, fractionDuplicates);
 		} while (DataSetHelper.equals(data, shuffled));
 
-		TestDataSetOutputStream output = new TestDataSetOutputStream();
-
-		MemorySort sort = new MemorySort(output, new TestDataSetIterator(
-				shuffled));
-		sort.run();
-
-		TestDataSet sorted = output.getData();
+		MemorySortIterator sorter = new MemorySortIterator(
+				new TestDataSetIterator(shuffled));
+		TestDataSet sorted = DataSetHelper.read(sorter);
 
 		Assert.assertTrue(DataSetHelper.equals(data, sorted));
 	}
