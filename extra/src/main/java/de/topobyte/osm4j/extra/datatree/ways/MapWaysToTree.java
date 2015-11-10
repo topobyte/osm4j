@@ -51,7 +51,7 @@ import de.topobyte.osm4j.utils.config.PbfConfig;
 import de.topobyte.osm4j.utils.config.PbfOptions;
 import de.topobyte.osm4j.utils.config.TboConfig;
 import de.topobyte.osm4j.utils.config.TboOptions;
-import de.topobyte.osm4j.utils.merge.MergeIterator;
+import de.topobyte.osm4j.utils.merge.sorted.SortedMergeIterator;
 import de.topobyte.osm4j.utils.sort.IdComparator;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
@@ -126,7 +126,7 @@ public class MapWaysToTree extends AbstractTaskSingleInputFile
 
 	private DataTree tree;
 	private OsmIterator nodeIterator;
-	private MergeIterator wayIterator;
+	private SortedMergeIterator wayIterator;
 
 	private Map<Node, Output> outputs = new HashMap<>();
 	private List<InputStream> wayInputStreams = new ArrayList<>();
@@ -175,7 +175,7 @@ public class MapWaysToTree extends AbstractTaskSingleInputFile
 			wayIterators.add(osmIterator);
 		}
 
-		wayIterator = new MergeIterator(wayIterators, new IdComparator(),
+		wayIterator = new SortedMergeIterator(wayIterators, new IdComparator(),
 				new WayNodeIdComparator(), new IdComparator());
 	}
 
