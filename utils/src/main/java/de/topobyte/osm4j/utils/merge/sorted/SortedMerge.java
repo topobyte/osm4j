@@ -34,7 +34,6 @@ public class SortedMerge extends AbstractSortedMerge
 {
 
 	private OsmOutputStream output;
-	private Collection<OsmIterator> inputs;
 
 	/**
 	 * Merge the elements from a collection of OSM input sources to a single OSM
@@ -98,7 +97,6 @@ public class SortedMerge extends AbstractSortedMerge
 	{
 		super(inputs, comparatorNodes, comparatorWays, comparatorRelations);
 		this.output = output;
-		this.inputs = inputs;
 	}
 
 	// Remember the last id written per entity type to skip duplicates
