@@ -123,18 +123,16 @@ public class SortedMerge extends AbstractSortedMerge
 				continue;
 			}
 			EntityContainer container = iterator.next();
+			OsmEntity entity = container.getEntity();
 			switch (container.getType()) {
 			case Node:
-				nodeItems.add(createItem((OsmNode) container.getEntity(),
-						iterator));
+				nodeItems.add(createItem((OsmNode) entity, iterator));
 				break;
 			case Way:
-				wayItems.add(createItem((OsmWay) container.getEntity(),
-						iterator));
+				wayItems.add(createItem((OsmWay) entity, iterator));
 				break;
 			case Relation:
-				relationItems.add(createItem(
-						(OsmRelation) container.getEntity(), iterator));
+				relationItems.add(createItem((OsmRelation) entity, iterator));
 				break;
 			}
 		}
