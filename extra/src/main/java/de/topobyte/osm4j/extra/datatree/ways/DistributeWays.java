@@ -18,6 +18,7 @@
 package de.topobyte.osm4j.extra.datatree.ways;
 
 import gnu.trove.map.TLongObjectMap;
+import gnu.trove.map.hash.TLongObjectHashMap;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -68,7 +69,8 @@ public class DistributeWays extends AbstractTask
 	private static final String OPTION_FILE_NAMES_NODES2 = "nodes2";
 	private static final String OPTION_FILE_NAMES_WAYS = "ways";
 	private static final String OPTION_OUTPUT_FORMAT = "output_format";
-	private static final String OPTION_FILE_NAMES_INTERSECTING_WAYS = "ways_in";
+	private static final String OPTION_FILE_NAMES_OUTPUT_WAYS = "ways_out";
+	private static final String OPTION_FILE_NAMES_OUTPUT_NODES = "nodes_out";
 
 	@Override
 	protected String getHelpMessage()
@@ -92,7 +94,8 @@ public class DistributeWays extends AbstractTask
 	private String fileNamesNodes1;
 	private String fileNamesNodes2;
 	private String fileNamesWays;
-	private String fileNamesWaysIntersecting;
+	private String fileNamesOutputWays;
+	private String fileNamesOutputNodes;
 
 	private FileFormat inputFormatNodes;
 	private FileFormat inputFormatWays;
@@ -110,7 +113,8 @@ public class DistributeWays extends AbstractTask
 		OptionHelper.add(options, OPTION_INPUT_FORMAT, true, true, "the file format of the input");
 		OptionHelper.add(options, OPTION_TREE, true, true, "tree directory to work on");
 		OptionHelper.add(options, OPTION_OUTPUT_FORMAT, true, true, "the file format of the output");
-		OptionHelper.add(options, OPTION_FILE_NAMES_INTERSECTING_WAYS, true, true, "name of intersecting ways files");
+		OptionHelper.add(options, OPTION_FILE_NAMES_OUTPUT_WAYS, true, true, "name of files for intersecting ways");
+		OptionHelper.add(options, OPTION_FILE_NAMES_OUTPUT_NODES, true, true, "name of files for intersecting ways' nodes");
 		PbfOptions.add(options);
 		TboOptions.add(options);
 		// @formatter:on
@@ -147,8 +151,10 @@ public class DistributeWays extends AbstractTask
 		fileNamesNodes1 = line.getOptionValue(OPTION_FILE_NAMES_NODES1);
 		fileNamesNodes2 = line.getOptionValue(OPTION_FILE_NAMES_NODES2);
 		fileNamesWays = line.getOptionValue(OPTION_FILE_NAMES_WAYS);
-		fileNamesWaysIntersecting = line
-				.getOptionValue(OPTION_FILE_NAMES_INTERSECTING_WAYS);
+		fileNamesOutputWays = line
+				.getOptionValue(OPTION_FILE_NAMES_OUTPUT_WAYS);
+		fileNamesOutputNodes = line
+				.getOptionValue(OPTION_FILE_NAMES_OUTPUT_NODES);
 
 		pathTree = line.getOptionValue(OPTION_TREE);
 	}
@@ -156,7 +162,8 @@ public class DistributeWays extends AbstractTask
 	private DataTree tree;
 	private File dirTree;
 	private List<Node> leafs;
-	private Map<Node, Output> outputsIntersectingWays = new HashMap<>();
+	private Map<Node, Output> outputsWays = new HashMap<>();
+	private Map<Node, Output> outputsNodes = new HashMap<>();
 
 	private long counter = 0;
 	private long noneFound = 0;
@@ -165,6 +172,7 @@ public class DistributeWays extends AbstractTask
 	private long start = System.currentTimeMillis();
 
 	private NumberFormat format = NumberFormat.getNumberInstance(Locale.US);
+	private ClosingFileOutputStreamFactory factory = new SimpleClosingFileOutputStreamFactory();
 
 	public void prepare() throws IOException
 	{
@@ -172,20 +180,26 @@ public class DistributeWays extends AbstractTask
 		dirTree = new File(pathTree);
 		leafs = tree.getLeafs();
 
-		DataTreeFiles filesWaysIntersecting = new DataTreeFiles(dirTree,
-				fileNamesWaysIntersecting);
-
-		ClosingFileOutputStreamFactory factory = new SimpleClosingFileOutputStreamFactory();
+		DataTreeFiles filesWays = new DataTreeFiles(dirTree,
+				fileNamesOutputWays);
+		DataTreeFiles filesNodes = new DataTreeFiles(dirTree,
+				fileNamesOutputNodes);
 
 		for (Node leaf : leafs) {
-			File file = filesWaysIntersecting.getFile(leaf);
-			OutputStream output = factory.create(file);
-			output = new BufferedOutputStream(output);
-			OsmOutputStream osmOutput = OsmIoUtils.setupOsmOutput(output,
-					outputFormat, writeMetadata, pbfConfig, tboConfig);
-			outputsIntersectingWays.put(leaf, new Output(file.toPath(), output,
-					osmOutput));
+			Output outputWays = createOutput(filesWays.getFile(leaf));
+			outputsWays.put(leaf, outputWays);
+			Output outputNodes = createOutput(filesNodes.getFile(leaf));
+			outputsNodes.put(leaf, outputNodes);
 		}
+	}
+
+	private Output createOutput(File file) throws IOException
+	{
+		OutputStream output = factory.create(file);
+		output = new BufferedOutputStream(output);
+		OsmOutputStream osmOutput = OsmIoUtils.setupOsmOutput(output,
+				outputFormat, writeMetadata, pbfConfig, tboConfig);
+		return new Output(file.toPath(), output, osmOutput);
 	}
 
 	public void execute() throws IOException
@@ -259,7 +273,11 @@ public class DistributeWays extends AbstractTask
 			stats(i);
 		}
 
-		for (Output output : outputsIntersectingWays.values()) {
+		for (Output output : outputsWays.values()) {
+			output.getOsmOutput().complete();
+			output.getOutputStream().close();
+		}
+		for (Output output : outputsNodes.values()) {
 			output.getOsmOutput().complete();
 			output.getOutputStream().close();
 		}
@@ -268,11 +286,13 @@ public class DistributeWays extends AbstractTask
 	private void build(Node leaf, OsmWay way,
 			UnionOsmEntityProvider entityProvider) throws IOException
 	{
+		TLongObjectMap<OsmNode> nodes = new TLongObjectHashMap<>();
 		List<Node> leafs;
 		if (way.getNumberOfNodes() == 1) {
 			try {
 				long nodeId = way.getNodeId(0);
 				OsmNode node = entityProvider.getNode(nodeId);
+				nodes.put(nodeId, node);
 				leafs = tree.query(node.getLongitude(), node.getLatitude());
 			} catch (EntityNotFoundException e) {
 				System.out.println("Entity not found while building way: "
@@ -282,6 +302,7 @@ public class DistributeWays extends AbstractTask
 		} else {
 			try {
 				LineString line = GeometryBuilder.build(way, entityProvider);
+				putNodes(way, nodes, entityProvider);
 				leafs = tree.query(line);
 			} catch (EntityNotFoundException e) {
 				System.out.println("Entity not found while building way: "
@@ -291,8 +312,12 @@ public class DistributeWays extends AbstractTask
 		}
 
 		for (Node ileaf : leafs) {
-			if (ileaf != leaf) {
-				outputsIntersectingWays.get(ileaf).getOsmOutput().write(way);
+			if (ileaf == leaf) {
+				continue;
+			}
+			outputsWays.get(ileaf).getOsmOutput().write(way);
+			for (OsmNode node : nodes.valueCollection()) {
+				outputsNodes.get(ileaf).getOsmOutput().write(node);
 			}
 		}
 
@@ -301,6 +326,16 @@ public class DistributeWays extends AbstractTask
 		}
 
 		counter++;
+	}
+
+	private void putNodes(OsmWay way, TLongObjectMap<OsmNode> nodes,
+			UnionOsmEntityProvider entityProvider)
+			throws EntityNotFoundException
+	{
+		for (int i = 0; i < way.getNumberOfNodes(); i++) {
+			long nodeId = way.getNodeId(i);
+			nodes.put(nodeId, entityProvider.getNode(nodeId));
+		}
 	}
 
 	private void stats(int leafsDone)
