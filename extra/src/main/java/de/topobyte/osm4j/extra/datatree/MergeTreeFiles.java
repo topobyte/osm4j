@@ -48,6 +48,7 @@ public class MergeTreeFiles extends AbstractTask
 	private static final String OPTION_FILE_NAMES_UNSORTED = "input_unsorted";
 	private static final String OPTION_OUTPUT_FORMAT = "output_format";
 	private static final String OPTION_FILE_NAMES_OUTPUT = "output";
+	private static final String OPTION_DELETE = "delete";
 
 	@Override
 	protected String getHelpMessage()
@@ -77,6 +78,7 @@ public class MergeTreeFiles extends AbstractTask
 	private PbfConfig pbfConfig;
 	private TboConfig tboConfig;
 	private boolean writeMetadata = true;
+	private boolean deleteInput;
 
 	public MergeTreeFiles()
 	{
@@ -87,6 +89,7 @@ public class MergeTreeFiles extends AbstractTask
 		OptionHelper.add(options, OPTION_TREE, true, true, "tree directory to work on");
 		OptionHelper.add(options, OPTION_OUTPUT_FORMAT, true, true, "the file format of the output");
 		OptionHelper.add(options, OPTION_FILE_NAMES_OUTPUT, true, true, "name of files for merged data");
+		OptionHelper.add(options, OPTION_DELETE, false, false, "delete input files");
 		PbfOptions.add(options);
 		TboOptions.add(options);
 		// @formatter:on
@@ -141,6 +144,7 @@ public class MergeTreeFiles extends AbstractTask
 			System.exit(1);
 		}
 
+		deleteInput = line.hasOption(OPTION_DELETE);
 	}
 
 	private DataTree tree;
@@ -166,12 +170,15 @@ public class MergeTreeFiles extends AbstractTask
 			System.out.println(String.format("Processing leaf %d/%d", ++i,
 					leafs.size()));
 
+			List<File> inputFiles = new ArrayList<>();
 			List<InputStream> inputs = new ArrayList<>();
 			List<OsmIterator> osmInputs = new ArrayList<>();
 
 			for (String fileName : fileNamesSorted) {
 				DataTreeFiles files = new DataTreeFiles(dirTree, fileName);
 				File file = files.getFile(leaf);
+				inputFiles.add(file);
+
 				InputStream input = StreamUtil.bufferedInputStream(file);
 				inputs.add(input);
 
@@ -183,6 +190,8 @@ public class MergeTreeFiles extends AbstractTask
 			for (String fileName : fileNamesUnsorted) {
 				DataTreeFiles files = new DataTreeFiles(dirTree, fileName);
 				File file = files.getFile(leaf);
+				inputFiles.add(file);
+
 				InputStream input = StreamUtil.bufferedInputStream(file);
 				inputs.add(input);
 
@@ -206,6 +215,12 @@ public class MergeTreeFiles extends AbstractTask
 				input.close();
 			}
 			output.close();
+
+			if (deleteInput) {
+				for (File file : inputFiles) {
+					file.delete();
+				}
+			}
 
 			stats(i);
 		}
