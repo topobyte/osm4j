@@ -17,37 +17,21 @@
 
 package de.topobyte.osm4j.utils.merge.sorted;
 
-import gnu.trove.set.TIntSet;
-import gnu.trove.set.hash.TIntHashSet;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import org.junit.Assert;
 import org.junit.Test;
 
 import de.topobyte.osm4j.core.access.OsmIterator;
-import de.topobyte.osm4j.testing.DataSetGenerator;
 import de.topobyte.osm4j.testing.DataSetHelper;
-import de.topobyte.osm4j.testing.EntityGenerator;
 import de.topobyte.osm4j.testing.TestDataSet;
 import de.topobyte.osm4j.testing.TestDataSetIterator;
 import de.topobyte.osm4j.testing.TestDataSetOutputStream;
-import de.topobyte.osm4j.testing.model.TestNode;
-import de.topobyte.osm4j.testing.model.TestRelation;
-import de.topobyte.osm4j.testing.model.TestWay;
 
-public class TestSortedMerge
+public class TestSortedMerge extends BaseTest
 {
-
-	private Random random = new Random();
-	private EntityGenerator entityGenerator;
-	private DataSetGenerator dataSetGenerator;
-	private TestDataSet data;
-
-	private List<TestDataSet> dataSets;
 
 	@Test
 	public void test() throws IOException
@@ -83,53 +67,6 @@ public class TestSortedMerge
 		Assert.assertEquals(data.getRelations().size(), merged.getRelations()
 				.size());
 		Assert.assertTrue(DataSetHelper.equals(data, merged));
-	}
-
-	public void setup(int numNodes, int numWays, int numRelations,
-			int numFiles, double p) throws IOException
-	{
-		dataSets = new ArrayList<>();
-
-		// Generate some data
-		entityGenerator = new EntityGenerator(10, true);
-		dataSetGenerator = new DataSetGenerator(entityGenerator);
-		data = dataSetGenerator.generate(numNodes, numWays, numRelations);
-
-		// Create some data sets
-		for (int i = 0; i < numFiles; i++) {
-			dataSets.add(new TestDataSet());
-		}
-
-		// Build separate data sets from the generated one, with data overlap
-		for (TestNode n : data.getNodes()) {
-			for (int i : pick(numFiles, p)) {
-				dataSets.get(i).getNodes().add(n);
-			}
-		}
-		for (TestWay w : data.getWays()) {
-			for (int i : pick(numFiles, p)) {
-				dataSets.get(i).getWays().add(w);
-			}
-		}
-		for (TestRelation r : data.getRelations()) {
-			for (int i : pick(numFiles, p)) {
-				dataSets.get(i).getRelations().add(r);
-			}
-		}
-	}
-
-	private int[] pick(int n, double p)
-	{
-		TIntSet set = new TIntHashSet();
-		// Pick at least one of the numbers
-		set.add(random.nextInt(n));
-		// And add some additional ones randomly
-		for (int i = 0; i < n; i++) {
-			if (random.nextDouble() > p) {
-				set.add(i);
-			}
-		}
-		return set.toArray();
 	}
 
 }
