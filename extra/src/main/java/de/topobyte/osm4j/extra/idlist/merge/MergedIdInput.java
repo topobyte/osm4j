@@ -20,34 +20,61 @@ package de.topobyte.osm4j.extra.idlist.merge;
 import java.io.EOFException;
 import java.io.IOException;
 import java.util.Collection;
+import java.util.PriorityQueue;
 
 import de.topobyte.osm4j.extra.idlist.IdInput;
-import de.topobyte.osm4j.extra.idlist.IdListOutputStream;
 
-public class IdListMerger
+public class MergedIdInput implements IdInput
 {
 
-	private IdListOutputStream output;
 	private Collection<IdInput> inputs;
 
-	public IdListMerger(IdListOutputStream output, Collection<IdInput> inputs)
-	{
-		this.output = output;
-		this.inputs = inputs;
-	}
+	private PriorityQueue<MergeInput> queue;
 
-	public void execute() throws IOException
+	public MergedIdInput(Collection<IdInput> inputs) throws IOException
 	{
-		IdInput idInput = new MergedIdInput(inputs);
-		while (true) {
+		this.inputs = inputs;
+
+		queue = new PriorityQueue<>(inputs.size(), new MergeInputComparator());
+
+		for (IdInput input : inputs) {
 			try {
-				long next = idInput.next();
-				output.write(next);
+				MergeInput mergeInput = new MergeInput(input);
+				queue.add(mergeInput);
 			} catch (EOFException e) {
-				break;
+				continue;
 			}
 		}
-		output.close();
+	}
+
+	private long last = 0;
+
+	@Override
+	public long next() throws IOException
+	{
+		while (!queue.isEmpty()) {
+			MergeInput input = queue.poll();
+			long next = input.getNext();
+			try {
+				input.next();
+				queue.add(input);
+			} catch (EOFException e) {
+				input.close();
+			}
+			if (last != next) {
+				last = next;
+				return next;
+			}
+		}
+		throw new EOFException();
+	}
+
+	@Override
+	public void close() throws IOException
+	{
+		for (IdInput input : inputs) {
+			input.close();
+		}
 	}
 
 }

@@ -19,18 +19,18 @@ package de.topobyte.osm4j.extra.idlist.merge;
 
 import java.io.IOException;
 
-import de.topobyte.osm4j.extra.idlist.IdListInputStream;
+import de.topobyte.osm4j.extra.idlist.IdInput;
 
 class MergeInput
 {
 
 	private long next;
-	private IdListInputStream input;
+	private IdInput input;
 
-	public MergeInput(IdListInputStream input) throws IOException
+	public MergeInput(IdInput input) throws IOException
 	{
 		this.input = input;
-		next = input.read();
+		next = input.next();
 	}
 
 	public long getNext()
@@ -40,7 +40,7 @@ class MergeInput
 
 	public void next() throws IOException
 	{
-		next = input.read();
+		next = input.next();
 	}
 
 	public void close() throws IOException

@@ -22,25 +22,25 @@ import java.io.OutputStream;
 
 import de.topobyte.osm4j.core.access.OsmOutputStream;
 import de.topobyte.osm4j.extra.entitywriter.EntityWriter;
-import de.topobyte.osm4j.extra.idlist.IdListInputStream;
+import de.topobyte.osm4j.extra.idlist.IdInput;
 
 class Item
 {
 
 	private long next;
-	private IdListInputStream input;
+	private IdInput input;
 	private OutputStream output;
 	private OsmOutputStream osmOutput;
 	private EntityWriter writer;
 
-	public Item(IdListInputStream input, OutputStream output,
-			OsmOutputStream osmOutput, EntityWriter writer) throws IOException
+	public Item(IdInput input, OutputStream output, OsmOutputStream osmOutput,
+			EntityWriter writer) throws IOException
 	{
 		this.input = input;
 		this.output = output;
 		this.osmOutput = osmOutput;
 		this.writer = writer;
-		next = input.read();
+		next = input.next();
 	}
 
 	public long getNext()
@@ -50,7 +50,7 @@ class Item
 
 	public void next() throws IOException
 	{
-		next = input.read();
+		next = input.next();
 	}
 
 	public void close() throws IOException

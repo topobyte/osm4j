@@ -33,7 +33,7 @@ class IdInput
 	{
 		this.node = node;
 		this.input = input;
-		next = input.read();
+		next = input.next();
 	}
 
 	public Node getNode()
@@ -48,7 +48,7 @@ class IdInput
 
 	public void next() throws IOException
 	{
-		next = input.read();
+		next = input.next();
 	}
 
 	public void close() throws IOException

@@ -23,7 +23,7 @@ import java.io.InputStream;
 import de.topobyte.compactio.CompactReader;
 import de.topobyte.compactio.InputStreamCompactReader;
 
-public class IdListInputStream
+public class IdListInputStream implements IdInput
 {
 
 	private InputStream input;
@@ -37,12 +37,14 @@ public class IdListInputStream
 		reader = new InputStreamCompactReader(input);
 	}
 
+	@Override
 	public void close() throws IOException
 	{
 		input.close();
 	}
 
-	public long read() throws IOException
+	@Override
+	public long next() throws IOException
 	{
 		long diff = reader.readVariableLengthUnsignedInteger();
 		long id = last + diff;
