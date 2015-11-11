@@ -44,6 +44,7 @@ import de.topobyte.osm4j.extra.datatree.DataTreeFiles;
 import de.topobyte.osm4j.extra.datatree.DataTreeOpener;
 import de.topobyte.osm4j.extra.datatree.Node;
 import de.topobyte.osm4j.extra.progress.NodeProgress;
+import de.topobyte.osm4j.extra.ways.WayNodeIdComparator;
 import de.topobyte.osm4j.utils.AbstractTaskSingleInputFile;
 import de.topobyte.osm4j.utils.FileFormat;
 import de.topobyte.osm4j.utils.OsmIoUtils;
