@@ -33,21 +33,15 @@ import de.topobyte.osm4j.core.model.iface.OsmRelation;
 import de.topobyte.osm4j.core.model.iface.OsmWay;
 import de.topobyte.osm4j.pbf.seq.PbfWriter;
 import de.topobyte.osm4j.tbo.access.TboWriter;
-import de.topobyte.osm4j.utils.AbstractTaskSingleInputIterator;
-import de.topobyte.osm4j.utils.FileFormat;
-import de.topobyte.osm4j.utils.config.PbfConfig;
-import de.topobyte.osm4j.utils.config.PbfOptions;
-import de.topobyte.osm4j.utils.config.TboConfig;
-import de.topobyte.osm4j.utils.config.TboOptions;
+import de.topobyte.osm4j.utils.AbstractTaskSingleInputIteratorOutput;
 import de.topobyte.osm4j.xml.output.OsmXmlOutputStream;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
-public class OsmEntitySplit extends AbstractTaskSingleInputIterator
+public class OsmEntitySplit extends AbstractTaskSingleInputIteratorOutput
 {
 
 	final static Logger logger = LoggerFactory.getLogger(OsmEntitySplit.class);
 
-	private static final String OPTION_OUTPUT_FORMAT = "output_format";
 	private static final String OPTION_OUTPUT_NODES = "output_nodes";
 	private static final String OPTION_OUTPUT_WAYS = "output_ways";
 	private static final String OPTION_OUTPUT_RELATIONS = "output_relations";
@@ -70,12 +64,6 @@ public class OsmEntitySplit extends AbstractTaskSingleInputIterator
 		task.finish();
 	}
 
-	protected boolean writeMetadata = true;
-
-	private FileFormat outputFormat;
-	private PbfConfig pbfConfig;
-	private TboConfig tboConfig;
-
 	private boolean passNodes = false;
 	private boolean passWays = false;
 	private boolean passRelations = false;
@@ -95,12 +83,9 @@ public class OsmEntitySplit extends AbstractTaskSingleInputIterator
 	public OsmEntitySplit()
 	{
 		// @formatter:off
-		OptionHelper.add(options, OPTION_OUTPUT_FORMAT, true, true, "the file format of the output");
 		OptionHelper.add(options, OPTION_OUTPUT_NODES, true, false, "the file to write nodes to");
 		OptionHelper.add(options, OPTION_OUTPUT_WAYS, true, false, "the file to write ways to");
 		OptionHelper.add(options, OPTION_OUTPUT_RELATIONS, true, false, "the file to write relations to");
-		PbfOptions.add(options);
-		TboOptions.add(options);
 		// @formatter:on
 	}
 
@@ -108,18 +93,6 @@ public class OsmEntitySplit extends AbstractTaskSingleInputIterator
 	public void setup(String[] args)
 	{
 		super.setup(args);
-
-		String outputFormatName = line.getOptionValue(OPTION_OUTPUT_FORMAT);
-		outputFormat = FileFormat.parseFileFormat(outputFormatName);
-		if (outputFormat == null) {
-			System.out.println("invalid output format");
-			System.out.println("please specify one of: "
-					+ FileFormat.getHumanReadableListOfSupportedFormats());
-			System.exit(1);
-		}
-
-		pbfConfig = PbfOptions.parse(line);
-		tboConfig = TboOptions.parse(line);
 
 		if (line.hasOption(OPTION_OUTPUT_NODES)) {
 			passNodes = true;
