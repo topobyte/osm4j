@@ -24,6 +24,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.PriorityQueue;
@@ -39,7 +40,9 @@ import de.topobyte.osm4j.core.model.iface.EntityType;
 import de.topobyte.osm4j.core.model.iface.OsmEntity;
 import de.topobyte.osm4j.extra.entitywriter.EntityWriter;
 import de.topobyte.osm4j.extra.entitywriter.EntityWriters;
+import de.topobyte.osm4j.extra.idlist.IdInput;
 import de.topobyte.osm4j.extra.idlist.IdListInputStream;
+import de.topobyte.osm4j.extra.idlist.merge.MergedIdInput;
 import de.topobyte.osm4j.extra.progress.NodeProgress;
 import de.topobyte.osm4j.utils.FileFormat;
 import de.topobyte.osm4j.utils.OsmIoUtils;
@@ -82,10 +85,22 @@ public class Extractor
 
 		for (ExtractionItem configItem : extractionItems) {
 			// Input
-			File fileIds = configItem.getPathIds().toFile();
-			InputStream inputIds = factoryIn.create(fileIds);
-			inputIds = new BufferedInputStream(inputIds);
-			IdListInputStream idInput = new IdListInputStream(inputIds);
+			IdInput idInput;
+			List<Path> pathsIds = configItem.getPathsIds();
+			if (pathsIds.size() == 1) {
+				File fileIds = pathsIds.get(0).toFile();
+				InputStream inputIds = factoryIn.create(fileIds);
+				inputIds = new BufferedInputStream(inputIds);
+				idInput = new IdListInputStream(inputIds);
+			} else {
+				List<IdInput> idInputs = new ArrayList<>();
+				for (Path path : pathsIds) {
+					InputStream inputIds = factoryIn.create(path.toFile());
+					inputIds = new BufferedInputStream(inputIds);
+					idInputs.add(new IdListInputStream(inputIds));
+				}
+				idInput = new MergedIdInput(idInputs);
+			}
 
 			// Output
 			File fileOutput = configItem.getPathOutput().toFile();

@@ -18,22 +18,31 @@
 package de.topobyte.osm4j.extra.idextract;
 
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ExtractionItem
 {
 
-	private Path pathIds;
+	private List<Path> pathsIds;
 	private Path pathOutput;
 
 	public ExtractionItem(Path pathIds, Path pathOutput)
 	{
-		this.pathIds = pathIds;
+		this.pathsIds = new ArrayList<>();
+		pathsIds.add(pathIds);
 		this.pathOutput = pathOutput;
 	}
 
-	public Path getPathIds()
+	public ExtractionItem(List<Path> pathIds, Path pathOutput)
 	{
-		return pathIds;
+		this.pathsIds = pathIds;
+		this.pathOutput = pathOutput;
+	}
+
+	public List<Path> getPathsIds()
+	{
+		return pathsIds;
 	}
 
 	public Path getPathOutput()

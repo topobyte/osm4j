@@ -56,7 +56,7 @@ public class ExtractEntities extends AbstractTaskSingleInputIteratorOutput
 
 	private String pathDirectory;
 
-	private String fileNamesIds;
+	private String[] fileNamesIds;
 	private String fileNamesOutput;
 
 	private EntityType type;
@@ -78,7 +78,7 @@ public class ExtractEntities extends AbstractTaskSingleInputIteratorOutput
 
 		pathDirectory = line.getOptionValue(OPTION_DIRECTORY);
 
-		fileNamesIds = line.getOptionValue(OPTION_FILE_NAMES_IDS);
+		fileNamesIds = line.getOptionValues(OPTION_FILE_NAMES_IDS);
 		fileNamesOutput = line.getOptionValue(OPTION_FILE_NAMES_OUTPUT);
 
 		String argType = line.getOptionValue(OPTION_TYPE);
@@ -112,22 +112,27 @@ public class ExtractEntities extends AbstractTaskSingleInputIteratorOutput
 
 		subdirs = new ArrayList<>();
 		File[] subs = dirData.toFile().listFiles();
-		for (File sub : subs) {
+		sub: for (File sub : subs) {
 			if (!sub.isDirectory()) {
 				continue;
 			}
 			Path subPath = sub.toPath();
-			Path relations = subPath.resolve(fileNamesIds);
-			if (!Files.exists(relations)) {
-				continue;
+			for (String fileNameIds : fileNamesIds) {
+				Path ids = subPath.resolve(fileNameIds);
+				if (!Files.exists(ids)) {
+					continue sub;
+				}
 			}
 			subdirs.add(subPath);
 		}
 
 		for (Path subdir : subdirs) {
-			Path pathIds = subdir.resolve(fileNamesIds);
+			List<Path> pathsIds = new ArrayList<>();
+			for (String fileNameIds : fileNamesIds) {
+				pathsIds.add(subdir.resolve(fileNameIds));
+			}
 			Path pathOutput = subdir.resolve(fileNamesOutput);
-			extractionItems.add(new ExtractionItem(pathIds, pathOutput));
+			extractionItems.add(new ExtractionItem(pathsIds, pathOutput));
 		}
 	}
 
