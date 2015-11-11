@@ -44,16 +44,15 @@ import de.topobyte.osm4j.extra.datatree.DataTreeFiles;
 import de.topobyte.osm4j.extra.datatree.DataTreeOpener;
 import de.topobyte.osm4j.extra.datatree.Node;
 import de.topobyte.osm4j.extra.idlist.IdListOutputStream;
-import de.topobyte.osm4j.utils.AbstractTask;
+import de.topobyte.osm4j.utils.AbstractTaskInput;
 import de.topobyte.osm4j.utils.FileFormat;
 import de.topobyte.osm4j.utils.OsmIoUtils;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
-public class FindMissingWayNodes extends AbstractTask
+public class FindMissingWayNodes extends AbstractTaskInput
 {
 
 	private static final String OPTION_TREE = "tree";
-	private static final String OPTION_INPUT_FORMAT = "input_format";
 	private static final String OPTION_FILE_NAMES_NODES = "nodes";
 	private static final String OPTION_FILE_NAMES_WAYS = "ways";
 	private static final String OPTION_FILE_NAMES_OUTPUT = "output";
@@ -90,7 +89,6 @@ public class FindMissingWayNodes extends AbstractTask
 		OptionHelper.add(options, OPTION_FILE_NAMES_OUTPUT, true, true, "names of the data files to create");
 		OptionHelper.add(options, OPTION_FILE_NAMES_NODES, true, true, "names of the node files in the tree");
 		OptionHelper.add(options, OPTION_FILE_NAMES_WAYS, true, true, "names of the way files in the tree");
-		OptionHelper.add(options, OPTION_INPUT_FORMAT, true, true, "the file format of the input");
 		OptionHelper.add(options, OPTION_TREE, true, true, "tree directory to work on");
 		// @formatter:on
 	}
@@ -100,14 +98,6 @@ public class FindMissingWayNodes extends AbstractTask
 	{
 		super.setup(args);
 
-		String inputFormatName = line.getOptionValue(OPTION_INPUT_FORMAT);
-		FileFormat inputFormat = FileFormat.parseFileFormat(inputFormatName);
-		if (inputFormat == null) {
-			System.out.println("invalid input format");
-			System.out.println("please specify one of: "
-					+ FileFormat.getHumanReadableListOfSupportedFormats());
-			System.exit(1);
-		}
 		inputFormatNodes = inputFormat;
 		inputFormatWays = inputFormat;
 

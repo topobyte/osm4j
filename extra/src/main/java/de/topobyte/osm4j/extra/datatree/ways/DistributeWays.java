@@ -51,7 +51,7 @@ import de.topobyte.osm4j.extra.datatree.DataTreeFiles;
 import de.topobyte.osm4j.extra.datatree.DataTreeOpener;
 import de.topobyte.osm4j.extra.datatree.Node;
 import de.topobyte.osm4j.geometry.GeometryBuilder;
-import de.topobyte.osm4j.utils.AbstractTask;
+import de.topobyte.osm4j.utils.AbstractTaskInput;
 import de.topobyte.osm4j.utils.FileFormat;
 import de.topobyte.osm4j.utils.OsmIoUtils;
 import de.topobyte.osm4j.utils.config.PbfConfig;
@@ -60,11 +60,10 @@ import de.topobyte.osm4j.utils.config.TboConfig;
 import de.topobyte.osm4j.utils.config.TboOptions;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
-public class DistributeWays extends AbstractTask
+public class DistributeWays extends AbstractTaskInput
 {
 
 	private static final String OPTION_TREE = "tree";
-	private static final String OPTION_INPUT_FORMAT = "input_format";
 	private static final String OPTION_FILE_NAMES_NODES1 = "nodes1";
 	private static final String OPTION_FILE_NAMES_NODES2 = "nodes2";
 	private static final String OPTION_FILE_NAMES_WAYS = "ways";
@@ -110,7 +109,6 @@ public class DistributeWays extends AbstractTask
 		OptionHelper.add(options, OPTION_FILE_NAMES_NODES1, true, true, "names of the node files in the tree");
 		OptionHelper.add(options, OPTION_FILE_NAMES_NODES2, true, true, "names of the node files in the tree");
 		OptionHelper.add(options, OPTION_FILE_NAMES_WAYS, true, true, "names of the way files in the tree");
-		OptionHelper.add(options, OPTION_INPUT_FORMAT, true, true, "the file format of the input");
 		OptionHelper.add(options, OPTION_TREE, true, true, "tree directory to work on");
 		OptionHelper.add(options, OPTION_OUTPUT_FORMAT, true, true, "the file format of the output");
 		OptionHelper.add(options, OPTION_FILE_NAMES_OUTPUT_WAYS, true, true, "name of files for intersecting ways");
@@ -125,14 +123,6 @@ public class DistributeWays extends AbstractTask
 	{
 		super.setup(args);
 
-		String inputFormatName = line.getOptionValue(OPTION_INPUT_FORMAT);
-		FileFormat inputFormat = FileFormat.parseFileFormat(inputFormatName);
-		if (inputFormat == null) {
-			System.out.println("invalid input format");
-			System.out.println("please specify one of: "
-					+ FileFormat.getHumanReadableListOfSupportedFormats());
-			System.exit(1);
-		}
 		inputFormatNodes = inputFormat;
 		inputFormatWays = inputFormat;
 

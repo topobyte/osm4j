@@ -39,16 +39,15 @@ import de.topobyte.osm4j.core.model.iface.OsmRelationMember;
 import de.topobyte.osm4j.core.model.util.OsmModelUtil;
 import de.topobyte.osm4j.extra.StreamUtil;
 import de.topobyte.osm4j.extra.idlist.IdListOutputStream;
-import de.topobyte.osm4j.utils.AbstractTask;
+import de.topobyte.osm4j.utils.AbstractTaskInput;
 import de.topobyte.osm4j.utils.FileFormat;
 import de.topobyte.osm4j.utils.OsmIoUtils;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
-public class ExtractMemberIds extends AbstractTask
+public class ExtractMemberIds extends AbstractTaskInput
 {
 
 	private static final String OPTION_DIRECTORY = "directory";
-	private static final String OPTION_INPUT_FORMAT = "input_format";
 	private static final String OPTION_FILE_NAMES_RELATIONS = "relations";
 	private static final String OPTION_FILE_NAMES_NODE_IDS = "node_ids";
 	private static final String OPTION_FILE_NAMES_WAY_IDS = "way_ids";
@@ -84,7 +83,6 @@ public class ExtractMemberIds extends AbstractTask
 	{
 		// @formatter:off
 		OptionHelper.add(options, OPTION_DIRECTORY, true, true, "directory to store output in");
-		OptionHelper.add(options, OPTION_INPUT_FORMAT, true, true, "the file format of the input");
 		OptionHelper.add(options, OPTION_FILE_NAMES_RELATIONS, true, true, "names of the relation files in each directory");
 		OptionHelper.add(options, OPTION_FILE_NAMES_NODE_IDS, true, true, "names of the node id files in each directory");
 		OptionHelper.add(options, OPTION_FILE_NAMES_WAY_IDS, true, true, "names of the way id files in each directory");
@@ -95,15 +93,6 @@ public class ExtractMemberIds extends AbstractTask
 	protected void setup(String[] args)
 	{
 		super.setup(args);
-
-		String inputFormatName = line.getOptionValue(OPTION_INPUT_FORMAT);
-		inputFormat = FileFormat.parseFileFormat(inputFormatName);
-		if (inputFormat == null) {
-			System.out.println("invalid input format");
-			System.out.println("please specify one of: "
-					+ FileFormat.getHumanReadableListOfSupportedFormats());
-			System.exit(1);
-		}
 
 		pathData = line.getOptionValue(OPTION_DIRECTORY);
 
