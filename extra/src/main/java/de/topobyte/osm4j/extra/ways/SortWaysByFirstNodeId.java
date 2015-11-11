@@ -34,20 +34,15 @@ import de.topobyte.osm4j.core.model.iface.EntityContainer;
 import de.topobyte.osm4j.core.model.iface.EntityType;
 import de.topobyte.osm4j.core.model.iface.OsmWay;
 import de.topobyte.osm4j.extra.StreamUtil;
-import de.topobyte.osm4j.utils.AbstractTaskSingleInputIterator;
-import de.topobyte.osm4j.utils.FileFormat;
+import de.topobyte.osm4j.utils.AbstractTaskSingleInputIteratorOutput;
 import de.topobyte.osm4j.utils.OsmIoUtils;
-import de.topobyte.osm4j.utils.config.PbfConfig;
-import de.topobyte.osm4j.utils.config.PbfOptions;
-import de.topobyte.osm4j.utils.config.TboConfig;
-import de.topobyte.osm4j.utils.config.TboOptions;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
-public class SortWaysByFirstNodeId extends AbstractTaskSingleInputIterator
+public class SortWaysByFirstNodeId extends
+		AbstractTaskSingleInputIteratorOutput
 {
 
 	private static final String OPTION_OUTPUT = "output";
-	private static final String OPTION_OUTPUT_FORMAT = "output_format";
 
 	@Override
 	protected String getHelpMessage()
@@ -69,20 +64,12 @@ public class SortWaysByFirstNodeId extends AbstractTaskSingleInputIterator
 	}
 
 	protected String pathOutput;
-	protected FileFormat outputFormat;
-	protected PbfConfig pbfConfig;
-	protected TboConfig tboConfig;
-	protected boolean writeMetadata = true;
-
 	protected Path dirOutput;
 
 	public SortWaysByFirstNodeId()
 	{
 		// @formatter:off
-		OptionHelper.add(options, OPTION_OUTPUT_FORMAT, true, true, "the file format of the output");
 		OptionHelper.add(options, OPTION_OUTPUT, true, true, "directory to store output in");
-		PbfOptions.add(options);
-		TboOptions.add(options);
 		// @formatter:on
 	}
 
@@ -90,18 +77,6 @@ public class SortWaysByFirstNodeId extends AbstractTaskSingleInputIterator
 	protected void setup(String[] args)
 	{
 		super.setup(args);
-
-		String outputFormatName = line.getOptionValue(OPTION_OUTPUT_FORMAT);
-		outputFormat = FileFormat.parseFileFormat(outputFormatName);
-		if (outputFormat == null) {
-			System.out.println("invalid output format");
-			System.out.println("please specify one of: "
-					+ FileFormat.getHumanReadableListOfSupportedFormats());
-			System.exit(1);
-		}
-
-		pbfConfig = PbfOptions.parse(line);
-		tboConfig = TboOptions.parse(line);
 
 		pathOutput = line.getOptionValue(OPTION_OUTPUT);
 	}

@@ -45,24 +45,18 @@ import de.topobyte.osm4j.extra.datatree.DataTreeOpener;
 import de.topobyte.osm4j.extra.datatree.Node;
 import de.topobyte.osm4j.extra.progress.NodeProgress;
 import de.topobyte.osm4j.extra.ways.WayNodeIdComparator;
-import de.topobyte.osm4j.utils.AbstractTaskSingleInputFile;
-import de.topobyte.osm4j.utils.FileFormat;
+import de.topobyte.osm4j.utils.AbstractTaskSingleInputFileOutput;
 import de.topobyte.osm4j.utils.OsmIoUtils;
-import de.topobyte.osm4j.utils.config.PbfConfig;
-import de.topobyte.osm4j.utils.config.PbfOptions;
-import de.topobyte.osm4j.utils.config.TboConfig;
-import de.topobyte.osm4j.utils.config.TboOptions;
 import de.topobyte.osm4j.utils.merge.sorted.SortedMergeIterator;
 import de.topobyte.osm4j.utils.sort.IdComparator;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
-public class MapWaysToTree extends AbstractTaskSingleInputFile
+public class MapWaysToTree extends AbstractTaskSingleInputFileOutput
 {
 
 	private static final String OPTION_TREE = "tree";
 	private static final String OPTION_WAYS = "ways";
 	private static final String OPTION_FILE_NAMES_OUTPUT = "output";
-	private static final String OPTION_OUTPUT_FORMAT = "output_format";
 
 	@Override
 	protected String getHelpMessage()
@@ -86,20 +80,12 @@ public class MapWaysToTree extends AbstractTaskSingleInputFile
 
 	private String fileNamesOutput;
 
-	private FileFormat outputFormat;
-	private PbfConfig pbfConfig;
-	private TboConfig tboConfig;
-	private boolean writeMetadata = true;
-
 	public MapWaysToTree()
 	{
 		// @formatter:off
 		OptionHelper.add(options, OPTION_FILE_NAMES_OUTPUT, true, true, "names of the data files to create");
-		OptionHelper.add(options, OPTION_OUTPUT_FORMAT, true, true, "the file format of the output");
 		OptionHelper.add(options, OPTION_WAYS, true, true, "directory with ways sorted by first node id");
 		OptionHelper.add(options, OPTION_TREE, true, true, "tree directory to work on");
-		PbfOptions.add(options);
-		TboOptions.add(options);
 		// @formatter:on
 	}
 
@@ -107,18 +93,6 @@ public class MapWaysToTree extends AbstractTaskSingleInputFile
 	protected void setup(String[] args)
 	{
 		super.setup(args);
-
-		String outputFormatName = line.getOptionValue(OPTION_OUTPUT_FORMAT);
-		outputFormat = FileFormat.parseFileFormat(outputFormatName);
-		if (outputFormat == null) {
-			System.out.println("invalid output format");
-			System.out.println("please specify one of: "
-					+ FileFormat.getHumanReadableListOfSupportedFormats());
-			System.exit(1);
-		}
-
-		pbfConfig = PbfOptions.parse(line);
-		tboConfig = TboOptions.parse(line);
 
 		pathWays = line.getOptionValue(OPTION_WAYS);
 		pathTree = line.getOptionValue(OPTION_TREE);

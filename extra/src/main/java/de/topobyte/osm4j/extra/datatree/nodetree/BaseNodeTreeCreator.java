@@ -42,29 +42,19 @@ import de.topobyte.osm4j.extra.datatree.DataTreeOpener;
 import de.topobyte.osm4j.extra.datatree.DataTreeUtil;
 import de.topobyte.osm4j.extra.datatree.Node;
 import de.topobyte.osm4j.extra.progress.NodeProgress;
-import de.topobyte.osm4j.utils.AbstractTaskSingleInputIterator;
-import de.topobyte.osm4j.utils.FileFormat;
+import de.topobyte.osm4j.utils.AbstractTaskSingleInputIteratorOutput;
 import de.topobyte.osm4j.utils.OsmIoUtils;
-import de.topobyte.osm4j.utils.config.PbfConfig;
-import de.topobyte.osm4j.utils.config.PbfOptions;
-import de.topobyte.osm4j.utils.config.TboConfig;
-import de.topobyte.osm4j.utils.config.TboOptions;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
 public abstract class BaseNodeTreeCreator extends
-		AbstractTaskSingleInputIterator
+		AbstractTaskSingleInputIteratorOutput
 {
 
 	private static final String OPTION_OUTPUT = "output";
-	private static final String OPTION_OUTPUT_FORMAT = "output_format";
 	private static final String OPTION_FILE_NAMES = "filenames";
 
 	protected String pathOutput;
 	protected String fileNames;
-	protected FileFormat outputFormat;
-	protected PbfConfig pbfConfig;
-	protected TboConfig tboConfig;
-	protected boolean writeMetadata = true;
 
 	protected Path dirOutput;
 	protected Map<Node, NodeOutput> outputs = new HashMap<>();
@@ -77,11 +67,8 @@ public abstract class BaseNodeTreeCreator extends
 	public BaseNodeTreeCreator()
 	{
 		// @formatter:off
-		OptionHelper.add(options, OPTION_OUTPUT_FORMAT, true, true, "the file format of the output");
 		OptionHelper.add(options, OPTION_OUTPUT, true, true, "directory to store output in");
 		OptionHelper.add(options, OPTION_FILE_NAMES, true, true, "names of the data files to create");
-		PbfOptions.add(options);
-		TboOptions.add(options);
 		// @formatter:on
 	}
 
@@ -89,18 +76,6 @@ public abstract class BaseNodeTreeCreator extends
 	protected void setup(String[] args)
 	{
 		super.setup(args);
-
-		String outputFormatName = line.getOptionValue(OPTION_OUTPUT_FORMAT);
-		outputFormat = FileFormat.parseFileFormat(outputFormatName);
-		if (outputFormat == null) {
-			System.out.println("invalid output format");
-			System.out.println("please specify one of: "
-					+ FileFormat.getHumanReadableListOfSupportedFormats());
-			System.exit(1);
-		}
-
-		pbfConfig = PbfOptions.parse(line);
-		tboConfig = TboOptions.parse(line);
 
 		pathOutput = line.getOptionValue(OPTION_OUTPUT);
 		fileNames = line.getOptionValue(OPTION_FILE_NAMES);

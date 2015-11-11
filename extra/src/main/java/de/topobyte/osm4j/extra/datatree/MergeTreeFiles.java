@@ -28,24 +28,18 @@ import java.util.List;
 import de.topobyte.osm4j.core.access.OsmIterator;
 import de.topobyte.osm4j.core.access.OsmOutputStream;
 import de.topobyte.osm4j.extra.StreamUtil;
-import de.topobyte.osm4j.utils.AbstractTaskInput;
-import de.topobyte.osm4j.utils.FileFormat;
+import de.topobyte.osm4j.utils.AbstractTaskInputOutput;
 import de.topobyte.osm4j.utils.OsmIoUtils;
-import de.topobyte.osm4j.utils.config.PbfConfig;
-import de.topobyte.osm4j.utils.config.PbfOptions;
-import de.topobyte.osm4j.utils.config.TboConfig;
-import de.topobyte.osm4j.utils.config.TboOptions;
 import de.topobyte.osm4j.utils.merge.sorted.SortedMerge;
 import de.topobyte.osm4j.utils.sort.MemorySortIterator;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
-public class MergeTreeFiles extends AbstractTaskInput
+public class MergeTreeFiles extends AbstractTaskInputOutput
 {
 
 	private static final String OPTION_TREE = "tree";
 	private static final String OPTION_FILE_NAMES_SORTED = "input_sorted";
 	private static final String OPTION_FILE_NAMES_UNSORTED = "input_unsorted";
-	private static final String OPTION_OUTPUT_FORMAT = "output_format";
 	private static final String OPTION_FILE_NAMES_OUTPUT = "output";
 	private static final String OPTION_DELETE = "delete";
 
@@ -72,10 +66,6 @@ public class MergeTreeFiles extends AbstractTaskInput
 	private List<String> fileNamesUnsorted = new ArrayList<>();
 	private String fileNamesOutput;
 
-	private FileFormat outputFormat;
-	private PbfConfig pbfConfig;
-	private TboConfig tboConfig;
-	private boolean writeMetadata = true;
 	private boolean deleteInput;
 
 	public MergeTreeFiles()
@@ -84,11 +74,8 @@ public class MergeTreeFiles extends AbstractTaskInput
 		OptionHelper.add(options, OPTION_FILE_NAMES_SORTED, true, false, "name of a data file with sorted data in the tree");
 		OptionHelper.add(options, OPTION_FILE_NAMES_UNSORTED, true, false, "name of a data file with unsorted data in the tree");
 		OptionHelper.add(options, OPTION_TREE, true, true, "tree directory to work on");
-		OptionHelper.add(options, OPTION_OUTPUT_FORMAT, true, true, "the file format of the output");
 		OptionHelper.add(options, OPTION_FILE_NAMES_OUTPUT, true, true, "name of files for merged data");
 		OptionHelper.add(options, OPTION_DELETE, false, false, "delete input files");
-		PbfOptions.add(options);
-		TboOptions.add(options);
 		// @formatter:on
 	}
 
@@ -96,18 +83,6 @@ public class MergeTreeFiles extends AbstractTaskInput
 	protected void setup(String[] args)
 	{
 		super.setup(args);
-
-		String outputFormatName = line.getOptionValue(OPTION_OUTPUT_FORMAT);
-		outputFormat = FileFormat.parseFileFormat(outputFormatName);
-		if (outputFormat == null) {
-			System.out.println("invalid output format");
-			System.out.println("please specify one of: "
-					+ FileFormat.getHumanReadableListOfSupportedFormats());
-			System.exit(1);
-		}
-
-		pbfConfig = PbfOptions.parse(line);
-		tboConfig = TboOptions.parse(line);
 
 		pathTree = line.getOptionValue(OPTION_TREE);
 		fileNamesOutput = line.getOptionValue(OPTION_FILE_NAMES_OUTPUT);
