@@ -40,7 +40,6 @@ import de.topobyte.osm4j.core.model.util.OsmModelUtil;
 import de.topobyte.osm4j.extra.StreamUtil;
 import de.topobyte.osm4j.extra.idlist.IdListOutputStream;
 import de.topobyte.osm4j.utils.AbstractTaskInput;
-import de.topobyte.osm4j.utils.FileFormat;
 import de.topobyte.osm4j.utils.OsmIoUtils;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
@@ -70,7 +69,6 @@ public class ExtractMemberIds extends AbstractTaskInput
 	}
 
 	private String pathData;
-	private FileFormat inputFormat;
 
 	private Path dirData;
 	private List<Path> subdirs;
