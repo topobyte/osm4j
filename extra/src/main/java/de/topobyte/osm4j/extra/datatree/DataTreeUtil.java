@@ -17,9 +17,17 @@
 
 package de.topobyte.osm4j.extra.datatree;
 
+import gnu.trove.map.TLongLongMap;
+import gnu.trove.map.TObjectLongMap;
+import gnu.trove.map.hash.TObjectLongHashMap;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 import de.topobyte.adt.geo.BBox;
 import de.topobyte.adt.geo.BBoxString;
@@ -35,6 +43,47 @@ public class DataTreeUtil
 		PrintWriter pw = new PrintWriter(file);
 		pw.println(DataTree.PROPERTY_BBOX + ": " + BBoxString.create(bbox));
 		pw.close();
+	}
+
+	public static void mergeUnderfilledSiblings(DataTree tree, Node head,
+			int maxNodes, TLongLongMap counters)
+	{
+		List<Node> inner = tree.getInner(head);
+		List<Node> leafs = tree.getLeafs(head);
+
+		System.out.println("Before merging underfilled siblings:");
+		System.out.println("inner nodes: " + inner.size());
+		System.out.println("leafs: " + leafs.size());
+
+		TObjectLongMap<Node> counts = new TObjectLongHashMap<>();
+		for (Node leaf : leafs) {
+			long count = counters.get(leaf.getPath());
+			counts.put(leaf, count);
+		}
+
+		List<Node> check = new ArrayList<>(inner);
+		Collections.sort(check, new Comparator<Node>() {
+
+			@Override
+			public int compare(Node o1, Node o2)
+			{
+				return Integer.compare(o2.getLevel(), o1.getLevel());
+			}
+		});
+		for (Node node : check) {
+			if (!node.getLeft().isLeaf() || !node.getRight().isLeaf()) {
+				continue;
+			}
+			long sum = counts.get(node.getLeft()) + counts.get(node.getRight());
+			if (sum < maxNodes) {
+				node.melt();
+				counts.put(node, sum);
+			}
+		}
+
+		System.out.println("After:");
+		System.out.println("inner nodes: " + tree.getInner(head).size());
+		System.out.println("leafs: " + tree.getLeafs(head).size());
 	}
 
 }

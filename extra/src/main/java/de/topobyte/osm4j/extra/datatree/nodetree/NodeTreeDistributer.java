@@ -18,9 +18,7 @@
 package de.topobyte.osm4j.extra.datatree.nodetree;
 
 import gnu.trove.map.TLongLongMap;
-import gnu.trove.map.TObjectLongMap;
 import gnu.trove.map.hash.TLongLongHashMap;
-import gnu.trove.map.hash.TObjectLongHashMap;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -31,9 +29,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -48,6 +43,7 @@ import de.topobyte.osm4j.core.model.iface.EntityContainer;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.osm4j.core.model.impl.Bounds;
 import de.topobyte.osm4j.extra.datatree.DataTree;
+import de.topobyte.osm4j.extra.datatree.DataTreeUtil;
 import de.topobyte.osm4j.extra.datatree.Node;
 import de.topobyte.osm4j.extra.progress.NodeProgress;
 import de.topobyte.osm4j.utils.FileFormat;
@@ -107,7 +103,7 @@ public class NodeTreeDistributer
 	{
 		countLeafNodes();
 
-		mergeUnderfilledSiblings();
+		DataTreeUtil.mergeUnderfilledSiblings(tree, head, maxNodes, counters);
 
 		initOutputs();
 
@@ -160,46 +156,6 @@ public class NodeTreeDistributer
 			long path = leaf.getPath();
 			counters.put(path, counters.get(path) + 1);
 		}
-	}
-
-	private void mergeUnderfilledSiblings()
-	{
-		List<Node> inner = tree.getInner(head);
-		List<Node> leafs = tree.getLeafs(head);
-
-		System.out.println("Before merging underfilled siblings:");
-		System.out.println("inner nodes: " + inner.size());
-		System.out.println("leafs: " + leafs.size());
-
-		TObjectLongMap<Node> counts = new TObjectLongHashMap<>();
-		for (Node leaf : leafs) {
-			long count = counters.get(leaf.getPath());
-			counts.put(leaf, count);
-		}
-
-		List<Node> check = new ArrayList<>(inner);
-		Collections.sort(check, new Comparator<Node>() {
-
-			@Override
-			public int compare(Node o1, Node o2)
-			{
-				return Integer.compare(o2.getLevel(), o1.getLevel());
-			}
-		});
-		for (Node node : check) {
-			if (!node.getLeft().isLeaf() || !node.getRight().isLeaf()) {
-				continue;
-			}
-			long sum = counts.get(node.getLeft()) + counts.get(node.getRight());
-			if (sum < maxNodes) {
-				node.melt();
-				counts.put(node, sum);
-			}
-		}
-
-		System.out.println("After:");
-		System.out.println("inner nodes: " + tree.getInner(head).size());
-		System.out.println("leafs: " + tree.getLeafs(head).size());
 	}
 
 	private void initOutputs() throws IOException
