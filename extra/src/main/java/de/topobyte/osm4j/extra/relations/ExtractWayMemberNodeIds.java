@@ -110,8 +110,8 @@ public class ExtractWayMemberNodeIds extends AbstractTaskInput
 				continue;
 			}
 			Path subPath = sub.toPath();
-			Path relations = subPath.resolve(fileNamesWays);
-			if (!Files.exists(relations)) {
+			Path ways = subPath.resolve(fileNamesWays);
+			if (!Files.exists(ways)) {
 				continue;
 			}
 			subdirs.add(subPath);
