@@ -132,6 +132,9 @@ public class SplitRelations extends AbstractTaskSingleInputIteratorOutput
 			status();
 			batch.clear();
 		}
+
+		System.out.println(String.format("Wrote %s relations in %d batches",
+				format.format(relationCount), batchCount));
 	}
 
 	private int batchCount = 0;
