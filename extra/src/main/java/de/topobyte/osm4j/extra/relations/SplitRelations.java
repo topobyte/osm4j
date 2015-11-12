@@ -23,7 +23,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.NumberFormat;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -107,40 +106,9 @@ public class SplitRelations extends AbstractTaskSingleInputIteratorOutput
 
 	private int maxMembers = 400 * 1000;
 
-	private class Batch
-	{
-
-		List<OsmRelation> relations = new ArrayList<>();
-		int members = 0;
-
-		void clear()
-		{
-			relations.clear();
-			members = 0;
-		}
-
-		boolean fits(OsmRelation relation)
-		{
-			if (relations.isEmpty()) {
-				return true;
-			}
-			if (members + relation.getNumberOfMembers() <= maxMembers) {
-				return true;
-			}
-			return false;
-		}
-
-		void add(OsmRelation way)
-		{
-			relations.add(way);
-			members += way.getNumberOfMembers();
-		}
-
-	}
-
 	private void execute() throws IOException
 	{
-		Batch batch = new Batch();
+		RelationBatch batch = new RelationBatch(maxMembers);
 
 		for (EntityContainer container : inputIterator) {
 			if (container.getType() != EntityType.Relation) {
@@ -159,7 +127,7 @@ public class SplitRelations extends AbstractTaskSingleInputIteratorOutput
 				batch.add(relation);
 			}
 		}
-		if (!batch.relations.isEmpty()) {
+		if (!batch.getRelations().isEmpty()) {
 			process(batch);
 			status();
 			batch.clear();
@@ -186,9 +154,9 @@ public class SplitRelations extends AbstractTaskSingleInputIteratorOutput
 				format.format(perSecond)));
 	}
 
-	private void process(Batch batch) throws IOException
+	private void process(RelationBatch batch) throws IOException
 	{
-		List<OsmRelation> relations = batch.relations;
+		List<OsmRelation> relations = batch.getRelations();
 
 		batchCount++;
 
