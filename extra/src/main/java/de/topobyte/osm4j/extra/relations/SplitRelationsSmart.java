@@ -17,9 +17,6 @@
 
 package de.topobyte.osm4j.extra.relations;
 
-import gnu.trove.iterator.TLongIterator;
-import gnu.trove.list.TLongList;
-import gnu.trove.list.array.TLongArrayList;
 import gnu.trove.map.TLongObjectMap;
 import gnu.trove.map.hash.TLongObjectHashMap;
 import gnu.trove.set.TLongSet;
@@ -34,23 +31,17 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.NumberFormat;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Set;
 
-import de.topobyte.adt.graph.Graph;
 import de.topobyte.osm4j.core.access.OsmIterator;
 import de.topobyte.osm4j.core.access.OsmOutputStream;
 import de.topobyte.osm4j.core.model.iface.EntityContainer;
 import de.topobyte.osm4j.core.model.iface.EntityType;
 import de.topobyte.osm4j.core.model.iface.OsmRelation;
-import de.topobyte.osm4j.core.model.iface.OsmRelationMember;
-import de.topobyte.osm4j.core.model.util.OsmModelUtil;
 import de.topobyte.osm4j.extra.StreamUtil;
 import de.topobyte.osm4j.utils.AbstractTaskSingleInputFileOutput;
 import de.topobyte.osm4j.utils.OsmIoUtils;
@@ -122,28 +113,28 @@ public class SplitRelationsSmart extends AbstractTaskSingleInputFileOutput
 
 	private int maxMembers = 400 * 1000;
 
-	private int numNoChildren = 0;
-	private Graph<Long> graph = new Graph<>();
-	private TLongSet idsHasChildRelations = new TLongHashSet();
-	private TLongSet idsIsChildRelation = new TLongHashSet();
-
-	private List<Group> groups = new LinkedList<>();
+	private RelationGraph relationGraph = new RelationGraph();
+	private List<Group> groups;
 	private TLongObjectMap<OsmRelation> groupRelations;
 
 	private TLongSet processed;
 
 	private void execute() throws IOException
 	{
-		buildGraph();
+		InputStream input = StreamUtil.bufferedInputStream(getInputFile());
+		OsmIterator iterator = OsmIoUtils.setupOsmIterator(input, inputFormat,
+				false);
+		relationGraph.build(iterator, false);
+		input.close();
 
 		System.out.println("Number of relations without relation members: "
-				+ numNoChildren);
+				+ relationGraph.getNumNoChildren());
 		System.out.println("Number of relations with relation members: "
-				+ idsHasChildRelations.size());
+				+ relationGraph.getIdsHasChildRelations().size());
 		System.out.println("Number of child relations: "
-				+ idsIsChildRelation.size());
+				+ relationGraph.getIdsIsChildRelation().size());
 
-		buildGroups();
+		groups = relationGraph.buildGroups();
 
 		getGroupRelations();
 
@@ -154,96 +145,21 @@ public class SplitRelationsSmart extends AbstractTaskSingleInputFileOutput
 		processGroupBatches();
 
 		groupRelations.clear();
-		graph = null;
+
 		processed = new TLongHashSet();
-		processed.addAll(idsHasChildRelations);
-		idsHasChildRelations.clear();
-		processed.addAll(idsIsChildRelation);
-		idsIsChildRelation.clear();
+		processed.addAll(relationGraph.getIdsHasChildRelations());
+		relationGraph.getIdsHasChildRelations().clear();
+		processed.addAll(relationGraph.getIdsIsChildRelation());
+		relationGraph.getIdsIsChildRelation().clear();
 
 		processRemaining();
 	}
 
-	private void buildGraph() throws IOException
-	{
-		InputStream input = StreamUtil.bufferedInputStream(getInputFile());
-		OsmIterator iterator = OsmIoUtils.setupOsmIterator(input, inputFormat,
-				false);
-		for (EntityContainer container : iterator) {
-			if (container.getType() != EntityType.Relation) {
-				continue;
-			}
-			OsmRelation relation = (OsmRelation) container.getEntity();
-			boolean hasChildRelations = false;
-			TLongList childRelationMembers = new TLongArrayList();
-			for (OsmRelationMember member : OsmModelUtil
-					.membersAsList(relation)) {
-				if (member.getType() == EntityType.Relation) {
-					hasChildRelations = true;
-					idsIsChildRelation.add(member.getId());
-					childRelationMembers.add(member.getId());
-				}
-			}
-			if (hasChildRelations) {
-				long id = relation.getId();
-				idsHasChildRelations.add(id);
-				graph.addNode(id);
-				for (long member : childRelationMembers.toArray()) {
-					if (!graph.getNodes().contains(member)) {
-						graph.addNode(member);
-					}
-					graph.addEdge(id, member);
-				}
-			} else {
-				numNoChildren++;
-			}
-		}
-	}
-
-	private void buildGroups()
-	{
-		TLongSet starts = new TLongHashSet();
-		Collection<Long> ids = graph.getNodes();
-		for (long id : ids) {
-			if (graph.getEdgesIn(id).isEmpty()) {
-				starts.add(id);
-			}
-		}
-		System.out.println("Number of start relations: " + starts.size());
-		for (long start : starts.toArray()) {
-			build(start);
-		}
-	}
-
-	private void build(long start)
-	{
-		TLongSet group = new TLongHashSet();
-		group.add(start);
-
-		TLongSet left = new TLongHashSet();
-		left.addAll(graph.getEdgesOut(start));
-
-		while (!left.isEmpty()) {
-			// System.out.println("left: " + left.size());
-			TLongIterator iterator = left.iterator();
-			long next = iterator.next();
-			// System.out.println("got: " + next);
-			iterator.remove();
-
-			if (group.contains(next)) {
-				continue;
-			}
-			group.add(next);
-			Set<Long> out = graph.getEdgesOut(next);
-			// System.out.println("adding: " + out);
-			left.addAll(out);
-		}
-
-		groups.add(new Group(start, group));
-	}
-
 	private void getGroupRelations() throws FileNotFoundException, IOException
 	{
+		TLongSet idsHasChildRelations = relationGraph.getIdsHasChildRelations();
+		TLongSet idsIsChildRelation = relationGraph.getIdsIsChildRelation();
+
 		InputStream input = StreamUtil.bufferedInputStream(getInputFile());
 		OsmIterator iterator = OsmIoUtils.setupOsmIterator(input, inputFormat,
 				writeMetadata);
