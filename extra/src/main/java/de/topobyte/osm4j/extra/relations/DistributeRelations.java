@@ -258,8 +258,8 @@ public class DistributeRelations extends AbstractTaskInputOutput
 		OsmEntityProvider entityProvider = new CompositeOsmEntityProvider(
 				dataNodes, dataWays, dataRelations);
 
-		RelationGraph relationGraph = new RelationGraph();
-		relationGraph.build(dataRelations, true, false);
+		RelationGraph relationGraph = new RelationGraph(true, false);
+		relationGraph.build(dataRelations);
 
 		List<Group> groups = relationGraph.buildGroups();
 		TLongSet idsSimpleRelations = relationGraph.getIdsSimpleRelations();

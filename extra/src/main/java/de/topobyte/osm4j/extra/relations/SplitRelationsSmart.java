@@ -113,18 +113,16 @@ public class SplitRelationsSmart extends AbstractTaskSingleInputFileOutput
 
 	private int maxMembers = 400 * 1000;
 
-	private RelationGraph relationGraph = new RelationGraph();
+	private RelationGraph relationGraph = new RelationGraph(false, true);
 	private List<Group> groups;
 	private TLongObjectMap<OsmRelation> groupRelations;
-
-	private TLongSet processed;
 
 	private void execute() throws IOException
 	{
 		InputStream input = StreamUtil.bufferedInputStream(getInputFile());
 		OsmIterator iterator = OsmIoUtils.setupOsmIterator(input, inputFormat,
 				false);
-		relationGraph.build(iterator, false, false);
+		relationGraph.build(iterator);
 		input.close();
 
 		System.out.println("Number of relations without relation members: "
@@ -143,16 +141,6 @@ public class SplitRelationsSmart extends AbstractTaskSingleInputFileOutput
 		sortGroupsBySize();
 
 		processGroupBatches();
-
-		groupRelations.clear();
-
-		processed = new TLongHashSet();
-		processed.addAll(relationGraph.getIdsHasChildRelations());
-		relationGraph.getIdsHasChildRelations().clear();
-		processed.addAll(relationGraph.getIdsIsChildRelation());
-		relationGraph.getIdsIsChildRelation().clear();
-
-		processRemaining();
 	}
 
 	private void getGroupRelations() throws FileNotFoundException, IOException
@@ -270,68 +258,6 @@ public class SplitRelationsSmart extends AbstractTaskSingleInputFileOutput
 		for (long relationId : batchRelationIds.toArray()) {
 			relations.add(groupRelations.get(relationId));
 		}
-
-		batchCount++;
-
-		String subdirName = String.format("%d", batchCount);
-		Path subdir = dirOutput.resolve(subdirName);
-		Path path = subdir.resolve(fileNamesRelations);
-		Files.createDirectory(subdir);
-
-		OutputStream output = StreamUtil.bufferedOutputStream(path.toFile());
-		OsmOutputStream osmOutput = OsmIoUtils.setupOsmOutput(output,
-				outputFormat, writeMetadata, pbfConfig, tboConfig);
-
-		for (OsmRelation relation : relations) {
-			osmOutput.write(relation);
-		}
-
-		osmOutput.complete();
-		output.close();
-
-		relationCount += relations.size();
-	}
-
-	private void processRemaining() throws IOException
-	{
-		RelationBatch batch = new RelationBatch(maxMembers);
-
-		InputStream input = StreamUtil.bufferedInputStream(getInputFile());
-		OsmIterator iterator = OsmIoUtils.setupOsmIterator(input, inputFormat,
-				writeMetadata);
-
-		for (EntityContainer container : iterator) {
-			if (container.getType() != EntityType.Relation) {
-				continue;
-			}
-			OsmRelation relation = (OsmRelation) container.getEntity();
-			if (relation.getNumberOfMembers() == 0) {
-				continue;
-			}
-			if (processed.contains(relation.getId())) {
-				continue;
-			}
-			if (batch.fits(relation)) {
-				batch.add(relation);
-			} else {
-				process(batch);
-				status();
-				batch.clear();
-				batch.add(relation);
-			}
-		}
-		if (!batch.getRelations().isEmpty()) {
-			process(batch);
-			status();
-			batch.clear();
-		}
-
-		input.close();
-	}
-
-	private void process(RelationBatch batch) throws IOException
-	{
-		List<OsmRelation> relations = batch.getRelations();
 
 		batchCount++;
 

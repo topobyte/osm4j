@@ -54,8 +54,16 @@ public class RelationGraph
 	// number of relations that do not have relation members
 	private int numNoChildren = 0;
 
-	public void build(OsmIterator iterator, boolean storeSimpleRelations,
-			boolean undirected) throws IOException
+	private boolean storeSimpleRelations;
+	private boolean undirected;
+
+	public RelationGraph(boolean storeSimpleRelations, boolean undirected)
+	{
+		this.storeSimpleRelations = storeSimpleRelations;
+		this.undirected = undirected;
+	}
+
+	public void build(OsmIterator iterator) throws IOException
 	{
 		graph = undirected ? new UndirectedGraph<Long>() : new Graph<Long>();
 		for (EntityContainer container : iterator) {
@@ -63,20 +71,19 @@ public class RelationGraph
 				continue;
 			}
 			OsmRelation relation = (OsmRelation) container.getEntity();
-			process(relation, storeSimpleRelations);
+			process(relation);
 		}
 	}
 
-	public void build(InMemoryDataSet data, boolean storeSimpleRelations,
-			boolean undirected) throws IOException
+	public void build(InMemoryDataSet data) throws IOException
 	{
 		graph = undirected ? new UndirectedGraph<Long>() : new Graph<Long>();
 		for (OsmRelation relation : data.getRelations().valueCollection()) {
-			process(relation, storeSimpleRelations);
+			process(relation);
 		}
 	}
 
-	private void process(OsmRelation relation, boolean storeSimpleRelations)
+	private void process(OsmRelation relation)
 	{
 		boolean hasChildRelations = false;
 		TLongList childRelationMembers = new TLongArrayList();
