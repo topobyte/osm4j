@@ -17,9 +17,6 @@
 
 package de.topobyte.osm4j.extra.relations;
 
-import gnu.trove.iterator.TLongIterator;
-import gnu.trove.set.TLongSet;
-
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -36,7 +33,6 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
@@ -47,23 +43,20 @@ import de.topobyte.largescalefileio.SimpleClosingFileOutputStreamFactory;
 import de.topobyte.osm4j.core.access.OsmIterator;
 import de.topobyte.osm4j.core.access.OsmOutputStream;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
-import de.topobyte.osm4j.core.model.iface.OsmRelation;
 import de.topobyte.osm4j.core.model.impl.Bounds;
-import de.topobyte.osm4j.core.resolve.CompositeOsmEntityProvider;
 import de.topobyte.osm4j.core.resolve.DataSetReader;
-import de.topobyte.osm4j.core.resolve.EntityNotFoundException;
 import de.topobyte.osm4j.core.resolve.InMemoryDataSet;
-import de.topobyte.osm4j.core.resolve.OsmEntityProvider;
 import de.topobyte.osm4j.extra.StreamUtil;
 import de.topobyte.osm4j.extra.datatree.DataTree;
 import de.topobyte.osm4j.extra.datatree.DataTreeFiles;
 import de.topobyte.osm4j.extra.datatree.DataTreeOpener;
 import de.topobyte.osm4j.extra.datatree.Node;
+import de.topobyte.osm4j.tbo.access.TboWriter;
 import de.topobyte.osm4j.utils.AbstractTaskInputOutput;
 import de.topobyte.osm4j.utils.OsmIoUtils;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
-public class DistributeRelations extends AbstractTaskInputOutput
+public abstract class DistributeSimpleBase extends AbstractTaskInputOutput
 {
 
 	private static final String OPTION_TREE = "tree";
@@ -73,45 +66,29 @@ public class DistributeRelations extends AbstractTaskInputOutput
 	private static final String OPTION_FILE_NAMES_NODES = "nodes";
 	private static final String OPTION_FILE_NAMES_TREE_RELATIONS = "tree_relations";
 	private static final String OPTION_OUTPUT_EMPTY_RELATIONS = "empty_relations";
+	private static final String OPTION_OUTPUT_NON_TREE_RELATIONS = "non_tree_relations";
 
-	@Override
-	protected String getHelpMessage()
-	{
-		return DistributeRelations.class.getSimpleName() + " [options]";
-	}
+	protected String pathTree;
+	protected String pathData;
+	protected String pathOutputEmpty;
+	protected String pathOutputNonTree;
 
-	public static void main(String[] args) throws IOException
-	{
-		DistributeRelations task = new DistributeRelations();
+	protected Path dirData;
+	protected String fileNamesRelations;
+	protected String fileNamesWays;
+	protected String fileNamesNodes;
+	protected String fileNamesTreeRelations;
 
-		task.setup(args);
+	protected DataTree tree;
+	protected List<Path> subdirs;
 
-		task.init();
+	protected DataTreeFiles treeFilesRelations;
 
-		task.execute();
+	protected Output outputEmpty;
+	protected Output outputNonTree;
+	protected Map<Node, Output> outputs = new HashMap<>();
 
-		task.finish();
-	}
-
-	private String pathTree;
-	private String pathData;
-	private String pathOutputEmpty;
-
-	private Path dirData;
-	private String fileNamesRelations;
-	private String fileNamesWays;
-	private String fileNamesNodes;
-	private String fileNamesTreeRelations;
-
-	private DataTree tree;
-	private List<Path> subdirs;
-
-	private DataTreeFiles treeFilesRelations;
-
-	private Output outputEmpty;
-	private Map<Node, Output> outputs = new HashMap<>();
-
-	public DistributeRelations()
+	public DistributeSimpleBase()
 	{
 		// @formatter:off
 		OptionHelper.add(options, OPTION_TREE, true, true, "tree to use for small relations");
@@ -121,6 +98,7 @@ public class DistributeRelations extends AbstractTaskInputOutput
 		OptionHelper.add(options, OPTION_FILE_NAMES_NODES, true, true, "names of the nodes files in each directory");
 		OptionHelper.add(options, OPTION_FILE_NAMES_TREE_RELATIONS, true, true, "names of the relation files in the tree");
 		OptionHelper.add(options, OPTION_OUTPUT_EMPTY_RELATIONS, true, true, "where to store relations without geometry");
+		OptionHelper.add(options, OPTION_OUTPUT_NON_TREE_RELATIONS, true, true, "where to store relations without geometry");
 		// @formatter:on
 	}
 
@@ -132,6 +110,8 @@ public class DistributeRelations extends AbstractTaskInputOutput
 		pathData = line.getOptionValue(OPTION_DIRECTORY);
 		pathTree = line.getOptionValue(OPTION_TREE);
 		pathOutputEmpty = line.getOptionValue(OPTION_OUTPUT_EMPTY_RELATIONS);
+		pathOutputNonTree = line
+				.getOptionValue(OPTION_OUTPUT_NON_TREE_RELATIONS);
 
 		fileNamesRelations = line.getOptionValue(OPTION_FILE_NAMES_RELATIONS);
 		fileNamesWays = line.getOptionValue(OPTION_FILE_NAMES_WAYS);
@@ -200,6 +180,16 @@ public class DistributeRelations extends AbstractTaskInputOutput
 		outputEmpty = new Output(fileOutputEmpty.toPath(), outEmpty,
 				osmOutputEmpty);
 
+		// Setup output for non-tree relations
+
+		File fileOutputNonTree = new File(pathOutputNonTree);
+		OutputStream outNonTree = new BufferedOutputStream(
+				new FileOutputStream(fileOutputNonTree));
+		OsmOutputStream osmOutputNonTree = OsmIoUtils.setupOsmOutput(
+				outNonTree, outputFormat, writeMetadata, pbfConfig, tboConfig);
+		outputNonTree = new Output(fileOutputNonTree.toPath(), outNonTree,
+				osmOutputNonTree);
+
 		// Setup output for tree relations
 
 		ClosingFileOutputStreamFactory factory = new SimpleClosingFileOutputStreamFactory();
@@ -209,6 +199,12 @@ public class DistributeRelations extends AbstractTaskInputOutput
 			OutputStream out = new BufferedOutputStream(factory.create(file));
 			OsmOutputStream osmOutput = OsmIoUtils.setupOsmOutput(out,
 					outputFormat, writeMetadata, pbfConfig, tboConfig);
+
+			if (osmOutput instanceof TboWriter) {
+				TboWriter tboWriter = (TboWriter) osmOutput;
+				tboWriter.setBatchSizeRelationsByMembers(1024);
+			}
+
 			outputs.put(leaf, new Output(file.toPath(), out, osmOutput));
 
 			Envelope box = leaf.getEnvelope();
@@ -221,7 +217,7 @@ public class DistributeRelations extends AbstractTaskInputOutput
 	int nWrittenToTree = 0;
 	int nRemaining = 0;
 
-	private void execute() throws IOException
+	protected void execute() throws IOException
 	{
 		int i = 0;
 		for (Path path : subdirs) {
@@ -234,10 +230,13 @@ public class DistributeRelations extends AbstractTaskInputOutput
 		}
 	}
 
-	private void finish() throws IOException
+	protected void finish() throws IOException
 	{
 		outputEmpty.getOsmOutput().complete();
 		outputEmpty.getOutputStream().close();
+
+		outputNonTree.getOsmOutput().complete();
+		outputNonTree.getOutputStream().close();
 
 		for (Output output : outputs.values()) {
 			output.getOsmOutput().complete();
@@ -245,89 +244,9 @@ public class DistributeRelations extends AbstractTaskInputOutput
 		}
 	}
 
-	private void build(Path path) throws IOException
-	{
-		Path pathRelations = path.resolve(fileNamesRelations);
-		Path pathWays = path.resolve(fileNamesWays);
-		Path pathNodes = path.resolve(fileNamesNodes);
+	protected abstract void build(Path path) throws IOException;
 
-		InMemoryDataSet dataRelations = read(pathRelations);
-		InMemoryDataSet dataWays = read(pathWays);
-		InMemoryDataSet dataNodes = read(pathNodes);
-
-		OsmEntityProvider entityProvider = new CompositeOsmEntityProvider(
-				dataNodes, dataWays, dataRelations);
-
-		RelationGraph relationGraph = new RelationGraph(true, false);
-		relationGraph.build(dataRelations);
-
-		List<Group> groups = relationGraph.buildGroups();
-		TLongSet idsSimpleRelations = relationGraph.getIdsSimpleRelations();
-
-		List<RelationGroup> relationGroups = new ArrayList<>();
-
-		for (Group group : groups) {
-			try {
-				List<OsmRelation> groupRelations = findRelations(
-						group.getRelationIds(), dataRelations);
-				relationGroups.add(new RelationGroupMultiple(groupRelations));
-			} catch (EntityNotFoundException e) {
-				System.out.println("unable to build relation group");
-			}
-		}
-
-		TLongIterator simpleRelations = idsSimpleRelations.iterator();
-		while (simpleRelations.hasNext()) {
-			long id = simpleRelations.next();
-			OsmRelation relation = dataRelations.getRelations().get(id);
-			relationGroups.add(new RelationGroupSingle(relation));
-		}
-
-		for (RelationGroup group : relationGroups) {
-			try {
-				Set<OsmNode> nodes = group.findNodes(entityProvider);
-				if (nodes.size() == 0) {
-					nWrittenEmpty += group.getRelations().size();
-					write(group, outputEmpty);
-					continue;
-				}
-				Geometry box = box(nodes);
-				List<Node> leafs = tree.query(box);
-				if (leafs.size() == 1) {
-					nWrittenToTree += group.getRelations().size();
-					Node leaf = leafs.get(0);
-					Output output = outputs.get(leaf);
-					write(group, output);
-				} else {
-					nRemaining += group.getRelations().size();
-					// TODO: write somewhere else with ways and nodes
-				}
-			} catch (EntityNotFoundException e) {
-				System.out.println("unable to build simple relation");
-			}
-		}
-	}
-
-	private void write(RelationGroup group, Output output) throws IOException
-	{
-		Collection<OsmRelation> relations = group.getRelations();
-		for (OsmRelation relation : relations) {
-			output.getOsmOutput().write(relation);
-		}
-	}
-
-	private List<OsmRelation> findRelations(TLongSet ids,
-			OsmEntityProvider entityProvider) throws EntityNotFoundException
-	{
-		List<OsmRelation> relations = new ArrayList<>();
-		TLongIterator idIterator = ids.iterator();
-		while (idIterator.hasNext()) {
-			relations.add(entityProvider.getRelation(idIterator.next()));
-		}
-		return relations;
-	}
-
-	private Geometry box(Set<OsmNode> nodes)
+	protected Geometry box(Collection<OsmNode> nodes)
 	{
 		Envelope env = new Envelope();
 		for (OsmNode node : nodes) {
@@ -336,13 +255,14 @@ public class DistributeRelations extends AbstractTaskInputOutput
 		return new GeometryFactory().toGeometry(env);
 	}
 
-	private InMemoryDataSet read(Path path) throws IOException
+	protected InMemoryDataSet read(Path path, boolean readMetadata,
+			boolean keepTags) throws IOException
 	{
 		InputStream input = StreamUtil.bufferedInputStream(path.toFile());
 		OsmIterator osmIterator = OsmIoUtils.setupOsmIterator(input,
-				inputFormat, writeMetadata);
-		InMemoryDataSet data = DataSetReader
-				.read(osmIterator, true, true, true);
+				inputFormat, readMetadata);
+		InMemoryDataSet data = DataSetReader.read(osmIterator, keepTags,
+				keepTags, keepTags);
 		input.close();
 		return data;
 	}
