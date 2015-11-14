@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.Set;
 
 import de.topobyte.adt.graph.Graph;
+import de.topobyte.adt.graph.UndirectedGraph;
 import de.topobyte.osm4j.core.access.OsmIterator;
 import de.topobyte.osm4j.core.model.iface.EntityContainer;
 import de.topobyte.osm4j.core.model.iface.EntityType;
@@ -41,7 +42,7 @@ import de.topobyte.osm4j.core.resolve.InMemoryDataSet;
 public class RelationGraph
 {
 
-	private Graph<Long> graph = new Graph<>();
+	private Graph<Long> graph;
 
 	// ids of relations that have relation members
 	private TLongSet idsHasChildRelations = new TLongHashSet();
@@ -53,9 +54,10 @@ public class RelationGraph
 	// number of relations that do not have relation members
 	private int numNoChildren = 0;
 
-	public void build(OsmIterator iterator, boolean storeSimpleRelations)
-			throws IOException
+	public void build(OsmIterator iterator, boolean storeSimpleRelations,
+			boolean undirected) throws IOException
 	{
+		graph = undirected ? new UndirectedGraph<Long>() : new Graph<Long>();
 		for (EntityContainer container : iterator) {
 			if (container.getType() != EntityType.Relation) {
 				continue;
@@ -65,9 +67,10 @@ public class RelationGraph
 		}
 	}
 
-	public void build(InMemoryDataSet data, boolean storeSimpleRelations)
-			throws IOException
+	public void build(InMemoryDataSet data, boolean storeSimpleRelations,
+			boolean undirected) throws IOException
 	{
+		graph = undirected ? new UndirectedGraph<Long>() : new Graph<Long>();
 		for (OsmRelation relation : data.getRelations().valueCollection()) {
 			process(relation, storeSimpleRelations);
 		}

@@ -259,7 +259,7 @@ public class DistributeRelations extends AbstractTaskInputOutput
 				dataNodes, dataWays, dataRelations);
 
 		RelationGraph relationGraph = new RelationGraph();
-		relationGraph.build(dataRelations, true);
+		relationGraph.build(dataRelations, true, false);
 
 		List<Group> groups = relationGraph.buildGroups();
 		TLongSet idsSimpleRelations = relationGraph.getIdsSimpleRelations();

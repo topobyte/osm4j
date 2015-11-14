@@ -124,7 +124,7 @@ public class SplitRelationsSmart extends AbstractTaskSingleInputFileOutput
 		InputStream input = StreamUtil.bufferedInputStream(getInputFile());
 		OsmIterator iterator = OsmIoUtils.setupOsmIterator(input, inputFormat,
 				false);
-		relationGraph.build(iterator, false);
+		relationGraph.build(iterator, false, false);
 		input.close();
 
 		System.out.println("Number of relations without relation members: "
