@@ -19,7 +19,7 @@ package de.topobyte.osm4j.extra.relations;
 
 import gnu.trove.set.TLongSet;
 
-class Group
+public class Group
 {
 
 	private long start;
@@ -27,34 +27,34 @@ class Group
 	private int numRelations;
 	private int numMembers;
 
-	Group(long start, TLongSet relationIds)
+	public Group(long start, TLongSet relationIds)
 	{
 		this.start = start;
 		this.relationIds = relationIds;
 		numRelations = relationIds.size();
 	}
 
-	long getStart()
+	public long getStart()
 	{
 		return start;
 	}
 
-	TLongSet getRelationIds()
+	public TLongSet getRelationIds()
 	{
 		return relationIds;
 	}
 
-	int getNumRelations()
+	public int getNumRelations()
 	{
 		return numRelations;
 	}
 
-	int getNumMembers()
+	public int getNumMembers()
 	{
 		return numMembers;
 	}
 
-	void setNumMembers(int numMembers)
+	public void setNumMembers(int numMembers)
 	{
 		this.numMembers = numMembers;
 	}

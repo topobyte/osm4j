@@ -15,39 +15,27 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with osm4j. If not, see <http://www.gnu.org/licenses/>.
 
-package de.topobyte.osm4j.extra.relations;
+package de.topobyte.osm4j.extra.relations.split;
 
-import gnu.trove.map.TLongObjectMap;
-import gnu.trove.map.hash.TLongObjectHashMap;
-import gnu.trove.set.TLongSet;
-import gnu.trove.set.hash.TLongHashSet;
-
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.NumberFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
-import de.topobyte.osm4j.core.access.OsmIterator;
 import de.topobyte.osm4j.core.access.OsmOutputStream;
 import de.topobyte.osm4j.core.model.iface.EntityContainer;
 import de.topobyte.osm4j.core.model.iface.EntityType;
 import de.topobyte.osm4j.core.model.iface.OsmRelation;
 import de.topobyte.osm4j.extra.StreamUtil;
-import de.topobyte.osm4j.utils.AbstractTaskSingleInputFileOutput;
+import de.topobyte.osm4j.utils.AbstractTaskSingleInputIteratorOutput;
 import de.topobyte.osm4j.utils.OsmIoUtils;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
-public class SplitRelationsSmart extends AbstractTaskSingleInputFileOutput
+public class SplitRelations extends AbstractTaskSingleInputIteratorOutput
 {
 
 	private static final String OPTION_OUTPUT = "output";
@@ -56,18 +44,20 @@ public class SplitRelationsSmart extends AbstractTaskSingleInputFileOutput
 	@Override
 	protected String getHelpMessage()
 	{
-		return SplitRelationsSmart.class.getSimpleName() + " [options]";
+		return SplitRelations.class.getSimpleName() + " [options]";
 	}
 
 	public static void main(String[] args) throws IOException
 	{
-		SplitRelationsSmart task = new SplitRelationsSmart();
+		SplitRelations task = new SplitRelations();
 
 		task.setup(args);
 
 		task.init();
 
 		task.execute();
+
+		task.finish();
 	}
 
 	private String pathOutput;
@@ -75,7 +65,7 @@ public class SplitRelationsSmart extends AbstractTaskSingleInputFileOutput
 	private Path dirOutput;
 	private String fileNamesRelations;
 
-	public SplitRelationsSmart()
+	public SplitRelations()
 	{
 		// @formatter:off
 		OptionHelper.add(options, OPTION_OUTPUT, true, true, "directory to store output in");
@@ -93,8 +83,11 @@ public class SplitRelationsSmart extends AbstractTaskSingleInputFileOutput
 		fileNamesRelations = line.getOptionValue(OPTION_FILE_NAMES_RELATIONS);
 	}
 
+	@Override
 	protected void init() throws IOException
 	{
+		super.init();
+
 		dirOutput = Paths.get(pathOutput);
 
 		if (!Files.exists(dirOutput)) {
@@ -113,113 +106,35 @@ public class SplitRelationsSmart extends AbstractTaskSingleInputFileOutput
 
 	private int maxMembers = 100 * 1000;
 
-	private RelationGraph relationGraph = new RelationGraph(false, true);
-	private List<Group> groups;
-	private TLongObjectMap<OsmRelation> groupRelations;
-
 	private void execute() throws IOException
 	{
-		InputStream input = StreamUtil.bufferedInputStream(getInputFile());
-		OsmIterator iterator = OsmIoUtils.setupOsmIterator(input, inputFormat,
-				false);
-		relationGraph.build(iterator);
-		input.close();
+		RelationBatch batch = new RelationBatch(maxMembers);
 
-		System.out.println("Number of relations without relation members: "
-				+ relationGraph.getNumNoChildren());
-		System.out.println("Number of relations with relation members: "
-				+ relationGraph.getIdsHasChildRelations().size());
-		System.out.println("Number of child relations: "
-				+ relationGraph.getIdsIsChildRelation().size());
-
-		groups = relationGraph.buildGroups();
-
-		getGroupRelations();
-
-		determineGroupSizes();
-
-		sortGroupsBySize();
-
-		processGroupBatches();
-	}
-
-	private void getGroupRelations() throws FileNotFoundException, IOException
-	{
-		TLongSet idsHasChildRelations = relationGraph.getIdsHasChildRelations();
-		TLongSet idsIsChildRelation = relationGraph.getIdsIsChildRelation();
-
-		InputStream input = StreamUtil.bufferedInputStream(getInputFile());
-		OsmIterator iterator = OsmIoUtils.setupOsmIterator(input, inputFormat,
-				writeMetadata);
-
-		groupRelations = new TLongObjectHashMap<>();
-		for (EntityContainer container : iterator) {
+		for (EntityContainer container : inputIterator) {
 			if (container.getType() != EntityType.Relation) {
 				continue;
 			}
 			OsmRelation relation = (OsmRelation) container.getEntity();
-			if (idsHasChildRelations.contains(relation.getId())
-					|| idsIsChildRelation.contains(relation.getId())) {
-				groupRelations.put(relation.getId(), relation);
+			if (relation.getNumberOfMembers() == 0) {
+				continue;
+			}
+			if (batch.fits(relation)) {
+				batch.add(relation);
+			} else {
+				process(batch);
+				status();
+				batch.clear();
+				batch.add(relation);
 			}
 		}
-
-		input.close();
-	}
-
-	private void determineGroupSizes()
-	{
-		for (Group group : groups) {
-			group.setNumMembers(groupsize(group));
-		}
-	}
-
-	private int groupsize(Group group)
-	{
-		int n = 0;
-		for (long member : group.getRelationIds().toArray()) {
-			OsmRelation relation = groupRelations.get(member);
-			n += relation.getNumberOfMembers();
-		}
-		return n;
-	}
-
-	private void sortGroupsBySize()
-	{
-		Collections.sort(groups, new Comparator<Group>() {
-
-			@Override
-			public int compare(Group o1, Group o2)
-			{
-				return Integer.compare(o2.getNumMembers(), o1.getNumMembers());
-			}
-		});
-	}
-
-	private void processGroupBatches() throws IOException
-	{
-		GroupBatch batch = new GroupBatch(maxMembers);
-
-		batches: while (!groups.isEmpty()) {
-			Iterator<Group> iterator = groups.iterator();
-			while (iterator.hasNext()) {
-				Group group = iterator.next();
-				if (!batch.fits(group)) {
-					continue;
-				}
-				iterator.remove();
-				batch.add(group);
-				if (batch.isFull()) {
-					process(batch);
-					batch.clear();
-					status();
-					continue batches;
-				}
-			}
+		if (!batch.getRelations().isEmpty()) {
 			process(batch);
-			batch.clear();
 			status();
+			batch.clear();
 		}
+
+		System.out.println(String.format("Wrote %s relations in %d batches",
+				format.format(relationCount), batchCount));
 	}
 
 	private int batchCount = 0;
@@ -242,22 +157,9 @@ public class SplitRelationsSmart extends AbstractTaskSingleInputFileOutput
 				format.format(perSecond)));
 	}
 
-	private void process(GroupBatch batch) throws IOException
+	private void process(RelationBatch batch) throws IOException
 	{
-		System.out.println(String.format("groups: %d, members: %d", batch
-				.getGroups().size(), batch.getNumMembers()));
-
-		List<Group> groups = batch.getGroups();
-
-		TLongSet batchRelationIds = new TLongHashSet();
-		for (Group group : groups) {
-			batchRelationIds.addAll(group.getRelationIds());
-		}
-
-		List<OsmRelation> relations = new ArrayList<>();
-		for (long relationId : batchRelationIds.toArray()) {
-			relations.add(groupRelations.get(relationId));
-		}
+		List<OsmRelation> relations = batch.getRelations();
 
 		batchCount++;
 
