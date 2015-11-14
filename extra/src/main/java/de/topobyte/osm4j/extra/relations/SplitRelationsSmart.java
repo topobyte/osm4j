@@ -111,7 +111,7 @@ public class SplitRelationsSmart extends AbstractTaskSingleInputFileOutput
 		}
 	}
 
-	private int maxMembers = 400 * 1000;
+	private int maxMembers = 100 * 1000;
 
 	private RelationGraph relationGraph = new RelationGraph(false, true);
 	private List<Group> groups;

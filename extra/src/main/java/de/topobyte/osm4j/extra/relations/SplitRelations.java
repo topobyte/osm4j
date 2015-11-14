@@ -104,7 +104,7 @@ public class SplitRelations extends AbstractTaskSingleInputIteratorOutput
 		}
 	}
 
-	private int maxMembers = 400 * 1000;
+	private int maxMembers = 100 * 1000;
 
 	private void execute() throws IOException
 	{
