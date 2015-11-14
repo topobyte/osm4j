@@ -54,7 +54,7 @@ public class ExtractEntities extends AbstractTaskSingleInputIteratorOutput
 		task.execute();
 	}
 
-	private String pathDirectory;
+	private String[] pathsData;
 
 	private String[] fileNamesIds;
 	private String fileNamesOutput;
@@ -76,7 +76,7 @@ public class ExtractEntities extends AbstractTaskSingleInputIteratorOutput
 	{
 		super.setup(args);
 
-		pathDirectory = line.getOptionValue(OPTION_DIRECTORY);
+		pathsData = line.getOptionValues(OPTION_DIRECTORY);
 
 		fileNamesIds = line.getOptionValues(OPTION_FILE_NAMES_IDS);
 		fileNamesOutput = line.getOptionValue(OPTION_FILE_NAMES_OUTPUT);
@@ -96,34 +96,41 @@ public class ExtractEntities extends AbstractTaskSingleInputIteratorOutput
 
 	private List<ExtractionItem> extractionItems = new ArrayList<>();
 
-	private Path dirData;
+	private Path[] dirsData;
 	private List<Path> subdirs;
 
 	@Override
 	protected void init() throws IOException
 	{
 		super.init();
-		dirData = Paths.get(pathDirectory);
+		dirsData = new Path[pathsData.length];
+		for (int i = 0; i < dirsData.length; i++) {
+			dirsData[i] = Paths.get(pathsData[i]);
+		}
 
-		if (!Files.isDirectory(dirData)) {
-			System.out.println("Data path is not a directory");
-			System.exit(1);
+		for (Path dirData : dirsData) {
+			if (!Files.isDirectory(dirData)) {
+				System.out.println("Data path is not a directory: " + dirData);
+				System.exit(1);
+			}
 		}
 
 		subdirs = new ArrayList<>();
-		File[] subs = dirData.toFile().listFiles();
-		sub: for (File sub : subs) {
-			if (!sub.isDirectory()) {
-				continue;
-			}
-			Path subPath = sub.toPath();
-			for (String fileNameIds : fileNamesIds) {
-				Path ids = subPath.resolve(fileNameIds);
-				if (!Files.exists(ids)) {
-					continue sub;
+		for (Path dirData : dirsData) {
+			File[] subs = dirData.toFile().listFiles();
+			sub: for (File sub : subs) {
+				if (!sub.isDirectory()) {
+					continue;
 				}
+				Path subPath = sub.toPath();
+				for (String fileNameIds : fileNamesIds) {
+					Path ids = subPath.resolve(fileNameIds);
+					if (!Files.exists(ids)) {
+						continue sub;
+					}
+				}
+				subdirs.add(subPath);
 			}
-			subdirs.add(subPath);
 		}
 
 		for (Path subdir : subdirs) {
