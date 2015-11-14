@@ -340,7 +340,7 @@ public class DistributeRelations extends AbstractTaskInputOutput
 	{
 		InputStream input = StreamUtil.bufferedInputStream(path.toFile());
 		OsmIterator osmIterator = OsmIoUtils.setupOsmIterator(input,
-				inputFormat, false);
+				inputFormat, writeMetadata);
 		InMemoryDataSet data = DataSetReader
 				.read(osmIterator, true, true, true);
 		input.close();
