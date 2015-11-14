@@ -66,9 +66,9 @@ public class ExtractWayMemberNodeIds extends AbstractTaskInput
 		task.execute();
 	}
 
-	private String pathData;
+	private String[] pathsData;
 
-	private Path dirData;
+	private Path[] dirsData;
 	private List<Path> subdirs;
 
 	private String fileNamesWays;
@@ -88,7 +88,7 @@ public class ExtractWayMemberNodeIds extends AbstractTaskInput
 	{
 		super.setup(args);
 
-		pathData = line.getOptionValue(OPTION_DIRECTORY);
+		pathsData = line.getOptionValues(OPTION_DIRECTORY);
 
 		fileNamesWays = line.getOptionValue(OPTION_FILE_NAMES_WAYS);
 		fileNamesNodeIds = line.getOptionValue(OPTION_FILE_NAMES_NODE_IDS);
@@ -96,25 +96,32 @@ public class ExtractWayMemberNodeIds extends AbstractTaskInput
 
 	protected void init() throws IOException
 	{
-		dirData = Paths.get(pathData);
+		dirsData = new Path[pathsData.length];
+		for (int i = 0; i < dirsData.length; i++) {
+			dirsData[i] = Paths.get(pathsData[i]);
+		}
 
-		if (!Files.isDirectory(dirData)) {
-			System.out.println("Data path is not a directory");
-			System.exit(1);
+		for (Path dirData : dirsData) {
+			if (!Files.isDirectory(dirData)) {
+				System.out.println("Data path is not a directory: " + dirData);
+				System.exit(1);
+			}
 		}
 
 		subdirs = new ArrayList<>();
-		File[] subs = dirData.toFile().listFiles();
-		for (File sub : subs) {
-			if (!sub.isDirectory()) {
-				continue;
+		for (Path dirData : dirsData) {
+			File[] subs = dirData.toFile().listFiles();
+			for (File sub : subs) {
+				if (!sub.isDirectory()) {
+					continue;
+				}
+				Path subPath = sub.toPath();
+				Path ways = subPath.resolve(fileNamesWays);
+				if (!Files.exists(ways)) {
+					continue;
+				}
+				subdirs.add(subPath);
 			}
-			Path subPath = sub.toPath();
-			Path ways = subPath.resolve(fileNamesWays);
-			if (!Files.exists(ways)) {
-				continue;
-			}
-			subdirs.add(subPath);
 		}
 	}
 
