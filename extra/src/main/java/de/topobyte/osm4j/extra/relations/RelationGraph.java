@@ -100,7 +100,9 @@ public class RelationGraph
 		long id = relation.getId();
 		if (hasChildRelations) {
 			idsHasChildRelations.add(id);
-			graph.addNode(id);
+			if (!graph.getNodes().contains(id)) {
+				graph.addNode(id);
+			}
 
 			TLongIterator iterator = childRelationMembers.iterator();
 			while (iterator.hasNext()) {
@@ -145,6 +147,61 @@ public class RelationGraph
 
 	public List<Group> buildGroups()
 	{
+		if (undirected) {
+			return buildGroupsUndirected();
+		} else {
+			return buildGroupsDirected();
+		}
+	}
+
+	public List<Group> buildGroupsUndirected()
+	{
+		List<Group> groups = new LinkedList<>();
+
+		TLongSet nodes = new TLongHashSet(graph.getNodes());
+		while (!nodes.isEmpty()) {
+			long id = any(nodes);
+
+			TLongSet reachable = reachable(graph, id);
+			nodes.removeAll(reachable);
+
+			groups.add(new Group(id, reachable));
+		}
+		return groups;
+	}
+
+	private TLongSet reachable(Graph<Long> graph, long id)
+	{
+		TLongSet reached = new TLongHashSet();
+		TLongSet queue = new TLongHashSet();
+
+		queue.add(id);
+
+		while (!queue.isEmpty()) {
+			long current = any(queue);
+			reached.add(current);
+
+			Set<Long> out = graph.getEdgesOut(current);
+			for (long next : out) {
+				if (!reached.contains(next)) {
+					queue.add(next);
+				}
+			}
+		}
+
+		return reached;
+	}
+
+	private long any(TLongSet nodes)
+	{
+		TLongIterator iterator = nodes.iterator();
+		long id = iterator.next();
+		iterator.remove();
+		return id;
+	}
+
+	public List<Group> buildGroupsDirected()
+	{
 		List<Group> groups = new LinkedList<>();
 
 		TLongSet starts = new TLongHashSet();
@@ -171,9 +228,7 @@ public class RelationGraph
 		left.addAll(graph.getEdgesOut(start));
 
 		while (!left.isEmpty()) {
-			TLongIterator iterator = left.iterator();
-			long next = iterator.next();
-			iterator.remove();
+			long next = any(left);
 
 			if (group.contains(next)) {
 				continue;
