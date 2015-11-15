@@ -19,7 +19,6 @@ package de.topobyte.osm4j.extra.relations;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -50,6 +49,7 @@ import de.topobyte.osm4j.extra.datatree.DataTree;
 import de.topobyte.osm4j.extra.datatree.DataTreeFiles;
 import de.topobyte.osm4j.extra.datatree.DataTreeOpener;
 import de.topobyte.osm4j.extra.datatree.Node;
+import de.topobyte.osm4j.extra.idbboxlist.IdBboxListOutputStream;
 import de.topobyte.osm4j.tbo.access.TboWriter;
 import de.topobyte.osm4j.utils.AbstractExecutableInputOutput;
 import de.topobyte.osm4j.utils.OsmIoUtils;
@@ -68,11 +68,13 @@ public abstract class DistributeSimpleBase extends
 	private static final String OPTION_FILE_NAMES_TREE_RELATIONS = "tree_relations";
 	private static final String OPTION_OUTPUT_EMPTY_RELATIONS = "empty_relations";
 	private static final String OPTION_OUTPUT_NON_TREE_RELATIONS = "non_tree_relations";
+	private static final String OPTION_OUTPUT_NON_TREE_BBOXES = "non_tree_bboxes";
 
 	protected String pathTree;
 	protected String pathData;
 	protected String pathOutputEmpty;
 	protected String pathOutputNonTree;
+	protected String pathOutputBboxes;
 
 	protected Path dirData;
 	protected String fileNamesRelations;
@@ -89,6 +91,8 @@ public abstract class DistributeSimpleBase extends
 	protected Output outputNonTree;
 	protected Map<Node, Output> outputs = new HashMap<>();
 
+	private IdBboxListOutputStream outputBboxes;
+
 	public DistributeSimpleBase()
 	{
 		// @formatter:off
@@ -99,7 +103,8 @@ public abstract class DistributeSimpleBase extends
 		OptionHelper.add(options, OPTION_FILE_NAMES_NODES, true, true, "names of the nodes files in each directory");
 		OptionHelper.add(options, OPTION_FILE_NAMES_TREE_RELATIONS, true, true, "names of the relation files in the tree");
 		OptionHelper.add(options, OPTION_OUTPUT_EMPTY_RELATIONS, true, true, "where to store relations without geometry");
-		OptionHelper.add(options, OPTION_OUTPUT_NON_TREE_RELATIONS, true, true, "where to store relations without geometry");
+		OptionHelper.add(options, OPTION_OUTPUT_NON_TREE_RELATIONS, true, true, "where to store relations not matched with the tree");
+		OptionHelper.add(options, OPTION_OUTPUT_NON_TREE_BBOXES, true, true, "where to store bboxes of non-matched relations");
 		// @formatter:on
 	}
 
@@ -113,6 +118,7 @@ public abstract class DistributeSimpleBase extends
 		pathOutputEmpty = line.getOptionValue(OPTION_OUTPUT_EMPTY_RELATIONS);
 		pathOutputNonTree = line
 				.getOptionValue(OPTION_OUTPUT_NON_TREE_RELATIONS);
+		pathOutputBboxes = line.getOptionValue(OPTION_OUTPUT_NON_TREE_BBOXES);
 
 		fileNamesRelations = line.getOptionValue(OPTION_FILE_NAMES_RELATIONS);
 		fileNamesWays = line.getOptionValue(OPTION_FILE_NAMES_WAYS);
@@ -174,8 +180,8 @@ public abstract class DistributeSimpleBase extends
 		// Setup output for non-geometry relations
 
 		File fileOutputEmpty = new File(pathOutputEmpty);
-		OutputStream outEmpty = new BufferedOutputStream(new FileOutputStream(
-				fileOutputEmpty));
+		OutputStream outEmpty = StreamUtil
+				.bufferedOutputStream(fileOutputEmpty);
 		OsmOutputStream osmOutputEmpty = OsmIoUtils.setupOsmOutput(outEmpty,
 				outputFormat, writeMetadata, pbfConfig, tboConfig);
 		outputEmpty = new Output(fileOutputEmpty.toPath(), outEmpty,
@@ -184,12 +190,18 @@ public abstract class DistributeSimpleBase extends
 		// Setup output for non-tree relations
 
 		File fileOutputNonTree = new File(pathOutputNonTree);
-		OutputStream outNonTree = new BufferedOutputStream(
-				new FileOutputStream(fileOutputNonTree));
+		OutputStream outNonTree = StreamUtil
+				.bufferedOutputStream(fileOutputNonTree);
 		OsmOutputStream osmOutputNonTree = OsmIoUtils.setupOsmOutput(
 				outNonTree, outputFormat, writeMetadata, pbfConfig, tboConfig);
 		outputNonTree = new Output(fileOutputNonTree.toPath(), outNonTree,
 				osmOutputNonTree);
+
+		// Setup output for non-tree relations' bboxes
+
+		OutputStream outBboxes = StreamUtil
+				.bufferedOutputStream(pathOutputBboxes);
+		outputBboxes = new IdBboxListOutputStream(outBboxes);
 
 		// Setup output for tree relations
 
@@ -238,6 +250,8 @@ public abstract class DistributeSimpleBase extends
 
 		outputNonTree.getOsmOutput().complete();
 		outputNonTree.getOutputStream().close();
+
+		outputBboxes.close();
 
 		for (Output output : outputs.values()) {
 			output.getOsmOutput().complete();
