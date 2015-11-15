@@ -20,26 +20,22 @@ package de.topobyte.osm4j.utils;
 import gnu.trove.set.TLongSet;
 import gnu.trove.set.hash.TLongHashSet;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Iterator;
 
+import de.topobyte.osm4j.core.access.OsmHandler;
 import de.topobyte.osm4j.core.access.OsmInputException;
+import de.topobyte.osm4j.core.access.OsmReader;
 import de.topobyte.osm4j.core.model.iface.EntityContainer;
 import de.topobyte.osm4j.core.model.iface.OsmBounds;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.osm4j.core.model.iface.OsmRelation;
 import de.topobyte.osm4j.core.model.iface.OsmWay;
-import de.topobyte.osm4j.pbf.seq.PbfIterator;
-import de.topobyte.osm4j.tbo.access.TboIterator;
-import de.topobyte.osm4j.xml.dynsax.OsmXmlIterator;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
 public abstract class AbstractEntityCollector extends
-		AbstractTaskSingleInputReaderSingleOutput
+		AbstractTaskSingleInputStreamSingleOutput implements OsmHandler
 {
 
 	private static final String OPTION_REFERENCES = "references";
@@ -69,27 +65,15 @@ public abstract class AbstractEntityCollector extends
 	@Override
 	protected void init() throws IOException
 	{
-		File file = new File(pathReferences);
-		FileInputStream fis = new FileInputStream(file);
-		inRefs = new BufferedInputStream(fis);
+		inRefs = StreamUtil.bufferedInputStream(pathReferences);
 
-		switch (inputFormat) {
-		case XML:
-			iteratorReferences = new OsmXmlIterator(inRefs, readMetadata);
-			break;
-		case TBO:
-			iteratorReferences = new TboIterator(inRefs, readMetadata);
-			break;
-		case PBF:
-			iteratorReferences = new PbfIterator(inRefs, readMetadata);
-			break;
-		}
+		iteratorReferences = OsmIoUtils.setupOsmIterator(inRefs, inputFormat,
+				readMetadata);
 
 		super.init();
 	}
 
-	@Override
-	protected void run() throws OsmInputException
+	protected void run() throws OsmInputException, IOException
 	{
 		readReferences();
 		try {
@@ -98,7 +82,9 @@ public abstract class AbstractEntityCollector extends
 			throw new OsmInputException("unable to close references input", e);
 		}
 
-		super.run();
+		OsmReader reader = createReader();
+		reader.setHandler(this);
+		reader.read();
 	}
 
 	@Override

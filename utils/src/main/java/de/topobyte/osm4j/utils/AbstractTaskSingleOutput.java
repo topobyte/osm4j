@@ -44,7 +44,6 @@ public abstract class AbstractTaskSingleOutput extends AbstractTask
 	protected TboConfig tboConfig;
 	protected String pathOutput = null;
 
-	protected boolean readMetadata = true;
 	protected boolean writeMetadata = true;
 
 	protected boolean closeOutput = true;

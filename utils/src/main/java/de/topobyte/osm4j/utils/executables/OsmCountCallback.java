@@ -19,14 +19,17 @@ package de.topobyte.osm4j.utils.executables;
 
 import java.io.IOException;
 
+import de.topobyte.osm4j.core.access.OsmHandler;
 import de.topobyte.osm4j.core.access.OsmInputException;
+import de.topobyte.osm4j.core.access.OsmReader;
 import de.topobyte.osm4j.core.model.iface.OsmBounds;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.osm4j.core.model.iface.OsmRelation;
 import de.topobyte.osm4j.core.model.iface.OsmWay;
-import de.topobyte.osm4j.utils.AbstractTaskSingleInputReader;
+import de.topobyte.osm4j.utils.AbstractTaskSingleInputStream;
 
-public class OsmCountCallback extends AbstractTaskSingleInputReader
+public class OsmCountCallback extends AbstractTaskSingleInputStream implements
+		OsmHandler
 {
 
 	@Override
@@ -41,12 +44,12 @@ public class OsmCountCallback extends AbstractTaskSingleInputReader
 
 		task.setup(args);
 
-		task.readMetadata = true;
-
 		task.init();
 
+		OsmReader reader = task.createReader();
+		reader.setHandler(task);
 		try {
-			task.run();
+			reader.read();
 		} catch (OsmInputException e) {
 			System.out.println("error while running task");
 			e.printStackTrace();

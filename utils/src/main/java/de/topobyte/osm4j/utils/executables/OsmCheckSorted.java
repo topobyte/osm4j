@@ -19,11 +19,12 @@ package de.topobyte.osm4j.utils.executables;
 
 import java.io.IOException;
 
+import de.topobyte.osm4j.core.access.OsmIterator;
 import de.topobyte.osm4j.core.model.iface.EntityContainer;
 import de.topobyte.osm4j.core.model.iface.OsmEntity;
-import de.topobyte.osm4j.utils.AbstractTaskSingleInputIterator;
+import de.topobyte.osm4j.utils.AbstractTaskSingleInputStream;
 
-public class OsmCheckSorted extends AbstractTaskSingleInputIterator
+public class OsmCheckSorted extends AbstractTaskSingleInputStream
 {
 
 	@Override
@@ -51,8 +52,9 @@ public class OsmCheckSorted extends AbstractTaskSingleInputIterator
 
 	private void run() throws IOException
 	{
-		while (inputIterator.hasNext()) {
-			EntityContainer container = inputIterator.next();
+		OsmIterator iterator = createIterator();
+		while (iterator.hasNext()) {
+			EntityContainer container = iterator.next();
 			OsmEntity entity = container.getEntity();
 			long id = entity.getId();
 			switch (container.getType()) {

@@ -19,36 +19,28 @@ package de.topobyte.osm4j.utils;
 
 import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
 import de.topobyte.osm4j.core.access.OsmIterator;
-import de.topobyte.osm4j.pbf.seq.PbfIterator;
-import de.topobyte.osm4j.tbo.access.TboIterator;
-import de.topobyte.osm4j.xml.dynsax.OsmXmlIterator;
+import de.topobyte.osm4j.core.access.OsmReader;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
-public abstract class AbstractTaskSingleInputIterator extends AbstractTask
+public abstract class AbstractTaskSingleInputStreamOutput extends
+		AbstractTaskInputOutput
 {
 
 	private static final String OPTION_INPUT = "input";
-	private static final String OPTION_INPUT_FORMAT = "input_format";
 
-	protected FileFormat inputFormat;
 	protected String pathInput = null;
 
-	protected boolean readMetadata = true;
-
 	protected boolean closeInput = true;
-	protected InputStream in;
-	protected OsmIterator inputIterator;
+	protected OsmStream osmStream;
 
-	public AbstractTaskSingleInputIterator()
+	public AbstractTaskSingleInputStreamOutput()
 	{
 		// @formatter:off
 		OptionHelper.add(options, OPTION_INPUT, true, false, "the input file");
-		OptionHelper.add(options, OPTION_INPUT_FORMAT, true, true, "the file format of the input");
 		// @formatter:on
 	}
 
@@ -57,48 +49,40 @@ public abstract class AbstractTaskSingleInputIterator extends AbstractTask
 	{
 		super.setup(args);
 
-		String inputFormatName = line.getOptionValue(OPTION_INPUT_FORMAT);
-		inputFormat = FileFormat.parseFileFormat(inputFormatName);
-		if (inputFormat == null) {
-			System.out.println("invalid input format");
-			System.out.println("please specify one of: "
-					+ FileFormat.getHumanReadableListOfSupportedFormats());
-			System.exit(1);
-		}
-
 		pathInput = line.getOptionValue(OPTION_INPUT);
 	}
 
 	protected void init() throws IOException
 	{
-		in = null;
+		InputStream in = null;
 		if (pathInput == null) {
 			closeInput = false;
 			in = new BufferedInputStream(System.in);
 		} else {
 			closeInput = true;
 			File file = new File(pathInput);
-			FileInputStream fis = new FileInputStream(file);
-			in = new BufferedInputStream(fis);
+			in = StreamUtil.bufferedInputStream(file);
 		}
 
-		switch (inputFormat) {
-		case XML:
-			inputIterator = new OsmXmlIterator(in, readMetadata);
-			break;
-		case TBO:
-			inputIterator = new TboIterator(in, readMetadata);
-			break;
-		case PBF:
-			inputIterator = new PbfIterator(in, readMetadata);
-			break;
-		}
+		osmStream = new OsmStream(in, inputFormat);
+	}
+
+	protected OsmIterator createIterator() throws IOException
+	{
+		OsmStreamInput input = new OsmStreamInput(osmStream);
+		return input.createIterator(readMetadata).getIterator();
+	}
+
+	protected OsmReader createReader() throws IOException
+	{
+		OsmStreamInput input = new OsmStreamInput(osmStream);
+		return input.createReader(readMetadata).getReader();
 	}
 
 	protected void finish() throws IOException
 	{
 		if (closeInput) {
-			in.close();
+			osmStream.getInputStream().close();
 		}
 	}
 

@@ -19,10 +19,11 @@ package de.topobyte.osm4j.utils.executables;
 
 import java.io.IOException;
 
-import de.topobyte.osm4j.utils.AbstractTaskSingleInputIteratorSingleOutput;
+import de.topobyte.osm4j.core.access.OsmIterator;
+import de.topobyte.osm4j.utils.AbstractTaskSingleInputStreamSingleOutput;
 import de.topobyte.osm4j.utils.sort.MemorySort;
 
-public class OsmSort extends AbstractTaskSingleInputIteratorSingleOutput
+public class OsmSort extends AbstractTaskSingleInputStreamSingleOutput
 {
 
 	@Override
@@ -36,9 +37,6 @@ public class OsmSort extends AbstractTaskSingleInputIteratorSingleOutput
 		OsmSort convert = new OsmSort();
 
 		convert.setup(args);
-
-		convert.readMetadata = true;
-		convert.writeMetadata = true;
 
 		convert.init();
 
@@ -55,7 +53,8 @@ public class OsmSort extends AbstractTaskSingleInputIteratorSingleOutput
 
 	private void run() throws IOException
 	{
-		MemorySort sort = new MemorySort(osmOutputStream, inputIterator);
+		OsmIterator iterator = createIterator();
+		MemorySort sort = new MemorySort(osmOutputStream, iterator);
 		sort.run();
 	}
 

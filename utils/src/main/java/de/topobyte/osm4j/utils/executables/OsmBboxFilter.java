@@ -42,9 +42,6 @@ public class OsmBboxFilter extends AbstractAreaFilter
 
 		convert.setup(args);
 
-		convert.readMetadata = true;
-		convert.writeMetadata = true;
-
 		convert.init();
 
 		convert.run();

@@ -17,30 +17,23 @@
 
 package de.topobyte.osm4j.utils.executables;
 
-import java.io.BufferedOutputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import de.topobyte.osm4j.core.access.OsmIterator;
 import de.topobyte.osm4j.core.access.OsmOutputStream;
 import de.topobyte.osm4j.core.model.iface.EntityContainer;
 import de.topobyte.osm4j.core.model.iface.OsmBounds;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.osm4j.core.model.iface.OsmRelation;
 import de.topobyte.osm4j.core.model.iface.OsmWay;
-import de.topobyte.osm4j.pbf.seq.PbfWriter;
-import de.topobyte.osm4j.tbo.access.TboWriter;
-import de.topobyte.osm4j.utils.AbstractTaskSingleInputIteratorOutput;
-import de.topobyte.osm4j.xml.output.OsmXmlOutputStream;
+import de.topobyte.osm4j.utils.AbstractTaskSingleInputStreamOutput;
+import de.topobyte.osm4j.utils.OsmIoUtils;
+import de.topobyte.osm4j.utils.StreamUtil;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
-public class OsmEntitySplit extends AbstractTaskSingleInputIteratorOutput
+public class OsmEntitySplit extends AbstractTaskSingleInputStreamOutput
 {
-
-	final static Logger logger = LoggerFactory.getLogger(OsmEntitySplit.class);
 
 	private static final String OPTION_OUTPUT_NODES = "output_nodes";
 	private static final String OPTION_OUTPUT_WAYS = "output_ways";
@@ -120,51 +113,42 @@ public class OsmEntitySplit extends AbstractTaskSingleInputIteratorOutput
 		super.init();
 
 		if (passNodes) {
-			FileOutputStream fos = new FileOutputStream(pathNodes);
-			osNodes = new BufferedOutputStream(fos);
-			oosNodes = setupOsmOutput(osNodes);
+			OutputStream osNodes = StreamUtil.bufferedOutputStream(pathNodes);
+			oosNodes = OsmIoUtils.setupOsmOutput(osNodes, outputFormat,
+					writeMetadata, pbfConfig, tboConfig);
 		}
 		if (passWays) {
-			FileOutputStream fos = new FileOutputStream(pathWays);
-			osWays = new BufferedOutputStream(fos);
-			oosWays = setupOsmOutput(osWays);
+			OutputStream osWays = StreamUtil.bufferedOutputStream(pathWays);
+			oosWays = OsmIoUtils.setupOsmOutput(osWays, outputFormat,
+					writeMetadata, pbfConfig, tboConfig);
 		}
 		if (passRelations) {
-			FileOutputStream fos = new FileOutputStream(pathRelations);
-			osRelations = new BufferedOutputStream(fos);
-			oosRelations = setupOsmOutput(osRelations);
-		}
-	}
-
-	private OsmOutputStream setupOsmOutput(OutputStream out)
-	{
-		switch (outputFormat) {
-		default:
-		case TBO:
-			TboWriter tboWriter = new TboWriter(out, writeMetadata);
-			tboWriter.setCompression(tboConfig.getCompression());
-			return tboWriter;
-		case XML:
-			return new OsmXmlOutputStream(out, writeMetadata);
-		case PBF:
-			PbfWriter pbfWriter = new PbfWriter(out, writeMetadata);
-			pbfWriter.setCompression(pbfConfig.getCompression());
-			pbfWriter.setUseDense(pbfConfig.isUseDenseNodes());
-			return pbfWriter;
+			OutputStream osRelations = StreamUtil
+					.bufferedOutputStream(pathRelations);
+			oosRelations = OsmIoUtils.setupOsmOutput(osRelations, outputFormat,
+					writeMetadata, pbfConfig, tboConfig);
 		}
 	}
 
 	public void run() throws IOException
 	{
-		if (inputIterator.hasBounds()) {
-			OsmBounds bounds = inputIterator.getBounds();
-			oosNodes.write(bounds);
-			oosWays.write(bounds);
-			oosRelations.write(bounds);
+		OsmIterator iterator = createIterator();
+
+		if (iterator.hasBounds()) {
+			OsmBounds bounds = iterator.getBounds();
+			if (passNodes) {
+				oosNodes.write(bounds);
+			}
+			if (passWays) {
+				oosWays.write(bounds);
+			}
+			if (passRelations) {
+				oosRelations.write(bounds);
+			}
 		}
 
-		loop: while (inputIterator.hasNext()) {
-			EntityContainer entityContainer = inputIterator.next();
+		loop: while (iterator.hasNext()) {
+			EntityContainer entityContainer = iterator.next();
 			switch (entityContainer.getType()) {
 			case Node:
 				if (passNodes) {

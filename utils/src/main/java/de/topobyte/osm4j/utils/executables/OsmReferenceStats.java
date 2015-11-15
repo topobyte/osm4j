@@ -19,6 +19,7 @@ package de.topobyte.osm4j.utils.executables;
 
 import java.io.IOException;
 
+import de.topobyte.osm4j.core.access.OsmIterator;
 import de.topobyte.osm4j.core.model.iface.EntityType;
 import de.topobyte.osm4j.core.model.iface.OsmRelation;
 import de.topobyte.osm4j.core.model.iface.OsmRelationMember;
@@ -26,10 +27,10 @@ import de.topobyte.osm4j.core.model.iface.OsmWay;
 import de.topobyte.osm4j.core.resolve.DataSetReader;
 import de.topobyte.osm4j.core.resolve.EntityNotFoundException;
 import de.topobyte.osm4j.core.resolve.InMemoryDataSet;
-import de.topobyte.osm4j.utils.AbstractTaskSingleInputIterator;
+import de.topobyte.osm4j.utils.AbstractTaskSingleInputStream;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
-public class OsmReferenceStats extends AbstractTaskSingleInputIterator
+public class OsmReferenceStats extends AbstractTaskSingleInputStream
 {
 
 	private static final String OPTION_NO_WAY_NODES = "no_way_nodes";
@@ -84,8 +85,9 @@ public class OsmReferenceStats extends AbstractTaskSingleInputIterator
 
 	private void run() throws IOException
 	{
-		InMemoryDataSet data = DataSetReader.read(inputIterator, false, false,
-				false);
+		OsmIterator iterator = createIterator();
+		InMemoryDataSet data = DataSetReader
+				.read(iterator, false, false, false);
 
 		System.out.println("Nodes: " + data.getNodes().size());
 		System.out.println("Ways: " + data.getWays().size());

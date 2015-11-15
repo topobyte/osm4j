@@ -43,9 +43,6 @@ public class OsmCollectRelations extends AbstractEntityCollector
 
 		task.setup(args);
 
-		task.readMetadata = true;
-		task.writeMetadata = true;
-
 		task.init();
 
 		try {

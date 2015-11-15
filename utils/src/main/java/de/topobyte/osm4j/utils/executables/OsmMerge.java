@@ -17,21 +17,17 @@
 
 package de.topobyte.osm4j.utils.executables;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 import de.topobyte.osm4j.core.access.OsmIterator;
-import de.topobyte.osm4j.pbf.seq.PbfIterator;
-import de.topobyte.osm4j.tbo.access.TboIterator;
 import de.topobyte.osm4j.utils.AbstractTaskSingleOutput;
 import de.topobyte.osm4j.utils.FileFormat;
+import de.topobyte.osm4j.utils.OsmIoUtils;
+import de.topobyte.osm4j.utils.StreamUtil;
 import de.topobyte.osm4j.utils.merge.sorted.SortedMerge;
-import de.topobyte.osm4j.xml.dynsax.OsmXmlIterator;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
 public class OsmMerge extends AbstractTaskSingleOutput
@@ -50,9 +46,6 @@ public class OsmMerge extends AbstractTaskSingleOutput
 		OsmMerge task = new OsmMerge();
 
 		task.setup(args);
-
-		task.readMetadata = true;
-		task.writeMetadata = true;
 
 		task.init();
 
@@ -73,6 +66,7 @@ public class OsmMerge extends AbstractTaskSingleOutput
 		// @formatter:on
 	}
 
+	private boolean readMetadata = true;
 	private FileFormat inputFormat;
 	private List<String> additionalPaths = new ArrayList<String>();
 
@@ -111,25 +105,12 @@ public class OsmMerge extends AbstractTaskSingleOutput
 		super.init();
 
 		for (String path : additionalPaths) {
-			File file = new File(path);
-			FileInputStream fis = new FileInputStream(file);
-			InputStream in = new BufferedInputStream(fis);
-			inputs.add(in);
+			inputs.add(StreamUtil.bufferedInputStream(path));
 		}
 
 		for (InputStream input : inputs) {
-			OsmIterator iterator = null;
-			switch (inputFormat) {
-			case XML:
-				iterator = new OsmXmlIterator(input, readMetadata);
-				break;
-			case TBO:
-				iterator = new TboIterator(input, readMetadata);
-				break;
-			case PBF:
-				iterator = new PbfIterator(input, readMetadata);
-				break;
-			}
+			OsmIterator iterator = OsmIoUtils.setupOsmIterator(input,
+					inputFormat, readMetadata);
 			iterators.add(iterator);
 		}
 

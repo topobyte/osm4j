@@ -19,13 +19,14 @@ package de.topobyte.osm4j.utils.executables;
 
 import java.io.IOException;
 
+import de.topobyte.osm4j.core.access.OsmIterator;
 import de.topobyte.osm4j.core.model.iface.EntityContainer;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.osm4j.core.model.iface.OsmRelation;
 import de.topobyte.osm4j.core.model.iface.OsmWay;
-import de.topobyte.osm4j.utils.AbstractTaskSingleInputIteratorSingleOutput;
+import de.topobyte.osm4j.utils.AbstractTaskSingleInputStreamSingleOutput;
 
-public class OsmCat extends AbstractTaskSingleInputIteratorSingleOutput
+public class OsmCat extends AbstractTaskSingleInputStreamSingleOutput
 {
 
 	@Override
@@ -39,9 +40,6 @@ public class OsmCat extends AbstractTaskSingleInputIteratorSingleOutput
 		OsmCat convert = new OsmCat();
 
 		convert.setup(args);
-
-		convert.readMetadata = true;
-		convert.writeMetadata = true;
 
 		convert.init();
 
@@ -58,12 +56,14 @@ public class OsmCat extends AbstractTaskSingleInputIteratorSingleOutput
 
 	private void run() throws IOException
 	{
-		if (inputIterator.hasBounds()) {
-			osmOutputStream.write(inputIterator.getBounds());
+		OsmIterator iterator = createIterator();
+
+		if (iterator.hasBounds()) {
+			osmOutputStream.write(iterator.getBounds());
 		}
 
-		while (inputIterator.hasNext()) {
-			EntityContainer entityContainer = inputIterator.next();
+		while (iterator.hasNext()) {
+			EntityContainer entityContainer = iterator.next();
 			switch (entityContainer.getType()) {
 			case Node:
 				osmOutputStream.write((OsmNode) entityContainer.getEntity());

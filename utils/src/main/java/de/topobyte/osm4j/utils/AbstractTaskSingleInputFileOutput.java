@@ -17,39 +17,22 @@
 
 package de.topobyte.osm4j.utils;
 
-import java.io.File;
-import java.io.IOException;
+import java.nio.file.Paths;
 
-import de.topobyte.osm4j.utils.config.PbfConfig;
-import de.topobyte.osm4j.utils.config.PbfOptions;
-import de.topobyte.osm4j.utils.config.TboConfig;
-import de.topobyte.osm4j.utils.config.TboOptions;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
-public abstract class AbstractTaskSingleInputFileOutput extends AbstractTask
+public abstract class AbstractTaskSingleInputFileOutput extends
+		AbstractTaskInputOutput
 {
 
 	private static final String OPTION_INPUT = "input";
-	private static final String OPTION_INPUT_FORMAT = "input_format";
-	private static final String OPTION_OUTPUT_FORMAT = "output_format";
 
-	protected FileFormat inputFormat;
-	protected FileFormat outputFormat;
-	protected PbfConfig pbfConfig;
-	protected TboConfig tboConfig;
 	protected String pathInput;
-
-	protected boolean readMetadata = true;
-	protected boolean writeMetadata = true;
 
 	public AbstractTaskSingleInputFileOutput()
 	{
 		// @formatter:off
 		OptionHelper.add(options, OPTION_INPUT, true, true, "the input file");
-		OptionHelper.add(options, OPTION_INPUT_FORMAT, true, true, "the file format of the input");
-		OptionHelper.add(options, OPTION_OUTPUT_FORMAT, true, true, "the file format of the output");
-		PbfOptions.add(options);
-		TboOptions.add(options);
 		// @formatter:on
 	}
 
@@ -58,38 +41,17 @@ public abstract class AbstractTaskSingleInputFileOutput extends AbstractTask
 	{
 		super.setup(args);
 
-		String inputFormatName = line.getOptionValue(OPTION_INPUT_FORMAT);
-		inputFormat = FileFormat.parseFileFormat(inputFormatName);
-		if (inputFormat == null) {
-			System.out.println("invalid input format");
-			System.out.println("please specify one of: "
-					+ FileFormat.getHumanReadableListOfSupportedFormats());
-			System.exit(1);
-		}
-
-		String outputFormatName = line.getOptionValue(OPTION_OUTPUT_FORMAT);
-		outputFormat = FileFormat.parseFileFormat(outputFormatName);
-		if (outputFormat == null) {
-			System.out.println("invalid output format");
-			System.out.println("please specify one of: "
-					+ FileFormat.getHumanReadableListOfSupportedFormats());
-			System.exit(1);
-		}
-
-		pbfConfig = PbfOptions.parse(line);
-		tboConfig = TboOptions.parse(line);
-
 		pathInput = line.getOptionValue(OPTION_INPUT);
 	}
 
-	protected String getInputPath() throws IOException
+	protected OsmFile getOsmFile()
 	{
-		return pathInput;
+		return new OsmFile(Paths.get(pathInput), inputFormat);
 	}
 
-	protected File getInputFile() throws IOException
+	protected OsmFileInput getOsmFileInput()
 	{
-		return new File(pathInput);
+		return new OsmFileInput(getOsmFile());
 	}
 
 }

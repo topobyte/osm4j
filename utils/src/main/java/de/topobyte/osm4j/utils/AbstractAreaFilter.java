@@ -24,6 +24,7 @@ import java.io.IOException;
 import com.vividsolutions.jts.geom.Coordinate;
 
 import de.topobyte.jts.utils.predicate.ContainmentTest;
+import de.topobyte.osm4j.core.access.OsmIterator;
 import de.topobyte.osm4j.core.access.ProgressMonitor;
 import de.topobyte.osm4j.core.model.iface.EntityContainer;
 import de.topobyte.osm4j.core.model.iface.EntityType;
@@ -34,7 +35,7 @@ import de.topobyte.osm4j.core.model.iface.OsmWay;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
 public abstract class AbstractAreaFilter extends
-		AbstractTaskSingleInputIteratorSingleOutput
+		AbstractTaskSingleInputStreamSingleOutput
 {
 
 	private static final String OPTION_ONLY_NODES = "nodes_only";
@@ -65,8 +66,10 @@ public abstract class AbstractAreaFilter extends
 
 	protected void run() throws IOException
 	{
-		while (inputIterator.hasNext()) {
-			EntityContainer entityContainer = inputIterator.next();
+		OsmIterator iterator = createIterator();
+
+		while (iterator.hasNext()) {
+			EntityContainer entityContainer = iterator.next();
 			switch (entityContainer.getType()) {
 			case Node:
 				handle((OsmNode) entityContainer.getEntity());

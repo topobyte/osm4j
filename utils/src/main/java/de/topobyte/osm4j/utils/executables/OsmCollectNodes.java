@@ -43,9 +43,6 @@ public class OsmCollectNodes extends AbstractEntityCollector
 
 		task.setup(args);
 
-		task.readMetadata = true;
-		task.writeMetadata = true;
-
 		task.init();
 
 		try {

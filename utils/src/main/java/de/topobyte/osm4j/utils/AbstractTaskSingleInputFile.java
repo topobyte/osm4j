@@ -17,25 +17,21 @@
 
 package de.topobyte.osm4j.utils;
 
-import java.io.File;
-import java.io.IOException;
+import java.nio.file.Paths;
 
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
-public abstract class AbstractTaskSingleInputFile extends AbstractTask
+public abstract class AbstractTaskSingleInputFile extends AbstractTaskInput
 {
 
 	private static final String OPTION_INPUT = "input";
-	private static final String OPTION_INPUT_FORMAT = "input_format";
 
-	protected FileFormat inputFormat;
 	protected String pathInput;
 
 	public AbstractTaskSingleInputFile()
 	{
 		// @formatter:off
 		OptionHelper.add(options, OPTION_INPUT, true, true, "the input file");
-		OptionHelper.add(options, OPTION_INPUT_FORMAT, true, true, "the file format of the input");
 		// @formatter:on
 	}
 
@@ -44,26 +40,17 @@ public abstract class AbstractTaskSingleInputFile extends AbstractTask
 	{
 		super.setup(args);
 
-		String inputFormatName = line.getOptionValue(OPTION_INPUT_FORMAT);
-		inputFormat = FileFormat.parseFileFormat(inputFormatName);
-		if (inputFormat == null) {
-			System.out.println("invalid input format");
-			System.out.println("please specify one of: "
-					+ FileFormat.getHumanReadableListOfSupportedFormats());
-			System.exit(1);
-		}
-
 		pathInput = line.getOptionValue(OPTION_INPUT);
 	}
 
-	protected String getInputPath() throws IOException
+	protected OsmFile getOsmFile()
 	{
-		return pathInput;
+		return new OsmFile(Paths.get(pathInput), inputFormat);
 	}
 
-	protected File getInputFile() throws IOException
+	protected OsmFileInput getOsmFileInput()
 	{
-		return new File(pathInput);
+		return new OsmFileInput(getOsmFile());
 	}
 
 }

@@ -25,6 +25,7 @@ public abstract class AbstractTaskInput extends AbstractTask
 	private static final String OPTION_INPUT_FORMAT = "input_format";
 
 	protected FileFormat inputFormat;
+	protected boolean readMetadata = true;
 
 	public AbstractTaskInput()
 	{

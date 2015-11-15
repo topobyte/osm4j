@@ -20,13 +20,14 @@ package de.topobyte.osm4j.utils.executables;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 
+import de.topobyte.osm4j.core.access.OsmIterator;
 import de.topobyte.osm4j.core.model.iface.EntityContainer;
 import de.topobyte.osm4j.core.model.iface.OsmEntity;
 import de.topobyte.osm4j.core.model.iface.OsmMetadata;
-import de.topobyte.osm4j.utils.AbstractTaskSingleInputIterator;
+import de.topobyte.osm4j.utils.AbstractTaskSingleInputStream;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
-public class OsmFindMostRecentTimestamp extends AbstractTaskSingleInputIterator
+public class OsmFindMostRecentTimestamp extends AbstractTaskSingleInputStream
 {
 
 	private static final String OPTION_VERBOSE = "verbose";
@@ -42,7 +43,6 @@ public class OsmFindMostRecentTimestamp extends AbstractTaskSingleInputIterator
 		OsmFindMostRecentTimestamp task = new OsmFindMostRecentTimestamp();
 		task.setup(args);
 
-		task.readMetadata = true;
 		task.init();
 
 		task.run();
@@ -71,8 +71,9 @@ public class OsmFindMostRecentTimestamp extends AbstractTaskSingleInputIterator
 	{
 		long latest = 0;
 
-		while (inputIterator.hasNext()) {
-			EntityContainer entityContainer = inputIterator.next();
+		OsmIterator iterator = createIterator();
+		while (iterator.hasNext()) {
+			EntityContainer entityContainer = iterator.next();
 			OsmEntity entity = entityContainer.getEntity();
 
 			OsmMetadata metadata = entity.getMetadata();
