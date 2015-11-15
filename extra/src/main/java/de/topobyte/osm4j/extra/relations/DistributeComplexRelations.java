@@ -28,6 +28,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
+import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
 
 import de.topobyte.osm4j.core.access.OsmIterator;
@@ -105,7 +106,8 @@ public class DistributeComplexRelations extends DistributeSimpleBase
 
 		if (relationGroups.size() == 1) {
 			InMemoryDataSet dataNodes = read(pathNodes, false, false);
-			Geometry box = box(dataNodes.getNodes().valueCollection());
+			Envelope envelope = box(dataNodes.getNodes().valueCollection());
+			Geometry box = box(envelope);
 
 			List<Node> leafs = tree.query(box);
 
@@ -129,7 +131,8 @@ public class DistributeComplexRelations extends DistributeSimpleBase
 				Set<OsmNode> nodes;
 				try {
 					nodes = relation.findNodes(entityProvider);
-					Geometry box = box(nodes);
+					Envelope envelope = box(nodes);
+					Geometry box = box(envelope);
 					List<Node> leafs = tree.query(box);
 
 					if (leafs.size() == 1) {

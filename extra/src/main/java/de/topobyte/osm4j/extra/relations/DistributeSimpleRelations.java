@@ -23,6 +23,7 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.Set;
 
+import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
 
 import de.topobyte.osm4j.core.access.OsmIterator;
@@ -92,7 +93,8 @@ public class DistributeSimpleRelations extends DistributeSimpleBase
 				continue;
 			}
 
-			Geometry box = box(nodes);
+			Envelope envelope = box(nodes);
+			Geometry box = box(envelope);
 			List<Node> leafs = tree.query(box);
 
 			if (leafs.size() == 1) {

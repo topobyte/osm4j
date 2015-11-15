@@ -247,12 +247,17 @@ public abstract class DistributeSimpleBase extends
 
 	protected abstract void build(Path path) throws IOException;
 
-	protected Geometry box(Collection<OsmNode> nodes)
+	protected Envelope box(Collection<OsmNode> nodes)
 	{
 		Envelope env = new Envelope();
 		for (OsmNode node : nodes) {
 			env.expandToInclude(node.getLongitude(), node.getLatitude());
 		}
+		return env;
+	}
+
+	protected Geometry box(Envelope env)
+	{
 		return new GeometryFactory().toGeometry(env);
 	}
 
