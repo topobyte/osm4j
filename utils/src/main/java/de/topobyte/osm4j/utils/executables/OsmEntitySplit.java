@@ -27,12 +27,12 @@ import de.topobyte.osm4j.core.model.iface.OsmBounds;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.osm4j.core.model.iface.OsmRelation;
 import de.topobyte.osm4j.core.model.iface.OsmWay;
-import de.topobyte.osm4j.utils.AbstractTaskSingleInputStreamOutput;
+import de.topobyte.osm4j.utils.AbstractExecutableSingleInputStreamOutput;
 import de.topobyte.osm4j.utils.OsmIoUtils;
 import de.topobyte.osm4j.utils.StreamUtil;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
-public class OsmEntitySplit extends AbstractTaskSingleInputStreamOutput
+public class OsmEntitySplit extends AbstractExecutableSingleInputStreamOutput
 {
 
 	private static final String OPTION_OUTPUT_NODES = "output_nodes";

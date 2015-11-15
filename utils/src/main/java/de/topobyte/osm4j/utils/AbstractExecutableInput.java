@@ -17,28 +17,34 @@
 
 package de.topobyte.osm4j.utils;
 
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.GnuParser;
-import org.apache.commons.cli.HelpFormatter;
-import org.apache.commons.cli.Options;
-import org.apache.commons.cli.ParseException;
+import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
-public abstract class AbstractTask
+public abstract class AbstractExecutableInput extends AbstractExecutable
 {
 
-	protected abstract String getHelpMessage();
+	private static final String OPTION_INPUT_FORMAT = "input_format";
 
-	protected Options options = new Options();
-	protected CommandLine line = null;
+	protected FileFormat inputFormat;
+	protected boolean readMetadata = true;
 
+	public AbstractExecutableInput()
+	{
+		// @formatter:off
+		OptionHelper.add(options, OPTION_INPUT_FORMAT, true, true, "the file format of the input");
+		// @formatter:on
+	}
+
+	@Override
 	protected void setup(String[] args)
 	{
-		try {
-			line = new GnuParser().parse(options, args);
-		} catch (ParseException e) {
-			System.out.println("unable to parse command line: "
-					+ e.getMessage());
-			new HelpFormatter().printHelp(getHelpMessage(), options);
+		super.setup(args);
+
+		String inputFormatName = line.getOptionValue(OPTION_INPUT_FORMAT);
+		inputFormat = FileFormat.parseFileFormat(inputFormatName);
+		if (inputFormat == null) {
+			System.out.println("invalid input format");
+			System.out.println("please specify one of: "
+					+ FileFormat.getHumanReadableListOfSupportedFormats());
 			System.exit(1);
 		}
 	}

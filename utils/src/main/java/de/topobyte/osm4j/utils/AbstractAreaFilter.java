@@ -35,7 +35,7 @@ import de.topobyte.osm4j.core.model.iface.OsmWay;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
 public abstract class AbstractAreaFilter extends
-		AbstractTaskSingleInputStreamSingleOutput
+		AbstractExecutableSingleInputStreamSingleOutput
 {
 
 	private static final String OPTION_ONLY_NODES = "nodes_only";

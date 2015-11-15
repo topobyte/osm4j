@@ -24,8 +24,8 @@ import java.io.OutputStream;
 import de.topobyte.osm4j.core.access.OsmOutputStream;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
-public abstract class AbstractTaskSingleInputStreamSingleOutput extends
-		AbstractTaskSingleInputStreamOutput
+public abstract class AbstractExecutableSingleInputStreamSingleOutput extends
+		AbstractExecutableSingleInputStreamOutput
 {
 
 	private static final String OPTION_OUTPUT = "output";
@@ -37,7 +37,7 @@ public abstract class AbstractTaskSingleInputStreamSingleOutput extends
 
 	protected OsmOutputStream osmOutputStream;
 
-	public AbstractTaskSingleInputStreamSingleOutput()
+	public AbstractExecutableSingleInputStreamSingleOutput()
 	{
 		// @formatter:off
 		OptionHelper.add(options, OPTION_OUTPUT, true, false, "the output file");

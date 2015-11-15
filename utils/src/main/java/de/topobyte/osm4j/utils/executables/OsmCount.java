@@ -23,9 +23,9 @@ import de.topobyte.osm4j.core.access.OsmIterator;
 import de.topobyte.osm4j.core.model.iface.EntityContainer;
 import de.topobyte.osm4j.core.model.iface.OsmRelation;
 import de.topobyte.osm4j.core.model.iface.OsmWay;
-import de.topobyte.osm4j.utils.AbstractTaskSingleInputStream;
+import de.topobyte.osm4j.utils.AbstractExecutableSingleInputStream;
 
-public class OsmCount extends AbstractTaskSingleInputStream
+public class OsmCount extends AbstractExecutableSingleInputStream
 {
 
 	@Override

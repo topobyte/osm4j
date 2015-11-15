@@ -15,47 +15,42 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with osm4j. If not, see <http://www.gnu.org/licenses/>.
 
-package de.topobyte.osm4j.utils.executables;
+package de.topobyte.osm4j.utils;
 
-import java.io.IOException;
+import java.nio.file.Paths;
 
-import de.topobyte.osm4j.core.access.OsmIterator;
-import de.topobyte.osm4j.utils.AbstractExecutableSingleInputStreamSingleOutput;
-import de.topobyte.osm4j.utils.sort.MemorySort;
+import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
-public class OsmSort extends AbstractExecutableSingleInputStreamSingleOutput
+public abstract class AbstractExecutableSingleInputFile extends AbstractExecutableInput
 {
 
-	@Override
-	protected String getHelpMessage()
+	private static final String OPTION_INPUT = "input";
+
+	protected String pathInput;
+
+	public AbstractExecutableSingleInputFile()
 	{
-		return OsmSort.class.getSimpleName() + " [options]";
-	}
-
-	public static void main(String[] args) throws IOException
-	{
-		OsmSort convert = new OsmSort();
-
-		convert.setup(args);
-
-		convert.init();
-
-		convert.run();
-
-		convert.finish();
+		// @formatter:off
+		OptionHelper.add(options, OPTION_INPUT, true, true, "the input file");
+		// @formatter:on
 	}
 
 	@Override
 	protected void setup(String[] args)
 	{
 		super.setup(args);
+
+		pathInput = line.getOptionValue(OPTION_INPUT);
 	}
 
-	private void run() throws IOException
+	protected OsmFile getOsmFile()
 	{
-		OsmIterator iterator = createIterator();
-		MemorySort sort = new MemorySort(osmOutputStream, iterator);
-		sort.run();
+		return new OsmFile(Paths.get(pathInput), inputFormat);
+	}
+
+	protected OsmFileInput getOsmFileInput()
+	{
+		return new OsmFileInput(getOsmFile());
 	}
 
 }

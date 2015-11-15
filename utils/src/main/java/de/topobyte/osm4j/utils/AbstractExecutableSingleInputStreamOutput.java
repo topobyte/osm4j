@@ -26,8 +26,8 @@ import de.topobyte.osm4j.core.access.OsmIterator;
 import de.topobyte.osm4j.core.access.OsmReader;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
-public abstract class AbstractTaskSingleInputStreamOutput extends
-		AbstractTaskInputOutput
+public abstract class AbstractExecutableSingleInputStreamOutput extends
+		AbstractExecutableInputOutput
 {
 
 	private static final String OPTION_INPUT = "input";
@@ -37,7 +37,7 @@ public abstract class AbstractTaskSingleInputStreamOutput extends
 	protected boolean closeInput = true;
 	protected OsmStream osmStream;
 
-	public AbstractTaskSingleInputStreamOutput()
+	public AbstractExecutableSingleInputStreamOutput()
 	{
 		// @formatter:off
 		OptionHelper.add(options, OPTION_INPUT, true, false, "the input file");

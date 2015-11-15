@@ -27,10 +27,10 @@ import de.topobyte.osm4j.core.model.iface.OsmEntity;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.osm4j.core.model.iface.OsmRelation;
 import de.topobyte.osm4j.core.model.iface.OsmWay;
-import de.topobyte.osm4j.utils.AbstractTaskSingleInputStreamSingleOutput;
+import de.topobyte.osm4j.utils.AbstractExecutableSingleInputStreamSingleOutput;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
-public class OsmIdFilter extends AbstractTaskSingleInputStreamSingleOutput
+public class OsmIdFilter extends AbstractExecutableSingleInputStreamSingleOutput
 		implements OsmHandler
 {
 

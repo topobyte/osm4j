@@ -26,9 +26,9 @@ import de.topobyte.osm4j.core.model.iface.OsmBounds;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.osm4j.core.model.iface.OsmRelation;
 import de.topobyte.osm4j.core.model.iface.OsmWay;
-import de.topobyte.osm4j.utils.AbstractTaskSingleInputStream;
+import de.topobyte.osm4j.utils.AbstractExecutableSingleInputStream;
 
-public class OsmCountCallback extends AbstractTaskSingleInputStream implements
+public class OsmCountCallback extends AbstractExecutableSingleInputStream implements
 		OsmHandler
 {
 

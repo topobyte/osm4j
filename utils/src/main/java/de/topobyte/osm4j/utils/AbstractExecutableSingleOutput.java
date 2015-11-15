@@ -33,7 +33,7 @@ import de.topobyte.osm4j.utils.config.TboOptions;
 import de.topobyte.osm4j.xml.output.OsmXmlOutputStream;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
-public abstract class AbstractTaskSingleOutput extends AbstractTask
+public abstract class AbstractExecutableSingleOutput extends AbstractExecutable
 {
 
 	private static final String OPTION_OUTPUT = "output";
@@ -51,7 +51,7 @@ public abstract class AbstractTaskSingleOutput extends AbstractTask
 
 	protected OsmOutputStream osmOutputStream;
 
-	public AbstractTaskSingleOutput()
+	public AbstractExecutableSingleOutput()
 	{
 		// @formatter:off
 		OptionHelper.add(options, OPTION_OUTPUT, true, false, "the output file");

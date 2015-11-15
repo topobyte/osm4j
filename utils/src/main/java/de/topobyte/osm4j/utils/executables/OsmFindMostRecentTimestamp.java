@@ -24,10 +24,10 @@ import de.topobyte.osm4j.core.access.OsmIterator;
 import de.topobyte.osm4j.core.model.iface.EntityContainer;
 import de.topobyte.osm4j.core.model.iface.OsmEntity;
 import de.topobyte.osm4j.core.model.iface.OsmMetadata;
-import de.topobyte.osm4j.utils.AbstractTaskSingleInputStream;
+import de.topobyte.osm4j.utils.AbstractExecutableSingleInputStream;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
-public class OsmFindMostRecentTimestamp extends AbstractTaskSingleInputStream
+public class OsmFindMostRecentTimestamp extends AbstractExecutableSingleInputStream
 {
 
 	private static final String OPTION_VERBOSE = "verbose";

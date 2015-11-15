@@ -21,15 +21,15 @@ import java.nio.file.Paths;
 
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
-public abstract class AbstractTaskSingleInputFileOutput extends
-		AbstractTaskInputOutput
+public abstract class AbstractExecutableSingleInputFileOutput extends
+		AbstractExecutableInputOutput
 {
 
 	private static final String OPTION_INPUT = "input";
 
 	protected String pathInput;
 
-	public AbstractTaskSingleInputFileOutput()
+	public AbstractExecutableSingleInputFileOutput()
 	{
 		// @formatter:off
 		OptionHelper.add(options, OPTION_INPUT, true, true, "the input file");

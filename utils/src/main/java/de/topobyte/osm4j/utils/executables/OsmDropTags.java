@@ -32,9 +32,9 @@ import de.topobyte.osm4j.core.model.iface.OsmWay;
 import de.topobyte.osm4j.core.model.impl.Node;
 import de.topobyte.osm4j.core.model.impl.Relation;
 import de.topobyte.osm4j.core.model.impl.Way;
-import de.topobyte.osm4j.utils.AbstractTaskSingleInputStreamSingleOutput;
+import de.topobyte.osm4j.utils.AbstractExecutableSingleInputStreamSingleOutput;
 
-public class OsmDropTags extends AbstractTaskSingleInputStreamSingleOutput
+public class OsmDropTags extends AbstractExecutableSingleInputStreamSingleOutput
 {
 
 	@Override

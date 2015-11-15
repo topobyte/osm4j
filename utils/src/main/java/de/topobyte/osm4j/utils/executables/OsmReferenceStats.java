@@ -27,10 +27,10 @@ import de.topobyte.osm4j.core.model.iface.OsmWay;
 import de.topobyte.osm4j.core.resolve.DataSetReader;
 import de.topobyte.osm4j.core.resolve.EntityNotFoundException;
 import de.topobyte.osm4j.core.resolve.InMemoryDataSet;
-import de.topobyte.osm4j.utils.AbstractTaskSingleInputStream;
+import de.topobyte.osm4j.utils.AbstractExecutableSingleInputStream;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
-public class OsmReferenceStats extends AbstractTaskSingleInputStream
+public class OsmReferenceStats extends AbstractExecutableSingleInputStream
 {
 
 	private static final String OPTION_NO_WAY_NODES = "no_way_nodes";

@@ -22,9 +22,9 @@ import java.io.IOException;
 import de.topobyte.osm4j.core.access.OsmIterator;
 import de.topobyte.osm4j.core.model.iface.EntityContainer;
 import de.topobyte.osm4j.core.model.iface.OsmEntity;
-import de.topobyte.osm4j.utils.AbstractTaskSingleInputStream;
+import de.topobyte.osm4j.utils.AbstractExecutableSingleInputStream;
 
-public class OsmCheckSorted extends AbstractTaskSingleInputStream
+public class OsmCheckSorted extends AbstractExecutableSingleInputStream
 {
 
 	@Override

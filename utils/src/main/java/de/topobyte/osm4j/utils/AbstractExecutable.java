@@ -17,40 +17,30 @@
 
 package de.topobyte.osm4j.utils;
 
-import java.nio.file.Paths;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.GnuParser;
+import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.ParseException;
 
-import de.topobyte.utilities.apache.commons.cli.OptionHelper;
-
-public abstract class AbstractTaskSingleInputFile extends AbstractTaskInput
+public abstract class AbstractExecutable
 {
 
-	private static final String OPTION_INPUT = "input";
+	protected abstract String getHelpMessage();
 
-	protected String pathInput;
+	protected Options options = new Options();
+	protected CommandLine line = null;
 
-	public AbstractTaskSingleInputFile()
-	{
-		// @formatter:off
-		OptionHelper.add(options, OPTION_INPUT, true, true, "the input file");
-		// @formatter:on
-	}
-
-	@Override
 	protected void setup(String[] args)
 	{
-		super.setup(args);
-
-		pathInput = line.getOptionValue(OPTION_INPUT);
-	}
-
-	protected OsmFile getOsmFile()
-	{
-		return new OsmFile(Paths.get(pathInput), inputFormat);
-	}
-
-	protected OsmFileInput getOsmFileInput()
-	{
-		return new OsmFileInput(getOsmFile());
+		try {
+			line = new GnuParser().parse(options, args);
+		} catch (ParseException e) {
+			System.out.println("unable to parse command line: "
+					+ e.getMessage());
+			new HelpFormatter().printHelp(getHelpMessage(), options);
+			System.exit(1);
+		}
 	}
 
 }

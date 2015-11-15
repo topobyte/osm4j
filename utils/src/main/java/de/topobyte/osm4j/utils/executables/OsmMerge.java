@@ -23,14 +23,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.topobyte.osm4j.core.access.OsmIterator;
-import de.topobyte.osm4j.utils.AbstractTaskSingleOutput;
+import de.topobyte.osm4j.utils.AbstractExecutableSingleOutput;
 import de.topobyte.osm4j.utils.FileFormat;
 import de.topobyte.osm4j.utils.OsmIoUtils;
 import de.topobyte.osm4j.utils.StreamUtil;
 import de.topobyte.osm4j.utils.merge.sorted.SortedMerge;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
-public class OsmMerge extends AbstractTaskSingleOutput
+public class OsmMerge extends AbstractExecutableSingleOutput
 {
 
 	private static final String OPTION_INPUT_FORMAT = "input_format";
