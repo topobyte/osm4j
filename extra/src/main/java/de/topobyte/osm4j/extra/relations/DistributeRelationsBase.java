@@ -56,7 +56,7 @@ import de.topobyte.osm4j.utils.OsmIoUtils;
 import de.topobyte.osm4j.utils.StreamUtil;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
-public abstract class DistributeSimpleBase extends
+public abstract class DistributeRelationsBase extends
 		AbstractExecutableInputOutput
 {
 
@@ -93,7 +93,7 @@ public abstract class DistributeSimpleBase extends
 
 	private IdBboxListOutputStream outputBboxes;
 
-	public DistributeSimpleBase()
+	public DistributeRelationsBase()
 	{
 		// @formatter:off
 		OptionHelper.add(options, OPTION_TREE, true, true, "tree to use for small relations");

@@ -42,7 +42,7 @@ import de.topobyte.osm4j.extra.datatree.Node;
 import de.topobyte.osm4j.utils.OsmIoUtils;
 import de.topobyte.osm4j.utils.StreamUtil;
 
-public class DistributeComplexRelations extends DistributeSimpleBase
+public class DistributeComplexRelations extends DistributeRelationsBase
 {
 
 	@Override

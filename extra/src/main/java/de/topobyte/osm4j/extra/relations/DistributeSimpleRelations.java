@@ -38,7 +38,7 @@ import de.topobyte.osm4j.extra.datatree.Node;
 import de.topobyte.osm4j.utils.OsmIoUtils;
 import de.topobyte.osm4j.utils.StreamUtil;
 
-public class DistributeSimpleRelations extends DistributeSimpleBase
+public class DistributeSimpleRelations extends DistributeRelationsBase
 {
 
 	@Override
