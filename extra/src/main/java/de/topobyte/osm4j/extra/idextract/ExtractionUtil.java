@@ -38,6 +38,7 @@ public class ExtractionUtil
 			Path pathOutput = path.resolve(fileNamesOutput);
 			extractionItems.add(new ExtractionItem(pathsIds, pathOutput));
 		}
+		directories.close();
 
 		return extractionItems;
 	}
