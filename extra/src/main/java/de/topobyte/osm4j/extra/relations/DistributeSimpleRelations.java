@@ -104,7 +104,8 @@ public class DistributeSimpleRelations extends DistributeRelationsBase
 			} else {
 				nRemaining++;
 				write(relation, outputNonTree);
-				outputBboxes.write(new IdBboxEntry(relation.getId(), envelope));
+				outputBboxes.write(new IdBboxEntry(relation.getId(), envelope,
+						nodes.size()));
 			}
 		}
 	}

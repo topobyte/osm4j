@@ -143,7 +143,8 @@ public class DistributeComplexRelations extends DistributeRelationsBase
 						nRemaining++;
 						write(relation, outputNonTree);
 						long id = lowestId(relation.getRelations());
-						outputBboxes.write(new IdBboxEntry(id, envelope));
+						outputBboxes.write(new IdBboxEntry(id, envelope, nodes
+								.size()));
 					}
 				} catch (EntityNotFoundException e) {
 					//

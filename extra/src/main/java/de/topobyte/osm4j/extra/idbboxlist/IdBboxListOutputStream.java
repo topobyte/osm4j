@@ -46,6 +46,7 @@ public class IdBboxListOutputStream
 		dataOutput.writeDouble(e.getMaxX());
 		dataOutput.writeDouble(e.getMinY());
 		dataOutput.writeDouble(e.getMaxY());
+		dataOutput.writeInt(entry.getSize());
 	}
 
 }

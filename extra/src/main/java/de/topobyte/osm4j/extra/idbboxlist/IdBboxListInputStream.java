@@ -47,7 +47,8 @@ public class IdBboxListInputStream implements IdBboxInput
 		double maxX = dataInput.readDouble();
 		double minY = dataInput.readDouble();
 		double maxY = dataInput.readDouble();
-		return new IdBboxEntry(id, new Envelope(minX, maxX, minY, maxY));
+		int size = dataInput.readInt();
+		return new IdBboxEntry(id, new Envelope(minX, maxX, minY, maxY), size);
 	}
 
 }

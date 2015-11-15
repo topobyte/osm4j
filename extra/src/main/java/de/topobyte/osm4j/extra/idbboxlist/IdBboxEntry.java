@@ -7,11 +7,13 @@ public class IdBboxEntry
 
 	private long id;
 	private Envelope envelope;
+	private int size;
 
-	public IdBboxEntry(long id, Envelope envelope)
+	public IdBboxEntry(long id, Envelope envelope, int size)
 	{
 		this.id = id;
 		this.envelope = envelope;
+		this.size = size;
 	}
 
 	public long getId()
@@ -32,6 +34,16 @@ public class IdBboxEntry
 	public void setEnvelope(Envelope envelope)
 	{
 		this.envelope = envelope;
+	}
+
+	public int getSize()
+	{
+		return size;
+	}
+
+	public void setSize(int size)
+	{
+		this.size = size;
 	}
 
 }
