@@ -35,6 +35,7 @@ import de.topobyte.osm4j.core.resolve.InMemoryDataSet;
 import de.topobyte.osm4j.core.resolve.NullOsmEntityProvider;
 import de.topobyte.osm4j.core.resolve.OsmEntityProvider;
 import de.topobyte.osm4j.extra.datatree.Node;
+import de.topobyte.osm4j.extra.idbboxlist.IdBboxEntry;
 import de.topobyte.osm4j.utils.OsmIoUtils;
 import de.topobyte.osm4j.utils.StreamUtil;
 
@@ -103,6 +104,7 @@ public class DistributeSimpleRelations extends DistributeRelationsBase
 			} else {
 				nRemaining++;
 				write(relation, outputNonTree);
+				outputBboxes.write(new IdBboxEntry(relation.getId(), envelope));
 			}
 		}
 	}

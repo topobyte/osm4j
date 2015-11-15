@@ -91,7 +91,7 @@ public abstract class DistributeRelationsBase extends
 	protected Output outputNonTree;
 	protected Map<Node, Output> outputs = new HashMap<>();
 
-	private IdBboxListOutputStream outputBboxes;
+	protected IdBboxListOutputStream outputBboxes;
 
 	public DistributeRelationsBase()
 	{

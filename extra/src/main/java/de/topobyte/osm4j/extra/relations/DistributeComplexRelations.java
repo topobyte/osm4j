@@ -39,6 +39,7 @@ import de.topobyte.osm4j.core.resolve.EntityNotFoundException;
 import de.topobyte.osm4j.core.resolve.InMemoryDataSet;
 import de.topobyte.osm4j.core.resolve.OsmEntityProvider;
 import de.topobyte.osm4j.extra.datatree.Node;
+import de.topobyte.osm4j.extra.idbboxlist.IdBboxEntry;
 import de.topobyte.osm4j.utils.OsmIoUtils;
 import de.topobyte.osm4j.utils.StreamUtil;
 
@@ -141,6 +142,8 @@ public class DistributeComplexRelations extends DistributeRelationsBase
 					} else {
 						nRemaining++;
 						write(relation, outputNonTree);
+						long id = lowestId(relation.getRelations());
+						outputBboxes.write(new IdBboxEntry(id, envelope));
 					}
 				} catch (EntityNotFoundException e) {
 					//
@@ -148,6 +151,15 @@ public class DistributeComplexRelations extends DistributeRelationsBase
 			}
 
 		}
+	}
+
+	private long lowestId(Collection<OsmRelation> relations)
+	{
+		long lowest = Long.MAX_VALUE;
+		for (OsmRelation relation : relations) {
+			lowest = Math.min(lowest, relation.getId());
+		}
+		return lowest;
 	}
 
 	private void write(RelationGroup group, Output output) throws IOException
