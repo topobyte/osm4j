@@ -32,6 +32,7 @@ import com.vividsolutions.jts.geom.Envelope;
 import de.topobyte.adt.geo.BBox;
 import de.topobyte.largescalefileio.ClosingFileOutputStreamFactory;
 import de.topobyte.largescalefileio.SimpleClosingFileOutputStreamFactory;
+import de.topobyte.osm4j.core.access.OsmIterator;
 import de.topobyte.osm4j.core.access.OsmOutputStream;
 import de.topobyte.osm4j.core.model.iface.EntityContainer;
 import de.topobyte.osm4j.core.model.iface.OsmBounds;
@@ -42,16 +43,18 @@ import de.topobyte.osm4j.extra.datatree.DataTreeOpener;
 import de.topobyte.osm4j.extra.datatree.DataTreeUtil;
 import de.topobyte.osm4j.extra.datatree.Node;
 import de.topobyte.osm4j.extra.progress.NodeProgress;
-import de.topobyte.osm4j.utils.AbstractTaskSingleInputIteratorOutput;
+import de.topobyte.osm4j.utils.AbstractExecutableSingleInputStreamOutput;
 import de.topobyte.osm4j.utils.OsmIoUtils;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
 public abstract class BaseNodeTreeCreator extends
-		AbstractTaskSingleInputIteratorOutput
+		AbstractExecutableSingleInputStreamOutput
 {
 
 	private static final String OPTION_OUTPUT = "output";
 	private static final String OPTION_FILE_NAMES = "filenames";
+
+	protected OsmIterator inputIterator;
 
 	protected String pathOutput;
 	protected String fileNames;
@@ -79,6 +82,13 @@ public abstract class BaseNodeTreeCreator extends
 
 		pathOutput = line.getOptionValue(OPTION_OUTPUT);
 		fileNames = line.getOptionValue(OPTION_FILE_NAMES);
+	}
+
+	@Override
+	protected void init() throws IOException
+	{
+		super.init();
+		inputIterator = createIterator();
 	}
 
 	protected void initNewTree() throws IOException

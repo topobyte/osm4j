@@ -20,7 +20,6 @@ package de.topobyte.osm4j.extra.datatree.ways;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -39,18 +38,20 @@ import de.topobyte.osm4j.core.model.iface.EntityType;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.osm4j.core.model.iface.OsmWay;
 import de.topobyte.osm4j.core.model.impl.Bounds;
-import de.topobyte.osm4j.extra.StreamUtil;
 import de.topobyte.osm4j.extra.datatree.DataTree;
 import de.topobyte.osm4j.extra.datatree.DataTreeOpener;
 import de.topobyte.osm4j.extra.datatree.Node;
 import de.topobyte.osm4j.extra.nodearray.NodeArray;
 import de.topobyte.osm4j.extra.nodearray.NodeArrayInteger;
 import de.topobyte.osm4j.extra.progress.NodeProgress;
-import de.topobyte.osm4j.utils.AbstractTaskSingleInputFileOutput;
+import de.topobyte.osm4j.utils.AbstractExecutableSingleInputFileOutput;
 import de.topobyte.osm4j.utils.OsmIoUtils;
+import de.topobyte.osm4j.utils.OsmIteratorInput;
+import de.topobyte.osm4j.utils.StreamUtil;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
-public class MapWaysToTreeUsingArray extends AbstractTaskSingleInputFileOutput
+public class MapWaysToTreeUsingArray extends
+		AbstractExecutableSingleInputFileOutput
 {
 
 	private static final String OPTION_FILE_NAMES = "filenames";
@@ -109,9 +110,9 @@ public class MapWaysToTreeUsingArray extends AbstractTaskSingleInputFileOutput
 				4096);
 		DataTree tree = DataTreeOpener.open(dirTree.toFile());
 
-		InputStream bis = StreamUtil.bufferedInputStream(getInputFile());
-		OsmIterator iterator = OsmIoUtils.setupOsmIterator(bis, inputFormat,
-				writeMetadata);
+		OsmIteratorInput input = getOsmFileInput()
+				.createIterator(writeMetadata);
+		OsmIterator iterator = input.getIterator();
 
 		// This is where we write ways to that do not contain any reference
 		// within the world bounds
@@ -197,7 +198,7 @@ public class MapWaysToTreeUsingArray extends AbstractTaskSingleInputFileOutput
 		System.out.println("none: " + nNone);
 		System.out.println("multiple: " + nMultiple);
 
-		bis.close();
+		input.close();
 		array.close();
 
 		outputNone.getOsmOutput().complete();

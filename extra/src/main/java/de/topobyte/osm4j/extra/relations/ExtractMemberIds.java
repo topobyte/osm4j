@@ -37,13 +37,13 @@ import de.topobyte.osm4j.core.model.iface.EntityType;
 import de.topobyte.osm4j.core.model.iface.OsmRelation;
 import de.topobyte.osm4j.core.model.iface.OsmRelationMember;
 import de.topobyte.osm4j.core.model.util.OsmModelUtil;
-import de.topobyte.osm4j.extra.StreamUtil;
 import de.topobyte.osm4j.extra.idlist.IdListOutputStream;
-import de.topobyte.osm4j.utils.AbstractTaskInput;
+import de.topobyte.osm4j.utils.AbstractExecutableInput;
 import de.topobyte.osm4j.utils.OsmIoUtils;
+import de.topobyte.osm4j.utils.StreamUtil;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
-public class ExtractMemberIds extends AbstractTaskInput
+public class ExtractMemberIds extends AbstractExecutableInput
 {
 
 	private static final String OPTION_DIRECTORY = "directory";

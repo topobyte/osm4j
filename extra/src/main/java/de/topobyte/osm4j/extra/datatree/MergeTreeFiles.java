@@ -27,14 +27,14 @@ import java.util.List;
 
 import de.topobyte.osm4j.core.access.OsmIterator;
 import de.topobyte.osm4j.core.access.OsmOutputStream;
-import de.topobyte.osm4j.extra.StreamUtil;
-import de.topobyte.osm4j.utils.AbstractTaskInputOutput;
+import de.topobyte.osm4j.utils.AbstractExecutableInputOutput;
 import de.topobyte.osm4j.utils.OsmIoUtils;
+import de.topobyte.osm4j.utils.StreamUtil;
 import de.topobyte.osm4j.utils.merge.sorted.SortedMerge;
 import de.topobyte.osm4j.utils.sort.MemorySortIterator;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
-public class MergeTreeFiles extends AbstractTaskInputOutput
+public class MergeTreeFiles extends AbstractExecutableInputOutput
 {
 
 	private static final String OPTION_TREE = "tree";

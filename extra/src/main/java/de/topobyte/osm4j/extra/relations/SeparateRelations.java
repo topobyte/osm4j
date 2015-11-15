@@ -21,20 +21,19 @@ import gnu.trove.set.TLongSet;
 import gnu.trove.set.hash.TLongHashSet;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 
-import de.topobyte.osm4j.core.access.OsmIterator;
 import de.topobyte.osm4j.core.access.OsmOutputStream;
 import de.topobyte.osm4j.core.model.iface.EntityType;
 import de.topobyte.osm4j.core.model.iface.OsmRelation;
 import de.topobyte.osm4j.core.model.iface.OsmRelationMember;
-import de.topobyte.osm4j.extra.StreamUtil;
-import de.topobyte.osm4j.utils.AbstractTaskSingleInputFileOutput;
+import de.topobyte.osm4j.utils.AbstractExecutableSingleInputFileOutput;
 import de.topobyte.osm4j.utils.OsmIoUtils;
+import de.topobyte.osm4j.utils.OsmIteratorInput;
+import de.topobyte.osm4j.utils.StreamUtil;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
-public class SeparateRelations extends AbstractTaskSingleInputFileOutput
+public class SeparateRelations extends AbstractExecutableSingleInputFileOutput
 {
 
 	private static final String OPTION_OUTPUT_SIMPLE = "output_simple";
@@ -87,11 +86,9 @@ public class SeparateRelations extends AbstractTaskSingleInputFileOutput
 
 	private void findComplexRelations() throws IOException
 	{
-		InputStream input = StreamUtil.bufferedInputStream(getInputFile());
-		OsmIterator iterator = OsmIoUtils.setupOsmIterator(input, inputFormat,
-				false);
+		OsmIteratorInput input = getOsmFileInput().createIterator(false);
 
-		for (OsmRelation relation : new RelationIterator(iterator)) {
+		for (OsmRelation relation : new RelationIterator(input.getIterator())) {
 			boolean hasRelationMembers = false;
 			for (int i = 0; i < relation.getNumberOfMembers(); i++) {
 				OsmRelationMember member = relation.getMember(i);
@@ -120,11 +117,10 @@ public class SeparateRelations extends AbstractTaskSingleInputFileOutput
 		OsmOutputStream osmOutputComplex = OsmIoUtils.setupOsmOutput(
 				outComplex, outputFormat, writeMetadata, pbfConfig, tboConfig);
 
-		InputStream input = StreamUtil.bufferedInputStream(getInputFile());
-		OsmIterator iterator = OsmIoUtils.setupOsmIterator(input, inputFormat,
-				writeMetadata);
+		OsmIteratorInput input = getOsmFileInput()
+				.createIterator(writeMetadata);
 
-		for (OsmRelation relation : new RelationIterator(iterator)) {
+		for (OsmRelation relation : new RelationIterator(input.getIterator())) {
 			long id = relation.getId();
 			if (idsIsRelationMember.contains(id)
 					|| idsHasRelationMembers.contains(id)) {

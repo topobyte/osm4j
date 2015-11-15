@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.topobyte.osm4j.core.access.OsmIterator;
 import de.topobyte.osm4j.core.model.iface.EntityType;
 import de.topobyte.osm4j.extra.datatree.DataTree;
 import de.topobyte.osm4j.extra.datatree.DataTreeFiles;
@@ -29,11 +30,11 @@ import de.topobyte.osm4j.extra.datatree.DataTreeOpener;
 import de.topobyte.osm4j.extra.datatree.Node;
 import de.topobyte.osm4j.extra.idextract.ExtractionItem;
 import de.topobyte.osm4j.extra.idextract.Extractor;
-import de.topobyte.osm4j.utils.AbstractTaskSingleInputIteratorOutput;
+import de.topobyte.osm4j.utils.AbstractExecutableSingleInputStreamOutput;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
 public class ExtractMissingWayNodes extends
-		AbstractTaskSingleInputIteratorOutput
+		AbstractExecutableSingleInputStreamOutput
 {
 
 	private static final String OPTION_TREE = "tree";
@@ -115,7 +116,8 @@ public class ExtractMissingWayNodes extends
 		Extractor extractor = new Extractor(EntityType.Node, extractionItems,
 				outputFormat, pbfConfig, tboConfig, writeMetadata);
 
-		extractor.execute(inputIterator);
+		OsmIterator iterator = createIterator();
+		extractor.execute(iterator);
 		finish();
 	}
 

@@ -33,9 +33,9 @@ import de.topobyte.osm4j.core.resolve.EntityNotFoundException;
 import de.topobyte.osm4j.core.resolve.InMemoryDataSet;
 import de.topobyte.osm4j.core.resolve.NullOsmEntityProvider;
 import de.topobyte.osm4j.core.resolve.OsmEntityProvider;
-import de.topobyte.osm4j.extra.StreamUtil;
 import de.topobyte.osm4j.extra.datatree.Node;
 import de.topobyte.osm4j.utils.OsmIoUtils;
+import de.topobyte.osm4j.utils.StreamUtil;
 
 public class DistributeSimpleRelations extends DistributeSimpleBase
 {

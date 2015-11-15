@@ -24,14 +24,15 @@ import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
 
+import de.topobyte.osm4j.core.access.OsmIterator;
 import de.topobyte.osm4j.core.model.iface.EntityContainer;
 import de.topobyte.osm4j.core.model.iface.EntityType;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
-import de.topobyte.osm4j.extra.StreamUtil;
-import de.topobyte.osm4j.utils.AbstractTaskSingleInputIterator;
+import de.topobyte.osm4j.utils.AbstractExecutableSingleInputStream;
+import de.topobyte.osm4j.utils.StreamUtil;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
-public class CreateNodeArray extends AbstractTaskSingleInputIterator
+public class CreateNodeArray extends AbstractExecutableSingleInputStream
 {
 
 	private static final String OPTION_OUTPUT = "output";
@@ -123,8 +124,9 @@ public class CreateNodeArray extends AbstractTaskSingleInputIterator
 
 	private void execute() throws IOException
 	{
-		while (inputIterator.hasNext()) {
-			EntityContainer container = inputIterator.next();
+		OsmIterator iterator = createIterator();
+		while (iterator.hasNext()) {
+			EntityContainer container = iterator.next();
 			if (container.getType() != EntityType.Node) {
 				break;
 			}

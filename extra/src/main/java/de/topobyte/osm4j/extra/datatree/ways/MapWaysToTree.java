@@ -38,20 +38,20 @@ import de.topobyte.osm4j.core.model.iface.EntityContainer;
 import de.topobyte.osm4j.core.model.iface.EntityType;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.osm4j.core.model.iface.OsmWay;
-import de.topobyte.osm4j.extra.StreamUtil;
 import de.topobyte.osm4j.extra.datatree.DataTree;
 import de.topobyte.osm4j.extra.datatree.DataTreeFiles;
 import de.topobyte.osm4j.extra.datatree.DataTreeOpener;
 import de.topobyte.osm4j.extra.datatree.Node;
 import de.topobyte.osm4j.extra.progress.NodeProgress;
 import de.topobyte.osm4j.extra.ways.WayNodeIdComparator;
-import de.topobyte.osm4j.utils.AbstractTaskSingleInputFileOutput;
+import de.topobyte.osm4j.utils.AbstractExecutableSingleInputFileOutput;
 import de.topobyte.osm4j.utils.OsmIoUtils;
+import de.topobyte.osm4j.utils.OsmIteratorInput;
 import de.topobyte.osm4j.utils.merge.sorted.SortedMergeIterator;
 import de.topobyte.osm4j.utils.sort.IdComparator;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
-public class MapWaysToTree extends AbstractTaskSingleInputFileOutput
+public class MapWaysToTree extends AbstractExecutableSingleInputFileOutput
 {
 
 	private static final String OPTION_TREE = "tree";
@@ -100,7 +100,7 @@ public class MapWaysToTree extends AbstractTaskSingleInputFileOutput
 	}
 
 	private DataTree tree;
-	private OsmIterator nodeIterator;
+	private OsmIteratorInput nodeInput;
 	private SortedMergeIterator wayIterator;
 
 	private Map<Node, Output> outputs = new HashMap<>();
@@ -117,10 +117,7 @@ public class MapWaysToTree extends AbstractTaskSingleInputFileOutput
 
 		List<Node> leafs = tree.getLeafs();
 
-		// Node input
-		InputStream input = StreamUtil.bufferedInputStream(getInputFile());
-		nodeIterator = OsmIoUtils.setupOsmIterator(input, inputFormat,
-				writeMetadata);
+		nodeInput = getOsmFileInput().createIterator(writeMetadata);
 
 		// Node outputs
 		ClosingFileOutputStreamFactory factoryOut = new SimpleClosingFileOutputStreamFactory();
@@ -181,6 +178,7 @@ public class MapWaysToTree extends AbstractTaskSingleInputFileOutput
 
 		advanceWay();
 
+		OsmIterator nodeIterator = nodeInput.getIterator();
 		while (nodeIterator.hasNext()) {
 			EntityContainer container = nodeIterator.next();
 			if (container.getType() != EntityType.Node) {
@@ -213,6 +211,8 @@ public class MapWaysToTree extends AbstractTaskSingleInputFileOutput
 		}
 
 		progress.stop();
+
+		nodeInput.close();
 
 		for (InputStream input : wayInputStreams) {
 			input.close();

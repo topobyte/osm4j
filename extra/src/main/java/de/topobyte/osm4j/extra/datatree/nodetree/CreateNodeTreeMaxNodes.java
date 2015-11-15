@@ -18,7 +18,6 @@
 package de.topobyte.osm4j.extra.datatree.nodetree;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -34,15 +33,15 @@ import com.vividsolutions.jts.geom.Envelope;
 import de.topobyte.adt.geo.BBox;
 import de.topobyte.osm4j.core.access.OsmIterator;
 import de.topobyte.osm4j.core.model.iface.OsmBounds;
-import de.topobyte.osm4j.extra.StreamUtil;
 import de.topobyte.osm4j.extra.datatree.DataTree;
 import de.topobyte.osm4j.extra.datatree.DataTreeUtil;
 import de.topobyte.osm4j.extra.datatree.Node;
-import de.topobyte.osm4j.utils.AbstractTaskSingleInputFileOutput;
-import de.topobyte.osm4j.utils.OsmIoUtils;
+import de.topobyte.osm4j.utils.AbstractExecutableSingleInputFileOutput;
+import de.topobyte.osm4j.utils.OsmIteratorInput;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
-public class CreateNodeTreeMaxNodes extends AbstractTaskSingleInputFileOutput
+public class CreateNodeTreeMaxNodes extends
+		AbstractExecutableSingleInputFileOutput
 {
 
 	private static final String OPTION_OUTPUT = "output";
@@ -121,9 +120,9 @@ public class CreateNodeTreeMaxNodes extends AbstractTaskSingleInputFileOutput
 			System.exit(1);
 		}
 
-		InputStream input = StreamUtil.bufferedInputStream(getInputFile());
-		OsmIterator iterator = OsmIoUtils.setupOsmIterator(input, inputFormat,
-				false);
+		OsmIteratorInput input = getOsmFileInput().createIterator(false);
+		OsmIterator iterator = input.getIterator();
+
 		if (!iterator.hasBounds()) {
 			System.out.println("Input does not provide bounds");
 			System.exit(1);
@@ -147,8 +146,9 @@ public class CreateNodeTreeMaxNodes extends AbstractTaskSingleInputFileOutput
 
 		tree.getRoot().split(SPLIT_INITIAL);
 		NodeTreeDistributer initialDistributer = new NodeTreeDistributer(tree,
-				dirOutput, tree.getRoot(), getInputFile(), maxNodes, fileNames,
-				inputFormat, outputFormat, pbfConfig, tboConfig, writeMetadata);
+				dirOutput, tree.getRoot(), getOsmFile().getPath().toFile(),
+				maxNodes, fileNames, inputFormat, outputFormat, pbfConfig,
+				tboConfig, writeMetadata);
 		initialDistributer.execute();
 
 		Deque<NodeTreeDistributer> check = new LinkedList<>();

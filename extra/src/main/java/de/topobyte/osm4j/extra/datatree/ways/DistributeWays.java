@@ -45,18 +45,18 @@ import de.topobyte.osm4j.core.resolve.EntityNotFoundException;
 import de.topobyte.osm4j.core.resolve.InMemoryDataSet;
 import de.topobyte.osm4j.core.resolve.OsmEntityProvider;
 import de.topobyte.osm4j.core.resolve.UnionOsmEntityProvider;
-import de.topobyte.osm4j.extra.StreamUtil;
 import de.topobyte.osm4j.extra.datatree.DataTree;
 import de.topobyte.osm4j.extra.datatree.DataTreeFiles;
 import de.topobyte.osm4j.extra.datatree.DataTreeOpener;
 import de.topobyte.osm4j.extra.datatree.Node;
 import de.topobyte.osm4j.geometry.GeometryBuilder;
-import de.topobyte.osm4j.utils.AbstractTaskInputOutput;
+import de.topobyte.osm4j.utils.AbstractExecutableInputOutput;
 import de.topobyte.osm4j.utils.FileFormat;
 import de.topobyte.osm4j.utils.OsmIoUtils;
+import de.topobyte.osm4j.utils.StreamUtil;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
-public class DistributeWays extends AbstractTaskInputOutput
+public class DistributeWays extends AbstractExecutableInputOutput
 {
 
 	private static final String OPTION_TREE = "tree";

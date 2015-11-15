@@ -22,10 +22,10 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import de.topobyte.osm4j.utils.AbstractTask;
+import de.topobyte.osm4j.utils.AbstractExecutable;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
-public class NodeArrayInfo extends AbstractTask
+public class NodeArrayInfo extends AbstractExecutable
 {
 
 	private static final String OPTION_INPUT = "input";

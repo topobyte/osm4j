@@ -18,24 +18,13 @@
 package de.topobyte.osm4j.extra.relations.split;
 
 import java.io.IOException;
-import java.io.OutputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.text.NumberFormat;
-import java.util.List;
-import java.util.Locale;
 
-import de.topobyte.osm4j.core.access.OsmOutputStream;
-import de.topobyte.osm4j.core.model.iface.EntityContainer;
-import de.topobyte.osm4j.core.model.iface.EntityType;
-import de.topobyte.osm4j.core.model.iface.OsmRelation;
-import de.topobyte.osm4j.extra.StreamUtil;
-import de.topobyte.osm4j.utils.AbstractTaskSingleInputIteratorOutput;
-import de.topobyte.osm4j.utils.OsmIoUtils;
+import de.topobyte.osm4j.utils.AbstractExecutableSingleInputStreamOutput;
+import de.topobyte.osm4j.utils.OsmStreamInput;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
-public class SplitRelations extends AbstractTaskSingleInputIteratorOutput
+public class SplitRelations extends AbstractExecutableSingleInputStreamOutput
 {
 
 	private static final String OPTION_OUTPUT = "output";
@@ -62,7 +51,6 @@ public class SplitRelations extends AbstractTaskSingleInputIteratorOutput
 
 	private String pathOutput;
 
-	private Path dirOutput;
 	private String fileNamesRelations;
 
 	public SplitRelations()
@@ -83,103 +71,13 @@ public class SplitRelations extends AbstractTaskSingleInputIteratorOutput
 		fileNamesRelations = line.getOptionValue(OPTION_FILE_NAMES_RELATIONS);
 	}
 
-	@Override
-	protected void init() throws IOException
-	{
-		super.init();
-
-		dirOutput = Paths.get(pathOutput);
-
-		if (!Files.exists(dirOutput)) {
-			System.out.println("Creating output directory");
-			Files.createDirectories(dirOutput);
-		}
-		if (!Files.isDirectory(dirOutput)) {
-			System.out.println("Output path is not a directory");
-			System.exit(1);
-		}
-		if (dirOutput.toFile().list().length != 0) {
-			System.out.println("Output directory is not empty");
-			System.exit(1);
-		}
-	}
-
-	private int maxMembers = 100 * 1000;
-
 	private void execute() throws IOException
 	{
-		RelationBatch batch = new RelationBatch(maxMembers);
-
-		for (EntityContainer container : inputIterator) {
-			if (container.getType() != EntityType.Relation) {
-				continue;
-			}
-			OsmRelation relation = (OsmRelation) container.getEntity();
-			if (relation.getNumberOfMembers() == 0) {
-				continue;
-			}
-			if (batch.fits(relation)) {
-				batch.add(relation);
-			} else {
-				process(batch);
-				status();
-				batch.clear();
-				batch.add(relation);
-			}
-		}
-		if (!batch.getRelations().isEmpty()) {
-			process(batch);
-			status();
-			batch.clear();
-		}
-
-		System.out.println(String.format("Wrote %s relations in %d batches",
-				format.format(relationCount), batchCount));
-	}
-
-	private int batchCount = 0;
-	private int relationCount = 0;
-
-	private long start = System.currentTimeMillis();
-	private NumberFormat format = NumberFormat.getNumberInstance(Locale.US);
-
-	private void status()
-	{
-		long now = System.currentTimeMillis();
-		long past = now - start;
-
-		double seconds = past / 1000;
-		long perSecond = Math.round(relationCount / seconds);
-
-		System.out.println(String.format(
-				"Processed: %s relations, time passed: %.2f per second: %s",
-				format.format(relationCount), past / 1000 / 60.,
-				format.format(perSecond)));
-	}
-
-	private void process(RelationBatch batch) throws IOException
-	{
-		List<OsmRelation> relations = batch.getRelations();
-
-		batchCount++;
-
-		String subdirName = String.format("%d", batchCount);
-		Path subdir = dirOutput.resolve(subdirName);
-		Path path = subdir.resolve(fileNamesRelations);
-		Files.createDirectory(subdir);
-
-		OutputStream output = StreamUtil.bufferedOutputStream(path.toFile());
-		OsmOutputStream osmOutput = OsmIoUtils.setupOsmOutput(output,
+		OsmStreamInput streamInput = new OsmStreamInput(osmStream);
+		SimpleRelationSplitter splitter = new SimpleRelationSplitter(
+				Paths.get(pathOutput), fileNamesRelations, streamInput,
 				outputFormat, writeMetadata, pbfConfig, tboConfig);
-
-		for (OsmRelation relation : relations) {
-			osmOutput.write(relation);
-		}
-
-		osmOutput.complete();
-		output.close();
-
-		relationCount += relations.size();
+		splitter.execute();
 	}
 
 }

@@ -46,17 +46,18 @@ import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.osm4j.core.model.impl.Bounds;
 import de.topobyte.osm4j.core.resolve.DataSetReader;
 import de.topobyte.osm4j.core.resolve.InMemoryDataSet;
-import de.topobyte.osm4j.extra.StreamUtil;
 import de.topobyte.osm4j.extra.datatree.DataTree;
 import de.topobyte.osm4j.extra.datatree.DataTreeFiles;
 import de.topobyte.osm4j.extra.datatree.DataTreeOpener;
 import de.topobyte.osm4j.extra.datatree.Node;
 import de.topobyte.osm4j.tbo.access.TboWriter;
-import de.topobyte.osm4j.utils.AbstractTaskInputOutput;
+import de.topobyte.osm4j.utils.AbstractExecutableInputOutput;
 import de.topobyte.osm4j.utils.OsmIoUtils;
+import de.topobyte.osm4j.utils.StreamUtil;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
-public abstract class DistributeSimpleBase extends AbstractTaskInputOutput
+public abstract class DistributeSimpleBase extends
+		AbstractExecutableInputOutput
 {
 
 	private static final String OPTION_TREE = "tree";

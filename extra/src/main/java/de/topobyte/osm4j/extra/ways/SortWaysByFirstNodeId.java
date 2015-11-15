@@ -29,17 +29,18 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
+import de.topobyte.osm4j.core.access.OsmIterator;
 import de.topobyte.osm4j.core.access.OsmOutputStream;
 import de.topobyte.osm4j.core.model.iface.EntityContainer;
 import de.topobyte.osm4j.core.model.iface.EntityType;
 import de.topobyte.osm4j.core.model.iface.OsmWay;
-import de.topobyte.osm4j.extra.StreamUtil;
-import de.topobyte.osm4j.utils.AbstractTaskSingleInputIteratorOutput;
+import de.topobyte.osm4j.utils.AbstractExecutableSingleInputStreamOutput;
 import de.topobyte.osm4j.utils.OsmIoUtils;
+import de.topobyte.osm4j.utils.StreamUtil;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
 public class SortWaysByFirstNodeId extends
-		AbstractTaskSingleInputIteratorOutput
+		AbstractExecutableSingleInputStreamOutput
 {
 
 	private static final String OPTION_OUTPUT = "output";
@@ -141,7 +142,8 @@ public class SortWaysByFirstNodeId extends
 	{
 		Batch batch = new Batch();
 
-		for (EntityContainer container : inputIterator) {
+		OsmIterator iterator = createIterator();
+		for (EntityContainer container : iterator) {
 			if (container.getType() != EntityType.Way) {
 				continue;
 			}

@@ -25,11 +25,12 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.topobyte.osm4j.core.access.OsmIterator;
 import de.topobyte.osm4j.core.model.iface.EntityType;
-import de.topobyte.osm4j.utils.AbstractTaskSingleInputIteratorOutput;
+import de.topobyte.osm4j.utils.AbstractExecutableSingleInputStreamOutput;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
-public class ExtractEntities extends AbstractTaskSingleInputIteratorOutput
+public class ExtractEntities extends AbstractExecutableSingleInputStreamOutput
 {
 
 	private static final String OPTION_DIRECTORY = "directory";
@@ -147,7 +148,8 @@ public class ExtractEntities extends AbstractTaskSingleInputIteratorOutput
 	{
 		Extractor extractor = new Extractor(type, extractionItems,
 				outputFormat, pbfConfig, tboConfig, writeMetadata);
-		extractor.execute(inputIterator);
+		OsmIterator iterator = createIterator();
+		extractor.execute(iterator);
 		finish();
 	}
 

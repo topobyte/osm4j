@@ -38,18 +38,18 @@ import de.topobyte.osm4j.core.model.iface.IdContainer;
 import de.topobyte.osm4j.core.model.iface.OsmWay;
 import de.topobyte.osm4j.core.resolve.DataSetReader;
 import de.topobyte.osm4j.core.resolve.InMemoryDataSet;
-import de.topobyte.osm4j.extra.StreamUtil;
 import de.topobyte.osm4j.extra.datatree.DataTree;
 import de.topobyte.osm4j.extra.datatree.DataTreeFiles;
 import de.topobyte.osm4j.extra.datatree.DataTreeOpener;
 import de.topobyte.osm4j.extra.datatree.Node;
 import de.topobyte.osm4j.extra.idlist.IdListOutputStream;
-import de.topobyte.osm4j.utils.AbstractTaskInput;
+import de.topobyte.osm4j.utils.AbstractExecutableInput;
 import de.topobyte.osm4j.utils.FileFormat;
 import de.topobyte.osm4j.utils.OsmIoUtils;
+import de.topobyte.osm4j.utils.StreamUtil;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
-public class FindMissingWayNodes extends AbstractTaskInput
+public class FindMissingWayNodes extends AbstractExecutableInput
 {
 
 	private static final String OPTION_TREE = "tree";

@@ -23,10 +23,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import de.topobyte.osm4j.core.model.iface.OsmNode;
-import de.topobyte.osm4j.utils.AbstractTask;
+import de.topobyte.osm4j.utils.AbstractExecutable;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
-public class NodeArrayShow extends AbstractTask
+public class NodeArrayShow extends AbstractExecutable
 {
 
 	private static final String OPTION_INPUT = "input";
