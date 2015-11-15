@@ -17,7 +17,6 @@
 
 package de.topobyte.osm4j.extra.idextract;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -97,14 +96,12 @@ public class ExtractEntities extends AbstractExecutableSingleInputStreamOutput
 
 	private List<ExtractionItem> extractionItems = new ArrayList<>();
 
-	private Path[] dirsData;
-	private List<Path> subdirs;
-
 	@Override
 	protected void init() throws IOException
 	{
 		super.init();
-		dirsData = new Path[pathsData.length];
+
+		Path[] dirsData = new Path[pathsData.length];
 		for (int i = 0; i < dirsData.length; i++) {
 			dirsData[i] = Paths.get(pathsData[i]);
 		}
@@ -116,31 +113,10 @@ public class ExtractEntities extends AbstractExecutableSingleInputStreamOutput
 			}
 		}
 
-		subdirs = new ArrayList<>();
 		for (Path dirData : dirsData) {
-			File[] subs = dirData.toFile().listFiles();
-			sub: for (File sub : subs) {
-				if (!sub.isDirectory()) {
-					continue;
-				}
-				Path subPath = sub.toPath();
-				for (String fileNameIds : fileNamesIds) {
-					Path ids = subPath.resolve(fileNameIds);
-					if (!Files.exists(ids)) {
-						continue sub;
-					}
-				}
-				subdirs.add(subPath);
-			}
-		}
-
-		for (Path subdir : subdirs) {
-			List<Path> pathsIds = new ArrayList<>();
-			for (String fileNameIds : fileNamesIds) {
-				pathsIds.add(subdir.resolve(fileNameIds));
-			}
-			Path pathOutput = subdir.resolve(fileNamesOutput);
-			extractionItems.add(new ExtractionItem(pathsIds, pathOutput));
+			List<ExtractionItem> items = ExtractionUtil.createExtractionItems(
+					dirData, fileNamesIds, fileNamesOutput);
+			extractionItems.addAll(items);
 		}
 	}
 
