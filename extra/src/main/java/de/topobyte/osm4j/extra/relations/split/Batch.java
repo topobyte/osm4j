@@ -17,20 +17,60 @@
 
 package de.topobyte.osm4j.extra.relations.split;
 
-import de.topobyte.osm4j.extra.relations.Group;
+import java.util.ArrayList;
+import java.util.List;
 
-class GroupBatch extends Batch<Group>
+public abstract class Batch<T>
 {
 
-	GroupBatch(int maxMembers)
+	private int maxSize;
+
+	private List<T> elements = new ArrayList<>();
+	private int size = 0;
+
+	public Batch(int maxSize)
 	{
-		super(maxMembers);
+		this.maxSize = maxSize;
 	}
 
-	@Override
-	protected int size(Group element)
+	protected abstract int size(T element);
+
+	public void clear()
 	{
-		return element.getNumMembers();
+		elements.clear();
+		size = 0;
+	}
+
+	public boolean fits(T element)
+	{
+		if (elements.isEmpty()) {
+			return true;
+		}
+		if (size + size(element) <= maxSize) {
+			return true;
+		}
+		return false;
+	}
+
+	public void add(T element)
+	{
+		elements.add(element);
+		size += size(element);
+	}
+
+	public List<T> getElements()
+	{
+		return elements;
+	}
+
+	public int getSize()
+	{
+		return size;
+	}
+
+	public boolean isFull()
+	{
+		return size == maxSize;
 	}
 
 }

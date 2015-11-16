@@ -216,9 +216,9 @@ public class ComplexRelationSplitter
 	private void process(GroupBatch batch) throws IOException
 	{
 		System.out.println(String.format("groups: %d, members: %d", batch
-				.getGroups().size(), batch.getNumMembers()));
+				.getElements().size(), batch.getSize()));
 
-		List<Group> groups = batch.getGroups();
+		List<Group> groups = batch.getElements();
 
 		TLongSet batchRelationIds = new TLongHashSet();
 		for (Group group : groups) {

@@ -17,50 +17,20 @@
 
 package de.topobyte.osm4j.extra.relations.split;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import de.topobyte.osm4j.core.model.iface.OsmRelation;
 
-class RelationBatch
+class RelationBatch extends Batch<OsmRelation>
 {
-
-	private int maxMembers;
-
-	private List<OsmRelation> relations = new ArrayList<>();
-	private int members = 0;
 
 	RelationBatch(int maxMembers)
 	{
-		this.maxMembers = maxMembers;
+		super(maxMembers);
 	}
 
-	void clear()
+	@Override
+	protected int size(OsmRelation element)
 	{
-		relations.clear();
-		members = 0;
-	}
-
-	boolean fits(OsmRelation relation)
-	{
-		if (relations.isEmpty()) {
-			return true;
-		}
-		if (members + relation.getNumberOfMembers() <= maxMembers) {
-			return true;
-		}
-		return false;
-	}
-
-	void add(OsmRelation relation)
-	{
-		relations.add(relation);
-		members += relation.getNumberOfMembers();
-	}
-
-	List<OsmRelation> getRelations()
-	{
-		return relations;
+		return element.getNumberOfMembers();
 	}
 
 }

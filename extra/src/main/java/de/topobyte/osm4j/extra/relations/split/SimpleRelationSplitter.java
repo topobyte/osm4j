@@ -99,7 +99,7 @@ public class SimpleRelationSplitter
 				batch.add(relation);
 			}
 		}
-		if (!batch.getRelations().isEmpty()) {
+		if (!batch.getElements().isEmpty()) {
 			process(batch);
 			status();
 			batch.clear();
@@ -131,7 +131,7 @@ public class SimpleRelationSplitter
 
 	private void process(RelationBatch batch) throws IOException
 	{
-		List<OsmRelation> relations = batch.getRelations();
+		List<OsmRelation> relations = batch.getElements();
 
 		batchCount++;
 
