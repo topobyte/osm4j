@@ -29,7 +29,6 @@ import java.util.List;
 import java.util.Set;
 
 import com.vividsolutions.jts.geom.Envelope;
-import com.vividsolutions.jts.geom.Geometry;
 
 import de.topobyte.osm4j.core.access.OsmIterator;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
@@ -108,19 +107,10 @@ public class DistributeComplexRelations extends DistributeRelationsBase
 		if (relationGroups.size() == 1) {
 			InMemoryDataSet dataNodes = read(pathNodes, false, false);
 			Envelope envelope = box(dataNodes.getNodes().valueCollection());
-			Geometry box = box(envelope);
+			List<Node> leafs = tree.query(box(envelope));
 
-			List<Node> leafs = tree.query(box);
-
-			RelationGroup relation = relationGroups.get(0);
-
-			if (leafs.size() == 1) {
-				nWrittenToTree++;
-				write(relation, outputs.get(leafs.get(0)));
-			} else {
-				nRemaining++;
-				write(relation, outputNonTree);
-			}
+			write(relationGroups.get(0), leafs, envelope, dataNodes.getNodes()
+					.size());
 		} else {
 			InMemoryDataSet dataNodes = read(pathNodes, false, false);
 			InMemoryDataSet dataWays = read(pathWays, false, false);
@@ -129,28 +119,31 @@ public class DistributeComplexRelations extends DistributeRelationsBase
 					dataNodes, dataWays, dataRelations);
 
 			for (RelationGroup relation : relationGroups) {
-				Set<OsmNode> nodes;
 				try {
-					nodes = relation.findNodes(entityProvider);
+					Set<OsmNode> nodes = relation.findNodes(entityProvider);
 					Envelope envelope = box(nodes);
-					Geometry box = box(envelope);
-					List<Node> leafs = tree.query(box);
+					List<Node> leafs = tree.query(box(envelope));
 
-					if (leafs.size() == 1) {
-						nWrittenToTree++;
-						write(relation, outputs.get(leafs.get(0)));
-					} else {
-						nRemaining++;
-						write(relation, outputNonTree);
-						long id = lowestId(relation.getRelations());
-						outputBboxes.write(new IdBboxEntry(id, envelope, nodes
-								.size()));
-					}
+					write(relation, leafs, envelope, nodes.size());
 				} catch (EntityNotFoundException e) {
 					//
 				}
 			}
 
+		}
+	}
+
+	private void write(RelationGroup relation, List<Node> leafs,
+			Envelope envelope, int size) throws IOException
+	{
+		if (leafs.size() == 1) {
+			nWrittenToTree++;
+			write(relation, outputs.get(leafs.get(0)));
+		} else {
+			nRemaining++;
+			write(relation, outputNonTree);
+			long id = lowestId(relation.getRelations());
+			outputBboxes.write(new IdBboxEntry(id, envelope, size));
 		}
 	}
 
