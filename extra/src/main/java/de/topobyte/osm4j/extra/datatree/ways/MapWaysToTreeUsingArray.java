@@ -38,6 +38,7 @@ import de.topobyte.osm4j.core.model.iface.EntityType;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.osm4j.core.model.iface.OsmWay;
 import de.topobyte.osm4j.core.model.impl.Bounds;
+import de.topobyte.osm4j.extra.OsmOutput;
 import de.topobyte.osm4j.extra.datatree.DataTree;
 import de.topobyte.osm4j.extra.datatree.DataTreeOpener;
 import de.topobyte.osm4j.extra.datatree.Node;
@@ -122,13 +123,13 @@ public class MapWaysToTreeUsingArray extends
 				.toFile());
 		OsmOutputStream osmOutputNone = OsmIoUtils.setupOsmOutput(bosNone,
 				outputFormat, writeMetadata, pbfConfig, tboConfig);
-		Output outputNone = new Output(pathNonMatched, bosNone, osmOutputNone);
+		OsmOutput outputNone = new OsmOutput(bosNone, osmOutputNone);
 
 		// Set up outputs
 
 		ClosingFileOutputStreamFactory outputStreamFactory = new SimpleClosingFileOutputStreamFactory();
 
-		Map<Node, Output> outputs = new HashMap<>();
+		Map<Node, OsmOutput> outputs = new HashMap<>();
 
 		for (Node leaf : tree.getLeafs()) {
 			String dirname = Long.toHexString(leaf.getPath());
@@ -139,7 +140,7 @@ public class MapWaysToTreeUsingArray extends
 			OutputStream bos = new BufferedOutputStream(os);
 			OsmOutputStream osmOutput = OsmIoUtils.setupOsmOutput(bos,
 					outputFormat, writeMetadata, pbfConfig, tboConfig);
-			Output output = new Output(file, bos, osmOutput);
+			OsmOutput output = new OsmOutput(bos, osmOutput);
 			outputs.put(leaf, output);
 
 			Envelope box = leaf.getEnvelope();
@@ -188,7 +189,7 @@ public class MapWaysToTreeUsingArray extends
 			}
 
 			for (Node leaf : leafs) {
-				Output output = outputs.get(leaf);
+				OsmOutput output = outputs.get(leaf);
 				output.getOsmOutput().write(way);
 			}
 		}
@@ -204,7 +205,7 @@ public class MapWaysToTreeUsingArray extends
 		outputNone.getOsmOutput().complete();
 		outputNone.getOutputStream().close();
 
-		for (Output output : outputs.values()) {
+		for (OsmOutput output : outputs.values()) {
 			output.getOsmOutput().complete();
 			output.getOutputStream().close();
 		}

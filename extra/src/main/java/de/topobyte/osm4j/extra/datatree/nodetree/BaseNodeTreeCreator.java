@@ -38,6 +38,7 @@ import de.topobyte.osm4j.core.model.iface.EntityContainer;
 import de.topobyte.osm4j.core.model.iface.OsmBounds;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.osm4j.core.model.impl.Bounds;
+import de.topobyte.osm4j.extra.OsmOutput;
 import de.topobyte.osm4j.extra.datatree.DataTree;
 import de.topobyte.osm4j.extra.datatree.DataTreeOpener;
 import de.topobyte.osm4j.extra.datatree.DataTreeUtil;
@@ -195,12 +196,12 @@ public abstract class BaseNodeTreeCreator extends
 	{
 		super.finish();
 
-		for (Output output : outputs.values()) {
+		for (OsmOutput output : outputs.values()) {
 			close(output);
 		}
 	}
 
-	protected void close(Output output) throws IOException
+	protected void close(OsmOutput output) throws IOException
 	{
 		output.getOsmOutput().complete();
 		output.getOutputStream().close();

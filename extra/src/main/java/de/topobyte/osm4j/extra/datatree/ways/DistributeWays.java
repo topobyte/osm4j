@@ -45,6 +45,7 @@ import de.topobyte.osm4j.core.resolve.EntityNotFoundException;
 import de.topobyte.osm4j.core.resolve.InMemoryDataSet;
 import de.topobyte.osm4j.core.resolve.OsmEntityProvider;
 import de.topobyte.osm4j.core.resolve.UnionOsmEntityProvider;
+import de.topobyte.osm4j.extra.OsmOutput;
 import de.topobyte.osm4j.extra.datatree.DataTree;
 import de.topobyte.osm4j.extra.datatree.DataTreeFiles;
 import de.topobyte.osm4j.extra.datatree.DataTreeOpener;
@@ -128,8 +129,8 @@ public class DistributeWays extends AbstractExecutableInputOutput
 	private DataTree tree;
 	private File dirTree;
 	private List<Node> leafs;
-	private Map<Node, Output> outputsWays = new HashMap<>();
-	private Map<Node, Output> outputsNodes = new HashMap<>();
+	private Map<Node, OsmOutput> outputsWays = new HashMap<>();
+	private Map<Node, OsmOutput> outputsNodes = new HashMap<>();
 
 	private long counter = 0;
 	private long noneFound = 0;
@@ -152,20 +153,20 @@ public class DistributeWays extends AbstractExecutableInputOutput
 				fileNamesOutputNodes);
 
 		for (Node leaf : leafs) {
-			Output outputWays = createOutput(filesWays.getFile(leaf));
+			OsmOutput outputWays = createOutput(filesWays.getFile(leaf));
 			outputsWays.put(leaf, outputWays);
-			Output outputNodes = createOutput(filesNodes.getFile(leaf));
+			OsmOutput outputNodes = createOutput(filesNodes.getFile(leaf));
 			outputsNodes.put(leaf, outputNodes);
 		}
 	}
 
-	private Output createOutput(File file) throws IOException
+	private OsmOutput createOutput(File file) throws IOException
 	{
 		OutputStream output = factory.create(file);
 		output = new BufferedOutputStream(output);
 		OsmOutputStream osmOutput = OsmIoUtils.setupOsmOutput(output,
 				outputFormat, writeMetadata, pbfConfig, tboConfig);
-		return new Output(file.toPath(), output, osmOutput);
+		return new OsmOutput(output, osmOutput);
 	}
 
 	public void execute() throws IOException
@@ -239,11 +240,11 @@ public class DistributeWays extends AbstractExecutableInputOutput
 			stats(i);
 		}
 
-		for (Output output : outputsWays.values()) {
+		for (OsmOutput output : outputsWays.values()) {
 			output.getOsmOutput().complete();
 			output.getOutputStream().close();
 		}
-		for (Output output : outputsNodes.values()) {
+		for (OsmOutput output : outputsNodes.values()) {
 			output.getOsmOutput().complete();
 			output.getOutputStream().close();
 		}

@@ -37,6 +37,7 @@ import de.topobyte.osm4j.core.resolve.CompositeOsmEntityProvider;
 import de.topobyte.osm4j.core.resolve.EntityNotFoundException;
 import de.topobyte.osm4j.core.resolve.InMemoryDataSet;
 import de.topobyte.osm4j.core.resolve.OsmEntityProvider;
+import de.topobyte.osm4j.extra.OsmOutput;
 import de.topobyte.osm4j.extra.datatree.Node;
 import de.topobyte.osm4j.extra.idbboxlist.IdBboxEntry;
 import de.topobyte.osm4j.utils.OsmIoUtils;
@@ -156,7 +157,8 @@ public class DistributeComplexRelations extends DistributeRelationsBase
 		return lowest;
 	}
 
-	private void write(RelationGroup group, Output output) throws IOException
+	private void write(RelationGroup group, OsmOutput output)
+			throws IOException
 	{
 		Collection<OsmRelation> relations = group.getRelations();
 		for (OsmRelation relation : relations) {

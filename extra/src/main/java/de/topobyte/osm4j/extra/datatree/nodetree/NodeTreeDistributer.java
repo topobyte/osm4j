@@ -42,6 +42,7 @@ import de.topobyte.osm4j.core.access.OsmOutputStream;
 import de.topobyte.osm4j.core.model.iface.EntityContainer;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.osm4j.core.model.impl.Bounds;
+import de.topobyte.osm4j.extra.OsmOutput;
 import de.topobyte.osm4j.extra.datatree.DataTree;
 import de.topobyte.osm4j.extra.datatree.DataTreeUtil;
 import de.topobyte.osm4j.extra.datatree.Node;
@@ -227,7 +228,7 @@ public class NodeTreeDistributer
 
 	private void finish() throws IOException
 	{
-		for (Output output : outputs.values()) {
+		for (OsmOutput output : outputs.values()) {
 			output.getOsmOutput().complete();
 			output.getOutputStream().close();
 		}

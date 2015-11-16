@@ -45,6 +45,7 @@ import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.osm4j.core.model.impl.Bounds;
 import de.topobyte.osm4j.core.resolve.DataSetReader;
 import de.topobyte.osm4j.core.resolve.InMemoryDataSet;
+import de.topobyte.osm4j.extra.OsmOutput;
 import de.topobyte.osm4j.extra.datatree.DataTree;
 import de.topobyte.osm4j.extra.datatree.DataTreeFiles;
 import de.topobyte.osm4j.extra.datatree.DataTreeOpener;
@@ -87,9 +88,9 @@ public abstract class DistributeRelationsBase extends
 
 	protected DataTreeFiles treeFilesRelations;
 
-	protected Output outputEmpty;
-	protected Output outputNonTree;
-	protected Map<Node, Output> outputs = new HashMap<>();
+	protected OsmOutput outputEmpty;
+	protected OsmOutput outputNonTree;
+	protected Map<Node, OsmOutput> outputs = new HashMap<>();
 
 	protected IdBboxListOutputStream outputBboxes;
 
@@ -184,8 +185,7 @@ public abstract class DistributeRelationsBase extends
 				.bufferedOutputStream(fileOutputEmpty);
 		OsmOutputStream osmOutputEmpty = OsmIoUtils.setupOsmOutput(outEmpty,
 				outputFormat, writeMetadata, pbfConfig, tboConfig);
-		outputEmpty = new Output(fileOutputEmpty.toPath(), outEmpty,
-				osmOutputEmpty);
+		outputEmpty = new OsmOutput(outEmpty, osmOutputEmpty);
 
 		// Setup output for non-tree relations
 
@@ -194,8 +194,7 @@ public abstract class DistributeRelationsBase extends
 				.bufferedOutputStream(fileOutputNonTree);
 		OsmOutputStream osmOutputNonTree = OsmIoUtils.setupOsmOutput(
 				outNonTree, outputFormat, writeMetadata, pbfConfig, tboConfig);
-		outputNonTree = new Output(fileOutputNonTree.toPath(), outNonTree,
-				osmOutputNonTree);
+		outputNonTree = new OsmOutput(outNonTree, osmOutputNonTree);
 
 		// Setup output for non-tree relations' bboxes
 
@@ -218,7 +217,7 @@ public abstract class DistributeRelationsBase extends
 				tboWriter.setBatchSizeRelationsByMembers(1024);
 			}
 
-			outputs.put(leaf, new Output(file.toPath(), out, osmOutput));
+			outputs.put(leaf, new OsmOutput(out, osmOutput));
 
 			Envelope box = leaf.getEnvelope();
 			osmOutput.write(new Bounds(box.getMinX(), box.getMaxX(), box
@@ -253,7 +252,7 @@ public abstract class DistributeRelationsBase extends
 
 		outputBboxes.close();
 
-		for (Output output : outputs.values()) {
+		for (OsmOutput output : outputs.values()) {
 			output.getOsmOutput().complete();
 			output.getOutputStream().close();
 		}

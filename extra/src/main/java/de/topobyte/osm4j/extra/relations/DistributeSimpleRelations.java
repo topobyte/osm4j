@@ -34,6 +34,7 @@ import de.topobyte.osm4j.core.resolve.EntityNotFoundException;
 import de.topobyte.osm4j.core.resolve.InMemoryDataSet;
 import de.topobyte.osm4j.core.resolve.NullOsmEntityProvider;
 import de.topobyte.osm4j.core.resolve.OsmEntityProvider;
+import de.topobyte.osm4j.extra.OsmOutput;
 import de.topobyte.osm4j.extra.datatree.Node;
 import de.topobyte.osm4j.extra.idbboxlist.IdBboxEntry;
 import de.topobyte.osm4j.utils.OsmIoUtils;
@@ -110,7 +111,8 @@ public class DistributeSimpleRelations extends DistributeRelationsBase
 		}
 	}
 
-	private void write(OsmRelation relation, Output output) throws IOException
+	private void write(OsmRelation relation, OsmOutput output)
+			throws IOException
 	{
 		output.getOsmOutput().write(relation);
 	}

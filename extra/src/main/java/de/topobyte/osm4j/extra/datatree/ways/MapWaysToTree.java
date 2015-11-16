@@ -38,6 +38,7 @@ import de.topobyte.osm4j.core.model.iface.EntityContainer;
 import de.topobyte.osm4j.core.model.iface.EntityType;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.osm4j.core.model.iface.OsmWay;
+import de.topobyte.osm4j.extra.OsmOutput;
 import de.topobyte.osm4j.extra.datatree.DataTree;
 import de.topobyte.osm4j.extra.datatree.DataTreeFiles;
 import de.topobyte.osm4j.extra.datatree.DataTreeOpener;
@@ -103,7 +104,7 @@ public class MapWaysToTree extends AbstractExecutableSingleInputFileOutput
 	private OsmIteratorInput nodeInput;
 	private SortedMergeIterator wayIterator;
 
-	private Map<Node, Output> outputs = new HashMap<>();
+	private Map<Node, OsmOutput> outputs = new HashMap<>();
 	private List<InputStream> wayInputStreams = new ArrayList<>();
 
 	public void prepare() throws IOException
@@ -129,7 +130,7 @@ public class MapWaysToTree extends AbstractExecutableSingleInputFileOutput
 			OsmOutputStream osmOutput = OsmIoUtils.setupOsmOutput(output,
 					outputFormat, writeMetadata, pbfConfig, tboConfig);
 
-			Output out = new Output(fileOutput.toPath(), output, osmOutput);
+			OsmOutput out = new OsmOutput(output, osmOutput);
 			outputs.put(leaf, out);
 		}
 
@@ -218,7 +219,7 @@ public class MapWaysToTree extends AbstractExecutableSingleInputFileOutput
 			input.close();
 		}
 
-		for (Output output : outputs.values()) {
+		for (OsmOutput output : outputs.values()) {
 			output.getOsmOutput().complete();
 			output.getOutputStream().close();
 		}
@@ -228,7 +229,7 @@ public class MapWaysToTree extends AbstractExecutableSingleInputFileOutput
 	{
 		List<Node> leafs = tree.query(node.getLongitude(), node.getLatitude());
 		for (Node leaf : leafs) {
-			Output output = outputs.get(leaf);
+			OsmOutput output = outputs.get(leaf);
 			output.getOsmOutput().write(way);
 		}
 	}
