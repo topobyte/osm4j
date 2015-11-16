@@ -31,9 +31,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import com.vividsolutions.jts.geom.Envelope;
+
 import de.topobyte.largescalefileio.ClosingFileOutputStreamFactory;
 import de.topobyte.largescalefileio.SimpleClosingFileOutputStreamFactory;
 import de.topobyte.osm4j.core.access.OsmOutputStream;
+import de.topobyte.osm4j.core.model.impl.Bounds;
 import de.topobyte.osm4j.extra.OsmOutput;
 import de.topobyte.osm4j.extra.idbboxlist.IdBboxEntry;
 import de.topobyte.osm4j.extra.idbboxlist.IdBboxUtil;
@@ -130,6 +133,14 @@ public class RelationSorterBase
 			OsmOutputStream osmOutput = OsmIoUtils.setupOsmOutput(output,
 					outputFormat, writeMetadata, pbfConfig, tboConfig);
 			outputs.add(new OsmOutput(output, osmOutput));
+
+			Envelope e = new Envelope();
+			for (IdBboxEntry entry : batches.get(i)) {
+				e.expandToInclude(entry.getEnvelope());
+			}
+			Bounds bounds = new Bounds(e.getMinX(), e.getMaxX(), e.getMaxY(),
+					e.getMinY());
+			osmOutput.write(bounds);
 		}
 	}
 
