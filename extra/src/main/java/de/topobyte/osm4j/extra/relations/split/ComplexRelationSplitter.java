@@ -18,11 +18,9 @@
 package de.topobyte.osm4j.extra.relations.split;
 
 import gnu.trove.map.TLongObjectMap;
-import gnu.trove.map.hash.TLongObjectHashMap;
 import gnu.trove.set.TLongSet;
 import gnu.trove.set.hash.TLongHashSet;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Files;
@@ -38,12 +36,9 @@ import java.util.Locale;
 import de.topobyte.osm4j.core.access.OsmOutputStream;
 import de.topobyte.osm4j.core.model.iface.OsmRelation;
 import de.topobyte.osm4j.extra.relations.Group;
-import de.topobyte.osm4j.extra.relations.RelationGraph;
-import de.topobyte.osm4j.extra.relations.RelationIterator;
 import de.topobyte.osm4j.utils.FileFormat;
 import de.topobyte.osm4j.utils.OsmIoUtils;
 import de.topobyte.osm4j.utils.OsmIteratorFactory;
-import de.topobyte.osm4j.utils.OsmIteratorInput;
 import de.topobyte.osm4j.utils.StreamUtil;
 import de.topobyte.osm4j.utils.config.PbfConfig;
 import de.topobyte.osm4j.utils.config.TboConfig;
@@ -63,6 +58,9 @@ public class ComplexRelationSplitter
 	private PbfConfig pbfConfig;
 	private TboConfig tboConfig;
 
+	private List<Group> groups;
+	private TLongObjectMap<OsmRelation> groupRelations;
+
 	public ComplexRelationSplitter(Path pathOutput, String fileNamesRelations,
 			OsmIteratorFactory iteratorFactory, FileFormat outputFormat,
 			boolean writeMetadata, PbfConfig pbfConfig, TboConfig tboConfig)
@@ -75,10 +73,6 @@ public class ComplexRelationSplitter
 		this.pbfConfig = pbfConfig;
 		this.tboConfig = tboConfig;
 	}
-
-	private RelationGraph relationGraph = new RelationGraph(false, true);
-	private List<Group> groups;
-	private TLongObjectMap<OsmRelation> groupRelations;
 
 	public void execute() throws IOException
 	{
@@ -95,47 +89,19 @@ public class ComplexRelationSplitter
 			System.exit(1);
 		}
 
-		OsmIteratorInput iteratorInput = iteratorFactory.createIterator(false);
-		relationGraph.build(iteratorInput.getIterator());
-		iteratorInput.close();
+		ComplexRelationGrouper grouper = new ComplexRelationGrouper(
+				iteratorFactory);
+		grouper.buildGroups();
+		grouper.readGroupRelations(writeMetadata);
 
-		System.out.println("Number of relations without relation members: "
-				+ relationGraph.getNumNoChildren());
-		System.out.println("Number of relations with relation members: "
-				+ relationGraph.getIdsHasChildRelations().size());
-		System.out.println("Number of child relations: "
-				+ relationGraph.getIdsIsChildRelation().size());
-
-		groups = relationGraph.buildGroups();
-
-		getGroupRelations();
+		groups = grouper.getGroups();
+		groupRelations = grouper.getGroupRelations();
 
 		determineGroupSizes();
 
 		sortGroupsBySize();
 
 		processGroupBatches();
-	}
-
-	private void getGroupRelations() throws FileNotFoundException, IOException
-	{
-		TLongSet idsHasChildRelations = relationGraph.getIdsHasChildRelations();
-		TLongSet idsIsChildRelation = relationGraph.getIdsIsChildRelation();
-
-		OsmIteratorInput iteratorInput = iteratorFactory
-				.createIterator(writeMetadata);
-		RelationIterator relations = new RelationIterator(
-				iteratorInput.getIterator());
-
-		groupRelations = new TLongObjectHashMap<>();
-		for (OsmRelation relation : relations) {
-			if (idsHasChildRelations.contains(relation.getId())
-					|| idsIsChildRelation.contains(relation.getId())) {
-				groupRelations.put(relation.getId(), relation);
-			}
-		}
-
-		iteratorInput.close();
 	}
 
 	private void determineGroupSizes()

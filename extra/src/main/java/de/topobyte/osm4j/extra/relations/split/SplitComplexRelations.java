@@ -96,7 +96,6 @@ public class SplitComplexRelations extends
 				Paths.get(pathOutput), fileNamesRelations, getOsmFileInput(),
 				outputFormat, writeMetadata, pbfConfig, tboConfig);
 		splitter.execute();
-
 	}
 
 }
