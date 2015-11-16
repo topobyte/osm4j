@@ -21,11 +21,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import de.topobyte.osm4j.core.access.OsmElementCounter;
 import de.topobyte.osm4j.core.access.OsmIdIterator;
 import de.topobyte.osm4j.core.access.OsmIdReader;
 import de.topobyte.osm4j.core.access.OsmIterator;
 import de.topobyte.osm4j.core.access.OsmOutputStream;
 import de.topobyte.osm4j.core.access.OsmReader;
+import de.topobyte.osm4j.core.access.wrapper.OsmElementCounterReaderAdapter;
 import de.topobyte.osm4j.core.access.wrapper.OsmIdIteratorAdapter;
 import de.topobyte.osm4j.core.access.wrapper.OsmIdReaderAdapter;
 import de.topobyte.osm4j.pbf.seq.PbfIterator;
@@ -102,6 +104,23 @@ public class OsmIoUtils
 		case XML:
 			OsmReader xmlReader = new OsmXmlReader(in, false);
 			return new OsmIdReaderAdapter(xmlReader);
+		}
+	}
+
+	public static OsmElementCounter setupOsmElementCounter(InputStream in,
+			FileFormat format) throws IOException
+	{
+		switch (format) {
+		default:
+		case PBF:
+			OsmReader pbfReader = new PbfReader(in, false);
+			return new OsmElementCounterReaderAdapter(pbfReader);
+		case TBO:
+			TboReader tboReader = new TboReader(in, false);
+			return new OsmElementCounterReaderAdapter(tboReader);
+		case XML:
+			OsmReader xmlReader = new OsmXmlReader(in, false);
+			return new OsmElementCounterReaderAdapter(xmlReader);
 		}
 	}
 
