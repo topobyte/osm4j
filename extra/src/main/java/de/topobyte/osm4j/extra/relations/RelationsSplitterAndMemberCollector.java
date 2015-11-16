@@ -23,16 +23,10 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.topobyte.osm4j.core.model.iface.EntityType;
-import de.topobyte.osm4j.extra.idextract.ExtractionItem;
-import de.topobyte.osm4j.extra.idextract.ExtractionUtil;
-import de.topobyte.osm4j.extra.idextract.Extractor;
 import de.topobyte.osm4j.extra.relations.split.ComplexRelationSplitter;
 import de.topobyte.osm4j.extra.relations.split.SimpleRelationSplitter;
 import de.topobyte.osm4j.utils.FileFormat;
-import de.topobyte.osm4j.utils.OsmIoUtils;
 import de.topobyte.osm4j.utils.OsmIteratorFactory;
-import de.topobyte.osm4j.utils.OsmIteratorInput;
 import de.topobyte.osm4j.utils.config.PbfConfig;
 import de.topobyte.osm4j.utils.config.TboConfig;
 
@@ -77,12 +71,6 @@ public class RelationsSplitterAndMemberCollector
 
 	public void execute() throws IOException
 	{
-		String fileNamesRelationNodeIds = "nodes.ids";
-		String fileNamesRelationWayIds = "ways.ids";
-		String fileNamesWayNodeIds = "waynodes.ids";
-		String fileNamesWays = "ways" + OsmIoUtils.extension(outputFormat);
-		String fileNamesNodes = "nodes" + OsmIoUtils.extension(outputFormat);
-
 		// Create output directories
 
 		Files.createDirectories(pathOutputSimpleRelations);
@@ -104,56 +92,15 @@ public class RelationsSplitterAndMemberCollector
 
 		complexRelationSplitter.execute();
 
-		// Extract relation member ids for each batch
+		// Collect members
 
-		Path[] dirsData = new Path[] { pathOutputSimpleRelations,
-				pathOutputComplexRelations };
+		List<Path> pathsRelations = new ArrayList<>();
+		pathsRelations.add(pathOutputSimpleRelations);
+		pathsRelations.add(pathOutputComplexRelations);
 
-		MemberIdsExtractor memberIdsExtractor = new MemberIdsExtractor(
-				dirsData, fileNamesRelations, fileNamesRelationNodeIds,
-				fileNamesRelationWayIds, outputFormat);
-		memberIdsExtractor.execute();
-
-		// Extract ways for each batch
-
-		List<ExtractionItem> wayExtractionItems = new ArrayList<>();
-		wayExtractionItems.addAll(ExtractionUtil.createExtractionItems(
-				pathOutputSimpleRelations, fileNamesRelationWayIds,
-				fileNamesWays));
-		wayExtractionItems.addAll(ExtractionUtil.createExtractionItems(
-				pathOutputComplexRelations, fileNamesRelationWayIds,
-				fileNamesWays));
-
-		Extractor wayExtractor = new Extractor(EntityType.Way,
-				wayExtractionItems, outputFormat, pbfConfig, tboConfig,
-				writeMetadata);
-		OsmIteratorInput wayInput = inputWays.createIterator(writeMetadata);
-		wayExtractor.execute(wayInput.getIterator());
-		wayInput.close();
-
-		// Extract way node ids for each batch
-
-		WayMemberNodeIdsExtractor wayMemberNodeIdsExtractor = new WayMemberNodeIdsExtractor(
-				dirsData, fileNamesWays, fileNamesWayNodeIds, outputFormat);
-		wayMemberNodeIdsExtractor.execute();
-
-		// Extract nodes for each batch
-
-		String[] fileNamesNodeIds = new String[] { fileNamesRelationNodeIds,
-				fileNamesWayNodeIds };
-
-		List<ExtractionItem> nodeExtractionItems = new ArrayList<>();
-		nodeExtractionItems.addAll(ExtractionUtil.createExtractionItems(
-				pathOutputSimpleRelations, fileNamesNodeIds, fileNamesNodes));
-		nodeExtractionItems.addAll(ExtractionUtil.createExtractionItems(
-				pathOutputComplexRelations, fileNamesNodeIds, fileNamesNodes));
-
-		Extractor nodeExtractor = new Extractor(EntityType.Node,
-				nodeExtractionItems, outputFormat, pbfConfig, tboConfig,
-				writeMetadata);
-		OsmIteratorInput nodeInput = inputNodes.createIterator(writeMetadata);
-		nodeExtractor.execute(nodeInput.getIterator());
-		nodeInput.close();
+		RelationsMemberCollector memberCollector = new RelationsMemberCollector(
+				pathsRelations, fileNamesRelations, inputWays, inputNodes,
+				outputFormat, writeMetadata, pbfConfig, tboConfig);
+		memberCollector.execute();
 	}
-
 }
