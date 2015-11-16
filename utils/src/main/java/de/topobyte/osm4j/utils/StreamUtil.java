@@ -23,8 +23,11 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 public class StreamUtil
 {
@@ -43,6 +46,13 @@ public class StreamUtil
 		return new BufferedOutputStream(out);
 	}
 
+	public static OutputStream bufferedOutputStream(Path path)
+			throws IOException
+	{
+		OutputStream out = Files.newOutputStream(path);
+		return new BufferedOutputStream(out);
+	}
+
 	public static InputStream bufferedInputStream(File file)
 			throws FileNotFoundException
 	{
@@ -54,6 +64,12 @@ public class StreamUtil
 			throws FileNotFoundException
 	{
 		InputStream in = new FileInputStream(path);
+		return new BufferedInputStream(in);
+	}
+
+	public static InputStream bufferedInputStream(Path path) throws IOException
+	{
+		InputStream in = Files.newInputStream(path);
 		return new BufferedInputStream(in);
 	}
 
