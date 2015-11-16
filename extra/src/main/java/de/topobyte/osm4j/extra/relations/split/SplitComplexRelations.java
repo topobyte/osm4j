@@ -18,13 +18,15 @@
 package de.topobyte.osm4j.extra.relations.split;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import de.topobyte.osm4j.utils.AbstractExecutableSingleInputStreamOutput;
-import de.topobyte.osm4j.utils.OsmStreamInput;
+import de.topobyte.osm4j.utils.AbstractExecutableSingleInputFileOutput;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
-public class SplitRelations extends AbstractExecutableSingleInputStreamOutput
+public class SplitComplexRelations extends
+		AbstractExecutableSingleInputFileOutput
 {
 
 	private static final String OPTION_OUTPUT = "output";
@@ -33,27 +35,26 @@ public class SplitRelations extends AbstractExecutableSingleInputStreamOutput
 	@Override
 	protected String getHelpMessage()
 	{
-		return SplitRelations.class.getSimpleName() + " [options]";
+		return SplitComplexRelations.class.getSimpleName() + " [options]";
 	}
 
 	public static void main(String[] args) throws IOException
 	{
-		SplitRelations task = new SplitRelations();
+		SplitComplexRelations task = new SplitComplexRelations();
 
 		task.setup(args);
 
 		task.init();
 
 		task.execute();
-
-		task.finish();
 	}
 
 	private String pathOutput;
 
+	private Path dirOutput;
 	private String fileNamesRelations;
 
-	public SplitRelations()
+	public SplitComplexRelations()
 	{
 		// @formatter:off
 		OptionHelper.add(options, OPTION_OUTPUT, true, true, "directory to store output in");
@@ -71,13 +72,31 @@ public class SplitRelations extends AbstractExecutableSingleInputStreamOutput
 		fileNamesRelations = line.getOptionValue(OPTION_FILE_NAMES_RELATIONS);
 	}
 
+	protected void init() throws IOException
+	{
+		dirOutput = Paths.get(pathOutput);
+
+		if (!Files.exists(dirOutput)) {
+			System.out.println("Creating output directory");
+			Files.createDirectories(dirOutput);
+		}
+		if (!Files.isDirectory(dirOutput)) {
+			System.out.println("Output path is not a directory");
+			System.exit(1);
+		}
+		if (dirOutput.toFile().list().length != 0) {
+			System.out.println("Output directory is not empty");
+			System.exit(1);
+		}
+	}
+
 	private void execute() throws IOException
 	{
-		OsmStreamInput streamInput = new OsmStreamInput(osmStream);
-		SimpleRelationSplitter splitter = new SimpleRelationSplitter(
-				Paths.get(pathOutput), fileNamesRelations, streamInput,
+		ComplexRelationSplitter splitter = new ComplexRelationSplitter(
+				Paths.get(pathOutput), fileNamesRelations, getOsmFileInput(),
 				outputFormat, writeMetadata, pbfConfig, tboConfig);
 		splitter.execute();
+
 	}
 
 }
