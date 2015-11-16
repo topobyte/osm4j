@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import de.topobyte.osm4j.extra.BatchFilesUtil;
+import de.topobyte.osm4j.extra.batch.BatchFilesUtil;
 import de.topobyte.osm4j.utils.AbstractExecutableInputOutput;
 import de.topobyte.osm4j.utils.OsmFile;
 import de.topobyte.osm4j.utils.OsmFileInput;
