@@ -20,6 +20,7 @@ package de.topobyte.osm4j.extra.query;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
@@ -47,6 +48,7 @@ public abstract class BaseQuery extends AbstractExecutableInputOutput
 {
 
 	private static final String OPTION_OUTPUT = "output";
+	private static final String OPTION_TMP = "tmp";
 	private static final String OPTION_TREE = "tree";
 	private static final String OPTION_SIMPLE_RELATIONS = "simple_relations";
 	private static final String OPTION_COMPLEX_RELATIONS = "complex_relations";
@@ -62,6 +64,7 @@ public abstract class BaseQuery extends AbstractExecutableInputOutput
 	{
 		// @formatter:off
 		OptionHelper.add(options, OPTION_OUTPUT, true, true, "directory to store output in");
+		OptionHelper.add(options, OPTION_TMP, true, false, "directory to store intermediate files");
 		OptionHelper.add(options, OPTION_TREE, true, true, "path to the data tree");
 		OptionHelper.add(options, OPTION_SIMPLE_RELATIONS, true, true, "path to simple relation batches");
 		OptionHelper.add(options, OPTION_COMPLEX_RELATIONS, true, true, "path to complex relation batches");
@@ -76,6 +79,7 @@ public abstract class BaseQuery extends AbstractExecutableInputOutput
 	}
 
 	protected Path pathOutput;
+	protected Path pathTmp;
 	protected Path pathTree;
 	protected Path pathSimpleRelations;
 	protected Path pathComplexRelations;
@@ -98,6 +102,11 @@ public abstract class BaseQuery extends AbstractExecutableInputOutput
 		super.setup(args);
 
 		pathOutput = Paths.get(line.getOptionValue(OPTION_OUTPUT));
+		if (line.hasOption(OPTION_TMP)) {
+			pathTmp = Paths.get(line.getOptionValue(OPTION_TMP));
+		} else {
+			pathTmp = null;
+		}
 		pathTree = Paths.get(line.getOptionValue(OPTION_TREE));
 		pathSimpleRelations = Paths.get(line
 				.getOptionValue(OPTION_SIMPLE_RELATIONS));
@@ -121,6 +130,23 @@ public abstract class BaseQuery extends AbstractExecutableInputOutput
 
 	protected void execute() throws IOException
 	{
+		if (pathTmp == null) {
+			pathTmp = Files.createTempDirectory("extract");
+		}
+		System.out.println(pathTmp);
+		Files.createDirectories(pathTmp);
+		if (!Files.isDirectory(pathTmp)) {
+			System.out
+					.println("Unable to create temporary directory for intermediate files");
+			System.exit(1);
+		}
+		if (pathTmp.toFile().listFiles().length != 0) {
+			System.out
+					.println("Temporary directory for intermediate files is not empty");
+			System.exit(1);
+		}
+		System.out.println("Storing intermediate files here: " + pathTmp);
+
 		DataTree tree = DataTreeOpener.open(pathTree.toFile());
 		GeometryFactory factory = new GeometryFactory();
 		Geometry box = factory.toGeometry(queryEnvelope);
