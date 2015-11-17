@@ -17,14 +17,30 @@
 
 package de.topobyte.osm4j.extra.query;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 
+import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Envelope;
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.GeometryFactory;
 
 import de.topobyte.jts.utils.predicate.ContainmentTest;
+import de.topobyte.osm4j.core.access.OsmIterator;
+import de.topobyte.osm4j.core.model.iface.OsmNode;
+import de.topobyte.osm4j.core.resolve.DataSetReader;
+import de.topobyte.osm4j.core.resolve.InMemoryDataSet;
 import de.topobyte.osm4j.extra.datatree.DataTree;
+import de.topobyte.osm4j.extra.datatree.DataTreeFiles;
+import de.topobyte.osm4j.extra.datatree.DataTreeOpener;
+import de.topobyte.osm4j.extra.datatree.Node;
 import de.topobyte.osm4j.utils.AbstractExecutableInputOutput;
+import de.topobyte.osm4j.utils.OsmIoUtils;
+import de.topobyte.osm4j.utils.StreamUtil;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
 public abstract class BaseQuery extends AbstractExecutableInputOutput
@@ -103,9 +119,38 @@ public abstract class BaseQuery extends AbstractExecutableInputOutput
 				.getOptionValue(OPTION_FILE_NAMES_RELATION_RELATIONS);
 	}
 
-	protected void execute()
+	protected void execute() throws IOException
 	{
-		// TODO: run query
-	}
+		DataTree tree = DataTreeOpener.open(pathTree.toFile());
+		GeometryFactory factory = new GeometryFactory();
+		Geometry box = factory.toGeometry(queryEnvelope);
+		List<Node> leafs = tree.query(box);
 
+		DataTreeFiles filesTreeNodes = new DataTreeFiles(pathTree.toFile(),
+				fileNamesTreeNodes);
+
+		int n = 0;
+		for (Node leaf : leafs) {
+			System.out.println("Loading data from leaf: "
+					+ Long.toHexString(leaf.getPath()));
+			File fileNodes = filesTreeNodes.getFile(leaf);
+			InputStream input = StreamUtil.bufferedInputStream(fileNodes);
+			OsmIterator iterator = OsmIoUtils.setupOsmIterator(input,
+					inputFormat, readMetadata);
+			InMemoryDataSet data = DataSetReader.read(iterator, true, true,
+					true);
+
+			int m = 0;
+			for (OsmNode node : data.getNodes().valueCollection()) {
+				if (test.contains(new Coordinate(node.getLongitude(), node
+						.getLatitude()))) {
+					m++;
+				}
+			}
+			System.out.println(String.format("Found %d nodes", m));
+			n += m;
+		}
+
+		System.out.println(String.format("Total number of nodes: %d", n));
+	}
 }

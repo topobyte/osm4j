@@ -70,7 +70,7 @@ public class BboxQuery extends BaseQuery
 	}
 
 	@Override
-	protected void execute()
+	protected void execute() throws IOException
 	{
 		queryEnvelope = bbox.toEnvelope();
 
