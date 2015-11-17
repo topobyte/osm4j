@@ -18,23 +18,39 @@
 package de.topobyte.osm4j.extra.datatree;
 
 import java.io.File;
+import java.nio.file.Path;
 
 public class DataTreeFiles
 {
 
-	private File dir;
+	private File dirFile;
+	private Path pathFile;
 	private String filename;
 
 	public DataTreeFiles(File dir, String filename)
 	{
-		this.dir = dir;
+		this.pathFile = dir.toPath();
+		this.dirFile = dir;
+		this.filename = filename;
+	}
+
+	public DataTreeFiles(Path dir, String filename)
+	{
+		this.pathFile = dir;
+		this.dirFile = dir.toFile();
 		this.filename = filename;
 	}
 
 	public File getFile(Node leaf)
 	{
-		File subdir = new File(dir, Long.toHexString(leaf.getPath()));
+		File subdir = new File(dirFile, Long.toHexString(leaf.getPath()));
 		return new File(subdir, filename);
+	}
+
+	public Path getPath(Node leaf)
+	{
+		Path subdir = pathFile.resolve(Long.toHexString(leaf.getPath()));
+		return subdir.resolve(filename);
 	}
 
 }

@@ -17,13 +17,19 @@
 
 package de.topobyte.osm4j.extra.query;
 
-import java.io.File;
+import gnu.trove.set.TLongSet;
+import gnu.trove.set.hash.TLongHashSet;
+
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
+
+import org.apache.commons.io.FileUtils;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Envelope;
@@ -32,9 +38,12 @@ import com.vividsolutions.jts.geom.GeometryFactory;
 
 import de.topobyte.jts.utils.predicate.ContainmentTest;
 import de.topobyte.osm4j.core.access.OsmIterator;
+import de.topobyte.osm4j.core.access.OsmOutputStream;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
+import de.topobyte.osm4j.core.model.iface.OsmWay;
 import de.topobyte.osm4j.core.resolve.DataSetReader;
 import de.topobyte.osm4j.core.resolve.InMemoryDataSet;
+import de.topobyte.osm4j.extra.OsmOutput;
 import de.topobyte.osm4j.extra.datatree.DataTree;
 import de.topobyte.osm4j.extra.datatree.DataTreeFiles;
 import de.topobyte.osm4j.extra.datatree.DataTreeOpener;
@@ -130,10 +139,12 @@ public abstract class BaseQuery extends AbstractExecutableInputOutput
 
 	protected void execute() throws IOException
 	{
+		// Make sure a temporary directory is available
+
 		if (pathTmp == null) {
 			pathTmp = Files.createTempDirectory("extract");
 		}
-		System.out.println(pathTmp);
+		System.out.println("Temporary directory: " + pathTmp);
 		Files.createDirectories(pathTmp);
 		if (!Files.isDirectory(pathTmp)) {
 			System.out
@@ -147,36 +158,139 @@ public abstract class BaseQuery extends AbstractExecutableInputOutput
 		}
 		System.out.println("Storing intermediate files here: " + pathTmp);
 
+		// Create sub-directories for intermediate files
+
+		Path pathTmpNodes = pathTmp.resolve("nodes");
+		Path pathTmpWays = pathTmp.resolve("ways");
+		Path pathTmpSimpleRelations = pathTmp.resolve("relations.simple");
+		Path pathTmpComplexRelations = pathTmp.resolve("relations.complex");
+
+		Files.createDirectory(pathTmpNodes);
+		Files.createDirectory(pathTmpWays);
+		Files.createDirectory(pathTmpSimpleRelations);
+		Files.createDirectory(pathTmpComplexRelations);
+
+		// Query setup
+
 		DataTree tree = DataTreeOpener.open(pathTree.toFile());
 		GeometryFactory factory = new GeometryFactory();
 		Geometry box = factory.toGeometry(queryEnvelope);
 		List<Node> leafs = tree.query(box);
 
-		DataTreeFiles filesTreeNodes = new DataTreeFiles(pathTree.toFile(),
+		DataTreeFiles filesTreeNodes = new DataTreeFiles(pathTree,
 				fileNamesTreeNodes);
+		DataTreeFiles filesTreeWays = new DataTreeFiles(pathTree,
+				fileNamesTreeWays);
+		DataTreeFiles filesTreeSimpleRelations = new DataTreeFiles(pathTree,
+				fileNamesTreeSimpleRelations);
+		DataTreeFiles filesTreeComplexRelations = new DataTreeFiles(pathTree,
+				fileNamesTreeComplexRelations);
 
-		int n = 0;
+		// Lists of files that need to be merged in the end
+
+		List<Path> pathsNodes = new ArrayList<>();
+		List<Path> pathsWays = new ArrayList<>();
+		List<Path> pathsSimpleRelations = new ArrayList<>();
+		List<Path> pathsComplexRelations = new ArrayList<>();
+
+		// Query data tree
+
+		int nNodes = 0;
+		int nWays = 0;
+
+		int tmpIndex = 0;
+
 		for (Node leaf : leafs) {
-			System.out.println("Loading data from leaf: "
-					+ Long.toHexString(leaf.getPath()));
-			File fileNodes = filesTreeNodes.getFile(leaf);
-			InputStream input = StreamUtil.bufferedInputStream(fileNodes);
-			OsmIterator iterator = OsmIoUtils.setupOsmIterator(input,
-					inputFormat, readMetadata);
-			InMemoryDataSet data = DataSetReader.read(iterator, true, true,
-					true);
+			String leafName = Long.toHexString(leaf.getPath());
 
-			int m = 0;
-			for (OsmNode node : data.getNodes().valueCollection()) {
+			if (test.contains(leaf.getEnvelope())) {
+				System.out.println("Leaf is completely contained: " + leafName);
+				pathsNodes.add(filesTreeNodes.getPath(leaf));
+				pathsWays.add(filesTreeWays.getPath(leaf));
+				pathsSimpleRelations
+						.add(filesTreeSimpleRelations.getPath(leaf));
+				pathsComplexRelations.add(filesTreeComplexRelations
+						.getPath(leaf));
+				continue;
+			}
+
+			System.out.println("Loading data from leaf: " + leafName);
+			InMemoryDataSet dataNodes = read(filesTreeNodes.getPath(leaf));
+			InMemoryDataSet dataWays = read(filesTreeWays.getPath(leaf));
+
+			tmpIndex++;
+			String tmpFilenames = String.format("%d%s", tmpIndex,
+					OsmIoUtils.extension(outputFormat));
+			Path pathOutNodes = pathTmpNodes.resolve(tmpFilenames);
+			Path pathOutWays = pathTmpWays.resolve(tmpFilenames);
+
+			OsmOutput outNodes = createOutput(pathOutNodes);
+			OsmOutput outWays = createOutput(pathOutWays);
+
+			TLongSet nodeIds = new TLongHashSet();
+			TLongSet wayIds = new TLongHashSet();
+
+			for (OsmNode node : dataNodes.getNodes().valueCollection()) {
 				if (test.contains(new Coordinate(node.getLongitude(), node
 						.getLatitude()))) {
-					m++;
+					nodeIds.add(node.getId());
+					outNodes.getOsmOutput().write(node);
 				}
 			}
-			System.out.println(String.format("Found %d nodes", m));
-			n += m;
+			for (OsmWay way : dataWays.getWays().valueCollection()) {
+				boolean in = false;
+				for (int i = 0; i < way.getNumberOfNodes(); i++) {
+					if (nodeIds.contains(way.getNodeId(i))) {
+						in = true;
+						break;
+					}
+				}
+				if (!in) {
+					// TODO: test geometry-wise
+				}
+				if (in) {
+					wayIds.add(way.getId());
+					outWays.getOsmOutput().write(way);
+				}
+			}
+			System.out.println(String.format("Found %d nodes", nodeIds.size()));
+			System.out.println(String.format("Found %d ways", wayIds.size()));
+			nNodes += nodeIds.size();
+			nWays += wayIds.size();
+
+			finish(outNodes);
+			finish(outWays);
 		}
 
-		System.out.println(String.format("Total number of nodes: %d", n));
+		System.out.println(String.format("Total number of nodes: %d", nNodes));
+		System.out.println(String.format("Total number of ways: %d", nWays));
+
+		FileUtils.deleteDirectory(pathTmp.toFile());
 	}
+
+	private InMemoryDataSet read(Path path) throws IOException
+	{
+		InputStream input = StreamUtil.bufferedInputStream(path);
+		OsmIterator iterator = OsmIoUtils.setupOsmIterator(input, inputFormat,
+				writeMetadata);
+		InMemoryDataSet data = DataSetReader.read(iterator, true, true, true);
+		input.close();
+		return data;
+	}
+
+	private OsmOutput createOutput(Path path) throws IOException
+	{
+		OutputStream outputStream = StreamUtil.bufferedOutputStream(path);
+		OsmOutputStream osmOutputStream = OsmIoUtils
+				.setupOsmOutput(outputStream, outputFormat, writeMetadata,
+						pbfConfig, tboConfig);
+		return new OsmOutput(outputStream, osmOutputStream);
+	}
+
+	private void finish(OsmOutput osmOutput) throws IOException
+	{
+		osmOutput.getOsmOutput().complete();
+		osmOutput.getOutputStream().close();
+	}
+
 }
