@@ -39,7 +39,10 @@ import com.vividsolutions.jts.geom.GeometryFactory;
 import de.topobyte.jts.utils.predicate.ContainmentTest;
 import de.topobyte.osm4j.core.access.OsmIterator;
 import de.topobyte.osm4j.core.access.OsmOutputStream;
+import de.topobyte.osm4j.core.model.iface.EntityType;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
+import de.topobyte.osm4j.core.model.iface.OsmRelation;
+import de.topobyte.osm4j.core.model.iface.OsmRelationMember;
 import de.topobyte.osm4j.core.model.iface.OsmWay;
 import de.topobyte.osm4j.core.resolve.DataSetReader;
 import de.topobyte.osm4j.core.resolve.InMemoryDataSet;
@@ -197,6 +200,8 @@ public abstract class BaseQuery extends AbstractExecutableInputOutput
 
 		int nNodes = 0;
 		int nWays = 0;
+		int nSimpleRelations = 0;
+		int nComplexRelations = 0;
 
 		int tmpIndex = 0;
 
@@ -217,15 +222,23 @@ public abstract class BaseQuery extends AbstractExecutableInputOutput
 			System.out.println("Loading data from leaf: " + leafName);
 			InMemoryDataSet dataNodes = read(filesTreeNodes.getPath(leaf));
 			InMemoryDataSet dataWays = read(filesTreeWays.getPath(leaf));
+			InMemoryDataSet dataSimpleRelations = read(filesTreeSimpleRelations
+					.getPath(leaf));
 
 			tmpIndex++;
 			String tmpFilenames = String.format("%d%s", tmpIndex,
 					OsmIoUtils.extension(outputFormat));
 			Path pathOutNodes = pathTmpNodes.resolve(tmpFilenames);
 			Path pathOutWays = pathTmpWays.resolve(tmpFilenames);
+			Path pathOutSimpleRelations = pathTmpSimpleRelations
+					.resolve(tmpFilenames);
+			Path pathOutComplexRelations = pathTmpComplexRelations
+					.resolve(tmpFilenames);
 
 			OsmOutput outNodes = createOutput(pathOutNodes);
 			OsmOutput outWays = createOutput(pathOutWays);
+			OsmOutput outSimpleRelations = createOutput(pathOutSimpleRelations);
+			OsmOutput outComplexRelations = createOutput(pathOutComplexRelations);
 
 			TLongSet nodeIds = new TLongHashSet();
 			TLongSet wayIds = new TLongHashSet();
@@ -237,6 +250,7 @@ public abstract class BaseQuery extends AbstractExecutableInputOutput
 					outNodes.getOsmOutput().write(node);
 				}
 			}
+
 			for (OsmWay way : dataWays.getWays().valueCollection()) {
 				boolean in = false;
 				for (int i = 0; i < way.getNumberOfNodes(); i++) {
@@ -253,17 +267,55 @@ public abstract class BaseQuery extends AbstractExecutableInputOutput
 					outWays.getOsmOutput().write(way);
 				}
 			}
+
+			int nSimple = 0;
+			for (OsmRelation relation : dataSimpleRelations.getRelations()
+					.valueCollection()) {
+				boolean in = false;
+				for (int i = 0; i < relation.getNumberOfMembers(); i++) {
+					OsmRelationMember member = relation.getMember(i);
+					if (member.getType() == EntityType.Node
+							&& nodeIds.contains(member.getId())
+							|| member.getType() == EntityType.Way
+							&& wayIds.contains(member.getId())) {
+						in = true;
+						break;
+					}
+				}
+				if (!in) {
+					// TODO: test geometry-wise
+				}
+				if (in) {
+					outSimpleRelations.getOsmOutput().write(relation);
+					nSimple++;
+				}
+			}
+
+			int nComplex = 0;
+
 			System.out.println(String.format("Found %d nodes", nodeIds.size()));
 			System.out.println(String.format("Found %d ways", wayIds.size()));
+			System.out.println(String.format("Found %d simple relations",
+					nSimple));
+			System.out.println(String.format("Found %d complex relations",
+					nComplex));
 			nNodes += nodeIds.size();
 			nWays += wayIds.size();
+			nSimpleRelations += nSimple;
+			nComplexRelations += nComplex;
 
 			finish(outNodes);
 			finish(outWays);
+			finish(outSimpleRelations);
+			finish(outComplexRelations);
 		}
 
 		System.out.println(String.format("Total number of nodes: %d", nNodes));
 		System.out.println(String.format("Total number of ways: %d", nWays));
+		System.out.println(String.format(
+				"Total number of simple relations: %d", nSimpleRelations));
+		System.out.println(String.format(
+				"Total number of complex relations: %d", nComplexRelations));
 
 		FileUtils.deleteDirectory(pathTmp.toFile());
 	}
