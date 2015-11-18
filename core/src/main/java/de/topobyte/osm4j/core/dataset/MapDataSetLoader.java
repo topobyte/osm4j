@@ -27,7 +27,9 @@ import java.util.List;
 import de.topobyte.osm4j.core.access.OsmHandler;
 import de.topobyte.osm4j.core.access.OsmInputException;
 import de.topobyte.osm4j.core.access.OsmIterator;
+import de.topobyte.osm4j.core.access.OsmIteratorInput;
 import de.topobyte.osm4j.core.access.OsmReader;
+import de.topobyte.osm4j.core.access.OsmReaderInput;
 import de.topobyte.osm4j.core.model.iface.EntityContainer;
 import de.topobyte.osm4j.core.model.iface.OsmBounds;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
@@ -40,6 +42,28 @@ import de.topobyte.osm4j.core.model.impl.Way;
 
 public class MapDataSetLoader
 {
+
+	public static InMemoryMapDataSet read(OsmIteratorInput iteratorInput,
+			boolean keepNodeTags, boolean keepWayTags, boolean keepRelationTags)
+			throws IOException
+	{
+		OsmIterator iterator = iteratorInput.getIterator();
+		InMemoryMapDataSet data = read(iterator, keepNodeTags, keepWayTags,
+				keepRelationTags);
+		iteratorInput.close();
+		return data;
+	}
+
+	public static InMemoryMapDataSet read(OsmReaderInput readerInput,
+			boolean keepNodeTags, boolean keepWayTags, boolean keepRelationTags)
+			throws IOException, OsmInputException
+	{
+		OsmReader reader = readerInput.getReader();
+		InMemoryMapDataSet data = read(reader, keepNodeTags, keepWayTags,
+				keepRelationTags);
+		readerInput.close();
+		return data;
+	}
 
 	public static InMemoryMapDataSet read(OsmIterator iterator,
 			boolean keepNodeTags, boolean keepWayTags, boolean keepRelationTags)
