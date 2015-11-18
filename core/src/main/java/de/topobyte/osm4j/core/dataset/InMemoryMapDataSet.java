@@ -15,7 +15,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with osm4j. If not, see <http://www.gnu.org/licenses/>.
 
-package de.topobyte.osm4j.core.resolve;
+package de.topobyte.osm4j.core.dataset;
 
 import gnu.trove.map.TLongObjectMap;
 import gnu.trove.map.hash.TLongObjectHashMap;
@@ -23,6 +23,8 @@ import de.topobyte.osm4j.core.model.iface.OsmBounds;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.osm4j.core.model.iface.OsmRelation;
 import de.topobyte.osm4j.core.model.iface.OsmWay;
+import de.topobyte.osm4j.core.resolve.EntityNotFoundException;
+import de.topobyte.osm4j.core.resolve.OsmEntityProvider;
 
 /**
  * A structure representing all entities except changesets that may be found in
