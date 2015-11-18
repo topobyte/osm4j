@@ -18,6 +18,7 @@
 package de.topobyte.osm4j.extra.query;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -30,14 +31,20 @@ import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
 
 import de.topobyte.jts.utils.predicate.ContainmentTest;
+import de.topobyte.osm4j.core.access.OsmIterator;
+import de.topobyte.osm4j.core.access.OsmOutputStream;
 import de.topobyte.osm4j.extra.datatree.DataTree;
 import de.topobyte.osm4j.extra.datatree.DataTreeFiles;
 import de.topobyte.osm4j.extra.datatree.DataTreeOpener;
 import de.topobyte.osm4j.extra.datatree.Node;
 import de.topobyte.osm4j.utils.FileFormat;
+import de.topobyte.osm4j.utils.OsmFileInput;
 import de.topobyte.osm4j.utils.OsmIoUtils;
+import de.topobyte.osm4j.utils.OsmIteratorInput;
+import de.topobyte.osm4j.utils.StreamUtil;
 import de.topobyte.osm4j.utils.config.PbfConfig;
 import de.topobyte.osm4j.utils.config.TboConfig;
+import de.topobyte.osm4j.utils.merge.sorted.SortedMerge;
 
 public class Query
 {
@@ -155,6 +162,48 @@ public class Query
 				"Total number of simple relations: %d", nSimpleRelations));
 		System.out.println(String.format(
 				"Total number of complex relations: %d", nComplexRelations));
+
+		// Merge intermediate files
+
+		List<Path> pathsMerge = new ArrayList<>();
+		pathsMerge.addAll(pathsNodes);
+		pathsMerge.addAll(pathsWays);
+		pathsMerge.addAll(pathsSimpleRelations);
+		pathsMerge.addAll(pathsComplexRelations);
+
+		System.out
+				.println(String.format("Merging %d files", pathsMerge.size()));
+
+		OutputStream output = StreamUtil.bufferedOutputStream(pathOutput);
+		OsmOutputStream osmOutput = OsmIoUtils.setupOsmOutput(output,
+				outputFormat, writeMetadata, pbfConfig, tboConfig);
+
+		// TODO: we need to distinguish input and intermediate files, file
+		// format may differ
+		List<OsmFileInput> mergeFiles = new ArrayList<>();
+		for (Path path : pathsMerge) {
+			mergeFiles.add(new OsmFileInput(path, outputFormat));
+		}
+
+		List<OsmIteratorInput> mergeIteratorInputs = new ArrayList<>();
+		List<OsmIterator> mergeIterators = new ArrayList<>();
+		for (OsmFileInput input : mergeFiles) {
+			OsmIteratorInput iteratorInput = input
+					.createIterator(writeMetadata);
+			mergeIteratorInputs.add(iteratorInput);
+			mergeIterators.add(iteratorInput.getIterator());
+		}
+
+		SortedMerge merge = new SortedMerge(osmOutput, mergeIterators);
+		merge.run();
+
+		for (OsmIteratorInput input : mergeIteratorInputs) {
+			input.close();
+		}
+
+		output.close();
+
+		// Delete intermediate files
 
 		FileUtils.deleteDirectory(pathTmp.toFile());
 	}
