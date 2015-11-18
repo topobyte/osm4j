@@ -22,6 +22,7 @@ import gnu.trove.set.TLongSet;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -31,16 +32,21 @@ import java.util.Set;
 import com.vividsolutions.jts.geom.Envelope;
 
 import de.topobyte.osm4j.core.access.OsmIterator;
+import de.topobyte.osm4j.core.access.OsmOutputStream;
+import de.topobyte.osm4j.core.model.iface.OsmBounds;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.osm4j.core.model.iface.OsmRelation;
 import de.topobyte.osm4j.core.resolve.CompositeOsmEntityProvider;
+import de.topobyte.osm4j.core.resolve.DataSetReader;
 import de.topobyte.osm4j.core.resolve.EntityNotFoundException;
 import de.topobyte.osm4j.core.resolve.InMemoryDataSet;
 import de.topobyte.osm4j.core.resolve.OsmEntityProvider;
 import de.topobyte.osm4j.extra.OsmOutput;
 import de.topobyte.osm4j.extra.datatree.Node;
 import de.topobyte.osm4j.extra.idbboxlist.IdBboxEntry;
+import de.topobyte.osm4j.utils.OsmFileInput;
 import de.topobyte.osm4j.utils.OsmIoUtils;
+import de.topobyte.osm4j.utils.OsmIteratorInput;
 import de.topobyte.osm4j.utils.StreamUtil;
 
 public class DistributeComplexRelations extends DistributeRelationsBase
@@ -63,6 +69,8 @@ public class DistributeComplexRelations extends DistributeRelationsBase
 		task.execute();
 
 		task.finish();
+
+		task.sortFiles();
 	}
 
 	@Override
@@ -175,6 +183,29 @@ public class DistributeComplexRelations extends DistributeRelationsBase
 			relations.add(entityProvider.getRelation(idIterator.next()));
 		}
 		return relations;
+	}
+
+	private void sortFiles() throws IOException
+	{
+		for (Node leaf : tree.getLeafs()) {
+			Path path = treeFilesRelations.getPath(leaf);
+			OsmFileInput fileInput = new OsmFileInput(path, outputFormat);
+			OsmIteratorInput input = fileInput.createIterator(writeMetadata);
+			InMemoryDataSet data = DataSetReader.read(input.getIterator(),
+					true, true, true);
+			OsmBounds bounds = input.getIterator().getBounds();
+			input.close();
+
+			// TODO: rewrite sorted data
+
+			OutputStream output = StreamUtil.bufferedOutputStream(path);
+			OsmOutputStream osmOutput = OsmIoUtils.setupOsmOutput(output,
+					outputFormat, writeMetadata, pbfConfig, tboConfig);
+			osmOutput.write(bounds);
+
+			osmOutput.complete();
+			output.close();
+		}
 	}
 
 }
