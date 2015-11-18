@@ -22,8 +22,8 @@ import java.nio.file.Path;
 
 import de.topobyte.osm4j.core.access.OsmIteratorInput;
 import de.topobyte.osm4j.core.access.OsmIteratorInputFactory;
+import de.topobyte.osm4j.core.access.OsmStreamOutput;
 import de.topobyte.osm4j.core.model.iface.OsmRelation;
-import de.topobyte.osm4j.extra.OsmOutput;
 import de.topobyte.osm4j.extra.relations.RelationIterator;
 import de.topobyte.osm4j.utils.FileFormat;
 import de.topobyte.osm4j.utils.config.PbfConfig;
@@ -58,7 +58,7 @@ public class SimpleRelationSorter extends RelationSorterBase
 				System.out.println("not available: " + relation.getId());
 			}
 			int batchNum = idToBatch.get(relation.getId());
-			OsmOutput osmOutput = outputs.get(batchNum);
+			OsmStreamOutput osmOutput = outputs.get(batchNum);
 			osmOutput.getOsmOutput().write(relation);
 			relationCount++;
 		}

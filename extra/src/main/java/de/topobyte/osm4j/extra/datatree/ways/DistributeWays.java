@@ -38,6 +38,8 @@ import com.vividsolutions.jts.geom.LineString;
 import de.topobyte.largescalefileio.ClosingFileOutputStreamFactory;
 import de.topobyte.largescalefileio.SimpleClosingFileOutputStreamFactory;
 import de.topobyte.osm4j.core.access.OsmOutputStream;
+import de.topobyte.osm4j.core.access.OsmOutputStreamStreamOutput;
+import de.topobyte.osm4j.core.access.OsmStreamOutput;
 import de.topobyte.osm4j.core.dataset.InMemoryMapDataSet;
 import de.topobyte.osm4j.core.dataset.MapDataSetLoader;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
@@ -45,7 +47,6 @@ import de.topobyte.osm4j.core.model.iface.OsmWay;
 import de.topobyte.osm4j.core.resolve.EntityNotFoundException;
 import de.topobyte.osm4j.core.resolve.OsmEntityProvider;
 import de.topobyte.osm4j.core.resolve.UnionOsmEntityProvider;
-import de.topobyte.osm4j.extra.OsmOutput;
 import de.topobyte.osm4j.extra.datatree.DataTree;
 import de.topobyte.osm4j.extra.datatree.DataTreeFiles;
 import de.topobyte.osm4j.extra.datatree.DataTreeOpener;
@@ -129,8 +130,8 @@ public class DistributeWays extends AbstractExecutableInputOutput
 	private DataTree tree;
 	private File dirTree;
 	private List<Node> leafs;
-	private Map<Node, OsmOutput> outputsWays = new HashMap<>();
-	private Map<Node, OsmOutput> outputsNodes = new HashMap<>();
+	private Map<Node, OsmStreamOutput> outputsWays = new HashMap<>();
+	private Map<Node, OsmStreamOutput> outputsNodes = new HashMap<>();
 
 	private long counter = 0;
 	private long noneFound = 0;
@@ -153,20 +154,20 @@ public class DistributeWays extends AbstractExecutableInputOutput
 				fileNamesOutputNodes);
 
 		for (Node leaf : leafs) {
-			OsmOutput outputWays = createOutput(filesWays.getFile(leaf));
+			OsmStreamOutput outputWays = createOutput(filesWays.getFile(leaf));
 			outputsWays.put(leaf, outputWays);
-			OsmOutput outputNodes = createOutput(filesNodes.getFile(leaf));
+			OsmStreamOutput outputNodes = createOutput(filesNodes.getFile(leaf));
 			outputsNodes.put(leaf, outputNodes);
 		}
 	}
 
-	private OsmOutput createOutput(File file) throws IOException
+	private OsmStreamOutput createOutput(File file) throws IOException
 	{
 		OutputStream output = factory.create(file);
 		output = new BufferedOutputStream(output);
 		OsmOutputStream osmOutput = OsmIoUtils.setupOsmOutput(output,
 				outputFormat, writeMetadata, pbfConfig, tboConfig);
-		return new OsmOutput(output, osmOutput);
+		return new OsmOutputStreamStreamOutput(output, osmOutput);
 	}
 
 	public void execute() throws IOException
@@ -240,13 +241,13 @@ public class DistributeWays extends AbstractExecutableInputOutput
 			stats(i);
 		}
 
-		for (OsmOutput output : outputsWays.values()) {
+		for (OsmStreamOutput output : outputsWays.values()) {
 			output.getOsmOutput().complete();
-			output.getOutputStream().close();
+			output.close();
 		}
-		for (OsmOutput output : outputsNodes.values()) {
+		for (OsmStreamOutput output : outputsNodes.values()) {
 			output.getOsmOutput().complete();
-			output.getOutputStream().close();
+			output.close();
 		}
 	}
 

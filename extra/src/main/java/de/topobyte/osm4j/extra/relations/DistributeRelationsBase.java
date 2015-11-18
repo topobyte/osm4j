@@ -41,11 +41,12 @@ import de.topobyte.largescalefileio.ClosingFileOutputStreamFactory;
 import de.topobyte.largescalefileio.SimpleClosingFileOutputStreamFactory;
 import de.topobyte.osm4j.core.access.OsmIterator;
 import de.topobyte.osm4j.core.access.OsmOutputStream;
+import de.topobyte.osm4j.core.access.OsmOutputStreamStreamOutput;
+import de.topobyte.osm4j.core.access.OsmStreamOutput;
 import de.topobyte.osm4j.core.dataset.InMemoryMapDataSet;
 import de.topobyte.osm4j.core.dataset.MapDataSetLoader;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.osm4j.core.model.impl.Bounds;
-import de.topobyte.osm4j.extra.OsmOutput;
 import de.topobyte.osm4j.extra.datatree.DataTree;
 import de.topobyte.osm4j.extra.datatree.DataTreeFiles;
 import de.topobyte.osm4j.extra.datatree.DataTreeOpener;
@@ -88,9 +89,9 @@ public abstract class DistributeRelationsBase extends
 
 	protected DataTreeFiles treeFilesRelations;
 
-	protected OsmOutput outputEmpty;
-	protected OsmOutput outputNonTree;
-	protected Map<Node, OsmOutput> outputs = new HashMap<>();
+	protected OsmStreamOutput outputEmpty;
+	protected OsmStreamOutput outputNonTree;
+	protected Map<Node, OsmStreamOutput> outputs = new HashMap<>();
 
 	protected IdBboxListOutputStream outputBboxes;
 
@@ -185,7 +186,7 @@ public abstract class DistributeRelationsBase extends
 				.bufferedOutputStream(fileOutputEmpty);
 		OsmOutputStream osmOutputEmpty = OsmIoUtils.setupOsmOutput(outEmpty,
 				outputFormat, writeMetadata, pbfConfig, tboConfig);
-		outputEmpty = new OsmOutput(outEmpty, osmOutputEmpty);
+		outputEmpty = new OsmOutputStreamStreamOutput(outEmpty, osmOutputEmpty);
 
 		// Setup output for non-tree relations
 
@@ -194,7 +195,8 @@ public abstract class DistributeRelationsBase extends
 				.bufferedOutputStream(fileOutputNonTree);
 		OsmOutputStream osmOutputNonTree = OsmIoUtils.setupOsmOutput(
 				outNonTree, outputFormat, writeMetadata, pbfConfig, tboConfig);
-		outputNonTree = new OsmOutput(outNonTree, osmOutputNonTree);
+		outputNonTree = new OsmOutputStreamStreamOutput(outNonTree,
+				osmOutputNonTree);
 
 		// Setup output for non-tree relations' bboxes
 
@@ -217,7 +219,7 @@ public abstract class DistributeRelationsBase extends
 				tboWriter.setBatchSizeRelationsByMembers(1024);
 			}
 
-			outputs.put(leaf, new OsmOutput(out, osmOutput));
+			outputs.put(leaf, new OsmOutputStreamStreamOutput(out, osmOutput));
 
 			Envelope box = leaf.getEnvelope();
 			osmOutput.write(new Bounds(box.getMinX(), box.getMaxX(), box
@@ -245,16 +247,16 @@ public abstract class DistributeRelationsBase extends
 	protected void finish() throws IOException
 	{
 		outputEmpty.getOsmOutput().complete();
-		outputEmpty.getOutputStream().close();
+		outputEmpty.close();
 
 		outputNonTree.getOsmOutput().complete();
-		outputNonTree.getOutputStream().close();
+		outputNonTree.close();
 
 		outputBboxes.close();
 
-		for (OsmOutput output : outputs.values()) {
+		for (OsmStreamOutput output : outputs.values()) {
 			output.getOsmOutput().complete();
-			output.getOutputStream().close();
+			output.close();
 		}
 	}
 

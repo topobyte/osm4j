@@ -26,8 +26,8 @@ import java.nio.file.Path;
 import java.util.List;
 
 import de.topobyte.osm4j.core.access.OsmIteratorInputFactory;
+import de.topobyte.osm4j.core.access.OsmStreamOutput;
 import de.topobyte.osm4j.core.model.iface.OsmRelation;
-import de.topobyte.osm4j.extra.OsmOutput;
 import de.topobyte.osm4j.extra.relations.Group;
 import de.topobyte.osm4j.utils.FileFormat;
 import de.topobyte.osm4j.utils.config.PbfConfig;
@@ -67,7 +67,7 @@ public class ComplexRelationSorter extends RelationSorterBase
 				System.out.println("not available: " + representative);
 			}
 			int batchNum = idToBatch.get(representative);
-			OsmOutput osmOutput = outputs.get(batchNum);
+			OsmStreamOutput osmOutput = outputs.get(batchNum);
 
 			TLongSet ids = group.getRelationIds();
 			for (long id : ids.toArray()) {

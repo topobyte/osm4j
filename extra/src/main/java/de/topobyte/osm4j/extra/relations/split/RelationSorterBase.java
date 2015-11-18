@@ -37,8 +37,9 @@ import de.topobyte.largescalefileio.ClosingFileOutputStreamFactory;
 import de.topobyte.largescalefileio.SimpleClosingFileOutputStreamFactory;
 import de.topobyte.osm4j.core.access.OsmIteratorInputFactory;
 import de.topobyte.osm4j.core.access.OsmOutputStream;
+import de.topobyte.osm4j.core.access.OsmOutputStreamStreamOutput;
+import de.topobyte.osm4j.core.access.OsmStreamOutput;
 import de.topobyte.osm4j.core.model.impl.Bounds;
-import de.topobyte.osm4j.extra.OsmOutput;
 import de.topobyte.osm4j.extra.idbboxlist.IdBboxEntry;
 import de.topobyte.osm4j.extra.idbboxlist.IdBboxUtil;
 import de.topobyte.osm4j.utils.FileFormat;
@@ -67,7 +68,7 @@ public class RelationSorterBase
 
 	protected TLongIntMap idToBatch;
 	protected List<List<IdBboxEntry>> batches;
-	protected List<OsmOutput> outputs;
+	protected List<OsmStreamOutput> outputs;
 
 	public RelationSorterBase(Path pathInputBboxes, Path pathOutput,
 			String fileNamesRelations, OsmIteratorInputFactory iteratorFactory,
@@ -132,7 +133,7 @@ public class RelationSorterBase
 					.toFile()));
 			OsmOutputStream osmOutput = OsmIoUtils.setupOsmOutput(output,
 					outputFormat, writeMetadata, pbfConfig, tboConfig);
-			outputs.add(new OsmOutput(output, osmOutput));
+			outputs.add(new OsmOutputStreamStreamOutput(output, osmOutput));
 
 			Envelope e = new Envelope();
 			for (IdBboxEntry entry : batches.get(i)) {
@@ -146,9 +147,9 @@ public class RelationSorterBase
 
 	protected void closeOutputs() throws IOException
 	{
-		for (OsmOutput output : outputs) {
+		for (OsmStreamOutput output : outputs) {
 			output.getOsmOutput().complete();
-			output.getOutputStream().close();
+			output.close();
 		}
 	}
 

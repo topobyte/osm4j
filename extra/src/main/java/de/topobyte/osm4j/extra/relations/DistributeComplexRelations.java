@@ -34,6 +34,7 @@ import com.vividsolutions.jts.geom.Envelope;
 import de.topobyte.osm4j.core.access.OsmIterator;
 import de.topobyte.osm4j.core.access.OsmIteratorInput;
 import de.topobyte.osm4j.core.access.OsmOutputStream;
+import de.topobyte.osm4j.core.access.OsmStreamOutput;
 import de.topobyte.osm4j.core.dataset.InMemoryMapDataSet;
 import de.topobyte.osm4j.core.dataset.MapDataSetLoader;
 import de.topobyte.osm4j.core.model.iface.OsmBounds;
@@ -42,7 +43,6 @@ import de.topobyte.osm4j.core.model.iface.OsmRelation;
 import de.topobyte.osm4j.core.resolve.CompositeOsmEntityProvider;
 import de.topobyte.osm4j.core.resolve.EntityNotFoundException;
 import de.topobyte.osm4j.core.resolve.OsmEntityProvider;
-import de.topobyte.osm4j.extra.OsmOutput;
 import de.topobyte.osm4j.extra.datatree.Node;
 import de.topobyte.osm4j.extra.idbboxlist.IdBboxEntry;
 import de.topobyte.osm4j.utils.OsmFileInput;
@@ -165,7 +165,7 @@ public class DistributeComplexRelations extends DistributeRelationsBase
 		return lowest;
 	}
 
-	private void write(RelationGroup group, OsmOutput output)
+	private void write(RelationGroup group, OsmStreamOutput output)
 			throws IOException
 	{
 		Collection<OsmRelation> relations = group.getRelations();

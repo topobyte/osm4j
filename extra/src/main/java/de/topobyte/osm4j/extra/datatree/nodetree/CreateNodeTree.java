@@ -20,8 +20,8 @@ package de.topobyte.osm4j.extra.datatree.nodetree;
 import java.io.IOException;
 import java.util.List;
 
+import de.topobyte.osm4j.core.access.OsmStreamOutput;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
-import de.topobyte.osm4j.extra.OsmOutput;
 import de.topobyte.osm4j.extra.datatree.Node;
 
 public class CreateNodeTree extends BaseNodeTreeCreator
@@ -59,7 +59,7 @@ public class CreateNodeTree extends BaseNodeTreeCreator
 		for (Node leaf : leafs) {
 			if (leaf.getEnvelope().contains(node.getLongitude(),
 					node.getLatitude())) {
-				OsmOutput output = outputs.get(leaf);
+				OsmStreamOutput output = outputs.get(leaf);
 				output.getOsmOutput().write(node);
 			}
 		}

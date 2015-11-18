@@ -35,12 +35,13 @@ import de.topobyte.largescalefileio.SimpleClosingFileOutputStreamFactory;
 import de.topobyte.osm4j.core.access.OsmIterator;
 import de.topobyte.osm4j.core.access.OsmIteratorInput;
 import de.topobyte.osm4j.core.access.OsmOutputStream;
+import de.topobyte.osm4j.core.access.OsmOutputStreamStreamOutput;
+import de.topobyte.osm4j.core.access.OsmStreamOutput;
 import de.topobyte.osm4j.core.dataset.sort.IdComparator;
 import de.topobyte.osm4j.core.model.iface.EntityContainer;
 import de.topobyte.osm4j.core.model.iface.EntityType;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.osm4j.core.model.iface.OsmWay;
-import de.topobyte.osm4j.extra.OsmOutput;
 import de.topobyte.osm4j.extra.datatree.DataTree;
 import de.topobyte.osm4j.extra.datatree.DataTreeFiles;
 import de.topobyte.osm4j.extra.datatree.DataTreeOpener;
@@ -104,7 +105,7 @@ public class MapWaysToTree extends AbstractExecutableSingleInputFileOutput
 	private OsmIteratorInput nodeInput;
 	private SortedMergeIterator wayIterator;
 
-	private Map<Node, OsmOutput> outputs = new HashMap<>();
+	private Map<Node, OsmStreamOutput> outputs = new HashMap<>();
 	private List<InputStream> wayInputStreams = new ArrayList<>();
 
 	public void prepare() throws IOException
@@ -130,7 +131,8 @@ public class MapWaysToTree extends AbstractExecutableSingleInputFileOutput
 			OsmOutputStream osmOutput = OsmIoUtils.setupOsmOutput(output,
 					outputFormat, writeMetadata, pbfConfig, tboConfig);
 
-			OsmOutput out = new OsmOutput(output, osmOutput);
+			OsmStreamOutput out = new OsmOutputStreamStreamOutput(output,
+					osmOutput);
 			outputs.put(leaf, out);
 		}
 
@@ -219,9 +221,9 @@ public class MapWaysToTree extends AbstractExecutableSingleInputFileOutput
 			input.close();
 		}
 
-		for (OsmOutput output : outputs.values()) {
+		for (OsmStreamOutput output : outputs.values()) {
 			output.getOsmOutput().complete();
-			output.getOutputStream().close();
+			output.close();
 		}
 	}
 
@@ -229,7 +231,7 @@ public class MapWaysToTree extends AbstractExecutableSingleInputFileOutput
 	{
 		List<Node> leafs = tree.query(node.getLongitude(), node.getLatitude());
 		for (Node leaf : leafs) {
-			OsmOutput output = outputs.get(leaf);
+			OsmStreamOutput output = outputs.get(leaf);
 			output.getOsmOutput().write(way);
 		}
 	}

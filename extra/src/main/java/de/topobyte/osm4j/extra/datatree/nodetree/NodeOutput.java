@@ -21,10 +21,10 @@ import java.io.OutputStream;
 import java.nio.file.Path;
 
 import de.topobyte.osm4j.core.access.OsmOutputStream;
-import de.topobyte.osm4j.extra.OsmOutput;
+import de.topobyte.osm4j.core.access.OsmOutputStreamStreamOutput;
 import de.topobyte.osm4j.extra.datatree.Node;
 
-class NodeOutput extends OsmOutput
+class NodeOutput extends OsmOutputStreamStreamOutput
 {
 
 	private Node node;

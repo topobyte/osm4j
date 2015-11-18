@@ -34,11 +34,11 @@ import de.topobyte.largescalefileio.ClosingFileOutputStreamFactory;
 import de.topobyte.largescalefileio.SimpleClosingFileOutputStreamFactory;
 import de.topobyte.osm4j.core.access.OsmIterator;
 import de.topobyte.osm4j.core.access.OsmOutputStream;
+import de.topobyte.osm4j.core.access.OsmStreamOutput;
 import de.topobyte.osm4j.core.model.iface.EntityContainer;
 import de.topobyte.osm4j.core.model.iface.OsmBounds;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.osm4j.core.model.impl.Bounds;
-import de.topobyte.osm4j.extra.OsmOutput;
 import de.topobyte.osm4j.extra.datatree.DataTree;
 import de.topobyte.osm4j.extra.datatree.DataTreeOpener;
 import de.topobyte.osm4j.extra.datatree.DataTreeUtil;
@@ -196,15 +196,15 @@ public abstract class BaseNodeTreeCreator extends
 	{
 		super.finish();
 
-		for (OsmOutput output : outputs.values()) {
+		for (OsmStreamOutput output : outputs.values()) {
 			close(output);
 		}
 	}
 
-	protected void close(OsmOutput output) throws IOException
+	protected void close(OsmStreamOutput output) throws IOException
 	{
 		output.getOsmOutput().complete();
-		output.getOutputStream().close();
+		output.close();
 	}
 
 }

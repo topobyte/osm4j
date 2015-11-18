@@ -29,6 +29,8 @@ import com.vividsolutions.jts.geom.Coordinate;
 import de.topobyte.jts.utils.predicate.ContainmentTest;
 import de.topobyte.osm4j.core.access.OsmIteratorInput;
 import de.topobyte.osm4j.core.access.OsmOutputStream;
+import de.topobyte.osm4j.core.access.OsmOutputStreamStreamOutput;
+import de.topobyte.osm4j.core.access.OsmStreamOutput;
 import de.topobyte.osm4j.core.dataset.InMemoryMapDataSet;
 import de.topobyte.osm4j.core.dataset.MapDataSetLoader;
 import de.topobyte.osm4j.core.model.iface.EntityType;
@@ -36,7 +38,6 @@ import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.osm4j.core.model.iface.OsmRelation;
 import de.topobyte.osm4j.core.model.iface.OsmRelationMember;
 import de.topobyte.osm4j.core.model.iface.OsmWay;
-import de.topobyte.osm4j.extra.OsmOutput;
 import de.topobyte.osm4j.extra.datatree.DataTreeFiles;
 import de.topobyte.osm4j.extra.datatree.Node;
 import de.topobyte.osm4j.utils.FileFormat;
@@ -86,10 +87,10 @@ public class LeafQuery
 	private Path pathOutSimpleRelations;
 	private Path pathOutComplexRelations;
 
-	private OsmOutput outNodes;
-	private OsmOutput outWays;
-	private OsmOutput outSimpleRelations;
-	private OsmOutput outComplexRelations;
+	private OsmStreamOutput outNodes;
+	private OsmStreamOutput outWays;
+	private OsmStreamOutput outSimpleRelations;
+	private OsmStreamOutput outComplexRelations;
 
 	private InMemoryMapDataSet dataNodes;
 	private InMemoryMapDataSet dataWays;
@@ -157,19 +158,19 @@ public class LeafQuery
 		return data;
 	}
 
-	private OsmOutput createOutput(Path path) throws IOException
+	private OsmStreamOutput createOutput(Path path) throws IOException
 	{
 		OutputStream outputStream = StreamUtil.bufferedOutputStream(path);
 		OsmOutputStream osmOutputStream = OsmIoUtils
 				.setupOsmOutput(outputStream, outputFormat, writeMetadata,
 						pbfConfig, tboConfig);
-		return new OsmOutput(outputStream, osmOutputStream);
+		return new OsmOutputStreamStreamOutput(outputStream, osmOutputStream);
 	}
 
-	private void finish(OsmOutput osmOutput) throws IOException
+	private void finish(OsmStreamOutput osmOutput) throws IOException
 	{
 		osmOutput.getOsmOutput().complete();
-		osmOutput.getOutputStream().close();
+		osmOutput.close();
 	}
 
 	private void queryNodes() throws IOException
