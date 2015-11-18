@@ -27,8 +27,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import de.topobyte.osm4j.core.access.OsmIterator;
-import de.topobyte.osm4j.core.resolve.DataSetReader;
-import de.topobyte.osm4j.core.resolve.InMemoryMapDataSet;
+import de.topobyte.osm4j.core.dataset.InMemoryMapDataSet;
+import de.topobyte.osm4j.core.dataset.MapDataSetLoader;
 import de.topobyte.osm4j.testing.TestDataSet;
 import de.topobyte.osm4j.utils.config.PbfConfig;
 import de.topobyte.osm4j.utils.config.TboConfig;
@@ -55,8 +55,8 @@ public class DataSetIO
 		InputStream bis = new BufferedInputStream(fis);
 		OsmIterator iterator = OsmIoUtils.setupOsmIterator(bis, format,
 				readMetadata);
-		InMemoryMapDataSet data = DataSetReader
-				.read(iterator, true, true, true);
+		InMemoryMapDataSet data = MapDataSetLoader.read(iterator, true, true,
+				true);
 		bis.close();
 		return new TestDataSet(data);
 	}

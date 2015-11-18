@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import de.topobyte.osm4j.core.access.OsmReader;
+import de.topobyte.osm4j.core.access.OsmReaderInput;
 
 public class OsmSingleReaderInput implements OsmReaderInput
 {

@@ -20,16 +20,23 @@ package de.topobyte.osm4j.utils;
 import java.io.IOException;
 import java.io.InputStream;
 
+import de.topobyte.osm4j.core.access.OsmIdIterator;
+import de.topobyte.osm4j.core.access.OsmIdIteratorInput;
+import de.topobyte.osm4j.core.access.OsmIdReader;
+import de.topobyte.osm4j.core.access.OsmIdReaderInput;
+import de.topobyte.osm4j.core.access.OsmInputAccessFactory;
 import de.topobyte.osm4j.core.access.OsmIterator;
+import de.topobyte.osm4j.core.access.OsmIteratorInput;
 import de.topobyte.osm4j.core.access.OsmReader;
+import de.topobyte.osm4j.core.access.OsmReaderInput;
 
-public class OsmStreamInput implements OsmAccessFactory
+public class OsmStreamInput implements OsmInputAccessFactory
 {
 
 	private InputStream input;
 	private FileFormat fileFormat;
 
-	public OsmStreamInput(OsmStream osmStream)
+	public OsmStreamInput(OsmInputStream osmStream)
 	{
 		this.input = osmStream.getInputStream();
 		this.fileFormat = osmStream.getFileFormat();
@@ -56,6 +63,21 @@ public class OsmStreamInput implements OsmAccessFactory
 		OsmReader reader = OsmIoUtils.setupOsmReader(input, fileFormat,
 				readMetadata);
 		return new OsmSingleReaderInput(input, reader);
+	}
+
+	@Override
+	public OsmIdIteratorInput createIdIterator() throws IOException
+	{
+		OsmIdIterator iterator = OsmIoUtils.setupOsmIdIterator(input,
+				fileFormat);
+		return new OsmSingleIdIteratorInput(input, iterator);
+	}
+
+	@Override
+	public OsmIdReaderInput createIdReader() throws IOException
+	{
+		OsmIdReader reader = OsmIoUtils.setupOsmIdReader(input, fileFormat);
+		return new OsmSingleIdReaderInput(input, reader);
 	}
 
 }

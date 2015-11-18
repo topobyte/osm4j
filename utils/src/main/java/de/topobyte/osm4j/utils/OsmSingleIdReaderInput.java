@@ -15,22 +15,36 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with osm4j. If not, see <http://www.gnu.org/licenses/>.
 
-package de.topobyte.osm4j.utils.sort;
+package de.topobyte.osm4j.utils;
 
-import java.util.Comparator;
+import java.io.IOException;
+import java.io.InputStream;
 
-import de.topobyte.osm4j.core.model.iface.OsmEntity;
+import de.topobyte.osm4j.core.access.OsmIdReader;
+import de.topobyte.osm4j.core.access.OsmIdReaderInput;
 
-/**
- * A comparator for OSM elements that orders them by their id
- */
-public class IdComparator implements Comparator<OsmEntity>
+public class OsmSingleIdReaderInput implements OsmIdReaderInput
 {
 
-	@Override
-	public int compare(OsmEntity o1, OsmEntity o2)
+	private InputStream input;
+	private OsmIdReader reader;
+
+	public OsmSingleIdReaderInput(InputStream input, OsmIdReader reader)
 	{
-		return Long.compare(o1.getId(), o2.getId());
+		this.input = input;
+		this.reader = reader;
+	}
+
+	@Override
+	public void close() throws IOException
+	{
+		input.close();
+	}
+
+	@Override
+	public OsmIdReader getReader()
+	{
+		return reader;
 	}
 
 }

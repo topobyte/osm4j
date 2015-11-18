@@ -25,14 +25,18 @@ import java.util.Comparator;
 
 import de.topobyte.largescalefileio.ClosingFileInputStreamFactory;
 import de.topobyte.largescalefileio.SimpleClosingFileInputStreamFactory;
+import de.topobyte.osm4j.core.access.OsmIdIterator;
+import de.topobyte.osm4j.core.access.OsmIdIteratorInput;
 import de.topobyte.osm4j.core.access.OsmIterator;
+import de.topobyte.osm4j.core.access.OsmIteratorInput;
+import de.topobyte.osm4j.core.access.OsmIteratorInputFactory;
+import de.topobyte.osm4j.core.dataset.sort.IdComparator;
 import de.topobyte.osm4j.core.model.iface.OsmEntity;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.osm4j.core.model.iface.OsmRelation;
 import de.topobyte.osm4j.core.model.iface.OsmWay;
-import de.topobyte.osm4j.utils.sort.IdComparator;
 
-public class OsmFileSetInput implements OsmIteratorFactory
+public class OsmFileSetInput implements OsmIteratorInputFactory
 {
 
 	private Collection<OsmFile> osmFiles;
@@ -81,6 +85,24 @@ public class OsmFileSetInput implements OsmIteratorFactory
 
 		return new OsmMergeIteratorInput(inputs, iterators, comparatorNodes,
 				comparatorWays, comparatorRelations);
+	}
+
+	@Override
+	public OsmIdIteratorInput createIdIterator() throws IOException
+	{
+		Collection<InputStream> inputs = new ArrayList<>();
+		Collection<OsmIdIterator> iterators = new ArrayList<>();
+
+		ClosingFileInputStreamFactory factory = new SimpleClosingFileInputStreamFactory();
+		for (OsmFile osmFile : osmFiles) {
+			InputStream input = factory.create(osmFile.getPath().toFile());
+			OsmIdIterator iterator = OsmIoUtils.setupOsmIdIterator(input,
+					osmFile.getFileFormat());
+			inputs.add(input);
+			iterators.add(iterator);
+		}
+
+		return new OsmMergeIdIteratorInput(inputs, iterators);
 	}
 
 }

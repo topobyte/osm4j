@@ -18,11 +18,33 @@
 package de.topobyte.osm4j.utils;
 
 import java.io.IOException;
+import java.io.InputStream;
 
-public interface OsmIteratorFactory
+import de.topobyte.osm4j.core.access.OsmIdIterator;
+import de.topobyte.osm4j.core.access.OsmIdIteratorInput;
+
+public class OsmSingleIdIteratorInput implements OsmIdIteratorInput
 {
 
-	public OsmIteratorInput createIterator(boolean readMetadata)
-			throws IOException;
+	private InputStream input;
+	private OsmIdIterator iterator;
+
+	public OsmSingleIdIteratorInput(InputStream input, OsmIdIterator iterator)
+	{
+		this.input = input;
+		this.iterator = iterator;
+	}
+
+	@Override
+	public void close() throws IOException
+	{
+		input.close();
+	}
+
+	@Override
+	public OsmIdIterator getIterator()
+	{
+		return iterator;
+	}
 
 }

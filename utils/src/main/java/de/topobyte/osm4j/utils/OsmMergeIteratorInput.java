@@ -23,12 +23,13 @@ import java.util.Collection;
 import java.util.Comparator;
 
 import de.topobyte.osm4j.core.access.OsmIterator;
+import de.topobyte.osm4j.core.access.OsmIteratorInput;
+import de.topobyte.osm4j.core.dataset.sort.IdComparator;
 import de.topobyte.osm4j.core.model.iface.OsmEntity;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.osm4j.core.model.iface.OsmRelation;
 import de.topobyte.osm4j.core.model.iface.OsmWay;
 import de.topobyte.osm4j.utils.merge.sorted.SortedMergeIterator;
-import de.topobyte.osm4j.utils.sort.IdComparator;
 
 public class OsmMergeIteratorInput implements OsmIteratorInput
 {

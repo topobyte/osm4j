@@ -17,28 +17,39 @@
 
 package de.topobyte.osm4j.utils;
 
+import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collection;
 
-public class OsmStream
+import de.topobyte.osm4j.core.access.OsmIdIterator;
+import de.topobyte.osm4j.core.access.OsmIdIteratorInput;
+import de.topobyte.osm4j.utils.merge.sorted.SortedIdMergeIterator;
+
+public class OsmMergeIdIteratorInput implements OsmIdIteratorInput
 {
 
-	private InputStream input;
-	private FileFormat fileFormat;
+	private Collection<InputStream> inputs;
+	private Collection<OsmIdIterator> iterators;
 
-	public OsmStream(InputStream input, FileFormat fileFormat)
+	public OsmMergeIdIteratorInput(Collection<InputStream> inputs,
+			Collection<OsmIdIterator> iterators)
 	{
-		this.input = input;
-		this.fileFormat = fileFormat;
+		this.inputs = inputs;
+		this.iterators = iterators;
 	}
 
-	public InputStream getInputStream()
+	@Override
+	public void close() throws IOException
 	{
-		return input;
+		for (InputStream input : inputs) {
+			input.close();
+		}
 	}
 
-	public FileFormat getFileFormat()
+	@Override
+	public OsmIdIterator getIterator() throws IOException
 	{
-		return fileFormat;
+		return new SortedIdMergeIterator(iterators);
 	}
 
 }

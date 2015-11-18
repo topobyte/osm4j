@@ -19,22 +19,16 @@ package de.topobyte.osm4j.utils.merge.sorted;
 
 import java.io.IOException;
 import java.util.Collection;
-import java.util.Comparator;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-import de.topobyte.osm4j.core.access.OsmIterator;
-import de.topobyte.osm4j.core.dataset.sort.IdComparator;
-import de.topobyte.osm4j.core.model.iface.EntityContainer;
+import de.topobyte.osm4j.core.access.OsmIdIterator;
 import de.topobyte.osm4j.core.model.iface.EntityType;
+import de.topobyte.osm4j.core.model.iface.IdContainer;
 import de.topobyte.osm4j.core.model.iface.OsmBounds;
-import de.topobyte.osm4j.core.model.iface.OsmEntity;
-import de.topobyte.osm4j.core.model.iface.OsmNode;
-import de.topobyte.osm4j.core.model.iface.OsmRelation;
-import de.topobyte.osm4j.core.model.iface.OsmWay;
 
-public class SortedMergeIterator extends AbstractSortedMerge implements
-		OsmIterator
+public class SortedIdMergeIterator extends AbstractSortedIdMerge implements
+		OsmIdIterator
 {
 
 	/**
@@ -47,53 +41,10 @@ public class SortedMergeIterator extends AbstractSortedMerge implements
 	 * @param inputs
 	 *            a collection of iterators to retrieve data from.
 	 */
-	public SortedMergeIterator(Collection<OsmIterator> inputs)
+	public SortedIdMergeIterator(Collection<OsmIdIterator> inputs)
 			throws IOException
 	{
-		this(inputs, new IdComparator());
-	}
-
-	/**
-	 * Merge the elements from a collection of OSM input sources to a single OSM
-	 * input source. The merging algorithm expects the input data to be in
-	 * default order, i.e. a sequence of nodes, followed by a sequence of ways,
-	 * followed by a sequence of relations. Each sequence ordered using the
-	 * specified comparator.
-	 * 
-	 * @param inputs
-	 *            a collection of iterators to retrieve data from.
-	 * @param comparator
-	 *            a Comparator used to compare elements of the same type.
-	 */
-	public SortedMergeIterator(Collection<OsmIterator> inputs,
-			Comparator<OsmEntity> comparator) throws IOException
-	{
-		this(inputs, comparator, comparator, comparator);
-	}
-
-	/**
-	 * Merge the elements from a collection of OSM input sources to a single OSM
-	 * input source. The merging algorithm expects the input data to be in
-	 * default order, i.e. a sequence of nodes, followed by a sequence of ways,
-	 * followed by a sequence of relations. Each sequence ordered using the
-	 * respective specified comparator.
-	 * 
-	 * @param inputs
-	 *            a collection of iterators to retrieve data from.
-	 * @param comparatorNodes
-	 *            a Comparator used to compare nodes.
-	 * @param comparatorWays
-	 *            a Comparator used to compare ways.
-	 * @param comparatorRelations
-	 *            a Comparator used to compare relations.
-	 */
-	public SortedMergeIterator(Collection<OsmIterator> inputs,
-			Comparator<? super OsmNode> comparatorNodes,
-			Comparator<? super OsmWay> comparatorWays,
-			Comparator<? super OsmRelation> comparatorRelations)
-			throws IOException
-	{
-		super(inputs, comparatorNodes, comparatorWays, comparatorRelations);
+		super(inputs);
 
 		// Initialize the input sources and put into the priority queues
 		prepare();
@@ -107,24 +58,22 @@ public class SortedMergeIterator extends AbstractSortedMerge implements
 
 	private void prepare() throws IOException
 	{
-		for (OsmIterator iterator : inputs) {
+		for (OsmIdIterator iterator : inputs) {
 			if (!iterator.hasNext()) {
 				continue;
 			}
 			available = true;
-			EntityContainer container = iterator.next();
+			IdContainer container = iterator.next();
+			long id = container.getId();
 			switch (container.getType()) {
 			case Node:
-				nodeItems.add(createItem((OsmNode) container.getEntity(),
-						iterator));
+				nodeItems.add(createItem(id, iterator));
 				break;
 			case Way:
-				wayItems.add(createItem((OsmWay) container.getEntity(),
-						iterator));
+				wayItems.add(createItem(id, iterator));
 				break;
 			case Relation:
-				relationItems.add(createItem(
-						(OsmRelation) container.getEntity(), iterator));
+				relationItems.add(createItem(id, iterator));
 				break;
 			}
 		}
@@ -138,7 +87,7 @@ public class SortedMergeIterator extends AbstractSortedMerge implements
 	}
 
 	@Override
-	public Iterator<EntityContainer> iterator()
+	public Iterator<IdContainer> iterator()
 	{
 		return this;
 	}
@@ -168,7 +117,7 @@ public class SortedMergeIterator extends AbstractSortedMerge implements
 	}
 
 	@Override
-	public EntityContainer next()
+	public IdContainer next()
 	{
 		switch (mode) {
 		case Node:
@@ -182,46 +131,43 @@ public class SortedMergeIterator extends AbstractSortedMerge implements
 		}
 	}
 
-	private EntityContainer nextNode()
+	private IdContainer nextNode()
 	{
-		Input<OsmNode> item = nodeItems.poll();
-		OsmEntity current = item.currentEntity;
-		lastId = current.getId();
+		Input item = nodeItems.poll();
+		lastId = item.currentId;
 
 		advanceNodeItem(item, true);
 		skipDuplicateNodes();
 		ensureMode();
-		return new EntityContainer(EntityType.Node, current);
+		return new IdContainer(EntityType.Node, lastId);
 	}
 
-	private EntityContainer nextWay()
+	private IdContainer nextWay()
 	{
-		Input<OsmWay> item = wayItems.poll();
-		OsmEntity current = item.currentEntity;
-		lastId = current.getId();
+		Input item = wayItems.poll();
+		lastId = item.currentId;
 
 		advanceWayItem(item, true);
 		skipDuplicateWays();
 		ensureMode();
-		return new EntityContainer(EntityType.Way, current);
+		return new IdContainer(EntityType.Way, lastId);
 	}
 
-	private EntityContainer nextRelation()
+	private IdContainer nextRelation()
 	{
-		Input<OsmRelation> item = relationItems.poll();
-		OsmEntity current = item.currentEntity;
-		lastId = current.getId();
+		Input item = relationItems.poll();
+		lastId = item.currentId;
 
 		advanceRelationItem(item, true);
 		skipDuplicateRelations();
 		ensureMode();
-		return new EntityContainer(EntityType.Relation, current);
+		return new IdContainer(EntityType.Relation, lastId);
 	}
 
 	private void skipDuplicateNodes()
 	{
 		while (!nodeItems.isEmpty()) {
-			Input<OsmNode> item = nodeItems.peek();
+			Input item = nodeItems.peek();
 			if (item.currentId != lastId) {
 				break;
 			}
@@ -234,7 +180,7 @@ public class SortedMergeIterator extends AbstractSortedMerge implements
 	private void skipDuplicateWays()
 	{
 		while (!wayItems.isEmpty()) {
-			Input<OsmWay> item = wayItems.peek();
+			Input item = wayItems.peek();
 			if (item.currentId != lastId) {
 				break;
 			}
@@ -247,7 +193,7 @@ public class SortedMergeIterator extends AbstractSortedMerge implements
 	private void skipDuplicateRelations()
 	{
 		while (!relationItems.isEmpty()) {
-			Input<OsmRelation> item = relationItems.peek();
+			Input item = relationItems.peek();
 			if (item.currentId != lastId) {
 				break;
 			}

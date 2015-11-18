@@ -21,10 +21,17 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
 
+import de.topobyte.osm4j.core.access.OsmIdIterator;
+import de.topobyte.osm4j.core.access.OsmIdIteratorInput;
+import de.topobyte.osm4j.core.access.OsmIdReader;
+import de.topobyte.osm4j.core.access.OsmIdReaderInput;
+import de.topobyte.osm4j.core.access.OsmInputAccessFactory;
 import de.topobyte.osm4j.core.access.OsmIterator;
+import de.topobyte.osm4j.core.access.OsmIteratorInput;
 import de.topobyte.osm4j.core.access.OsmReader;
+import de.topobyte.osm4j.core.access.OsmReaderInput;
 
-public class OsmFileInput implements OsmAccessFactory
+public class OsmFileInput implements OsmInputAccessFactory
 {
 
 	private Path path;
@@ -59,6 +66,23 @@ public class OsmFileInput implements OsmAccessFactory
 		OsmReader reader = OsmIoUtils.setupOsmReader(input, fileFormat,
 				readMetadata);
 		return new OsmSingleReaderInput(input, reader);
+	}
+
+	@Override
+	public OsmIdIteratorInput createIdIterator() throws IOException
+	{
+		InputStream input = StreamUtil.bufferedInputStream(path.toFile());
+		OsmIdIterator iterator = OsmIoUtils.setupOsmIdIterator(input,
+				fileFormat);
+		return new OsmSingleIdIteratorInput(input, iterator);
+	}
+
+	@Override
+	public OsmIdReaderInput createIdReader() throws IOException
+	{
+		InputStream input = StreamUtil.bufferedInputStream(path.toFile());
+		OsmIdReader reader = OsmIoUtils.setupOsmIdReader(input, fileFormat);
+		return new OsmSingleIdReaderInput(input, reader);
 	}
 
 }

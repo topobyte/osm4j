@@ -34,7 +34,7 @@ public abstract class AbstractExecutableSingleInputStream extends AbstractExecut
 	protected String pathInput = null;
 
 	protected boolean closeInput = true;
-	protected OsmStream osmStream;
+	protected OsmInputStream osmStream;
 
 	public AbstractExecutableSingleInputStream()
 	{
@@ -63,7 +63,7 @@ public abstract class AbstractExecutableSingleInputStream extends AbstractExecut
 			in = StreamUtil.bufferedInputStream(file);
 		}
 
-		osmStream = new OsmStream(in, inputFormat);
+		osmStream = new OsmInputStream(in, inputFormat);
 	}
 
 	protected OsmIterator createIterator() throws IOException

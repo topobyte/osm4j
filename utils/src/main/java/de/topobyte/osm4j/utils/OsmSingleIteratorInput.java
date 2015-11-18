@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import de.topobyte.osm4j.core.access.OsmIterator;
+import de.topobyte.osm4j.core.access.OsmIteratorInput;
 
 public class OsmSingleIteratorInput implements OsmIteratorInput
 {

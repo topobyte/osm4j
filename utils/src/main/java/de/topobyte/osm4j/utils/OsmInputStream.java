@@ -17,15 +17,28 @@
 
 package de.topobyte.osm4j.utils;
 
-import java.io.IOException;
+import java.io.InputStream;
 
-import de.topobyte.osm4j.core.access.OsmReader;
-
-public interface OsmReaderInput
+public class OsmInputStream
 {
 
-	public void close() throws IOException;
+	private InputStream input;
+	private FileFormat fileFormat;
 
-	public OsmReader getReader();
+	public OsmInputStream(InputStream input, FileFormat fileFormat)
+	{
+		this.input = input;
+		this.fileFormat = fileFormat;
+	}
+
+	public InputStream getInputStream()
+	{
+		return input;
+	}
+
+	public FileFormat getFileFormat()
+	{
+		return fileFormat;
+	}
 
 }
