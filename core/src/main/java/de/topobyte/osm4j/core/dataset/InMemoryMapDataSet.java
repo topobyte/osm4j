@@ -37,9 +37,9 @@ public class InMemoryMapDataSet implements OsmEntityProvider
 
 	private OsmBounds bounds = null;
 
-	private TLongObjectMap<OsmNode> nodes = new TLongObjectHashMap<OsmNode>();
-	private TLongObjectMap<OsmWay> ways = new TLongObjectHashMap<OsmWay>();
-	private TLongObjectMap<OsmRelation> relations = new TLongObjectHashMap<OsmRelation>();
+	private TLongObjectMap<OsmNode> nodes = new TLongObjectHashMap<>();
+	private TLongObjectMap<OsmWay> ways = new TLongObjectHashMap<>();
+	private TLongObjectMap<OsmRelation> relations = new TLongObjectHashMap<>();
 
 	public boolean hasBounds()
 	{
