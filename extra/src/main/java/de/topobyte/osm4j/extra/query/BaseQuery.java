@@ -33,6 +33,7 @@ public abstract class BaseQuery extends AbstractExecutableInputOutput
 
 	private static final String OPTION_OUTPUT = "output";
 	private static final String OPTION_TMP = "tmp";
+	private static final String OPTION_KEEP_TMP = "keep_tmp";
 	private static final String OPTION_TREE = "tree";
 	private static final String OPTION_SIMPLE_RELATIONS = "simple_relations";
 	private static final String OPTION_COMPLEX_RELATIONS = "complex_relations";
@@ -49,6 +50,7 @@ public abstract class BaseQuery extends AbstractExecutableInputOutput
 		// @formatter:off
 		OptionHelper.add(options, OPTION_OUTPUT, true, true, "directory to store output in");
 		OptionHelper.add(options, OPTION_TMP, true, false, "directory to store intermediate files");
+		OptionHelper.add(options, OPTION_KEEP_TMP, false, true, "directory to store intermediate files");
 		OptionHelper.add(options, OPTION_TREE, true, true, "path to the data tree");
 		OptionHelper.add(options, OPTION_SIMPLE_RELATIONS, true, true, "path to simple relation batches");
 		OptionHelper.add(options, OPTION_COMPLEX_RELATIONS, true, true, "path to complex relation batches");
@@ -80,6 +82,8 @@ public abstract class BaseQuery extends AbstractExecutableInputOutput
 	protected Envelope queryEnvelope;
 	protected ContainmentTest test;
 
+	protected boolean keepTmp;
+
 	@Override
 	protected void setup(String[] args)
 	{
@@ -110,6 +114,8 @@ public abstract class BaseQuery extends AbstractExecutableInputOutput
 				.getOptionValue(OPTION_FILE_NAMES_RELATION_WAYS);
 		fileNamesRelationRelations = line
 				.getOptionValue(OPTION_FILE_NAMES_RELATION_RELATIONS);
+
+		keepTmp = line.hasOption(OPTION_KEEP_TMP);
 	}
 
 	protected void execute() throws IOException
@@ -120,7 +126,7 @@ public abstract class BaseQuery extends AbstractExecutableInputOutput
 				fileNamesTreeComplexRelations, fileNamesRelationNodes,
 				fileNamesRelationWays, fileNamesRelationRelations,
 				queryEnvelope, test, inputFormat, outputFormat, writeMetadata,
-				pbfConfig, tboConfig);
+				pbfConfig, tboConfig, keepTmp);
 		query.execute();
 	}
 

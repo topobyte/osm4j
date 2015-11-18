@@ -72,6 +72,8 @@ public class Query
 	private PbfConfig pbfConfig;
 	private TboConfig tboConfig;
 
+	private boolean keepTmp;
+
 	public Query(Path pathOutput, Path pathTmp, Path pathTree,
 			Path pathSimpleRelations, Path pathComplexRelations,
 			String fileNamesTreeNodes, String fileNamesTreeWays,
@@ -81,7 +83,7 @@ public class Query
 			String fileNamesRelationRelations, Envelope queryEnvelope,
 			ContainmentTest test, FileFormat inputFormat,
 			FileFormat outputFormat, boolean writeMetadata,
-			PbfConfig pbfConfig, TboConfig tboConfig)
+			PbfConfig pbfConfig, TboConfig tboConfig, boolean keepTmp)
 	{
 		this.pathOutput = pathOutput;
 		this.pathTmp = pathTmp;
@@ -102,6 +104,7 @@ public class Query
 		this.writeMetadata = writeMetadata;
 		this.pbfConfig = pbfConfig;
 		this.tboConfig = tboConfig;
+		this.keepTmp = keepTmp;
 	}
 
 	private Path pathTmpNodes;
@@ -205,7 +208,9 @@ public class Query
 
 		// Delete intermediate files
 
-		FileUtils.deleteDirectory(pathTmp.toFile());
+		if (!keepTmp) {
+			FileUtils.deleteDirectory(pathTmp.toFile());
+		}
 	}
 
 	private void createTemporaryDirectory() throws IOException
