@@ -21,10 +21,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import de.topobyte.osm4j.core.dataset.InMemoryMapDataSet;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.osm4j.core.model.iface.OsmRelation;
 import de.topobyte.osm4j.core.model.iface.OsmWay;
-import de.topobyte.osm4j.core.resolve.InMemoryDataSet;
 import de.topobyte.osm4j.testing.model.TestBounds;
 import de.topobyte.osm4j.testing.model.TestNode;
 import de.topobyte.osm4j.testing.model.TestRelation;
@@ -55,7 +55,7 @@ public class TestDataSet
 		}
 	}
 
-	public TestDataSet(InMemoryDataSet data)
+	public TestDataSet(InMemoryMapDataSet data)
 	{
 		long[] nodeIds = data.getNodes().keys();
 		Arrays.sort(nodeIds);
