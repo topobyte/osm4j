@@ -27,6 +27,50 @@ import de.topobyte.osm4j.core.model.iface.OsmWay;
 public class OsmBridge
 {
 
+	public static void write(OsmIteratorInput input, OsmStreamOutput output)
+			throws IOException
+	{
+		write(input.getIterator(), output.getOsmOutput());
+		input.close();
+		output.close();
+	}
+
+	public static void write(OsmReaderInput input, OsmStreamOutput output)
+			throws IOException, OsmInputException
+	{
+		write(input.getReader(), output.getOsmOutput());
+		input.close();
+		output.close();
+	}
+
+	public static void write(OsmIterator iterator, OsmStreamOutput output)
+			throws IOException
+	{
+		write(iterator, output.getOsmOutput());
+		output.close();
+	}
+
+	public static void write(OsmReader reader, OsmStreamOutput output)
+			throws IOException, OsmInputException
+	{
+		write(reader, output.getOsmOutput());
+		output.close();
+	}
+
+	public static void write(OsmIteratorInput input, OsmOutputStream output)
+			throws IOException
+	{
+		write(input.getIterator(), output);
+		input.close();
+	}
+
+	public static void write(OsmReaderInput input, OsmOutputStream output)
+			throws IOException, OsmInputException
+	{
+		write(input.getReader(), output);
+		input.close();
+	}
+
 	public static void write(OsmIterator iterator, OsmOutputStream output)
 			throws IOException
 	{
