@@ -59,6 +59,7 @@ public class ListDataSetReader implements OsmReader
 			for (OsmRelation relation : data.getRelations()) {
 				handler.handle(relation);
 			}
+			handler.complete();
 		} catch (IOException e) {
 			throw new OsmInputException(e);
 		}
