@@ -31,13 +31,16 @@ import java.util.Set;
 
 import com.vividsolutions.jts.geom.Envelope;
 
+import de.topobyte.osm4j.core.access.OsmBridge;
+import de.topobyte.osm4j.core.access.OsmInputException;
 import de.topobyte.osm4j.core.access.OsmIterator;
-import de.topobyte.osm4j.core.access.OsmIteratorInput;
 import de.topobyte.osm4j.core.access.OsmOutputStream;
+import de.topobyte.osm4j.core.access.OsmOutputStreamStreamOutput;
 import de.topobyte.osm4j.core.access.OsmStreamOutput;
+import de.topobyte.osm4j.core.dataset.InMemoryListDataSet;
 import de.topobyte.osm4j.core.dataset.InMemoryMapDataSet;
-import de.topobyte.osm4j.core.dataset.MapDataSetLoader;
-import de.topobyte.osm4j.core.model.iface.OsmBounds;
+import de.topobyte.osm4j.core.dataset.ListDataSetLoader;
+import de.topobyte.osm4j.core.dataset.ListDataSetReader;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.osm4j.core.model.iface.OsmRelation;
 import de.topobyte.osm4j.core.resolve.CompositeOsmEntityProvider;
@@ -58,7 +61,8 @@ public class DistributeComplexRelations extends DistributeRelationsBase
 		return DistributeComplexRelations.class.getSimpleName() + " [options]";
 	}
 
-	public static void main(String[] args) throws IOException
+	public static void main(String[] args) throws IOException,
+			OsmInputException
 	{
 		DistributeComplexRelations task = new DistributeComplexRelations();
 
@@ -185,26 +189,24 @@ public class DistributeComplexRelations extends DistributeRelationsBase
 		return relations;
 	}
 
-	private void sortFiles() throws IOException
+	private void sortFiles() throws IOException, OsmInputException
 	{
 		for (Node leaf : tree.getLeafs()) {
 			Path path = treeFilesRelations.getPath(leaf);
-			OsmFileInput fileInput = new OsmFileInput(path, outputFormat);
-			OsmIteratorInput input = fileInput.createIterator(writeMetadata);
-			InMemoryMapDataSet data = MapDataSetLoader.read(
-					input.getIterator(), true, true, true);
-			OsmBounds bounds = input.getIterator().getBounds();
-			input.close();
 
-			// TODO: rewrite sorted data
+			OsmFileInput fileInput = new OsmFileInput(path, outputFormat);
+			InMemoryListDataSet data = ListDataSetLoader.read(
+					fileInput.createIterator(writeMetadata), true, true, true);
+
+			data.sort();
 
 			OutputStream output = StreamUtil.bufferedOutputStream(path);
 			OsmOutputStream osmOutput = OsmIoUtils.setupOsmOutput(output,
 					outputFormat, writeMetadata, pbfConfig, tboConfig);
-			osmOutput.write(bounds);
+			OsmStreamOutput streamOutput = new OsmOutputStreamStreamOutput(
+					output, osmOutput);
 
-			osmOutput.complete();
-			output.close();
+			OsmBridge.write(new ListDataSetReader(data), streamOutput);
 		}
 	}
 
