@@ -38,7 +38,7 @@ import de.topobyte.osm4j.core.model.impl.Node;
 import de.topobyte.osm4j.core.model.impl.Relation;
 import de.topobyte.osm4j.core.model.impl.Way;
 
-public class MapDataSetReader
+public class MapDataSetLoader
 {
 
 	public static InMemoryMapDataSet read(OsmIterator iterator,
