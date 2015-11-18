@@ -18,9 +18,13 @@
 package de.topobyte.osm4j.core.dataset;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
+import de.topobyte.osm4j.core.dataset.sort.IdComparator;
 import de.topobyte.osm4j.core.model.iface.OsmBounds;
+import de.topobyte.osm4j.core.model.iface.OsmEntity;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.osm4j.core.model.iface.OsmRelation;
 import de.topobyte.osm4j.core.model.iface.OsmWay;
@@ -77,6 +81,27 @@ public class InMemoryListDataSet
 	public void setRelations(List<OsmRelation> relations)
 	{
 		this.relations = relations;
+	}
+
+	public void sort()
+	{
+		sort(new IdComparator());
+	}
+
+	public void sort(Comparator<? super OsmEntity> comparator)
+	{
+		Collections.sort(nodes, comparator);
+		Collections.sort(ways, comparator);
+		Collections.sort(relations, comparator);
+	}
+
+	public void sort(Comparator<? super OsmNode> nodeComparator,
+			Comparator<? super OsmWay> wayComparator,
+			Comparator<? super OsmRelation> relationComparator)
+	{
+		Collections.sort(nodes, nodeComparator);
+		Collections.sort(ways, wayComparator);
+		Collections.sort(relations, relationComparator);
 	}
 
 }
