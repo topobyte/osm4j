@@ -38,10 +38,10 @@ import de.topobyte.osm4j.core.model.iface.OsmWay;
 public class IdDataSetReader
 {
 
-	public static InMemoryIdDataSet read(OsmIdIterator iterator)
+	public static InMemorySetIdDataSet read(OsmIdIterator iterator)
 			throws IOException
 	{
-		InMemoryIdDataSet dataSet = new InMemoryIdDataSet();
+		InMemorySetIdDataSet dataSet = new InMemorySetIdDataSet();
 
 		TLongSet nodeIds = dataSet.getNodeIds();
 		TLongSet wayIds = dataSet.getWayIds();
@@ -69,10 +69,10 @@ public class IdDataSetReader
 		return dataSet;
 	}
 
-	public static InMemoryIdDataSet read(OsmIterator iterator)
+	public static InMemorySetIdDataSet read(OsmIterator iterator)
 			throws IOException
 	{
-		InMemoryIdDataSet dataSet = new InMemoryIdDataSet();
+		InMemorySetIdDataSet dataSet = new InMemorySetIdDataSet();
 
 		TLongSet nodeIds = dataSet.getNodeIds();
 		TLongSet wayIds = dataSet.getWayIds();
@@ -100,10 +100,10 @@ public class IdDataSetReader
 		return dataSet;
 	}
 
-	public static InMemoryIdDataSet read(OsmIdReader reader)
+	public static InMemorySetIdDataSet read(OsmIdReader reader)
 			throws OsmInputException
 	{
-		final InMemoryIdDataSet dataSet = new InMemoryIdDataSet();
+		final InMemorySetIdDataSet dataSet = new InMemorySetIdDataSet();
 
 		final TLongSet nodeIds = dataSet.getNodeIds();
 		final TLongSet wayIds = dataSet.getWayIds();
@@ -148,10 +148,10 @@ public class IdDataSetReader
 		return dataSet;
 	}
 
-	public static InMemoryIdDataSet read(OsmReader reader)
+	public static InMemorySetIdDataSet read(OsmReader reader)
 			throws OsmInputException
 	{
-		final InMemoryIdDataSet dataSet = new InMemoryIdDataSet();
+		final InMemorySetIdDataSet dataSet = new InMemorySetIdDataSet();
 
 		final TLongSet nodeIds = dataSet.getNodeIds();
 		final TLongSet wayIds = dataSet.getWayIds();

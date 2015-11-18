@@ -26,7 +26,7 @@ import de.topobyte.osm4j.core.model.iface.OsmBounds;
  * 
  * @author Sebastian Kuerten (sebastian@topobyte.de)
  */
-public class InMemoryIdDataSet
+public class InMemorySetIdDataSet
 {
 
 	private OsmBounds bounds = null;

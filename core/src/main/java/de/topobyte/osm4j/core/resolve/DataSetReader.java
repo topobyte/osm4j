@@ -41,11 +41,11 @@ import de.topobyte.osm4j.core.model.impl.Way;
 public class DataSetReader
 {
 
-	public static InMemoryDataSet read(OsmIterator iterator,
+	public static InMemoryMapDataSet read(OsmIterator iterator,
 			boolean keepNodeTags, boolean keepWayTags, boolean keepRelationTags)
 			throws IOException
 	{
-		InMemoryDataSet dataSet = new InMemoryDataSet();
+		InMemoryMapDataSet dataSet = new InMemoryMapDataSet();
 
 		TLongObjectMap<OsmNode> nodes = dataSet.getNodes();
 		TLongObjectMap<OsmWay> ways = dataSet.getWays();
@@ -94,11 +94,11 @@ public class DataSetReader
 		return dataSet;
 	}
 
-	public static InMemoryDataSet read(OsmReader reader,
+	public static InMemoryMapDataSet read(OsmReader reader,
 			final boolean keepNodeTags, final boolean keepWayTags,
 			final boolean keepRelationTags) throws OsmInputException
 	{
-		final InMemoryDataSet dataSet = new InMemoryDataSet();
+		final InMemoryMapDataSet dataSet = new InMemoryMapDataSet();
 
 		final TLongObjectMap<OsmNode> nodes = dataSet.getNodes();
 		final TLongObjectMap<OsmWay> ways = dataSet.getWays();

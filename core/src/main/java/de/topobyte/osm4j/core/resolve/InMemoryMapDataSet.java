@@ -30,7 +30,7 @@ import de.topobyte.osm4j.core.model.iface.OsmWay;
  * 
  * @author Sebastian Kuerten (sebastian@topobyte.de)
  */
-public class InMemoryDataSet implements OsmEntityProvider
+public class InMemoryMapDataSet implements OsmEntityProvider
 {
 
 	private OsmBounds bounds = null;
