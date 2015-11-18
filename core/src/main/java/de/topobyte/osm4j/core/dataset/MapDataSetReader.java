@@ -38,7 +38,7 @@ import de.topobyte.osm4j.core.model.impl.Node;
 import de.topobyte.osm4j.core.model.impl.Relation;
 import de.topobyte.osm4j.core.model.impl.Way;
 
-public class DataSetReader
+public class MapDataSetReader
 {
 
 	public static InMemoryMapDataSet read(OsmIterator iterator,
@@ -80,7 +80,7 @@ public class DataSetReader
 			case Relation:
 				OsmRelation relation = (OsmRelation) container.getEntity();
 				if (!keepRelationTags) {
-					List<OsmRelationMember> members = new ArrayList<OsmRelationMember>();
+					List<OsmRelationMember> members = new ArrayList<>();
 					for (int i = 0; i < relation.getNumberOfMembers(); i++) {
 						members.add(relation.getMember(i));
 					}
@@ -139,7 +139,7 @@ public class DataSetReader
 			public void handle(OsmRelation relation) throws IOException
 			{
 				if (!keepRelationTags) {
-					List<OsmRelationMember> members = new ArrayList<OsmRelationMember>();
+					List<OsmRelationMember> members = new ArrayList<>();
 					for (int i = 0; i < relation.getNumberOfMembers(); i++) {
 						members.add(relation.getMember(i));
 					}
