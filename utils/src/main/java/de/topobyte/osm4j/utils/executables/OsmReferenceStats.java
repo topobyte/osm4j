@@ -26,7 +26,7 @@ import de.topobyte.osm4j.core.model.iface.OsmRelationMember;
 import de.topobyte.osm4j.core.model.iface.OsmWay;
 import de.topobyte.osm4j.core.resolve.DataSetReader;
 import de.topobyte.osm4j.core.resolve.EntityNotFoundException;
-import de.topobyte.osm4j.core.resolve.InMemoryDataSet;
+import de.topobyte.osm4j.core.resolve.InMemoryMapDataSet;
 import de.topobyte.osm4j.utils.AbstractExecutableSingleInputStream;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
@@ -86,8 +86,8 @@ public class OsmReferenceStats extends AbstractExecutableSingleInputStream
 	private void run() throws IOException
 	{
 		OsmIterator iterator = createIterator();
-		InMemoryDataSet data = DataSetReader
-				.read(iterator, false, false, false);
+		InMemoryMapDataSet data = DataSetReader.read(iterator, false, false,
+				false);
 
 		System.out.println("Nodes: " + data.getNodes().size());
 		System.out.println("Ways: " + data.getWays().size());
@@ -118,7 +118,7 @@ public class OsmReferenceStats extends AbstractExecutableSingleInputStream
 		finish();
 	}
 
-	private boolean isComplete(OsmWay way, InMemoryDataSet data)
+	private boolean isComplete(OsmWay way, InMemoryMapDataSet data)
 	{
 		try {
 			for (int i = 0; i < way.getNumberOfNodes(); i++) {
@@ -130,7 +130,7 @@ public class OsmReferenceStats extends AbstractExecutableSingleInputStream
 		return true;
 	}
 
-	private boolean isComplete(OsmRelation relation, InMemoryDataSet data)
+	private boolean isComplete(OsmRelation relation, InMemoryMapDataSet data)
 	{
 		try {
 			for (int i = 0; i < relation.getNumberOfMembers(); i++) {
