@@ -21,14 +21,12 @@ import gnu.trove.set.TLongSet;
 import gnu.trove.set.hash.TLongHashSet;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Path;
 
 import com.vividsolutions.jts.geom.Coordinate;
 
 import de.topobyte.jts.utils.predicate.ContainmentTest;
-import de.topobyte.osm4j.core.access.OsmIterator;
 import de.topobyte.osm4j.core.access.OsmOutputStream;
 import de.topobyte.osm4j.core.model.iface.EntityType;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
@@ -41,7 +39,9 @@ import de.topobyte.osm4j.extra.OsmOutput;
 import de.topobyte.osm4j.extra.datatree.DataTreeFiles;
 import de.topobyte.osm4j.extra.datatree.Node;
 import de.topobyte.osm4j.utils.FileFormat;
+import de.topobyte.osm4j.utils.OsmFileInput;
 import de.topobyte.osm4j.utils.OsmIoUtils;
+import de.topobyte.osm4j.utils.OsmIteratorInput;
 import de.topobyte.osm4j.utils.StreamUtil;
 import de.topobyte.osm4j.utils.config.PbfConfig;
 import de.topobyte.osm4j.utils.config.TboConfig;
@@ -149,10 +149,10 @@ public class LeafQuery
 
 	private InMemoryDataSet read(Path path) throws IOException
 	{
-		InputStream input = StreamUtil.bufferedInputStream(path);
-		OsmIterator iterator = OsmIoUtils.setupOsmIterator(input, inputFormat,
-				writeMetadata);
-		InMemoryDataSet data = DataSetReader.read(iterator, true, true, true);
+		OsmFileInput fileInput = new OsmFileInput(path, inputFormat);
+		OsmIteratorInput input = fileInput.createIterator(writeMetadata);
+		InMemoryDataSet data = DataSetReader.read(input.getIterator(), true,
+				true, true);
 		input.close();
 		return data;
 	}
