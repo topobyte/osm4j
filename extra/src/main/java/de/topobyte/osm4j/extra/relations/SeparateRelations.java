@@ -23,13 +23,13 @@ import gnu.trove.set.hash.TLongHashSet;
 import java.io.IOException;
 import java.io.OutputStream;
 
+import de.topobyte.osm4j.core.access.OsmIteratorInput;
 import de.topobyte.osm4j.core.access.OsmOutputStream;
 import de.topobyte.osm4j.core.model.iface.EntityType;
 import de.topobyte.osm4j.core.model.iface.OsmRelation;
 import de.topobyte.osm4j.core.model.iface.OsmRelationMember;
 import de.topobyte.osm4j.utils.AbstractExecutableSingleInputFileOutput;
 import de.topobyte.osm4j.utils.OsmIoUtils;
-import de.topobyte.osm4j.utils.OsmIteratorInput;
 import de.topobyte.osm4j.utils.StreamUtil;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 

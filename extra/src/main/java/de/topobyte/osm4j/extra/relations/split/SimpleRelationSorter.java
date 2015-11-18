@@ -20,12 +20,12 @@ package de.topobyte.osm4j.extra.relations.split;
 import java.io.IOException;
 import java.nio.file.Path;
 
+import de.topobyte.osm4j.core.access.OsmIteratorInput;
+import de.topobyte.osm4j.core.access.OsmIteratorInputFactory;
 import de.topobyte.osm4j.core.model.iface.OsmRelation;
 import de.topobyte.osm4j.extra.OsmOutput;
 import de.topobyte.osm4j.extra.relations.RelationIterator;
 import de.topobyte.osm4j.utils.FileFormat;
-import de.topobyte.osm4j.utils.OsmIteratorFactory;
-import de.topobyte.osm4j.utils.OsmIteratorInput;
 import de.topobyte.osm4j.utils.config.PbfConfig;
 import de.topobyte.osm4j.utils.config.TboConfig;
 
@@ -33,7 +33,7 @@ public class SimpleRelationSorter extends RelationSorterBase
 {
 
 	public SimpleRelationSorter(Path pathInputBboxes, Path pathOutput,
-			String fileNamesRelations, OsmIteratorFactory iteratorFactory,
+			String fileNamesRelations, OsmIteratorInputFactory iteratorFactory,
 			FileFormat outputFormat, boolean writeMetadata,
 			PbfConfig pbfConfig, TboConfig tboConfig)
 	{

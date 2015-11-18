@@ -32,12 +32,12 @@ import com.vividsolutions.jts.geom.Envelope;
 
 import de.topobyte.adt.geo.BBox;
 import de.topobyte.osm4j.core.access.OsmIterator;
+import de.topobyte.osm4j.core.access.OsmIteratorInput;
 import de.topobyte.osm4j.core.model.iface.OsmBounds;
 import de.topobyte.osm4j.extra.datatree.DataTree;
 import de.topobyte.osm4j.extra.datatree.DataTreeUtil;
 import de.topobyte.osm4j.extra.datatree.Node;
 import de.topobyte.osm4j.utils.AbstractExecutableSingleInputFileOutput;
-import de.topobyte.osm4j.utils.OsmIteratorInput;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
 public class CreateNodeTreeMaxNodes extends

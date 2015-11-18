@@ -32,21 +32,21 @@ import java.util.Set;
 import com.vividsolutions.jts.geom.Envelope;
 
 import de.topobyte.osm4j.core.access.OsmIterator;
+import de.topobyte.osm4j.core.access.OsmIteratorInput;
 import de.topobyte.osm4j.core.access.OsmOutputStream;
+import de.topobyte.osm4j.core.dataset.InMemoryMapDataSet;
+import de.topobyte.osm4j.core.dataset.MapDataSetLoader;
 import de.topobyte.osm4j.core.model.iface.OsmBounds;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.osm4j.core.model.iface.OsmRelation;
 import de.topobyte.osm4j.core.resolve.CompositeOsmEntityProvider;
-import de.topobyte.osm4j.core.resolve.DataSetReader;
 import de.topobyte.osm4j.core.resolve.EntityNotFoundException;
-import de.topobyte.osm4j.core.resolve.InMemoryDataSet;
 import de.topobyte.osm4j.core.resolve.OsmEntityProvider;
 import de.topobyte.osm4j.extra.OsmOutput;
 import de.topobyte.osm4j.extra.datatree.Node;
 import de.topobyte.osm4j.extra.idbboxlist.IdBboxEntry;
 import de.topobyte.osm4j.utils.OsmFileInput;
 import de.topobyte.osm4j.utils.OsmIoUtils;
-import de.topobyte.osm4j.utils.OsmIteratorInput;
 import de.topobyte.osm4j.utils.StreamUtil;
 
 public class DistributeComplexRelations extends DistributeRelationsBase
@@ -89,7 +89,7 @@ public class DistributeComplexRelations extends DistributeRelationsBase
 		relationGraph.build(iterator);
 		input.close();
 
-		InMemoryDataSet dataRelations = read(pathRelations, true, true);
+		InMemoryMapDataSet dataRelations = read(pathRelations, true, true);
 
 		System.out.println("Number of relations without relation members: "
 				+ relationGraph.getNumNoChildren());
@@ -114,15 +114,15 @@ public class DistributeComplexRelations extends DistributeRelationsBase
 		}
 
 		if (relationGroups.size() == 1) {
-			InMemoryDataSet dataNodes = read(pathNodes, false, false);
+			InMemoryMapDataSet dataNodes = read(pathNodes, false, false);
 			Envelope envelope = box(dataNodes.getNodes().valueCollection());
 			List<Node> leafs = tree.query(box(envelope));
 
 			write(relationGroups.get(0), leafs, envelope, dataNodes.getNodes()
 					.size());
 		} else {
-			InMemoryDataSet dataNodes = read(pathNodes, false, false);
-			InMemoryDataSet dataWays = read(pathWays, false, false);
+			InMemoryMapDataSet dataNodes = read(pathNodes, false, false);
+			InMemoryMapDataSet dataWays = read(pathWays, false, false);
 
 			OsmEntityProvider entityProvider = new CompositeOsmEntityProvider(
 					dataNodes, dataWays, dataRelations);
@@ -191,8 +191,8 @@ public class DistributeComplexRelations extends DistributeRelationsBase
 			Path path = treeFilesRelations.getPath(leaf);
 			OsmFileInput fileInput = new OsmFileInput(path, outputFormat);
 			OsmIteratorInput input = fileInput.createIterator(writeMetadata);
-			InMemoryDataSet data = DataSetReader.read(input.getIterator(),
-					true, true, true);
+			InMemoryMapDataSet data = MapDataSetLoader.read(
+					input.getIterator(), true, true, true);
 			OsmBounds bounds = input.getIterator().getBounds();
 			input.close();
 

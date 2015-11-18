@@ -25,23 +25,23 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 
+import de.topobyte.osm4j.core.access.OsmIteratorInput;
+import de.topobyte.osm4j.core.access.OsmIteratorInputFactory;
 import de.topobyte.osm4j.core.model.iface.OsmRelation;
 import de.topobyte.osm4j.extra.relations.Group;
 import de.topobyte.osm4j.extra.relations.RelationGraph;
 import de.topobyte.osm4j.extra.relations.RelationIterator;
-import de.topobyte.osm4j.utils.OsmIteratorFactory;
-import de.topobyte.osm4j.utils.OsmIteratorInput;
 
 public class ComplexRelationGrouper
 {
 
-	private OsmIteratorFactory iteratorFactory;
+	private OsmIteratorInputFactory iteratorFactory;
 
 	private RelationGraph relationGraph = new RelationGraph(false, true);
 	private List<Group> groups;
 	private TLongObjectMap<OsmRelation> groupRelations;
 
-	public ComplexRelationGrouper(OsmIteratorFactory iteratorFactory)
+	public ComplexRelationGrouper(OsmIteratorInputFactory iteratorFactory)
 	{
 		this.iteratorFactory = iteratorFactory;
 	}

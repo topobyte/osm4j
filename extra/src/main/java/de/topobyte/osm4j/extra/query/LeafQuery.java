@@ -27,21 +27,21 @@ import java.nio.file.Path;
 import com.vividsolutions.jts.geom.Coordinate;
 
 import de.topobyte.jts.utils.predicate.ContainmentTest;
+import de.topobyte.osm4j.core.access.OsmIteratorInput;
 import de.topobyte.osm4j.core.access.OsmOutputStream;
+import de.topobyte.osm4j.core.dataset.InMemoryMapDataSet;
+import de.topobyte.osm4j.core.dataset.MapDataSetLoader;
 import de.topobyte.osm4j.core.model.iface.EntityType;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.osm4j.core.model.iface.OsmRelation;
 import de.topobyte.osm4j.core.model.iface.OsmRelationMember;
 import de.topobyte.osm4j.core.model.iface.OsmWay;
-import de.topobyte.osm4j.core.resolve.DataSetReader;
-import de.topobyte.osm4j.core.resolve.InMemoryDataSet;
 import de.topobyte.osm4j.extra.OsmOutput;
 import de.topobyte.osm4j.extra.datatree.DataTreeFiles;
 import de.topobyte.osm4j.extra.datatree.Node;
 import de.topobyte.osm4j.utils.FileFormat;
 import de.topobyte.osm4j.utils.OsmFileInput;
 import de.topobyte.osm4j.utils.OsmIoUtils;
-import de.topobyte.osm4j.utils.OsmIteratorInput;
 import de.topobyte.osm4j.utils.StreamUtil;
 import de.topobyte.osm4j.utils.config.PbfConfig;
 import de.topobyte.osm4j.utils.config.TboConfig;
@@ -91,9 +91,9 @@ public class LeafQuery
 	private OsmOutput outSimpleRelations;
 	private OsmOutput outComplexRelations;
 
-	private InMemoryDataSet dataNodes;
-	private InMemoryDataSet dataWays;
-	private InMemoryDataSet dataSimpleRelations;
+	private InMemoryMapDataSet dataNodes;
+	private InMemoryMapDataSet dataWays;
+	private InMemoryMapDataSet dataSimpleRelations;
 
 	private TLongSet nodeIds = new TLongHashSet();
 	private TLongSet wayIds = new TLongHashSet();
@@ -147,12 +147,12 @@ public class LeafQuery
 		dataSimpleRelations = read(filesTreeSimpleRelations.getPath(leaf));
 	}
 
-	private InMemoryDataSet read(Path path) throws IOException
+	private InMemoryMapDataSet read(Path path) throws IOException
 	{
 		OsmFileInput fileInput = new OsmFileInput(path, inputFormat);
 		OsmIteratorInput input = fileInput.createIterator(writeMetadata);
-		InMemoryDataSet data = DataSetReader.read(input.getIterator(), true,
-				true, true);
+		InMemoryMapDataSet data = MapDataSetLoader.read(input.getIterator(),
+				true, true, true);
 		input.close();
 		return data;
 	}

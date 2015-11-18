@@ -33,11 +33,11 @@ import java.util.List;
 import java.util.Locale;
 
 import de.topobyte.osm4j.core.access.OsmIdIterator;
+import de.topobyte.osm4j.core.dataset.InMemoryMapDataSet;
+import de.topobyte.osm4j.core.dataset.MapDataSetLoader;
 import de.topobyte.osm4j.core.model.iface.EntityType;
 import de.topobyte.osm4j.core.model.iface.IdContainer;
 import de.topobyte.osm4j.core.model.iface.OsmWay;
-import de.topobyte.osm4j.core.resolve.DataSetReader;
-import de.topobyte.osm4j.core.resolve.InMemoryDataSet;
 import de.topobyte.osm4j.extra.datatree.DataTree;
 import de.topobyte.osm4j.extra.datatree.DataTreeFiles;
 import de.topobyte.osm4j.extra.datatree.DataTreeOpener;
@@ -163,7 +163,7 @@ public class FindMissingWayNodes extends AbstractExecutableInput
 					"Loading ways file of size: %.3fMB",
 					waysSize / 1024. / 1024.));
 
-			InMemoryDataSet dataWays = DataSetReader.read(OsmIoUtils
+			InMemoryMapDataSet dataWays = MapDataSetLoader.read(OsmIoUtils
 					.setupOsmIterator(inputWays, inputFormatWays, false),
 					false, false, false);
 

@@ -33,7 +33,9 @@ import de.topobyte.largescalefileio.ClosingFileOutputStreamFactory;
 import de.topobyte.largescalefileio.SimpleClosingFileInputStreamFactory;
 import de.topobyte.largescalefileio.SimpleClosingFileOutputStreamFactory;
 import de.topobyte.osm4j.core.access.OsmIterator;
+import de.topobyte.osm4j.core.access.OsmIteratorInput;
 import de.topobyte.osm4j.core.access.OsmOutputStream;
+import de.topobyte.osm4j.core.dataset.sort.IdComparator;
 import de.topobyte.osm4j.core.model.iface.EntityContainer;
 import de.topobyte.osm4j.core.model.iface.EntityType;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
@@ -47,9 +49,7 @@ import de.topobyte.osm4j.extra.progress.NodeProgress;
 import de.topobyte.osm4j.extra.ways.WayNodeIdComparator;
 import de.topobyte.osm4j.utils.AbstractExecutableSingleInputFileOutput;
 import de.topobyte.osm4j.utils.OsmIoUtils;
-import de.topobyte.osm4j.utils.OsmIteratorInput;
 import de.topobyte.osm4j.utils.merge.sorted.SortedMergeIterator;
-import de.topobyte.osm4j.utils.sort.IdComparator;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
 public class MapWaysToTree extends AbstractExecutableSingleInputFileOutput

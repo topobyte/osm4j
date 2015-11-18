@@ -25,13 +25,13 @@ import java.text.NumberFormat;
 import java.util.List;
 import java.util.Locale;
 
+import de.topobyte.osm4j.core.access.OsmIteratorInput;
+import de.topobyte.osm4j.core.access.OsmIteratorInputFactory;
 import de.topobyte.osm4j.core.access.OsmOutputStream;
 import de.topobyte.osm4j.core.model.iface.OsmRelation;
 import de.topobyte.osm4j.extra.relations.RelationIterator;
 import de.topobyte.osm4j.utils.FileFormat;
 import de.topobyte.osm4j.utils.OsmIoUtils;
-import de.topobyte.osm4j.utils.OsmIteratorFactory;
-import de.topobyte.osm4j.utils.OsmIteratorInput;
 import de.topobyte.osm4j.utils.StreamUtil;
 import de.topobyte.osm4j.utils.config.PbfConfig;
 import de.topobyte.osm4j.utils.config.TboConfig;
@@ -43,7 +43,7 @@ public class SimpleRelationSplitter
 
 	private Path pathOutput;
 	private String fileNamesRelations;
-	private OsmIteratorFactory iteratorFactory;
+	private OsmIteratorInputFactory iteratorFactory;
 
 	private FileFormat outputFormat;
 	private boolean writeMetadata;
@@ -52,7 +52,7 @@ public class SimpleRelationSplitter
 	private TboConfig tboConfig;
 
 	public SimpleRelationSplitter(Path pathOutput, String fileNamesRelations,
-			OsmIteratorFactory iteratorFactory, FileFormat outputFormat,
+			OsmIteratorInputFactory iteratorFactory, FileFormat outputFormat,
 			boolean writeMetadata, PbfConfig pbfConfig, TboConfig tboConfig)
 	{
 		this.pathOutput = pathOutput;

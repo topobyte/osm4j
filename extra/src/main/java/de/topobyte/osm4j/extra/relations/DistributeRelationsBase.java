@@ -41,10 +41,10 @@ import de.topobyte.largescalefileio.ClosingFileOutputStreamFactory;
 import de.topobyte.largescalefileio.SimpleClosingFileOutputStreamFactory;
 import de.topobyte.osm4j.core.access.OsmIterator;
 import de.topobyte.osm4j.core.access.OsmOutputStream;
+import de.topobyte.osm4j.core.dataset.InMemoryMapDataSet;
+import de.topobyte.osm4j.core.dataset.MapDataSetLoader;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.osm4j.core.model.impl.Bounds;
-import de.topobyte.osm4j.core.resolve.DataSetReader;
-import de.topobyte.osm4j.core.resolve.InMemoryDataSet;
 import de.topobyte.osm4j.extra.OsmOutput;
 import de.topobyte.osm4j.extra.datatree.DataTree;
 import de.topobyte.osm4j.extra.datatree.DataTreeFiles;
@@ -274,13 +274,13 @@ public abstract class DistributeRelationsBase extends
 		return new GeometryFactory().toGeometry(env);
 	}
 
-	protected InMemoryDataSet read(Path path, boolean readMetadata,
+	protected InMemoryMapDataSet read(Path path, boolean readMetadata,
 			boolean keepTags) throws IOException
 	{
 		InputStream input = StreamUtil.bufferedInputStream(path.toFile());
 		OsmIterator osmIterator = OsmIoUtils.setupOsmIterator(input,
 				inputFormat, readMetadata);
-		InMemoryDataSet data = DataSetReader.read(osmIterator, keepTags,
+		InMemoryMapDataSet data = MapDataSetLoader.read(osmIterator, keepTags,
 				keepTags, keepTags);
 		input.close();
 		return data;

@@ -32,6 +32,7 @@ import com.vividsolutions.jts.geom.GeometryFactory;
 
 import de.topobyte.jts.utils.predicate.ContainmentTest;
 import de.topobyte.osm4j.core.access.OsmIterator;
+import de.topobyte.osm4j.core.access.OsmIteratorInput;
 import de.topobyte.osm4j.core.access.OsmOutputStream;
 import de.topobyte.osm4j.extra.datatree.DataTree;
 import de.topobyte.osm4j.extra.datatree.DataTreeFiles;
@@ -40,7 +41,6 @@ import de.topobyte.osm4j.extra.datatree.Node;
 import de.topobyte.osm4j.utils.FileFormat;
 import de.topobyte.osm4j.utils.OsmFileInput;
 import de.topobyte.osm4j.utils.OsmIoUtils;
-import de.topobyte.osm4j.utils.OsmIteratorInput;
 import de.topobyte.osm4j.utils.StreamUtil;
 import de.topobyte.osm4j.utils.config.PbfConfig;
 import de.topobyte.osm4j.utils.config.TboConfig;

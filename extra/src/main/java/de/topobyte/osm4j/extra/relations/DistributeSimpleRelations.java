@@ -27,11 +27,11 @@ import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
 
 import de.topobyte.osm4j.core.access.OsmIterator;
+import de.topobyte.osm4j.core.dataset.InMemoryMapDataSet;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.osm4j.core.model.iface.OsmRelation;
 import de.topobyte.osm4j.core.resolve.CompositeOsmEntityProvider;
 import de.topobyte.osm4j.core.resolve.EntityNotFoundException;
-import de.topobyte.osm4j.core.resolve.InMemoryDataSet;
 import de.topobyte.osm4j.core.resolve.NullOsmEntityProvider;
 import de.topobyte.osm4j.core.resolve.OsmEntityProvider;
 import de.topobyte.osm4j.extra.OsmOutput;
@@ -69,8 +69,8 @@ public class DistributeSimpleRelations extends DistributeRelationsBase
 		Path pathWays = path.resolve(fileNamesWays);
 		Path pathNodes = path.resolve(fileNamesNodes);
 
-		InMemoryDataSet dataWays = read(pathWays, false, false);
-		InMemoryDataSet dataNodes = read(pathNodes, false, false);
+		InMemoryMapDataSet dataWays = read(pathWays, false, false);
+		InMemoryMapDataSet dataNodes = read(pathNodes, false, false);
 
 		OsmEntityProvider entityProvider = new CompositeOsmEntityProvider(
 				dataNodes, dataWays, new NullOsmEntityProvider());

@@ -38,11 +38,11 @@ import com.vividsolutions.jts.geom.LineString;
 import de.topobyte.largescalefileio.ClosingFileOutputStreamFactory;
 import de.topobyte.largescalefileio.SimpleClosingFileOutputStreamFactory;
 import de.topobyte.osm4j.core.access.OsmOutputStream;
+import de.topobyte.osm4j.core.dataset.InMemoryMapDataSet;
+import de.topobyte.osm4j.core.dataset.MapDataSetLoader;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.osm4j.core.model.iface.OsmWay;
-import de.topobyte.osm4j.core.resolve.DataSetReader;
 import de.topobyte.osm4j.core.resolve.EntityNotFoundException;
-import de.topobyte.osm4j.core.resolve.InMemoryDataSet;
 import de.topobyte.osm4j.core.resolve.OsmEntityProvider;
 import de.topobyte.osm4j.core.resolve.UnionOsmEntityProvider;
 import de.topobyte.osm4j.extra.OsmOutput;
@@ -195,7 +195,7 @@ public class DistributeWays extends AbstractExecutableInputOutput
 					"Loading nodes file of size: %.3fMB",
 					nodesSize1 / 1024. / 1024.));
 
-			InMemoryDataSet dataNodes1 = DataSetReader.read(OsmIoUtils
+			InMemoryMapDataSet dataNodes1 = MapDataSetLoader.read(OsmIoUtils
 					.setupOsmIterator(inputNodes1, inputFormatNodes, false),
 					false, false, false);
 
@@ -204,7 +204,7 @@ public class DistributeWays extends AbstractExecutableInputOutput
 					"Loading nodes file of size: %.3fMB",
 					nodesSize2 / 1024. / 1024.));
 
-			InMemoryDataSet dataNodes2 = DataSetReader.read(OsmIoUtils
+			InMemoryMapDataSet dataNodes2 = MapDataSetLoader.read(OsmIoUtils
 					.setupOsmIterator(inputNodes2, inputFormatNodes, false),
 					false, false, false);
 
@@ -213,7 +213,7 @@ public class DistributeWays extends AbstractExecutableInputOutput
 					"Loading ways file of size: %.3fMB",
 					waysSize / 1024. / 1024.));
 
-			InMemoryDataSet dataWays = DataSetReader.read(
+			InMemoryMapDataSet dataWays = MapDataSetLoader.read(
 					OsmIoUtils.setupOsmIterator(inputWays, inputFormatWays,
 							writeMetadata), false, true, false);
 

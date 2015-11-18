@@ -32,12 +32,12 @@ import java.util.Set;
 import de.topobyte.adt.graph.Graph;
 import de.topobyte.adt.graph.UndirectedGraph;
 import de.topobyte.osm4j.core.access.OsmIterator;
+import de.topobyte.osm4j.core.dataset.InMemoryMapDataSet;
 import de.topobyte.osm4j.core.model.iface.EntityContainer;
 import de.topobyte.osm4j.core.model.iface.EntityType;
 import de.topobyte.osm4j.core.model.iface.OsmRelation;
 import de.topobyte.osm4j.core.model.iface.OsmRelationMember;
 import de.topobyte.osm4j.core.model.util.OsmModelUtil;
-import de.topobyte.osm4j.core.resolve.InMemoryDataSet;
 
 public class RelationGraph
 {
@@ -75,7 +75,7 @@ public class RelationGraph
 		}
 	}
 
-	public void build(InMemoryDataSet data) throws IOException
+	public void build(InMemoryMapDataSet data) throws IOException
 	{
 		graph = undirected ? new UndirectedGraph<Long>() : new Graph<Long>();
 		for (OsmRelation relation : data.getRelations().valueCollection()) {

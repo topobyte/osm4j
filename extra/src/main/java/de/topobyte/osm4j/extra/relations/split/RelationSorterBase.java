@@ -35,6 +35,7 @@ import com.vividsolutions.jts.geom.Envelope;
 
 import de.topobyte.largescalefileio.ClosingFileOutputStreamFactory;
 import de.topobyte.largescalefileio.SimpleClosingFileOutputStreamFactory;
+import de.topobyte.osm4j.core.access.OsmIteratorInputFactory;
 import de.topobyte.osm4j.core.access.OsmOutputStream;
 import de.topobyte.osm4j.core.model.impl.Bounds;
 import de.topobyte.osm4j.extra.OsmOutput;
@@ -42,7 +43,6 @@ import de.topobyte.osm4j.extra.idbboxlist.IdBboxEntry;
 import de.topobyte.osm4j.extra.idbboxlist.IdBboxUtil;
 import de.topobyte.osm4j.utils.FileFormat;
 import de.topobyte.osm4j.utils.OsmIoUtils;
-import de.topobyte.osm4j.utils.OsmIteratorFactory;
 import de.topobyte.osm4j.utils.StreamUtil;
 import de.topobyte.osm4j.utils.config.PbfConfig;
 import de.topobyte.osm4j.utils.config.TboConfig;
@@ -55,7 +55,7 @@ public class RelationSorterBase
 	private Path pathInputBboxes;
 	private Path pathOutput;
 	private String fileNamesRelations;
-	protected OsmIteratorFactory iteratorFactory;
+	protected OsmIteratorInputFactory iteratorFactory;
 
 	private FileFormat outputFormat;
 	protected boolean writeMetadata;
@@ -70,7 +70,7 @@ public class RelationSorterBase
 	protected List<OsmOutput> outputs;
 
 	public RelationSorterBase(Path pathInputBboxes, Path pathOutput,
-			String fileNamesRelations, OsmIteratorFactory iteratorFactory,
+			String fileNamesRelations, OsmIteratorInputFactory iteratorFactory,
 			FileFormat outputFormat, boolean writeMetadata,
 			PbfConfig pbfConfig, TboConfig tboConfig)
 	{

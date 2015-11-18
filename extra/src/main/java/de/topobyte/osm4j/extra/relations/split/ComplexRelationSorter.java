@@ -25,11 +25,11 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 
+import de.topobyte.osm4j.core.access.OsmIteratorInputFactory;
 import de.topobyte.osm4j.core.model.iface.OsmRelation;
 import de.topobyte.osm4j.extra.OsmOutput;
 import de.topobyte.osm4j.extra.relations.Group;
 import de.topobyte.osm4j.utils.FileFormat;
-import de.topobyte.osm4j.utils.OsmIteratorFactory;
 import de.topobyte.osm4j.utils.config.PbfConfig;
 import de.topobyte.osm4j.utils.config.TboConfig;
 
@@ -37,7 +37,7 @@ public class ComplexRelationSorter extends RelationSorterBase
 {
 
 	public ComplexRelationSorter(Path pathInputBboxes, Path pathOutput,
-			String fileNamesRelations, OsmIteratorFactory iteratorFactory,
+			String fileNamesRelations, OsmIteratorInputFactory iteratorFactory,
 			FileFormat outputFormat, boolean writeMetadata,
 			PbfConfig pbfConfig, TboConfig tboConfig)
 	{

@@ -23,21 +23,21 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.topobyte.osm4j.core.access.OsmIteratorInputFactory;
 import de.topobyte.osm4j.extra.relations.split.ComplexRelationSplitter;
 import de.topobyte.osm4j.extra.relations.split.SimpleRelationSplitter;
 import de.topobyte.osm4j.utils.FileFormat;
-import de.topobyte.osm4j.utils.OsmIteratorFactory;
 import de.topobyte.osm4j.utils.config.PbfConfig;
 import de.topobyte.osm4j.utils.config.TboConfig;
 
 public class RelationsSplitterAndMemberCollector
 {
 
-	private OsmIteratorFactory inputSimpleRelations;
-	private OsmIteratorFactory inputComplexRelations;
+	private OsmIteratorInputFactory inputSimpleRelations;
+	private OsmIteratorInputFactory inputComplexRelations;
 
-	private OsmIteratorFactory inputWays;
-	private OsmIteratorFactory inputNodes;
+	private OsmIteratorInputFactory inputWays;
+	private OsmIteratorInputFactory inputNodes;
 
 	private Path pathOutputSimpleRelations;
 	private Path pathOutputComplexRelations;
@@ -49,11 +49,11 @@ public class RelationsSplitterAndMemberCollector
 	private TboConfig tboConfig;
 
 	public RelationsSplitterAndMemberCollector(
-			OsmIteratorFactory inputSimpleRelations,
-			OsmIteratorFactory inputComplexRelations,
+			OsmIteratorInputFactory inputSimpleRelations,
+			OsmIteratorInputFactory inputComplexRelations,
 			Path pathOutputSimpleRelations, Path pathOutputComplexRelations,
-			String fileNamesRelations, OsmIteratorFactory inputWays,
-			OsmIteratorFactory inputNodes, FileFormat outputFormat,
+			String fileNamesRelations, OsmIteratorInputFactory inputWays,
+			OsmIteratorInputFactory inputNodes, FileFormat outputFormat,
 			boolean writeMetadata, PbfConfig pbfConfig, TboConfig tboConfig)
 	{
 		this.inputSimpleRelations = inputSimpleRelations;
