@@ -28,8 +28,10 @@ import de.topobyte.osm4j.core.model.iface.OsmEntity;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.osm4j.core.model.iface.OsmRelation;
 import de.topobyte.osm4j.core.model.iface.OsmWay;
+import de.topobyte.osm4j.core.resolve.EntityNotFoundException;
+import de.topobyte.osm4j.core.resolve.OsmEntityProvider;
 
-public class InMemoryListDataSet
+public class InMemoryListDataSet implements OsmEntityProvider
 {
 
 	private OsmBounds bounds = null;
@@ -102,6 +104,46 @@ public class InMemoryListDataSet
 		Collections.sort(nodes, nodeComparator);
 		Collections.sort(ways, wayComparator);
 		Collections.sort(relations, relationComparator);
+	}
+
+	@Override
+	public OsmNode getNode(long id) throws EntityNotFoundException
+	{
+		return find(nodes, id);
+	}
+
+	@Override
+	public OsmWay getWay(long id) throws EntityNotFoundException
+	{
+		return find(ways, id);
+	}
+
+	@Override
+	public OsmRelation getRelation(long id) throws EntityNotFoundException
+	{
+		return find(relations, id);
+	}
+
+	private <T extends OsmEntity> T find(List<T> list, long nodeId)
+			throws EntityNotFoundException
+	{
+		int low = 0;
+		int high = list.size() - 1;
+
+		while (low <= high) {
+			int mid = (low + high) >>> 1;
+			T v = list.get(mid);
+			int cmp = Long.compare(v.getId(), nodeId);
+
+			if (cmp < 0) {
+				low = mid + 1;
+			} else if (cmp > 0) {
+				high = mid - 1;
+			} else {
+				return v;
+			}
+		}
+		throw new EntityNotFoundException("element not available in data set");
 	}
 
 }
