@@ -31,8 +31,8 @@ import de.topobyte.osm4j.core.access.OsmIteratorInput;
 import de.topobyte.osm4j.core.access.OsmOutputStream;
 import de.topobyte.osm4j.core.access.OsmOutputStreamStreamOutput;
 import de.topobyte.osm4j.core.access.OsmStreamOutput;
-import de.topobyte.osm4j.core.dataset.InMemoryMapDataSet;
-import de.topobyte.osm4j.core.dataset.MapDataSetLoader;
+import de.topobyte.osm4j.core.dataset.InMemoryListDataSet;
+import de.topobyte.osm4j.core.dataset.ListDataSetLoader;
 import de.topobyte.osm4j.core.model.iface.EntityType;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.osm4j.core.model.iface.OsmRelation;
@@ -92,9 +92,9 @@ public class LeafQuery
 	private OsmStreamOutput outSimpleRelations;
 	private OsmStreamOutput outComplexRelations;
 
-	private InMemoryMapDataSet dataNodes;
-	private InMemoryMapDataSet dataWays;
-	private InMemoryMapDataSet dataSimpleRelations;
+	private InMemoryListDataSet dataNodes;
+	private InMemoryListDataSet dataWays;
+	private InMemoryListDataSet dataSimpleRelations;
 
 	private TLongSet nodeIds = new TLongHashSet();
 	private TLongSet wayIds = new TLongHashSet();
@@ -148,11 +148,11 @@ public class LeafQuery
 		dataSimpleRelations = read(filesTreeSimpleRelations.getPath(leaf));
 	}
 
-	private InMemoryMapDataSet read(Path path) throws IOException
+	private InMemoryListDataSet read(Path path) throws IOException
 	{
 		OsmFileInput fileInput = new OsmFileInput(path, inputFormat);
 		OsmIteratorInput input = fileInput.createIterator(writeMetadata);
-		InMemoryMapDataSet data = MapDataSetLoader.read(input.getIterator(),
+		InMemoryListDataSet data = ListDataSetLoader.read(input.getIterator(),
 				true, true, true);
 		input.close();
 		return data;
@@ -175,7 +175,7 @@ public class LeafQuery
 
 	private void queryNodes() throws IOException
 	{
-		for (OsmNode node : dataNodes.getNodes().valueCollection()) {
+		for (OsmNode node : dataNodes.getNodes()) {
 			if (test.contains(new Coordinate(node.getLongitude(), node
 					.getLatitude()))) {
 				nodeIds.add(node.getId());
@@ -186,7 +186,7 @@ public class LeafQuery
 
 	private void queryWays() throws IOException
 	{
-		for (OsmWay way : dataWays.getWays().valueCollection()) {
+		for (OsmWay way : dataWays.getWays()) {
 			boolean in = false;
 			for (int i = 0; i < way.getNumberOfNodes(); i++) {
 				if (nodeIds.contains(way.getNodeId(i))) {
@@ -206,8 +206,7 @@ public class LeafQuery
 
 	private void querySimpleRelations() throws IOException
 	{
-		for (OsmRelation relation : dataSimpleRelations.getRelations()
-				.valueCollection()) {
+		for (OsmRelation relation : dataSimpleRelations.getRelations()) {
 			boolean in = false;
 			for (int i = 0; i < relation.getNumberOfMembers(); i++) {
 				OsmRelationMember member = relation.getMember(i);
