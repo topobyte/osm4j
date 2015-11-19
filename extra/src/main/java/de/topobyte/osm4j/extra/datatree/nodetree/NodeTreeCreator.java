@@ -79,7 +79,7 @@ public class NodeTreeCreator
 		this.writeMetadata = writeMetadata;
 	}
 
-	protected void initNewTree() throws IOException
+	public void initNewTree() throws IOException
 	{
 		if (!Files.exists(dirOutput)) {
 			System.out.println("Creating output directory");
@@ -111,7 +111,7 @@ public class NodeTreeCreator
 		tree = new DataTree(envelope);
 	}
 
-	protected void openExistingTree() throws IOException
+	public void openExistingTree() throws IOException
 	{
 		if (!Files.exists(dirOutput)) {
 			System.out.println("Output path does not exist");
@@ -125,12 +125,12 @@ public class NodeTreeCreator
 		tree = DataTreeOpener.open(dirOutput.toFile());
 	}
 
-	protected DataTree getTree()
+	public DataTree getTree()
 	{
 		return tree;
 	}
 
-	protected void execute() throws IOException
+	public void execute() throws IOException
 	{
 		initOutputs();
 

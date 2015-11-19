@@ -15,26 +15,47 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with osm4j. If not, see <http://www.gnu.org/licenses/>.
 
-package de.topobyte.osm4j.extra.datatree.nodetree;
+package de.topobyte.osm4j.extra.executables;
 
+import java.io.IOException;
+import java.nio.file.Paths;
+
+import de.topobyte.osm4j.core.access.OsmIterator;
+import de.topobyte.osm4j.extra.ways.WaysSorterByFirstNodeId;
 import de.topobyte.osm4j.utils.AbstractExecutableSingleInputStreamOutput;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
-public abstract class CreateNodeTreeBase extends
+public class SortWaysByFirstNodeId extends
 		AbstractExecutableSingleInputStreamOutput
 {
 
 	private static final String OPTION_OUTPUT = "output";
-	private static final String OPTION_FILE_NAMES = "filenames";
+
+	@Override
+	protected String getHelpMessage()
+	{
+		return SortWaysByFirstNodeId.class.getSimpleName() + " [options]";
+	}
+
+	public static void main(String[] args) throws IOException
+	{
+		SortWaysByFirstNodeId task = new SortWaysByFirstNodeId();
+
+		task.setup(args);
+
+		task.init();
+
+		task.execute();
+
+		task.finish();
+	}
 
 	protected String pathOutput;
-	protected String fileNames;
 
-	public CreateNodeTreeBase()
+	public SortWaysByFirstNodeId()
 	{
 		// @formatter:off
 		OptionHelper.add(options, OPTION_OUTPUT, true, true, "directory to store output in");
-		OptionHelper.add(options, OPTION_FILE_NAMES, true, true, "names of the data files to create");
 		// @formatter:on
 	}
 
@@ -44,7 +65,17 @@ public abstract class CreateNodeTreeBase extends
 		super.setup(args);
 
 		pathOutput = line.getOptionValue(OPTION_OUTPUT);
-		fileNames = line.getOptionValue(OPTION_FILE_NAMES);
+	}
+
+	private void execute() throws IOException
+	{
+		OsmIterator iterator = createIterator();
+
+		WaysSorterByFirstNodeId sorter = new WaysSorterByFirstNodeId(iterator,
+				Paths.get(pathOutput), outputFormat, pbfConfig, tboConfig,
+				writeMetadata);
+
+		sorter.execute();
 	}
 
 }
