@@ -15,54 +15,32 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with osm4j. If not, see <http://www.gnu.org/licenses/>.
 
-package de.topobyte.osm4j.extra.relations.split;
+package de.topobyte.osm4j.extra.batch;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
-public class BatchBuilder<T>
+public abstract class AbstractBatch<T> implements Batch<T>
 {
 
-	private Batch<T> batch;
-	private List<List<T>> results = new ArrayList<>();
+	protected List<T> elements = new ArrayList<>();
 
-	public BatchBuilder(Batch<T> batch)
+	@Override
+	public void clear()
 	{
-		this.batch = batch;
+		elements.clear();
 	}
 
+	@Override
 	public void add(T element)
 	{
-		if (batch.fits(element)) {
-			batch.add(element);
-		} else {
-			List<T> elements = new ArrayList<>(batch.getElements());
-			results.add(elements);
-			batch.clear();
-			batch.add(element);
-		}
+		elements.add(element);
 	}
 
-	public void addAll(Collection<T> elements)
+	@Override
+	public List<T> getElements()
 	{
-		for (T element : elements) {
-			add(element);
-		}
-	}
-
-	public void finish()
-	{
-		if (!batch.getElements().isEmpty()) {
-			List<T> elements = new ArrayList<>(batch.getElements());
-			results.add(elements);
-			batch.clear();
-		}
-	}
-
-	public List<List<T>> getResults()
-	{
-		return results;
+		return elements;
 	}
 
 }

@@ -15,62 +15,54 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with osm4j. If not, see <http://www.gnu.org/licenses/>.
 
-package de.topobyte.osm4j.extra.relations.split;
+package de.topobyte.osm4j.extra.batch;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
-public abstract class Batch<T>
+public class BatchBuilder<T>
 {
 
-	private int maxSize;
+	private Batch<T> batch;
+	private List<List<T>> results = new ArrayList<>();
 
-	private List<T> elements = new ArrayList<>();
-	private int size = 0;
-
-	public Batch(int maxSize)
+	public BatchBuilder(Batch<T> batch)
 	{
-		this.maxSize = maxSize;
-	}
-
-	protected abstract int size(T element);
-
-	public void clear()
-	{
-		elements.clear();
-		size = 0;
-	}
-
-	public boolean fits(T element)
-	{
-		if (elements.isEmpty()) {
-			return true;
-		}
-		if (size + size(element) <= maxSize) {
-			return true;
-		}
-		return false;
+		this.batch = batch;
 	}
 
 	public void add(T element)
 	{
-		elements.add(element);
-		size += size(element);
+		if (batch.fits(element)) {
+			batch.add(element);
+		} else {
+			List<T> elements = new ArrayList<>(batch.getElements());
+			results.add(elements);
+			batch.clear();
+			batch.add(element);
+		}
 	}
 
-	public List<T> getElements()
+	public void addAll(Collection<T> elements)
 	{
-		return elements;
+		for (T element : elements) {
+			add(element);
+		}
 	}
 
-	public int getSize()
+	public void finish()
 	{
-		return size;
+		if (!batch.getElements().isEmpty()) {
+			List<T> elements = new ArrayList<>(batch.getElements());
+			results.add(elements);
+			batch.clear();
+		}
 	}
 
-	public boolean isFull()
+	public List<List<T>> getResults()
 	{
-		return size == maxSize;
+		return results;
 	}
 
 }

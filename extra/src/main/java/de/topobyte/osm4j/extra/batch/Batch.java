@@ -15,23 +15,21 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with osm4j. If not, see <http://www.gnu.org/licenses/>.
 
-package de.topobyte.osm4j.extra.relations.split;
+package de.topobyte.osm4j.extra.batch;
 
-import de.topobyte.osm4j.extra.batch.SizeBatch;
-import de.topobyte.osm4j.extra.relations.Group;
+import java.util.List;
 
-class GroupBatch extends SizeBatch<Group>
+public interface Batch<T>
 {
 
-	GroupBatch(int maxMembers)
-	{
-		super(maxMembers);
-	}
+	public void clear();
 
-	@Override
-	protected int size(Group element)
-	{
-		return element.getNumMembers();
-	}
+	public boolean fits(T element);
+
+	public void add(T element);
+
+	public List<T> getElements();
+
+	public boolean isFull();
 
 }

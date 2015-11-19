@@ -23,7 +23,6 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.NumberFormat;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
@@ -84,44 +83,9 @@ public class WaysSorterByFirstNodeId
 		}
 	}
 
-	private int maxWays = 800 * 1000;
-	private int maxWayNodes = 10 * 1000 * 1000;
-
-	private class Batch
-	{
-
-		List<OsmWay> ways = new ArrayList<>();
-		int wayNodes = 0;
-
-		void clear()
-		{
-			ways.clear();
-			wayNodes = 0;
-		}
-
-		boolean fits(OsmWay way)
-		{
-			if (ways.isEmpty()) {
-				return true;
-			}
-			if (ways.size() < maxWays
-					&& wayNodes + way.getNumberOfNodes() <= maxWayNodes) {
-				return true;
-			}
-			return false;
-		}
-
-		void add(OsmWay way)
-		{
-			ways.add(way);
-			wayNodes += way.getNumberOfNodes();
-		}
-
-	}
-
 	private void run() throws IOException
 	{
-		Batch batch = new Batch();
+		WayBatch batch = new WayBatch(800 * 1000, 10 * 1000 * 1000);
 
 		for (EntityContainer container : input) {
 			if (container.getType() != EntityType.Way) {
@@ -140,7 +104,7 @@ public class WaysSorterByFirstNodeId
 				batch.add(way);
 			}
 		}
-		if (!batch.ways.isEmpty()) {
+		if (!batch.getElements().isEmpty()) {
 			process(batch);
 			status();
 			batch.clear();
@@ -167,9 +131,9 @@ public class WaysSorterByFirstNodeId
 				format.format(perSecond)));
 	}
 
-	private void process(Batch batch) throws IOException
+	private void process(WayBatch batch) throws IOException
 	{
-		List<OsmWay> ways = batch.ways;
+		List<OsmWay> ways = batch.getElements();
 		Collections.sort(ways, new WayNodeIdComparator());
 
 		batchCount++;
