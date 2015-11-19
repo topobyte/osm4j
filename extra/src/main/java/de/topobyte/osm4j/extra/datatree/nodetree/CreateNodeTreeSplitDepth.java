@@ -25,7 +25,7 @@ import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.osm4j.extra.datatree.Node;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
-public class CreateNodeTreeSplitDepth extends BaseNodeTreeCreator
+public class CreateNodeTreeSplitDepth extends CreateNodeTreeBase
 {
 
 	private static final String OPTION_SPLIT_DEPTH = "split_depth";

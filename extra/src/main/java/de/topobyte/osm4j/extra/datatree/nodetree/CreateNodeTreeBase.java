@@ -48,7 +48,7 @@ import de.topobyte.osm4j.utils.AbstractExecutableSingleInputStreamOutput;
 import de.topobyte.osm4j.utils.OsmIoUtils;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
-public abstract class BaseNodeTreeCreator extends
+public abstract class CreateNodeTreeBase extends
 		AbstractExecutableSingleInputStreamOutput
 {
 
@@ -68,7 +68,7 @@ public abstract class BaseNodeTreeCreator extends
 
 	private NodeProgress counter = new NodeProgress();
 
-	public BaseNodeTreeCreator()
+	public CreateNodeTreeBase()
 	{
 		// @formatter:off
 		OptionHelper.add(options, OPTION_OUTPUT, true, true, "directory to store output in");
