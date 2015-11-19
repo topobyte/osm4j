@@ -197,8 +197,8 @@ public class DistributeWays extends AbstractExecutableInputOutput
 					nodesSize1 / 1024. / 1024.));
 
 			InMemoryMapDataSet dataNodes1 = MapDataSetLoader.read(OsmIoUtils
-					.setupOsmIterator(inputNodes1, inputFormatNodes, false),
-					false, false, false);
+					.setupOsmIterator(inputNodes1, inputFormatNodes,
+							writeMetadata), true, true, true);
 
 			long nodesSize2 = fileNodes2.length();
 			System.out.println(String.format(
@@ -206,8 +206,8 @@ public class DistributeWays extends AbstractExecutableInputOutput
 					nodesSize2 / 1024. / 1024.));
 
 			InMemoryMapDataSet dataNodes2 = MapDataSetLoader.read(OsmIoUtils
-					.setupOsmIterator(inputNodes2, inputFormatNodes, false),
-					false, false, false);
+					.setupOsmIterator(inputNodes2, inputFormatNodes,
+							writeMetadata), true, true, true);
 
 			long waysSize = fileWays.length();
 			System.out.println(String.format(
@@ -216,7 +216,7 @@ public class DistributeWays extends AbstractExecutableInputOutput
 
 			InMemoryMapDataSet dataWays = MapDataSetLoader.read(
 					OsmIoUtils.setupOsmIterator(inputWays, inputFormatWays,
-							writeMetadata), false, true, false);
+							writeMetadata), true, true, true);
 
 			inputNodes1.close();
 			inputNodes2.close();
