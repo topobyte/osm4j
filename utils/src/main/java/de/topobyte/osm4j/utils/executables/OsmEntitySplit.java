@@ -113,18 +113,17 @@ public class OsmEntitySplit extends AbstractExecutableSingleInputStreamOutput
 		super.init();
 
 		if (passNodes) {
-			OutputStream osNodes = StreamUtil.bufferedOutputStream(pathNodes);
+			osNodes = StreamUtil.bufferedOutputStream(pathNodes);
 			oosNodes = OsmIoUtils.setupOsmOutput(osNodes, outputFormat,
 					writeMetadata, pbfConfig, tboConfig);
 		}
 		if (passWays) {
-			OutputStream osWays = StreamUtil.bufferedOutputStream(pathWays);
+			osWays = StreamUtil.bufferedOutputStream(pathWays);
 			oosWays = OsmIoUtils.setupOsmOutput(osWays, outputFormat,
 					writeMetadata, pbfConfig, tboConfig);
 		}
 		if (passRelations) {
-			OutputStream osRelations = StreamUtil
-					.bufferedOutputStream(pathRelations);
+			osRelations = StreamUtil.bufferedOutputStream(pathRelations);
 			oosRelations = OsmIoUtils.setupOsmOutput(osRelations, outputFormat,
 					writeMetadata, pbfConfig, tboConfig);
 		}
