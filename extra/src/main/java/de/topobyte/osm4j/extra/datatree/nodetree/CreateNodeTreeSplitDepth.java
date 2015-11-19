@@ -18,11 +18,10 @@
 package de.topobyte.osm4j.extra.datatree.nodetree;
 
 import java.io.IOException;
-import java.util.List;
+import java.nio.file.Paths;
 
-import de.topobyte.osm4j.core.access.OsmStreamOutput;
-import de.topobyte.osm4j.core.model.iface.OsmNode;
-import de.topobyte.osm4j.extra.datatree.Node;
+import de.topobyte.osm4j.core.access.OsmIterator;
+import de.topobyte.osm4j.extra.datatree.DataTree;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
 public class CreateNodeTreeSplitDepth extends CreateNodeTreeBase
@@ -42,17 +41,9 @@ public class CreateNodeTreeSplitDepth extends CreateNodeTreeBase
 
 		task.setup(args);
 
-		task.readMetadata = true;
-
 		task.init();
 
-		task.initNewTree();
-
-		task.initTree();
-
-		task.initOutputs();
-
-		task.run();
+		task.execute();
 
 		task.finish();
 	}
@@ -80,23 +71,21 @@ public class CreateNodeTreeSplitDepth extends CreateNodeTreeBase
 		}
 	}
 
-	protected void initTree() throws IOException
+	private void execute() throws IOException
 	{
+		OsmIterator iterator = createIterator();
+
+		NodeTreeCreator creator = new NodeTreeCreator(iterator,
+				Paths.get(pathOutput), fileNames, outputFormat, pbfConfig,
+				tboConfig, writeMetadata);
+
+		creator.initNewTree();
+
+		DataTree tree = creator.getTree();
 		tree.getRoot().split(splitDepth);
 		tree.print();
-	}
 
-	@Override
-	protected void handle(OsmNode node) throws IOException
-	{
-		List<Node> leafs = tree.query(node.getLongitude(), node.getLatitude());
-		for (Node leaf : leafs) {
-			if (leaf.getEnvelope().contains(node.getLongitude(),
-					node.getLatitude())) {
-				OsmStreamOutput output = outputs.get(leaf);
-				output.getOsmOutput().write(node);
-			}
-		}
+		creator.execute();
 	}
 
 }

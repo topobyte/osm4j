@@ -17,9 +17,6 @@
 
 package de.topobyte.osm4j.extra.datatree.nodetree;
 
-import gnu.trove.map.TLongLongMap;
-import gnu.trove.map.hash.TLongLongHashMap;
-
 import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -31,17 +28,18 @@ import java.util.Map;
 
 import com.vividsolutions.jts.geom.Envelope;
 
+import de.topobyte.adt.geo.BBox;
 import de.topobyte.largescalefileio.ClosingFileOutputStreamFactory;
 import de.topobyte.largescalefileio.SimpleClosingFileOutputStreamFactory;
-import de.topobyte.osm4j.core.access.OsmInputAccessFactory;
 import de.topobyte.osm4j.core.access.OsmIterator;
-import de.topobyte.osm4j.core.access.OsmIteratorInput;
 import de.topobyte.osm4j.core.access.OsmOutputStream;
 import de.topobyte.osm4j.core.access.OsmStreamOutput;
 import de.topobyte.osm4j.core.model.iface.EntityContainer;
+import de.topobyte.osm4j.core.model.iface.OsmBounds;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.osm4j.core.model.impl.Bounds;
 import de.topobyte.osm4j.extra.datatree.DataTree;
+import de.topobyte.osm4j.extra.datatree.DataTreeOpener;
 import de.topobyte.osm4j.extra.datatree.DataTreeUtil;
 import de.topobyte.osm4j.extra.datatree.Node;
 import de.topobyte.osm4j.extra.progress.NodeProgress;
@@ -50,125 +48,113 @@ import de.topobyte.osm4j.utils.OsmIoUtils;
 import de.topobyte.osm4j.utils.config.PbfConfig;
 import de.topobyte.osm4j.utils.config.TboConfig;
 
-public class NodeTreeDistributer
+public class NodeTreeCreator
 {
 
-	private DataTree tree;
-	private OsmInputAccessFactory inputFactory;
-
 	private Path dirOutput;
-	private Node head;
-
-	private int maxNodes;
 	private String fileNames;
+
 	private FileFormat outputFormat;
 	private PbfConfig pbfConfig;
 	private TboConfig tboConfig;
 	private boolean writeMetadata;
 
+	private OsmIterator input;
+	private DataTree tree;
+	private Map<Node, NodeOutput> outputs = new HashMap<>();
 	private ClosingFileOutputStreamFactory outputStreamFactory = new SimpleClosingFileOutputStreamFactory();
 
-	private Map<Node, NodeOutput> outputs = new HashMap<>();
+	private NodeProgress counter = new NodeProgress();
 
-	public NodeTreeDistributer(DataTree tree,
-			OsmInputAccessFactory inputFactory, Path dirOutput, Node head,
-			int maxNodes, String filenames, FileFormat outputFormat,
-			PbfConfig pbfConfig, TboConfig tboConfig, boolean writeMetadata)
+	public NodeTreeCreator(OsmIterator input, Path dirOutput, String fileNames,
+			FileFormat outputFormat, PbfConfig pbfConfig, TboConfig tboConfig,
+			boolean writeMetadata)
 	{
-		this.tree = tree;
-		this.inputFactory = inputFactory;
+		this.input = input;
 		this.dirOutput = dirOutput;
-		this.head = head;
-		this.maxNodes = maxNodes;
-		this.fileNames = filenames;
+		this.fileNames = fileNames;
 		this.outputFormat = outputFormat;
 		this.pbfConfig = pbfConfig;
 		this.tboConfig = tboConfig;
 		this.writeMetadata = writeMetadata;
 	}
 
-	public Node getHead()
+	protected void initNewTree() throws IOException
 	{
-		return head;
+		if (!Files.exists(dirOutput)) {
+			System.out.println("Creating output directory");
+			Files.createDirectories(dirOutput);
+		}
+		if (!Files.isDirectory(dirOutput)) {
+			System.out.println("Output path is not a directory");
+			System.exit(1);
+		}
+		if (dirOutput.toFile().list().length != 0) {
+			System.out.println("Output directory is not empty");
+			System.exit(1);
+		}
+
+		if (!input.hasBounds()) {
+			System.out.println("Input does not provide bounds");
+			System.exit(1);
+		}
+
+		OsmBounds bounds = input.getBounds();
+		System.out.println("bounds: " + bounds);
+
+		Envelope envelope = new Envelope(bounds.getLeft(), bounds.getRight(),
+				bounds.getBottom(), bounds.getTop());
+
+		BBox bbox = new BBox(envelope);
+		DataTreeUtil.writeTreeInfo(dirOutput.toFile(), bbox);
+
+		tree = new DataTree(envelope);
 	}
 
-	public Map<Node, NodeOutput> getOutputs()
+	protected void openExistingTree() throws IOException
 	{
-		return outputs;
+		if (!Files.exists(dirOutput)) {
+			System.out.println("Output path does not exist");
+			System.exit(1);
+		}
+		if (!Files.isDirectory(dirOutput)) {
+			System.out.println("Output path is not a directory");
+			System.exit(1);
+		}
+
+		tree = DataTreeOpener.open(dirOutput.toFile());
 	}
 
-	public void execute() throws IOException
+	protected DataTree getTree()
 	{
-		countLeafNodes();
+		return tree;
+	}
 
-		DataTreeUtil.mergeUnderfilledSiblings(tree, head, maxNodes, counters);
-
+	protected void execute() throws IOException
+	{
 		initOutputs();
 
-		distributeNodes();
+		run();
 
 		finish();
 	}
 
-	private TLongLongMap counters = new TLongLongHashMap();
-
-	public TLongLongMap getCounters()
+	protected void initOutputs() throws IOException
 	{
-		return counters;
-	}
-
-	private void countLeafNodes() throws IOException
-	{
-		NodeProgress counter = new NodeProgress();
-		counter.printTimed(1000);
-
-		OsmIteratorInput input = inputFactory.createIterator(false);
-		OsmIterator iterator = input.getIterator();
-
-		loop: while (iterator.hasNext()) {
-			EntityContainer entityContainer = iterator.next();
-			switch (entityContainer.getType()) {
-			case Node:
-				OsmNode node = (OsmNode) entityContainer.getEntity();
-				findLeafsAndIncrementCounters(node);
-				counter.increment();
-				break;
-			case Way:
-				break loop;
-			case Relation:
-				break loop;
-			}
-		}
-
-		counter.stop();
-		input.close();
-	}
-
-	private void findLeafsAndIncrementCounters(OsmNode node)
-	{
-		List<Node> leafs = tree.query(head, node.getLongitude(),
-				node.getLatitude());
-		for (Node leaf : leafs) {
-			long path = leaf.getPath();
-			counters.put(path, counters.get(path) + 1);
-		}
-	}
-
-	private void initOutputs() throws IOException
-	{
-		List<Node> leafs = tree.getLeafs(head);
+		List<Node> leafs = tree.getLeafs();
 		for (Node leaf : leafs) {
 			init(leaf);
 		}
 	}
 
-	private NodeOutput init(Node leaf) throws IOException
+	protected NodeOutput init(Node leaf) throws IOException
 	{
 		String dirname = Long.toHexString(leaf.getPath());
 		Path dir = dirOutput.resolve(dirname);
 		Files.createDirectories(dir);
 		Path file = dir.resolve(fileNames);
 
+		System.out.println(file + ": " + leaf.getEnvelope());
 		OutputStream os = outputStreamFactory.create(file.toFile());
 		OutputStream bos = new BufferedOutputStream(os);
 		OsmOutputStream osmOutput = OsmIoUtils.setupOsmOutput(bos,
@@ -183,20 +169,14 @@ public class NodeTreeDistributer
 		return output;
 	}
 
-	private void distributeNodes() throws IOException
+	protected void run() throws IOException
 	{
-		NodeProgress counter = new NodeProgress();
 		counter.printTimed(1000);
-
-		OsmIteratorInput input = inputFactory.createIterator(writeMetadata);
-		OsmIterator iterator = input.getIterator();
-
-		loop: while (iterator.hasNext()) {
-			EntityContainer entityContainer = iterator.next();
+		loop: while (input.hasNext()) {
+			EntityContainer entityContainer = input.next();
 			switch (entityContainer.getType()) {
 			case Node:
-				OsmNode node = (OsmNode) entityContainer.getEntity();
-				writeToLeafs(node);
+				handle((OsmNode) entityContainer.getEntity());
 				counter.increment();
 				break;
 			case Way:
@@ -206,20 +186,21 @@ public class NodeTreeDistributer
 			}
 		}
 		counter.stop();
-		input.close();
 	}
 
-	private void writeToLeafs(OsmNode node) throws IOException
+	protected void handle(OsmNode node) throws IOException
 	{
-		List<Node> leafs = tree.query(head, node.getLongitude(),
-				node.getLatitude());
+		List<Node> leafs = tree.query(node.getLongitude(), node.getLatitude());
 		for (Node leaf : leafs) {
-			NodeOutput output = outputs.get(leaf);
-			output.getOsmOutput().write(node);
+			if (leaf.getEnvelope().contains(node.getLongitude(),
+					node.getLatitude())) {
+				OsmStreamOutput output = outputs.get(leaf);
+				output.getOsmOutput().write(node);
+			}
 		}
 	}
 
-	private void finish() throws IOException
+	protected void finish() throws IOException
 	{
 		for (OsmStreamOutput output : outputs.values()) {
 			output.getOsmOutput().complete();
