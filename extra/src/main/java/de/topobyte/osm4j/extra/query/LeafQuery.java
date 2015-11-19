@@ -25,6 +25,8 @@ import java.io.OutputStream;
 import java.nio.file.Path;
 
 import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.LineString;
+import com.vividsolutions.jts.geom.MultiPolygon;
 
 import de.topobyte.jts.utils.predicate.ContainmentTest;
 import de.topobyte.osm4j.core.access.OsmIteratorInput;
@@ -38,8 +40,12 @@ import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.osm4j.core.model.iface.OsmRelation;
 import de.topobyte.osm4j.core.model.iface.OsmRelationMember;
 import de.topobyte.osm4j.core.model.iface.OsmWay;
+import de.topobyte.osm4j.core.resolve.CompositeOsmEntityProvider;
+import de.topobyte.osm4j.core.resolve.EntityNotFoundException;
+import de.topobyte.osm4j.core.resolve.NullOsmEntityProvider;
 import de.topobyte.osm4j.extra.datatree.DataTreeFiles;
 import de.topobyte.osm4j.extra.datatree.Node;
+import de.topobyte.osm4j.geometry.GeometryBuilder;
 import de.topobyte.osm4j.utils.FileFormat;
 import de.topobyte.osm4j.utils.OsmFileInput;
 import de.topobyte.osm4j.utils.OsmIoUtils;
@@ -101,6 +107,8 @@ public class LeafQuery
 	private int nSimple = 0;
 	private int nComplex = 0;
 
+	private CompositeOsmEntityProvider providerSimple;
+
 	public QueryResult execute(Node leaf, Path pathOutNodes, Path pathOutWays,
 			Path pathOutSimpleRelations, Path pathOutComplexRelations)
 			throws IOException
@@ -111,6 +119,9 @@ public class LeafQuery
 		this.pathOutComplexRelations = pathOutComplexRelations;
 
 		readData(leaf);
+
+		providerSimple = new CompositeOsmEntityProvider(dataNodes, dataWays,
+				new NullOsmEntityProvider());
 
 		createOutputs();
 
@@ -195,7 +206,14 @@ public class LeafQuery
 				}
 			}
 			if (!in) {
-				// TODO: test geometry-wise
+				try {
+					LineString string = GeometryBuilder.build(way, dataNodes);
+					if (test.intersects(string)) {
+						in = true;
+					}
+				} catch (EntityNotFoundException e) {
+					System.out.println("Unable to build way: " + way.getId());
+				}
 			}
 			if (in) {
 				wayIds.add(way.getId());
@@ -219,7 +237,16 @@ public class LeafQuery
 				}
 			}
 			if (!in) {
-				// TODO: test geometry-wise
+				try {
+					MultiPolygon polygon = GeometryBuilder.build(relation,
+							providerSimple);
+					if (test.intersects(polygon)) {
+						in = true;
+					}
+				} catch (EntityNotFoundException e) {
+					System.out.println("Unable to build relation: "
+							+ relation.getId());
+				}
 			}
 			if (in) {
 				outSimpleRelations.getOsmOutput().write(relation);
