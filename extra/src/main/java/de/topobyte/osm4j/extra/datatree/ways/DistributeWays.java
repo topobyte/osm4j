@@ -27,7 +27,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.NumberFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -40,8 +39,8 @@ import de.topobyte.largescalefileio.SimpleClosingFileOutputStreamFactory;
 import de.topobyte.osm4j.core.access.OsmOutputStream;
 import de.topobyte.osm4j.core.access.OsmOutputStreamStreamOutput;
 import de.topobyte.osm4j.core.access.OsmStreamOutput;
-import de.topobyte.osm4j.core.dataset.InMemoryMapDataSet;
-import de.topobyte.osm4j.core.dataset.MapDataSetLoader;
+import de.topobyte.osm4j.core.dataset.InMemoryListDataSet;
+import de.topobyte.osm4j.core.dataset.ListDataSetLoader;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.osm4j.core.model.iface.OsmWay;
 import de.topobyte.osm4j.core.resolve.EntityNotFoundException;
@@ -196,7 +195,7 @@ public class DistributeWays extends AbstractExecutableInputOutput
 					"Loading nodes file of size: %.3fMB",
 					nodesSize1 / 1024. / 1024.));
 
-			InMemoryMapDataSet dataNodes1 = MapDataSetLoader.read(OsmIoUtils
+			InMemoryListDataSet dataNodes1 = ListDataSetLoader.read(OsmIoUtils
 					.setupOsmIterator(inputNodes1, inputFormatNodes,
 							writeMetadata), true, true, true);
 
@@ -205,7 +204,7 @@ public class DistributeWays extends AbstractExecutableInputOutput
 					"Loading nodes file of size: %.3fMB",
 					nodesSize2 / 1024. / 1024.));
 
-			InMemoryMapDataSet dataNodes2 = MapDataSetLoader.read(OsmIoUtils
+			InMemoryListDataSet dataNodes2 = ListDataSetLoader.read(OsmIoUtils
 					.setupOsmIterator(inputNodes2, inputFormatNodes,
 							writeMetadata), true, true, true);
 
@@ -214,7 +213,7 @@ public class DistributeWays extends AbstractExecutableInputOutput
 					"Loading ways file of size: %.3fMB",
 					waysSize / 1024. / 1024.));
 
-			InMemoryMapDataSet dataWays = MapDataSetLoader.read(
+			InMemoryListDataSet dataWays = ListDataSetLoader.read(
 					OsmIoUtils.setupOsmIterator(inputWays, inputFormatWays,
 							writeMetadata), true, true, true);
 
@@ -230,11 +229,7 @@ public class DistributeWays extends AbstractExecutableInputOutput
 			UnionOsmEntityProvider entityProvider = new UnionOsmEntityProvider(
 					providers);
 
-			long[] wayIds = dataWays.getWays().keys();
-			Arrays.sort(wayIds);
-			TLongObjectMap<OsmWay> ways = dataWays.getWays();
-			for (long id : wayIds) {
-				OsmWay way = ways.get(id);
+			for (OsmWay way : dataWays.getWays()) {
 				build(leaf, way, entityProvider);
 			}
 
