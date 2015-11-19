@@ -50,7 +50,7 @@ public abstract class BaseQuery extends AbstractExecutableInputOutput
 		// @formatter:off
 		OptionHelper.add(options, OPTION_OUTPUT, true, true, "directory to store output in");
 		OptionHelper.add(options, OPTION_TMP, true, false, "directory to store intermediate files");
-		OptionHelper.add(options, OPTION_KEEP_TMP, false, true, "directory to store intermediate files");
+		OptionHelper.add(options, OPTION_KEEP_TMP, false, false, "directory to store intermediate files");
 		OptionHelper.add(options, OPTION_TREE, true, true, "path to the data tree");
 		OptionHelper.add(options, OPTION_SIMPLE_RELATIONS, true, true, "path to simple relation batches");
 		OptionHelper.add(options, OPTION_COMPLEX_RELATIONS, true, true, "path to complex relation batches");
