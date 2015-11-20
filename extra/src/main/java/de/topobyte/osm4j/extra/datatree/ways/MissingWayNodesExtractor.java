@@ -19,6 +19,7 @@ package de.topobyte.osm4j.extra.datatree.ways;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,75 +31,58 @@ import de.topobyte.osm4j.extra.datatree.DataTreeOpener;
 import de.topobyte.osm4j.extra.datatree.Node;
 import de.topobyte.osm4j.extra.idextract.ExtractionItem;
 import de.topobyte.osm4j.extra.idextract.Extractor;
-import de.topobyte.osm4j.utils.AbstractExecutableSingleInputStreamOutput;
-import de.topobyte.utilities.apache.commons.cli.OptionHelper;
+import de.topobyte.osm4j.utils.FileFormat;
+import de.topobyte.osm4j.utils.config.PbfConfig;
+import de.topobyte.osm4j.utils.config.TboConfig;
 
-public class ExtractMissingWayNodes extends
-		AbstractExecutableSingleInputStreamOutput
+public class MissingWayNodesExtractor
 {
 
-	private static final String OPTION_TREE = "tree";
-	private static final String OPTION_FILE_NAMES_IDS = "ids";
-	private static final String OPTION_FILE_NAMES_OUTPUT = "output";
+	private OsmIterator iterator;
 
-	@Override
-	protected String getHelpMessage()
-	{
-		return ExtractMissingWayNodes.class.getSimpleName() + " [options]";
-	}
-
-	public static void main(String[] args) throws IOException
-	{
-		ExtractMissingWayNodes task = new ExtractMissingWayNodes();
-
-		task.setup(args);
-
-		task.init();
-
-		task.prepare();
-
-		task.execute();
-	}
-
-	private String pathIdTree;
-	private String pathOutputTree;
+	private Path pathIdTree;
+	private Path pathOutputTree;
 
 	private String fileNamesIds;
 	private String fileNamesOutput;
 
-	public ExtractMissingWayNodes()
+	private FileFormat outputFormat;
+	private PbfConfig pbfConfig;
+	private TboConfig tboConfig;
+	private boolean writeMetadata;
+
+	public MissingWayNodesExtractor(OsmIterator iterator, Path pathIdTree,
+			String fileNamesIds, Path pathOutputTree, String fileNamesOutput,
+			FileFormat outputFormat, PbfConfig pbfConfig, TboConfig tboConfig,
+			boolean writeMetadata)
 	{
-		// @formatter:off
-		OptionHelper.add(options, OPTION_TREE, true, true, "tree directory to work on");
-		OptionHelper.add(options, OPTION_FILE_NAMES_OUTPUT, true, true, "names of the data files to create");
-		OptionHelper.add(options, OPTION_FILE_NAMES_IDS, true, true, "names of the node id files in the tree");
-		// @formatter:on
+		this.iterator = iterator;
+		this.pathIdTree = pathIdTree;
+		this.fileNamesIds = fileNamesIds;
+		this.pathOutputTree = pathOutputTree;
+		this.fileNamesOutput = fileNamesOutput;
+
+		this.outputFormat = outputFormat;
+		this.pbfConfig = pbfConfig;
+		this.tboConfig = tboConfig;
+		this.writeMetadata = writeMetadata;
 	}
 
-	@Override
-	protected void setup(String[] args)
+	public void execute() throws IOException
 	{
-		super.setup(args);
+		prepare();
 
-		String pathTree = line.getOptionValue(OPTION_TREE);
-		pathIdTree = pathTree;
-		pathOutputTree = pathTree;
-
-		fileNamesIds = line.getOptionValue(OPTION_FILE_NAMES_IDS);
-		fileNamesOutput = line.getOptionValue(OPTION_FILE_NAMES_OUTPUT);
+		run();
 	}
 
 	private List<ExtractionItem> extractionItems = new ArrayList<>();
 
-	public void prepare() throws IOException
+	private void prepare() throws IOException
 	{
-		DataTree tree = DataTreeOpener.open(new File(pathIdTree));
+		DataTree tree = DataTreeOpener.open(pathIdTree.toFile());
 
-		File dirIdTree = new File(pathIdTree);
-		File dirOutputTree = new File(pathOutputTree);
-
-		DataTreeFiles filesIds = new DataTreeFiles(dirIdTree, fileNamesIds);
-		DataTreeFiles filesOutput = new DataTreeFiles(dirOutputTree,
+		DataTreeFiles filesIds = new DataTreeFiles(pathIdTree, fileNamesIds);
+		DataTreeFiles filesOutput = new DataTreeFiles(pathOutputTree,
 				fileNamesOutput);
 
 		for (Node leaf : tree.getLeafs()) {
@@ -111,14 +95,12 @@ public class ExtractMissingWayNodes extends
 
 	}
 
-	public void execute() throws IOException
+	private void run() throws IOException
 	{
 		Extractor extractor = new Extractor(EntityType.Node, extractionItems,
 				outputFormat, pbfConfig, tboConfig, writeMetadata);
 
-		OsmIterator iterator = createIterator();
 		extractor.execute(iterator);
-		finish();
 	}
 
 }
