@@ -17,20 +17,11 @@
 
 package de.topobyte.osm4j.extra.relations;
 
-import gnu.trove.set.TLongSet;
-import gnu.trove.set.hash.TLongHashSet;
-
 import java.io.IOException;
-import java.io.OutputStream;
+import java.nio.file.Paths;
 
-import de.topobyte.osm4j.core.access.OsmIteratorInput;
-import de.topobyte.osm4j.core.access.OsmOutputStream;
-import de.topobyte.osm4j.core.model.iface.EntityType;
-import de.topobyte.osm4j.core.model.iface.OsmRelation;
-import de.topobyte.osm4j.core.model.iface.OsmRelationMember;
 import de.topobyte.osm4j.utils.AbstractExecutableSingleInputFileOutput;
-import de.topobyte.osm4j.utils.OsmIoUtils;
-import de.topobyte.osm4j.utils.StreamUtil;
+import de.topobyte.osm4j.utils.OsmOutputConfig;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
 public class SeparateRelations extends AbstractExecutableSingleInputFileOutput
@@ -74,68 +65,16 @@ public class SeparateRelations extends AbstractExecutableSingleInputFileOutput
 		pathOutputComplex = line.getOptionValue(OPTION_OUTPUT_COMPLEX);
 	}
 
-	private TLongSet idsHasRelationMembers = new TLongHashSet();
-	private TLongSet idsIsRelationMember = new TLongHashSet();
-
 	private void execute() throws IOException
 	{
-		findComplexRelations();
+		OsmOutputConfig outputConfig = new OsmOutputConfig(outputFormat,
+				pbfConfig, tboConfig, writeMetadata);
 
-		separateRelations();
+		RelationsSeparator separator = new RelationsSeparator(
+				getOsmFileInput(), Paths.get(pathOutputSimple),
+				Paths.get(pathOutputComplex), outputConfig);
+
+		separator.execute();
 	}
 
-	private void findComplexRelations() throws IOException
-	{
-		OsmIteratorInput input = getOsmFileInput().createIterator(false);
-
-		for (OsmRelation relation : new RelationIterator(input.getIterator())) {
-			boolean hasRelationMembers = false;
-			for (int i = 0; i < relation.getNumberOfMembers(); i++) {
-				OsmRelationMember member = relation.getMember(i);
-				if (member.getType() == EntityType.Relation) {
-					hasRelationMembers = true;
-					idsIsRelationMember.add(member.getId());
-				}
-			}
-			if (hasRelationMembers) {
-				idsHasRelationMembers.add(relation.getId());
-			}
-		}
-
-		input.close();
-	}
-
-	private void separateRelations() throws IOException
-	{
-		OutputStream outSimple = StreamUtil
-				.bufferedOutputStream(pathOutputSimple);
-		OutputStream outComplex = StreamUtil
-				.bufferedOutputStream(pathOutputComplex);
-
-		OsmOutputStream osmOutputSimple = OsmIoUtils.setupOsmOutput(outSimple,
-				outputFormat, writeMetadata, pbfConfig, tboConfig);
-		OsmOutputStream osmOutputComplex = OsmIoUtils.setupOsmOutput(
-				outComplex, outputFormat, writeMetadata, pbfConfig, tboConfig);
-
-		OsmIteratorInput input = getOsmFileInput()
-				.createIterator(writeMetadata);
-
-		for (OsmRelation relation : new RelationIterator(input.getIterator())) {
-			long id = relation.getId();
-			if (idsIsRelationMember.contains(id)
-					|| idsHasRelationMembers.contains(id)) {
-				osmOutputComplex.write(relation);
-			} else {
-				osmOutputSimple.write(relation);
-			}
-		}
-
-		osmOutputSimple.complete();
-		osmOutputComplex.complete();
-
-		outSimple.close();
-		outComplex.close();
-
-		input.close();
-	}
 }
