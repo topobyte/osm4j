@@ -205,7 +205,7 @@ public class LeafQuery
 					break;
 				}
 			}
-			if (!in) {
+			if (!in && way.getNumberOfNodes() > 1) {
 				try {
 					LineString string = GeometryBuilder.build(way, dataNodes);
 					if (test.intersects(string)) {
