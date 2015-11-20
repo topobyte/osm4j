@@ -20,11 +20,16 @@ package de.topobyte.osm4j.extra.extracts;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 
 import de.topobyte.osm4j.core.access.OsmIteratorInput;
+import de.topobyte.osm4j.extra.batch.BatchFilesUtil;
+import de.topobyte.osm4j.extra.datatree.TreeFilesMerger;
 import de.topobyte.osm4j.extra.datatree.nodetree.NodeTreeCreatorMaxNodes;
 import de.topobyte.osm4j.extra.datatree.ways.MissingWayNodesExtractor;
 import de.topobyte.osm4j.extra.datatree.ways.MissingWayNodesFinder;
+import de.topobyte.osm4j.extra.datatree.ways.WaysDistributor;
 import de.topobyte.osm4j.extra.datatree.ways.WaysToTreeMapper;
 import de.topobyte.osm4j.extra.ways.WaysSorterByFirstNodeId;
 import de.topobyte.osm4j.utils.FileFormat;
@@ -172,6 +177,44 @@ public class ExtractionFilesBuilder
 		wayNodesExtractor.execute();
 
 		inputNodes.close();
+
+		for (Path path : BatchFilesUtil.getPaths(pathTree,
+				fileNamesMissingWayNodeIds)) {
+			Files.delete(path);
+		}
+
+		// Distribute ways
+
+		WaysDistributor waysDistributor = new WaysDistributor(pathTree,
+				fileNamesInitialNodes, fileNamesMissingNodes,
+				fileNamesInitialWays, fileNamesDistributedWays,
+				fileNamesDistributedNodes, outputConfig.getFileFormat(),
+				outputConfig.getFileFormat(), outputConfig);
+		waysDistributor.execute();
+
+		// Merge nodes
+
+		List<String> fileNamesSortedNodes = new ArrayList<>();
+		List<String> fileNamesUnsortedNodes = new ArrayList<>();
+		fileNamesSortedNodes.add(fileNamesInitialNodes);
+		fileNamesSortedNodes.add(fileNamesMissingNodes);
+		fileNamesUnsortedNodes.add(fileNamesDistributedNodes);
+		TreeFilesMerger nodesMerger = new TreeFilesMerger(pathTree,
+				fileNamesSortedNodes, fileNamesUnsortedNodes,
+				fileNamesFinalNodes, outputConfig.getFileFormat(),
+				outputConfig, true);
+		nodesMerger.execute();
+
+		// Merge ways
+
+		List<String> fileNamesSortedWays = new ArrayList<>();
+		List<String> fileNamesUnsortedWays = new ArrayList<>();
+		fileNamesSortedWays.add(fileNamesInitialWays);
+		fileNamesUnsortedWays.add(fileNamesDistributedWays);
+		TreeFilesMerger waysMerger = new TreeFilesMerger(pathTree,
+				fileNamesSortedWays, fileNamesUnsortedWays, fileNamesFinalWays,
+				outputConfig.getFileFormat(), outputConfig, true);
+		waysMerger.execute();
 	}
 
 }
