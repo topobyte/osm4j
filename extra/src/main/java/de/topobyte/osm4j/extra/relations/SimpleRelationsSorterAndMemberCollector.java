@@ -26,6 +26,7 @@ import java.util.List;
 import de.topobyte.osm4j.core.access.OsmIteratorInputFactory;
 import de.topobyte.osm4j.extra.relations.split.SimpleRelationSorter;
 import de.topobyte.osm4j.utils.FileFormat;
+import de.topobyte.osm4j.utils.OsmOutputConfig;
 import de.topobyte.osm4j.utils.config.PbfConfig;
 import de.topobyte.osm4j.utils.config.TboConfig;
 
@@ -69,6 +70,9 @@ public class SimpleRelationsSorterAndMemberCollector
 
 	public void execute() throws IOException
 	{
+		OsmOutputConfig outputConfig = new OsmOutputConfig(outputFormat,
+				pbfConfig, tboConfig, writeMetadata);
+
 		// Create output directories
 
 		Files.createDirectories(pathOutputSimpleRelations);
@@ -77,8 +81,7 @@ public class SimpleRelationsSorterAndMemberCollector
 
 		SimpleRelationSorter simpleRelationSorter = new SimpleRelationSorter(
 				pathInputSimpleRelationsBboxes, pathOutputSimpleRelations,
-				fileNamesRelations, inputSimpleRelations, outputFormat,
-				writeMetadata, pbfConfig, tboConfig);
+				fileNamesRelations, inputSimpleRelations, outputConfig);
 
 		simpleRelationSorter.execute();
 
@@ -89,7 +92,7 @@ public class SimpleRelationsSorterAndMemberCollector
 
 		RelationsMemberCollector memberCollector = new RelationsMemberCollector(
 				pathsRelations, fileNamesRelations, inputWays, inputNodes,
-				outputFormat, writeMetadata, pbfConfig, tboConfig);
+				outputConfig);
 		memberCollector.execute();
 	}
 

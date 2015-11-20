@@ -42,11 +42,9 @@ import de.topobyte.osm4j.core.access.OsmStreamOutput;
 import de.topobyte.osm4j.core.model.impl.Bounds;
 import de.topobyte.osm4j.extra.idbboxlist.IdBboxEntry;
 import de.topobyte.osm4j.extra.idbboxlist.IdBboxUtil;
-import de.topobyte.osm4j.utils.FileFormat;
 import de.topobyte.osm4j.utils.OsmIoUtils;
+import de.topobyte.osm4j.utils.OsmOutputConfig;
 import de.topobyte.osm4j.utils.StreamUtil;
-import de.topobyte.osm4j.utils.config.PbfConfig;
-import de.topobyte.osm4j.utils.config.TboConfig;
 
 public class RelationSorterBase
 {
@@ -57,12 +55,7 @@ public class RelationSorterBase
 	private Path pathOutput;
 	private String fileNamesRelations;
 	protected OsmIteratorInputFactory iteratorFactory;
-
-	private FileFormat outputFormat;
-	protected boolean writeMetadata;
-
-	private PbfConfig pbfConfig;
-	private TboConfig tboConfig;
+	protected OsmOutputConfig outputConfig;
 
 	protected NumberFormat format = NumberFormat.getNumberInstance(Locale.US);
 
@@ -72,17 +65,13 @@ public class RelationSorterBase
 
 	public RelationSorterBase(Path pathInputBboxes, Path pathOutput,
 			String fileNamesRelations, OsmIteratorInputFactory iteratorFactory,
-			FileFormat outputFormat, boolean writeMetadata,
-			PbfConfig pbfConfig, TboConfig tboConfig)
+			OsmOutputConfig outputConfig)
 	{
 		this.pathInputBboxes = pathInputBboxes;
 		this.pathOutput = pathOutput;
 		this.fileNamesRelations = fileNamesRelations;
 		this.iteratorFactory = iteratorFactory;
-		this.outputFormat = outputFormat;
-		this.writeMetadata = writeMetadata;
-		this.pbfConfig = pbfConfig;
-		this.tboConfig = tboConfig;
+		this.outputConfig = outputConfig;
 	}
 
 	protected void ensureOutputDirectory() throws IOException
@@ -132,7 +121,7 @@ public class RelationSorterBase
 			OutputStream output = new BufferedOutputStream(factory.create(path
 					.toFile()));
 			OsmOutputStream osmOutput = OsmIoUtils.setupOsmOutput(output,
-					outputFormat, writeMetadata, pbfConfig, tboConfig);
+					outputConfig);
 			outputs.add(new OsmOutputStreamStreamOutput(output, osmOutput));
 
 			Envelope e = new Envelope();

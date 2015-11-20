@@ -30,11 +30,9 @@ import de.topobyte.osm4j.core.access.OsmIteratorInputFactory;
 import de.topobyte.osm4j.core.access.OsmOutputStream;
 import de.topobyte.osm4j.core.model.iface.OsmRelation;
 import de.topobyte.osm4j.extra.relations.RelationIterator;
-import de.topobyte.osm4j.utils.FileFormat;
 import de.topobyte.osm4j.utils.OsmIoUtils;
+import de.topobyte.osm4j.utils.OsmOutputConfig;
 import de.topobyte.osm4j.utils.StreamUtil;
-import de.topobyte.osm4j.utils.config.PbfConfig;
-import de.topobyte.osm4j.utils.config.TboConfig;
 
 public class SimpleRelationSplitter
 {
@@ -45,23 +43,16 @@ public class SimpleRelationSplitter
 	private String fileNamesRelations;
 	private OsmIteratorInputFactory iteratorFactory;
 
-	private FileFormat outputFormat;
-	private boolean writeMetadata;
-
-	private PbfConfig pbfConfig;
-	private TboConfig tboConfig;
+	private OsmOutputConfig outputConfig;
 
 	public SimpleRelationSplitter(Path pathOutput, String fileNamesRelations,
-			OsmIteratorInputFactory iteratorFactory, FileFormat outputFormat,
-			boolean writeMetadata, PbfConfig pbfConfig, TboConfig tboConfig)
+			OsmIteratorInputFactory iteratorFactory,
+			OsmOutputConfig outputConfig)
 	{
 		this.pathOutput = pathOutput;
 		this.fileNamesRelations = fileNamesRelations;
 		this.iteratorFactory = iteratorFactory;
-		this.outputFormat = outputFormat;
-		this.writeMetadata = writeMetadata;
-		this.pbfConfig = pbfConfig;
-		this.tboConfig = tboConfig;
+		this.outputConfig = outputConfig;
 	}
 
 	public void execute() throws IOException
@@ -82,7 +73,7 @@ public class SimpleRelationSplitter
 		RelationBatch batch = new RelationBatch(maxMembers);
 
 		OsmIteratorInput iteratorInput = iteratorFactory
-				.createIterator(writeMetadata);
+				.createIterator(outputConfig.isWriteMetadata());
 		RelationIterator relations = new RelationIterator(
 				iteratorInput.getIterator());
 
@@ -142,7 +133,7 @@ public class SimpleRelationSplitter
 
 		OutputStream output = StreamUtil.bufferedOutputStream(path.toFile());
 		OsmOutputStream osmOutput = OsmIoUtils.setupOsmOutput(output,
-				outputFormat, writeMetadata, pbfConfig, tboConfig);
+				outputConfig);
 
 		for (OsmRelation relation : relations) {
 			osmOutput.write(relation);

@@ -28,11 +28,8 @@ import de.topobyte.osm4j.core.model.iface.EntityType;
 import de.topobyte.osm4j.extra.idextract.ExtractionItem;
 import de.topobyte.osm4j.extra.idextract.ExtractionUtil;
 import de.topobyte.osm4j.extra.idextract.Extractor;
-import de.topobyte.osm4j.utils.FileFormat;
 import de.topobyte.osm4j.utils.OsmIoUtils;
 import de.topobyte.osm4j.utils.OsmOutputConfig;
-import de.topobyte.osm4j.utils.config.PbfConfig;
-import de.topobyte.osm4j.utils.config.TboConfig;
 
 public class RelationsMemberCollector
 {
@@ -43,22 +40,17 @@ public class RelationsMemberCollector
 	private List<Path> pathsRelations;
 	private String fileNamesRelations;
 
-	private FileFormat outputFormat;
 	private OsmOutputConfig outputConfig;
 
 	public RelationsMemberCollector(List<Path> pathsRelations,
 			String fileNamesRelations, OsmIteratorInputFactory inputWays,
-			OsmIteratorInputFactory inputNodes, FileFormat outputFormat,
-			boolean writeMetadata, PbfConfig pbfConfig, TboConfig tboConfig)
+			OsmIteratorInputFactory inputNodes, OsmOutputConfig outputConfig)
 	{
 		this.pathsRelations = pathsRelations;
 		this.fileNamesRelations = fileNamesRelations;
 		this.inputWays = inputWays;
 		this.inputNodes = inputNodes;
-
-		this.outputFormat = outputFormat;
-		outputConfig = new OsmOutputConfig(outputFormat, pbfConfig, tboConfig,
-				writeMetadata);
+		this.outputConfig = outputConfig;
 	}
 
 	public void execute() throws IOException
@@ -66,8 +58,10 @@ public class RelationsMemberCollector
 		String fileNamesRelationNodeIds = "nodes.ids";
 		String fileNamesRelationWayIds = "ways.ids";
 		String fileNamesWayNodeIds = "waynodes.ids";
-		String fileNamesWays = "ways" + OsmIoUtils.extension(outputFormat);
-		String fileNamesNodes = "nodes" + OsmIoUtils.extension(outputFormat);
+		String fileNamesWays = "ways"
+				+ OsmIoUtils.extension(outputConfig.getFileFormat());
+		String fileNamesNodes = "nodes"
+				+ OsmIoUtils.extension(outputConfig.getFileFormat());
 
 		// Extract relation member ids for each batch
 
@@ -75,7 +69,7 @@ public class RelationsMemberCollector
 
 		MemberIdsExtractor memberIdsExtractor = new MemberIdsExtractor(
 				dirsData, fileNamesRelations, fileNamesRelationNodeIds,
-				fileNamesRelationWayIds, outputFormat);
+				fileNamesRelationWayIds, outputConfig.getFileFormat());
 		memberIdsExtractor.execute();
 
 		// Extract ways for each batch
@@ -96,7 +90,8 @@ public class RelationsMemberCollector
 		// Extract way node ids for each batch
 
 		WayMemberNodeIdsExtractor wayMemberNodeIdsExtractor = new WayMemberNodeIdsExtractor(
-				dirsData, fileNamesWays, fileNamesWayNodeIds, outputFormat);
+				dirsData, fileNamesWays, fileNamesWayNodeIds,
+				outputConfig.getFileFormat());
 		wayMemberNodeIdsExtractor.execute();
 
 		// Extract nodes for each batch

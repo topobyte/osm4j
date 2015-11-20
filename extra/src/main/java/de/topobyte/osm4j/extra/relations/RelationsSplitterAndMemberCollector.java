@@ -26,9 +26,7 @@ import java.util.List;
 import de.topobyte.osm4j.core.access.OsmIteratorInputFactory;
 import de.topobyte.osm4j.extra.relations.split.ComplexRelationSplitter;
 import de.topobyte.osm4j.extra.relations.split.SimpleRelationSplitter;
-import de.topobyte.osm4j.utils.FileFormat;
-import de.topobyte.osm4j.utils.config.PbfConfig;
-import de.topobyte.osm4j.utils.config.TboConfig;
+import de.topobyte.osm4j.utils.OsmOutputConfig;
 
 public class RelationsSplitterAndMemberCollector
 {
@@ -43,18 +41,14 @@ public class RelationsSplitterAndMemberCollector
 	private Path pathOutputComplexRelations;
 	private String fileNamesRelations;
 
-	private FileFormat outputFormat;
-	private boolean writeMetadata;
-	private PbfConfig pbfConfig;
-	private TboConfig tboConfig;
+	private OsmOutputConfig outputConfig;
 
 	public RelationsSplitterAndMemberCollector(
 			OsmIteratorInputFactory inputSimpleRelations,
 			OsmIteratorInputFactory inputComplexRelations,
 			Path pathOutputSimpleRelations, Path pathOutputComplexRelations,
 			String fileNamesRelations, OsmIteratorInputFactory inputWays,
-			OsmIteratorInputFactory inputNodes, FileFormat outputFormat,
-			boolean writeMetadata, PbfConfig pbfConfig, TboConfig tboConfig)
+			OsmIteratorInputFactory inputNodes, OsmOutputConfig outputConfig)
 	{
 		this.inputSimpleRelations = inputSimpleRelations;
 		this.inputComplexRelations = inputComplexRelations;
@@ -63,10 +57,7 @@ public class RelationsSplitterAndMemberCollector
 		this.fileNamesRelations = fileNamesRelations;
 		this.inputWays = inputWays;
 		this.inputNodes = inputNodes;
-		this.outputFormat = outputFormat;
-		this.writeMetadata = writeMetadata;
-		this.pbfConfig = pbfConfig;
-		this.tboConfig = tboConfig;
+		this.outputConfig = outputConfig;
 	}
 
 	public void execute() throws IOException
@@ -80,15 +71,13 @@ public class RelationsSplitterAndMemberCollector
 
 		SimpleRelationSplitter simpleRelationSplitter = new SimpleRelationSplitter(
 				pathOutputSimpleRelations, fileNamesRelations,
-				inputSimpleRelations, outputFormat, writeMetadata, pbfConfig,
-				tboConfig);
+				inputSimpleRelations, outputConfig);
 
 		simpleRelationSplitter.execute();
 
 		ComplexRelationSplitter complexRelationSplitter = new ComplexRelationSplitter(
 				pathOutputComplexRelations, fileNamesRelations,
-				inputComplexRelations, outputFormat, writeMetadata, pbfConfig,
-				tboConfig);
+				inputComplexRelations, outputConfig);
 
 		complexRelationSplitter.execute();
 
@@ -100,7 +89,7 @@ public class RelationsSplitterAndMemberCollector
 
 		RelationsMemberCollector memberCollector = new RelationsMemberCollector(
 				pathsRelations, fileNamesRelations, inputWays, inputNodes,
-				outputFormat, writeMetadata, pbfConfig, tboConfig);
+				outputConfig);
 		memberCollector.execute();
 	}
 }

@@ -22,10 +22,12 @@ import java.nio.file.Paths;
 
 import de.topobyte.osm4j.extra.relations.split.SimpleRelationSplitter;
 import de.topobyte.osm4j.utils.AbstractExecutableSingleInputStreamOutput;
+import de.topobyte.osm4j.utils.OsmOutputConfig;
 import de.topobyte.osm4j.utils.OsmStreamInput;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
-public class SplitSimpleRelations extends AbstractExecutableSingleInputStreamOutput
+public class SplitSimpleRelations extends
+		AbstractExecutableSingleInputStreamOutput
 {
 
 	private static final String OPTION_OUTPUT = "output";
@@ -75,9 +77,14 @@ public class SplitSimpleRelations extends AbstractExecutableSingleInputStreamOut
 	private void execute() throws IOException
 	{
 		OsmStreamInput streamInput = new OsmStreamInput(osmStream);
+
+		OsmOutputConfig outputConfig = new OsmOutputConfig(outputFormat,
+				pbfConfig, tboConfig, writeMetadata);
+
 		SimpleRelationSplitter splitter = new SimpleRelationSplitter(
 				Paths.get(pathOutput), fileNamesRelations, streamInput,
-				outputFormat, writeMetadata, pbfConfig, tboConfig);
+				outputConfig);
+
 		splitter.execute();
 	}
 

@@ -30,6 +30,7 @@ import de.topobyte.osm4j.utils.OsmFile;
 import de.topobyte.osm4j.utils.OsmFileInput;
 import de.topobyte.osm4j.utils.OsmFileSetInput;
 import de.topobyte.osm4j.utils.OsmIoUtils;
+import de.topobyte.osm4j.utils.OsmOutputConfig;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
 public class SplitNonTreeRelations extends AbstractExecutableInputOutput
@@ -151,11 +152,13 @@ public class SplitNonTreeRelations extends AbstractExecutableInputOutput
 
 		task1.execute();
 
+		OsmOutputConfig outputConfig = new OsmOutputConfig(outputFormat,
+				pbfConfig, tboConfig, writeMetadata);
+
 		ComplexRelationsSorterAndMemberCollector task2 = new ComplexRelationsSorterAndMemberCollector(
 				inputComplexRelations, Paths.get(pathInputComplexBboxes),
 				pathOutputComplexRelations, fileNamesRelations,
-				inputWaysComplex, inputNodesComplex, outputFormat,
-				writeMetadata, pbfConfig, tboConfig);
+				inputWaysComplex, inputNodesComplex, outputConfig);
 
 		task2.execute();
 	}

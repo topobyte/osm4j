@@ -22,6 +22,7 @@ import java.nio.file.Paths;
 
 import de.topobyte.osm4j.extra.relations.split.SimpleRelationSorter;
 import de.topobyte.osm4j.utils.AbstractExecutableSingleInputStreamOutput;
+import de.topobyte.osm4j.utils.OsmOutputConfig;
 import de.topobyte.osm4j.utils.OsmStreamInput;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
@@ -80,10 +81,14 @@ public class SortSimpleRelations extends
 	private void execute() throws IOException
 	{
 		OsmStreamInput streamInput = new OsmStreamInput(osmStream);
+
+		OsmOutputConfig outputConfig = new OsmOutputConfig(outputFormat,
+				pbfConfig, tboConfig, writeMetadata);
+
 		SimpleRelationSorter sorter = new SimpleRelationSorter(
 				Paths.get(pathInputBboxes), Paths.get(pathOutput),
-				fileNamesRelations, streamInput, outputFormat, writeMetadata,
-				pbfConfig, tboConfig);
+				fileNamesRelations, streamInput, outputConfig);
+
 		sorter.execute();
 	}
 

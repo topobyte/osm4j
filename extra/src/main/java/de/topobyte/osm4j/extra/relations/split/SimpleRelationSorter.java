@@ -25,20 +25,17 @@ import de.topobyte.osm4j.core.access.OsmIteratorInputFactory;
 import de.topobyte.osm4j.core.access.OsmStreamOutput;
 import de.topobyte.osm4j.core.model.iface.OsmRelation;
 import de.topobyte.osm4j.extra.relations.RelationIterator;
-import de.topobyte.osm4j.utils.FileFormat;
-import de.topobyte.osm4j.utils.config.PbfConfig;
-import de.topobyte.osm4j.utils.config.TboConfig;
+import de.topobyte.osm4j.utils.OsmOutputConfig;
 
 public class SimpleRelationSorter extends RelationSorterBase
 {
 
 	public SimpleRelationSorter(Path pathInputBboxes, Path pathOutput,
 			String fileNamesRelations, OsmIteratorInputFactory iteratorFactory,
-			FileFormat outputFormat, boolean writeMetadata,
-			PbfConfig pbfConfig, TboConfig tboConfig)
+			OsmOutputConfig outputConfig)
 	{
 		super(pathInputBboxes, pathOutput, fileNamesRelations, iteratorFactory,
-				outputFormat, writeMetadata, pbfConfig, tboConfig);
+				outputConfig);
 	}
 
 	public void execute() throws IOException
@@ -48,7 +45,7 @@ public class SimpleRelationSorter extends RelationSorterBase
 		createBatchOutputs();
 
 		OsmIteratorInput iteratorInput = iteratorFactory
-				.createIterator(writeMetadata);
+				.createIterator(outputConfig.isWriteMetadata());
 		RelationIterator relations = new RelationIterator(
 				iteratorInput.getIterator());
 

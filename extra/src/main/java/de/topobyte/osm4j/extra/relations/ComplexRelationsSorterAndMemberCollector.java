@@ -25,9 +25,7 @@ import java.util.List;
 
 import de.topobyte.osm4j.core.access.OsmIteratorInputFactory;
 import de.topobyte.osm4j.extra.relations.split.ComplexRelationSorter;
-import de.topobyte.osm4j.utils.FileFormat;
-import de.topobyte.osm4j.utils.config.PbfConfig;
-import de.topobyte.osm4j.utils.config.TboConfig;
+import de.topobyte.osm4j.utils.OsmOutputConfig;
 
 public class ComplexRelationsSorterAndMemberCollector
 {
@@ -42,18 +40,14 @@ public class ComplexRelationsSorterAndMemberCollector
 	private Path pathOutputComplexRelations;
 	private String fileNamesRelations;
 
-	private FileFormat outputFormat;
-	private boolean writeMetadata;
-	private PbfConfig pbfConfig;
-	private TboConfig tboConfig;
+	private OsmOutputConfig outputConfig;
 
 	public ComplexRelationsSorterAndMemberCollector(
 			OsmIteratorInputFactory inputComplexRelations,
 			Path pathInputComplexRelationsBboxes,
 			Path pathOutputComplexRelations, String fileNamesRelations,
 			OsmIteratorInputFactory inputWays,
-			OsmIteratorInputFactory inputNodes, FileFormat outputFormat,
-			boolean writeMetadata, PbfConfig pbfConfig, TboConfig tboConfig)
+			OsmIteratorInputFactory inputNodes, OsmOutputConfig outputConfig)
 	{
 		this.inputComplexRelations = inputComplexRelations;
 		this.pathInputComplexRelationsBboxes = pathInputComplexRelationsBboxes;
@@ -61,10 +55,7 @@ public class ComplexRelationsSorterAndMemberCollector
 		this.fileNamesRelations = fileNamesRelations;
 		this.inputWays = inputWays;
 		this.inputNodes = inputNodes;
-		this.outputFormat = outputFormat;
-		this.writeMetadata = writeMetadata;
-		this.pbfConfig = pbfConfig;
-		this.tboConfig = tboConfig;
+		this.outputConfig = outputConfig;
 	}
 
 	public void execute() throws IOException
@@ -77,8 +68,7 @@ public class ComplexRelationsSorterAndMemberCollector
 
 		ComplexRelationSorter complexRelationSorter = new ComplexRelationSorter(
 				pathInputComplexRelationsBboxes, pathOutputComplexRelations,
-				fileNamesRelations, inputComplexRelations, outputFormat,
-				writeMetadata, pbfConfig, tboConfig);
+				fileNamesRelations, inputComplexRelations, outputConfig);
 
 		complexRelationSorter.execute();
 
@@ -89,7 +79,7 @@ public class ComplexRelationsSorterAndMemberCollector
 
 		RelationsMemberCollector memberCollector = new RelationsMemberCollector(
 				pathsRelations, fileNamesRelations, inputWays, inputNodes,
-				outputFormat, writeMetadata, pbfConfig, tboConfig);
+				outputConfig);
 		memberCollector.execute();
 	}
 

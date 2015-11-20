@@ -23,6 +23,7 @@ import java.nio.file.Paths;
 import de.topobyte.osm4j.extra.relations.split.ComplexRelationSorter;
 import de.topobyte.osm4j.utils.AbstractExecutableSingleInputFileOutput;
 import de.topobyte.osm4j.utils.OsmFileInput;
+import de.topobyte.osm4j.utils.OsmOutputConfig;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
 public class SortComplexRelations extends
@@ -76,10 +77,14 @@ public class SortComplexRelations extends
 	private void execute() throws IOException
 	{
 		OsmFileInput fileInput = getOsmFileInput();
+
+		OsmOutputConfig outputConfig = new OsmOutputConfig(outputFormat,
+				pbfConfig, tboConfig, writeMetadata);
+
 		ComplexRelationSorter sorter = new ComplexRelationSorter(
 				Paths.get(pathInputBboxes), Paths.get(pathOutput),
-				fileNamesRelations, fileInput, outputFormat, writeMetadata,
-				pbfConfig, tboConfig);
+				fileNamesRelations, fileInput, outputConfig);
+
 		sorter.execute();
 	}
 

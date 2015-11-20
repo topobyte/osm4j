@@ -29,20 +29,17 @@ import de.topobyte.osm4j.core.access.OsmIteratorInputFactory;
 import de.topobyte.osm4j.core.access.OsmStreamOutput;
 import de.topobyte.osm4j.core.model.iface.OsmRelation;
 import de.topobyte.osm4j.extra.relations.Group;
-import de.topobyte.osm4j.utils.FileFormat;
-import de.topobyte.osm4j.utils.config.PbfConfig;
-import de.topobyte.osm4j.utils.config.TboConfig;
+import de.topobyte.osm4j.utils.OsmOutputConfig;
 
 public class ComplexRelationSorter extends RelationSorterBase
 {
 
 	public ComplexRelationSorter(Path pathInputBboxes, Path pathOutput,
 			String fileNamesRelations, OsmIteratorInputFactory iteratorFactory,
-			FileFormat outputFormat, boolean writeMetadata,
-			PbfConfig pbfConfig, TboConfig tboConfig)
+			OsmOutputConfig outputConfig)
 	{
 		super(pathInputBboxes, pathOutput, fileNamesRelations, iteratorFactory,
-				outputFormat, writeMetadata, pbfConfig, tboConfig);
+				outputConfig);
 	}
 
 	public void execute() throws IOException
@@ -54,7 +51,7 @@ public class ComplexRelationSorter extends RelationSorterBase
 		ComplexRelationGrouper grouper = new ComplexRelationGrouper(
 				iteratorFactory);
 		grouper.buildGroups();
-		grouper.readGroupRelations(writeMetadata);
+		grouper.readGroupRelations(outputConfig.isWriteMetadata());
 
 		List<Group> groups = grouper.getGroups();
 		TLongObjectMap<OsmRelation> groupRelations = grouper

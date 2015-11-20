@@ -25,6 +25,7 @@ import de.topobyte.osm4j.extra.relations.RelationsSplitterAndMemberCollector;
 import de.topobyte.osm4j.utils.AbstractExecutableInputOutput;
 import de.topobyte.osm4j.utils.OsmFileInput;
 import de.topobyte.osm4j.utils.OsmIoUtils;
+import de.topobyte.osm4j.utils.OsmOutputConfig;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
 public class SplitRelationsAndCollectMembers extends
@@ -105,11 +106,14 @@ public class SplitRelationsAndCollectMembers extends
 		String fileNamesRelations = "relations"
 				+ OsmIoUtils.extension(outputFormat);
 
+		OsmOutputConfig outputConfig = new OsmOutputConfig(outputFormat,
+				pbfConfig, tboConfig, writeMetadata);
+
 		RelationsSplitterAndMemberCollector task = new RelationsSplitterAndMemberCollector(
 				inputSimpleRelations, inputComplexRelations,
 				pathOutputSimpleRelations, pathOutputComplexRelations,
-				fileNamesRelations, inputWays, inputNodes, outputFormat,
-				writeMetadata, pbfConfig, tboConfig);
+				fileNamesRelations, inputWays, inputNodes, outputConfig);
+
 		task.execute();
 	}
 
