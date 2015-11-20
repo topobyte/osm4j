@@ -22,6 +22,7 @@ import java.nio.file.Paths;
 
 import de.topobyte.osm4j.core.access.OsmIterator;
 import de.topobyte.osm4j.utils.AbstractExecutableSingleInputStreamOutput;
+import de.topobyte.osm4j.utils.OsmOutputConfig;
 import de.topobyte.osm4j.utils.split.EntitySplitter;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
@@ -89,9 +90,12 @@ public class OsmEntitySplit extends AbstractExecutableSingleInputStreamOutput
 	{
 		OsmIterator iterator = createIterator();
 
+		OsmOutputConfig outputConfig = new OsmOutputConfig(outputFormat,
+				pbfConfig, tboConfig, writeMetadata);
+
 		EntitySplitter splitter = new EntitySplitter(iterator,
 				Paths.get(pathNodes), Paths.get(pathWays),
-				Paths.get(pathRelations));
+				Paths.get(pathRelations), outputConfig);
 
 		splitter.execute();
 	}

@@ -55,12 +55,13 @@ public class EntitySplitter
 	private OsmOutputConfig outputConfig;
 
 	public EntitySplitter(OsmIterator iterator, Path pathNodes, Path pathWays,
-			Path pathRelations)
+			Path pathRelations, OsmOutputConfig outputConfig)
 	{
 		this.iterator = iterator;
 		this.pathNodes = pathNodes;
 		this.pathWays = pathWays;
 		this.pathRelations = pathRelations;
+		this.outputConfig = outputConfig;
 
 		passNodes = pathNodes != null;
 		passWays = pathWays != null;
