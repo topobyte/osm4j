@@ -18,18 +18,11 @@
 package de.topobyte.osm4j.utils.executables;
 
 import java.io.IOException;
-import java.io.OutputStream;
+import java.nio.file.Paths;
 
 import de.topobyte.osm4j.core.access.OsmIterator;
-import de.topobyte.osm4j.core.access.OsmOutputStream;
-import de.topobyte.osm4j.core.model.iface.EntityContainer;
-import de.topobyte.osm4j.core.model.iface.OsmBounds;
-import de.topobyte.osm4j.core.model.iface.OsmNode;
-import de.topobyte.osm4j.core.model.iface.OsmRelation;
-import de.topobyte.osm4j.core.model.iface.OsmWay;
 import de.topobyte.osm4j.utils.AbstractExecutableSingleInputStreamOutput;
-import de.topobyte.osm4j.utils.OsmIoUtils;
-import de.topobyte.osm4j.utils.StreamUtil;
+import de.topobyte.osm4j.utils.split.EntitySplitter;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
 public class OsmEntitySplit extends AbstractExecutableSingleInputStreamOutput
@@ -52,26 +45,14 @@ public class OsmEntitySplit extends AbstractExecutableSingleInputStreamOutput
 
 		task.init();
 
-		task.run();
+		task.execute();
 
 		task.finish();
 	}
 
-	private boolean passNodes = false;
-	private boolean passWays = false;
-	private boolean passRelations = false;
-
 	private String pathNodes = null;
 	private String pathWays = null;
 	private String pathRelations = null;
-
-	private OutputStream osNodes = null;
-	private OutputStream osWays = null;
-	private OutputStream osRelations = null;
-
-	private OsmOutputStream oosNodes = null;
-	private OsmOutputStream oosWays = null;
-	private OsmOutputStream oosRelations = null;
 
 	public OsmEntitySplit()
 	{
@@ -88,15 +69,12 @@ public class OsmEntitySplit extends AbstractExecutableSingleInputStreamOutput
 		super.setup(args);
 
 		if (line.hasOption(OPTION_OUTPUT_NODES)) {
-			passNodes = true;
 			pathNodes = line.getOptionValue(OPTION_OUTPUT_NODES);
 		}
 		if (line.hasOption(OPTION_OUTPUT_WAYS)) {
-			passWays = true;
 			pathWays = line.getOptionValue(OPTION_OUTPUT_WAYS);
 		}
 		if (line.hasOption(OPTION_OUTPUT_RELATIONS)) {
-			passRelations = true;
 			pathRelations = line.getOptionValue(OPTION_OUTPUT_RELATIONS);
 		}
 
@@ -107,88 +85,15 @@ public class OsmEntitySplit extends AbstractExecutableSingleInputStreamOutput
 		}
 	}
 
-	@Override
-	public void init() throws IOException
-	{
-		super.init();
-
-		if (passNodes) {
-			osNodes = StreamUtil.bufferedOutputStream(pathNodes);
-			oosNodes = OsmIoUtils.setupOsmOutput(osNodes, outputFormat,
-					writeMetadata, pbfConfig, tboConfig);
-		}
-		if (passWays) {
-			osWays = StreamUtil.bufferedOutputStream(pathWays);
-			oosWays = OsmIoUtils.setupOsmOutput(osWays, outputFormat,
-					writeMetadata, pbfConfig, tboConfig);
-		}
-		if (passRelations) {
-			osRelations = StreamUtil.bufferedOutputStream(pathRelations);
-			oosRelations = OsmIoUtils.setupOsmOutput(osRelations, outputFormat,
-					writeMetadata, pbfConfig, tboConfig);
-		}
-	}
-
-	public void run() throws IOException
+	public void execute() throws IOException
 	{
 		OsmIterator iterator = createIterator();
 
-		if (iterator.hasBounds()) {
-			OsmBounds bounds = iterator.getBounds();
-			if (passNodes) {
-				oosNodes.write(bounds);
-			}
-			if (passWays) {
-				oosWays.write(bounds);
-			}
-			if (passRelations) {
-				oosRelations.write(bounds);
-			}
-		}
+		EntitySplitter splitter = new EntitySplitter(iterator,
+				Paths.get(pathNodes), Paths.get(pathWays),
+				Paths.get(pathRelations));
 
-		loop: while (iterator.hasNext()) {
-			EntityContainer entityContainer = iterator.next();
-			switch (entityContainer.getType()) {
-			case Node:
-				if (passNodes) {
-					oosNodes.write((OsmNode) entityContainer.getEntity());
-				}
-				break;
-			case Way:
-				if (passWays) {
-					oosWays.write((OsmWay) entityContainer.getEntity());
-				} else if (!passRelations) {
-					break loop;
-				}
-				break;
-			case Relation:
-				if (passRelations) {
-					oosRelations.write((OsmRelation) entityContainer
-							.getEntity());
-				} else {
-					break loop;
-				}
-				break;
-			}
-		}
-	}
-
-	@Override
-	public void finish() throws IOException
-	{
-		if (passNodes) {
-			oosNodes.complete();
-			osNodes.close();
-		}
-		if (passWays) {
-			oosWays.complete();
-			osWays.close();
-		}
-		if (passRelations) {
-			oosRelations.complete();
-			osRelations.close();
-		}
-		super.finish();
+		splitter.execute();
 	}
 
 }
