@@ -15,47 +15,49 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with osm4j. If not, see <http://www.gnu.org/licenses/>.
 
-package de.topobyte.osm4j.extra.relations.split;
+package de.topobyte.osm4j.extra.executables;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import de.topobyte.osm4j.extra.relations.split.ComplexRelationSplitter;
 import de.topobyte.osm4j.utils.AbstractExecutableSingleInputFileOutput;
-import de.topobyte.osm4j.utils.OsmFileInput;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
-public class SortComplexRelations extends
+public class SplitComplexRelations extends
 		AbstractExecutableSingleInputFileOutput
 {
 
-	private static final String OPTION_INPUT_BBOXES = "bboxes";
 	private static final String OPTION_OUTPUT = "output";
 	private static final String OPTION_FILE_NAMES_RELATIONS = "relations";
 
 	@Override
 	protected String getHelpMessage()
 	{
-		return SortComplexRelations.class.getSimpleName() + " [options]";
+		return SplitComplexRelations.class.getSimpleName() + " [options]";
 	}
 
 	public static void main(String[] args) throws IOException
 	{
-		SortComplexRelations task = new SortComplexRelations();
+		SplitComplexRelations task = new SplitComplexRelations();
 
 		task.setup(args);
+
+		task.init();
 
 		task.execute();
 	}
 
-	private String pathInputBboxes;
 	private String pathOutput;
 
+	private Path dirOutput;
 	private String fileNamesRelations;
 
-	public SortComplexRelations()
+	public SplitComplexRelations()
 	{
 		// @formatter:off
-		OptionHelper.add(options, OPTION_INPUT_BBOXES, true, true, "bbox information file");
 		OptionHelper.add(options, OPTION_OUTPUT, true, true, "directory to store output in");
 		OptionHelper.add(options, OPTION_FILE_NAMES_RELATIONS, true, true, "names of the relation files in each directory");
 		// @formatter:on
@@ -66,20 +68,35 @@ public class SortComplexRelations extends
 	{
 		super.setup(args);
 
-		pathInputBboxes = line.getOptionValue(OPTION_INPUT_BBOXES);
 		pathOutput = line.getOptionValue(OPTION_OUTPUT);
 
 		fileNamesRelations = line.getOptionValue(OPTION_FILE_NAMES_RELATIONS);
 	}
 
+	protected void init() throws IOException
+	{
+		dirOutput = Paths.get(pathOutput);
+
+		if (!Files.exists(dirOutput)) {
+			System.out.println("Creating output directory");
+			Files.createDirectories(dirOutput);
+		}
+		if (!Files.isDirectory(dirOutput)) {
+			System.out.println("Output path is not a directory");
+			System.exit(1);
+		}
+		if (dirOutput.toFile().list().length != 0) {
+			System.out.println("Output directory is not empty");
+			System.exit(1);
+		}
+	}
+
 	private void execute() throws IOException
 	{
-		OsmFileInput fileInput = getOsmFileInput();
-		ComplexRelationSorter sorter = new ComplexRelationSorter(
-				Paths.get(pathInputBboxes), Paths.get(pathOutput),
-				fileNamesRelations, fileInput, outputFormat, writeMetadata,
-				pbfConfig, tboConfig);
-		sorter.execute();
+		ComplexRelationSplitter splitter = new ComplexRelationSplitter(
+				Paths.get(pathOutput), fileNamesRelations, getOsmFileInput(),
+				outputFormat, writeMetadata, pbfConfig, tboConfig);
+		splitter.execute();
 	}
 
 }
