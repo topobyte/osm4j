@@ -22,6 +22,7 @@ import java.nio.file.Paths;
 
 import de.topobyte.osm4j.extra.datatree.nodetree.NodeTreeCreatorMaxNodes;
 import de.topobyte.osm4j.utils.AbstractExecutableSingleInputFileOutput;
+import de.topobyte.osm4j.utils.OsmOutputConfig;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
 public class CreateNodeTreeMaxNodes extends
@@ -82,10 +83,12 @@ public class CreateNodeTreeMaxNodes extends
 
 	private void execute() throws IOException
 	{
+		OsmOutputConfig outputConfig = new OsmOutputConfig(outputFormat,
+				pbfConfig, tboConfig, writeMetadata);
+
 		NodeTreeCreatorMaxNodes creator = new NodeTreeCreatorMaxNodes(
 				getOsmFileInput(), maxNodes, SPLIT_INITIAL, SPLIT_ITERATION,
-				Paths.get(pathOutput), fileNames, outputFormat, pbfConfig,
-				tboConfig, writeMetadata);
+				Paths.get(pathOutput), fileNames, outputConfig);
 
 		creator.init();
 

@@ -27,6 +27,7 @@ import java.util.List;
 import de.topobyte.osm4j.core.access.OsmIterator;
 import de.topobyte.osm4j.core.model.iface.EntityType;
 import de.topobyte.osm4j.utils.AbstractExecutableSingleInputStreamOutput;
+import de.topobyte.osm4j.utils.OsmOutputConfig;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
 public class ExtractEntities extends AbstractExecutableSingleInputStreamOutput
@@ -122,8 +123,10 @@ public class ExtractEntities extends AbstractExecutableSingleInputStreamOutput
 
 	private void execute() throws IOException
 	{
-		Extractor extractor = new Extractor(type, extractionItems,
-				outputFormat, pbfConfig, tboConfig, writeMetadata);
+		OsmOutputConfig outputConfig = new OsmOutputConfig(outputFormat,
+				pbfConfig, tboConfig, writeMetadata);
+
+		Extractor extractor = new Extractor(type, extractionItems, outputConfig);
 		OsmIterator iterator = createIterator();
 		extractor.execute(iterator);
 		finish();

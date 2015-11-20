@@ -30,6 +30,7 @@ import de.topobyte.osm4j.extra.idextract.ExtractionUtil;
 import de.topobyte.osm4j.extra.idextract.Extractor;
 import de.topobyte.osm4j.utils.FileFormat;
 import de.topobyte.osm4j.utils.OsmIoUtils;
+import de.topobyte.osm4j.utils.OsmOutputConfig;
 import de.topobyte.osm4j.utils.config.PbfConfig;
 import de.topobyte.osm4j.utils.config.TboConfig;
 
@@ -43,9 +44,7 @@ public class RelationsMemberCollector
 	private String fileNamesRelations;
 
 	private FileFormat outputFormat;
-	private boolean writeMetadata;
-	private PbfConfig pbfConfig;
-	private TboConfig tboConfig;
+	private OsmOutputConfig outputConfig;
 
 	public RelationsMemberCollector(List<Path> pathsRelations,
 			String fileNamesRelations, OsmIteratorInputFactory inputWays,
@@ -56,10 +55,10 @@ public class RelationsMemberCollector
 		this.fileNamesRelations = fileNamesRelations;
 		this.inputWays = inputWays;
 		this.inputNodes = inputNodes;
+
 		this.outputFormat = outputFormat;
-		this.writeMetadata = writeMetadata;
-		this.pbfConfig = pbfConfig;
-		this.tboConfig = tboConfig;
+		outputConfig = new OsmOutputConfig(outputFormat, pbfConfig, tboConfig,
+				writeMetadata);
 	}
 
 	public void execute() throws IOException
@@ -88,9 +87,9 @@ public class RelationsMemberCollector
 		}
 
 		Extractor wayExtractor = new Extractor(EntityType.Way,
-				wayExtractionItems, outputFormat, pbfConfig, tboConfig,
-				writeMetadata);
-		OsmIteratorInput wayInput = inputWays.createIterator(writeMetadata);
+				wayExtractionItems, outputConfig);
+		OsmIteratorInput wayInput = inputWays.createIterator(outputConfig
+				.isWriteMetadata());
 		wayExtractor.execute(wayInput.getIterator());
 		wayInput.close();
 
@@ -112,9 +111,9 @@ public class RelationsMemberCollector
 		}
 
 		Extractor nodeExtractor = new Extractor(EntityType.Node,
-				nodeExtractionItems, outputFormat, pbfConfig, tboConfig,
-				writeMetadata);
-		OsmIteratorInput nodeInput = inputNodes.createIterator(writeMetadata);
+				nodeExtractionItems, outputConfig);
+		OsmIteratorInput nodeInput = inputNodes.createIterator(outputConfig
+				.isWriteMetadata());
 		nodeExtractor.execute(nodeInput.getIterator());
 		nodeInput.close();
 	}

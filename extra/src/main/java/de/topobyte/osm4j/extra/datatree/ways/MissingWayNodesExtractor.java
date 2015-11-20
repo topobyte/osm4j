@@ -31,9 +31,7 @@ import de.topobyte.osm4j.extra.datatree.DataTreeOpener;
 import de.topobyte.osm4j.extra.datatree.Node;
 import de.topobyte.osm4j.extra.idextract.ExtractionItem;
 import de.topobyte.osm4j.extra.idextract.Extractor;
-import de.topobyte.osm4j.utils.FileFormat;
-import de.topobyte.osm4j.utils.config.PbfConfig;
-import de.topobyte.osm4j.utils.config.TboConfig;
+import de.topobyte.osm4j.utils.OsmOutputConfig;
 
 public class MissingWayNodesExtractor
 {
@@ -46,26 +44,18 @@ public class MissingWayNodesExtractor
 	private String fileNamesIds;
 	private String fileNamesOutput;
 
-	private FileFormat outputFormat;
-	private PbfConfig pbfConfig;
-	private TboConfig tboConfig;
-	private boolean writeMetadata;
+	private OsmOutputConfig outputConfig;
 
 	public MissingWayNodesExtractor(OsmIterator iterator, Path pathIdTree,
 			String fileNamesIds, Path pathOutputTree, String fileNamesOutput,
-			FileFormat outputFormat, PbfConfig pbfConfig, TboConfig tboConfig,
-			boolean writeMetadata)
+			OsmOutputConfig outputConfig)
 	{
 		this.iterator = iterator;
 		this.pathIdTree = pathIdTree;
 		this.fileNamesIds = fileNamesIds;
 		this.pathOutputTree = pathOutputTree;
 		this.fileNamesOutput = fileNamesOutput;
-
-		this.outputFormat = outputFormat;
-		this.pbfConfig = pbfConfig;
-		this.tboConfig = tboConfig;
-		this.writeMetadata = writeMetadata;
+		this.outputConfig = outputConfig;
 	}
 
 	public void execute() throws IOException
@@ -98,7 +88,7 @@ public class MissingWayNodesExtractor
 	private void run() throws IOException
 	{
 		Extractor extractor = new Extractor(EntityType.Node, extractionItems,
-				outputFormat, pbfConfig, tboConfig, writeMetadata);
+				outputConfig);
 
 		extractor.execute(iterator);
 	}

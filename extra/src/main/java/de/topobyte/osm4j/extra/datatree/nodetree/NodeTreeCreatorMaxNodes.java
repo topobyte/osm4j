@@ -37,10 +37,8 @@ import de.topobyte.osm4j.core.model.iface.OsmBounds;
 import de.topobyte.osm4j.extra.datatree.DataTree;
 import de.topobyte.osm4j.extra.datatree.DataTreeUtil;
 import de.topobyte.osm4j.extra.datatree.Node;
-import de.topobyte.osm4j.utils.FileFormat;
 import de.topobyte.osm4j.utils.OsmFileInput;
-import de.topobyte.osm4j.utils.config.PbfConfig;
-import de.topobyte.osm4j.utils.config.TboConfig;
+import de.topobyte.osm4j.utils.OsmOutputConfig;
 
 public class NodeTreeCreatorMaxNodes
 {
@@ -54,18 +52,14 @@ public class NodeTreeCreatorMaxNodes
 	private Path dirOutput;
 	private String fileNames;
 
-	private FileFormat outputFormat;
-	private PbfConfig pbfConfig;
-	private TboConfig tboConfig;
-	private boolean writeMetadata;
+	private OsmOutputConfig outputConfig;
 
 	private Envelope envelope;
 	private DataTree tree;
 
 	public NodeTreeCreatorMaxNodes(OsmInputAccessFactory inputFactory,
 			int maxNodes, int splitInitial, int splitIteration, Path dirOutput,
-			String fileNames, FileFormat outputFormat, PbfConfig pbfConfig,
-			TboConfig tboConfig, boolean writeMetadata)
+			String fileNames, OsmOutputConfig outputConfig)
 	{
 		this.inputFactory = inputFactory;
 		this.maxNodes = maxNodes;
@@ -73,11 +67,7 @@ public class NodeTreeCreatorMaxNodes
 		this.splitIteration = splitIteration;
 		this.dirOutput = dirOutput;
 		this.fileNames = fileNames;
-
-		this.outputFormat = outputFormat;
-		this.pbfConfig = pbfConfig;
-		this.tboConfig = tboConfig;
-		this.writeMetadata = writeMetadata;
+		this.outputConfig = outputConfig;
 	}
 
 	public void init() throws IOException
@@ -122,7 +112,7 @@ public class NodeTreeCreatorMaxNodes
 		tree.getRoot().split(splitInitial);
 		NodeTreeDistributer initialDistributer = new NodeTreeDistributer(tree,
 				inputFactory, dirOutput, tree.getRoot(), maxNodes, fileNames,
-				outputFormat, pbfConfig, tboConfig, writeMetadata);
+				outputConfig);
 		initialDistributer.execute();
 
 		Deque<NodeTreeDistributer> check = new LinkedList<>();
@@ -162,9 +152,8 @@ public class NodeTreeCreatorMaxNodes
 						Long.toHexString(node.getPath())));
 				node.split(splitIteration);
 				NodeTreeDistributer distributer = new NodeTreeDistributer(tree,
-						new OsmFileInput(path, outputFormat), dirOutput, node,
-						maxNodes, fileNames, outputFormat, pbfConfig,
-						tboConfig, writeMetadata);
+						new OsmFileInput(path, outputConfig.getFileFormat()),
+						dirOutput, node, maxNodes, fileNames, outputConfig);
 				distributer.execute();
 				check.add(distributer);
 

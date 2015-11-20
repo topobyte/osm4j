@@ -45,10 +45,8 @@ import de.topobyte.osm4j.extra.datatree.DataTree;
 import de.topobyte.osm4j.extra.datatree.DataTreeUtil;
 import de.topobyte.osm4j.extra.datatree.Node;
 import de.topobyte.osm4j.extra.progress.NodeProgress;
-import de.topobyte.osm4j.utils.FileFormat;
 import de.topobyte.osm4j.utils.OsmIoUtils;
-import de.topobyte.osm4j.utils.config.PbfConfig;
-import de.topobyte.osm4j.utils.config.TboConfig;
+import de.topobyte.osm4j.utils.OsmOutputConfig;
 
 public class NodeTreeDistributer
 {
@@ -61,10 +59,7 @@ public class NodeTreeDistributer
 
 	private int maxNodes;
 	private String fileNames;
-	private FileFormat outputFormat;
-	private PbfConfig pbfConfig;
-	private TboConfig tboConfig;
-	private boolean writeMetadata;
+	private OsmOutputConfig outputConfig;
 
 	private ClosingFileOutputStreamFactory outputStreamFactory = new SimpleClosingFileOutputStreamFactory();
 
@@ -72,8 +67,7 @@ public class NodeTreeDistributer
 
 	public NodeTreeDistributer(DataTree tree,
 			OsmInputAccessFactory inputFactory, Path dirOutput, Node head,
-			int maxNodes, String filenames, FileFormat outputFormat,
-			PbfConfig pbfConfig, TboConfig tboConfig, boolean writeMetadata)
+			int maxNodes, String filenames, OsmOutputConfig outputConfig)
 	{
 		this.tree = tree;
 		this.inputFactory = inputFactory;
@@ -81,10 +75,7 @@ public class NodeTreeDistributer
 		this.head = head;
 		this.maxNodes = maxNodes;
 		this.fileNames = filenames;
-		this.outputFormat = outputFormat;
-		this.pbfConfig = pbfConfig;
-		this.tboConfig = tboConfig;
-		this.writeMetadata = writeMetadata;
+		this.outputConfig = outputConfig;
 	}
 
 	public Node getHead()
@@ -171,8 +162,8 @@ public class NodeTreeDistributer
 
 		OutputStream os = outputStreamFactory.create(file.toFile());
 		OutputStream bos = new BufferedOutputStream(os);
-		OsmOutputStream osmOutput = OsmIoUtils.setupOsmOutput(bos,
-				outputFormat, writeMetadata, pbfConfig, tboConfig);
+		OsmOutputStream osmOutput = OsmIoUtils
+				.setupOsmOutput(bos, outputConfig);
 		NodeOutput output = new NodeOutput(leaf, file, bos, osmOutput);
 		outputs.put(leaf, output);
 
@@ -188,7 +179,8 @@ public class NodeTreeDistributer
 		NodeProgress counter = new NodeProgress();
 		counter.printTimed(1000);
 
-		OsmIteratorInput input = inputFactory.createIterator(writeMetadata);
+		OsmIteratorInput input = inputFactory.createIterator(outputConfig
+				.isWriteMetadata());
 		OsmIterator iterator = input.getIterator();
 
 		loop: while (iterator.hasNext()) {

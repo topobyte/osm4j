@@ -23,6 +23,7 @@ import java.nio.file.Paths;
 import de.topobyte.osm4j.core.access.OsmIterator;
 import de.topobyte.osm4j.extra.datatree.ways.WaysToTreeMapperUsingArray;
 import de.topobyte.osm4j.utils.AbstractExecutableSingleInputStreamOutput;
+import de.topobyte.osm4j.utils.OsmOutputConfig;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
 public class MapWaysToTreeUsingArray extends
@@ -80,11 +81,12 @@ public class MapWaysToTreeUsingArray extends
 	public void execute() throws IOException
 	{
 		OsmIterator iterator = createIterator();
+		OsmOutputConfig outputConfig = new OsmOutputConfig(outputFormat,
+				pbfConfig, tboConfig, writeMetadata);
 
 		WaysToTreeMapperUsingArray mapper = new WaysToTreeMapperUsingArray(
 				iterator, Paths.get(pathTree), fileNames,
-				Paths.get(pathNodeArray), outputFormat, pbfConfig, tboConfig,
-				writeMetadata);
+				Paths.get(pathNodeArray), outputConfig);
 
 		mapper.execute();
 	}

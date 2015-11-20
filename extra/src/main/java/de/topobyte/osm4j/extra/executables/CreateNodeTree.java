@@ -22,6 +22,7 @@ import java.nio.file.Paths;
 
 import de.topobyte.osm4j.core.access.OsmIterator;
 import de.topobyte.osm4j.extra.datatree.nodetree.NodeTreeCreator;
+import de.topobyte.osm4j.utils.OsmOutputConfig;
 
 public class CreateNodeTree extends CreateNodeTreeBase
 {
@@ -48,10 +49,11 @@ public class CreateNodeTree extends CreateNodeTreeBase
 	private void execute() throws IOException
 	{
 		OsmIterator iterator = createIterator();
+		OsmOutputConfig outputConfig = new OsmOutputConfig(outputFormat,
+				pbfConfig, tboConfig, writeMetadata);
 
 		NodeTreeCreator creator = new NodeTreeCreator(iterator,
-				Paths.get(pathOutput), fileNames, outputFormat, pbfConfig,
-				tboConfig, writeMetadata);
+				Paths.get(pathOutput), fileNames, outputConfig);
 
 		creator.openExistingTree();
 

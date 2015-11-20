@@ -23,6 +23,7 @@ import java.nio.file.Paths;
 import de.topobyte.osm4j.core.access.OsmIterator;
 import de.topobyte.osm4j.extra.ways.WaysSorterByFirstNodeId;
 import de.topobyte.osm4j.utils.AbstractExecutableSingleInputStreamOutput;
+import de.topobyte.osm4j.utils.OsmOutputConfig;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
 public class SortWaysByFirstNodeId extends
@@ -70,10 +71,11 @@ public class SortWaysByFirstNodeId extends
 	private void execute() throws IOException
 	{
 		OsmIterator iterator = createIterator();
+		OsmOutputConfig outputConfig = new OsmOutputConfig(outputFormat,
+				pbfConfig, tboConfig, writeMetadata);
 
 		WaysSorterByFirstNodeId sorter = new WaysSorterByFirstNodeId(iterator,
-				Paths.get(pathOutput), outputFormat, pbfConfig, tboConfig,
-				writeMetadata);
+				Paths.get(pathOutput), outputConfig);
 
 		sorter.execute();
 	}

@@ -50,8 +50,7 @@ import de.topobyte.osm4j.extra.progress.NodeProgress;
 import de.topobyte.osm4j.extra.ways.WayNodeIdComparator;
 import de.topobyte.osm4j.utils.FileFormat;
 import de.topobyte.osm4j.utils.OsmIoUtils;
-import de.topobyte.osm4j.utils.config.PbfConfig;
-import de.topobyte.osm4j.utils.config.TboConfig;
+import de.topobyte.osm4j.utils.OsmOutputConfig;
 import de.topobyte.osm4j.utils.merge.sorted.SortedMergeIterator;
 
 public class WaysToTreeMapper
@@ -66,26 +65,18 @@ public class WaysToTreeMapper
 
 	private String fileNamesOutput;
 
-	private FileFormat outputFormat;
-	private PbfConfig pbfConfig;
-	private TboConfig tboConfig;
-	private boolean writeMetadata;
+	private OsmOutputConfig outputConfig;
 
 	public WaysToTreeMapper(OsmIterator nodeIterator, Path pathTree,
 			Path pathWays, FileFormat inputFormatWays, String fileNamesOutput,
-			FileFormat outputFormat, PbfConfig pbfConfig, TboConfig tboConfig,
-			boolean writeMetadata)
+			OsmOutputConfig outputConfig)
 	{
 		this.nodeIterator = nodeIterator;
 		this.pathTree = pathTree;
 		this.pathWays = pathWays;
 		this.inputFormatWays = inputFormatWays;
 		this.fileNamesOutput = fileNamesOutput;
-
-		this.outputFormat = outputFormat;
-		this.pbfConfig = pbfConfig;
-		this.tboConfig = tboConfig;
-		this.writeMetadata = writeMetadata;
+		this.outputConfig = outputConfig;
 	}
 
 	private DataTree tree;
@@ -110,7 +101,7 @@ public class WaysToTreeMapper
 			OutputStream output = factoryOut.create(fileOutput);
 			output = new BufferedOutputStream(output);
 			OsmOutputStream osmOutput = OsmIoUtils.setupOsmOutput(output,
-					outputFormat, writeMetadata, pbfConfig, tboConfig);
+					outputConfig);
 
 			OsmStreamOutput out = new OsmOutputStreamStreamOutput(output,
 					osmOutput);
@@ -127,7 +118,7 @@ public class WaysToTreeMapper
 			inputWays = new BufferedInputStream(inputWays);
 			wayInputStreams.add(inputWays);
 			OsmIterator osmIterator = OsmIoUtils.setupOsmIterator(inputWays,
-					inputFormatWays, writeMetadata);
+					inputFormatWays, outputConfig.isWriteMetadata());
 			wayIterators.add(osmIterator);
 		}
 

@@ -32,11 +32,9 @@ import de.topobyte.osm4j.core.access.OsmOutputStream;
 import de.topobyte.osm4j.core.model.iface.EntityContainer;
 import de.topobyte.osm4j.core.model.iface.EntityType;
 import de.topobyte.osm4j.core.model.iface.OsmWay;
-import de.topobyte.osm4j.utils.FileFormat;
 import de.topobyte.osm4j.utils.OsmIoUtils;
+import de.topobyte.osm4j.utils.OsmOutputConfig;
 import de.topobyte.osm4j.utils.StreamUtil;
-import de.topobyte.osm4j.utils.config.PbfConfig;
-import de.topobyte.osm4j.utils.config.TboConfig;
 
 public class WaysSorterByFirstNodeId
 {
@@ -44,21 +42,14 @@ public class WaysSorterByFirstNodeId
 	private OsmIterator input;
 	private Path dirOutput;
 
-	private FileFormat outputFormat;
-	private PbfConfig pbfConfig;
-	private TboConfig tboConfig;
-	private boolean writeMetadata;
+	private OsmOutputConfig outputConfig;
 
 	public WaysSorterByFirstNodeId(OsmIterator input, Path dirOutput,
-			FileFormat outputFormat, PbfConfig pbfConfig, TboConfig tboConfig,
-			boolean writeMetadata)
+			OsmOutputConfig outputConfig)
 	{
 		this.input = input;
 		this.dirOutput = dirOutput;
-		this.outputFormat = outputFormat;
-		this.pbfConfig = pbfConfig;
-		this.tboConfig = tboConfig;
-		this.writeMetadata = writeMetadata;
+		this.outputConfig = outputConfig;
 	}
 
 	public void execute() throws IOException
@@ -139,12 +130,12 @@ public class WaysSorterByFirstNodeId
 		batchCount++;
 
 		String filename = String.format("%d%s", batchCount,
-				OsmIoUtils.extension(outputFormat));
+				OsmIoUtils.extension(outputConfig.getFileFormat()));
 		Path path = dirOutput.resolve(filename);
 		File file = path.toFile();
 		OutputStream output = StreamUtil.bufferedOutputStream(file);
 		OsmOutputStream osmOutput = OsmIoUtils.setupOsmOutput(output,
-				outputFormat, writeMetadata, pbfConfig, tboConfig);
+				outputConfig);
 
 		for (OsmWay way : ways) {
 			osmOutput.write(way);

@@ -44,11 +44,9 @@ import de.topobyte.osm4j.extra.datatree.Node;
 import de.topobyte.osm4j.extra.nodearray.NodeArray;
 import de.topobyte.osm4j.extra.nodearray.NodeArrayInteger;
 import de.topobyte.osm4j.extra.progress.NodeProgress;
-import de.topobyte.osm4j.utils.FileFormat;
 import de.topobyte.osm4j.utils.OsmIoUtils;
+import de.topobyte.osm4j.utils.OsmOutputConfig;
 import de.topobyte.osm4j.utils.StreamUtil;
-import de.topobyte.osm4j.utils.config.PbfConfig;
-import de.topobyte.osm4j.utils.config.TboConfig;
 
 public class WaysToTreeMapperUsingArray
 {
@@ -60,24 +58,16 @@ public class WaysToTreeMapperUsingArray
 
 	private Path pathNodeArray;
 
-	private FileFormat outputFormat;
-	private PbfConfig pbfConfig;
-	private TboConfig tboConfig;
-	private boolean writeMetadata;
+	private OsmOutputConfig outputConfig;
 
 	public WaysToTreeMapperUsingArray(OsmIterator wayIterator, Path pathTree,
-			String fileNames, Path pathNodeArray, FileFormat outputFormat,
-			PbfConfig pbfConfig, TboConfig tboConfig, boolean writeMetadata)
+			String fileNames, Path pathNodeArray, OsmOutputConfig outputConfig)
 	{
 		this.wayIterator = wayIterator;
 		this.pathTree = pathTree;
 		this.fileNames = fileNames;
 		this.pathNodeArray = pathNodeArray;
-
-		this.outputFormat = outputFormat;
-		this.pbfConfig = pbfConfig;
-		this.tboConfig = tboConfig;
-		this.writeMetadata = writeMetadata;
+		this.outputConfig = outputConfig;
 	}
 
 	public void execute() throws IOException
@@ -97,7 +87,7 @@ public class WaysToTreeMapperUsingArray
 		OutputStream bosNone = StreamUtil.bufferedOutputStream(pathNonMatched
 				.toFile());
 		OsmOutputStream osmOutputNone = OsmIoUtils.setupOsmOutput(bosNone,
-				outputFormat, writeMetadata, pbfConfig, tboConfig);
+				outputConfig);
 		OsmStreamOutput outputNone = new OsmOutputStreamStreamOutput(bosNone,
 				osmOutputNone);
 
@@ -115,7 +105,7 @@ public class WaysToTreeMapperUsingArray
 			OutputStream os = outputStreamFactory.create(file.toFile());
 			OutputStream bos = new BufferedOutputStream(os);
 			OsmOutputStream osmOutput = OsmIoUtils.setupOsmOutput(bos,
-					outputFormat, writeMetadata, pbfConfig, tboConfig);
+					outputConfig);
 			OsmStreamOutput output = new OsmOutputStreamStreamOutput(bos,
 					osmOutput);
 			outputs.put(leaf, output);

@@ -44,34 +44,26 @@ import de.topobyte.osm4j.extra.idlist.IdInput;
 import de.topobyte.osm4j.extra.idlist.IdListInputStream;
 import de.topobyte.osm4j.extra.idlist.merge.MergedIdInput;
 import de.topobyte.osm4j.extra.progress.NodeProgress;
-import de.topobyte.osm4j.utils.FileFormat;
 import de.topobyte.osm4j.utils.OsmIoUtils;
-import de.topobyte.osm4j.utils.config.PbfConfig;
-import de.topobyte.osm4j.utils.config.TboConfig;
+import de.topobyte.osm4j.utils.OsmOutputConfig;
 
 public class Extractor
 {
 
 	private final EntityType type;
 	private List<ExtractionItem> extractionItems;
-	private FileFormat outputFormat;
-	private PbfConfig pbfConfig;
-	private TboConfig tboConfig;
-	private boolean writeMetadata;
 
 	private PriorityQueue<Item> queue;
 	private List<Item> items;
 
+	private OsmOutputConfig outputConfig;
+
 	public Extractor(EntityType type, List<ExtractionItem> extractionItems,
-			FileFormat outputFormat, PbfConfig pbfConfig, TboConfig tboConfig,
-			boolean writeMetadata)
+			OsmOutputConfig outputConfig)
 	{
 		this.type = type;
 		this.extractionItems = extractionItems;
-		this.outputFormat = outputFormat;
-		this.pbfConfig = pbfConfig;
-		this.tboConfig = tboConfig;
-		this.writeMetadata = writeMetadata;
+		this.outputConfig = outputConfig;
 	}
 
 	public void execute(OsmIterator iterator) throws IOException
@@ -107,7 +99,7 @@ public class Extractor
 			OutputStream output = factoryOut.create(fileOutput);
 			output = new BufferedOutputStream(output);
 			OsmOutputStream osmOutput = OsmIoUtils.setupOsmOutput(output,
-					outputFormat, writeMetadata, pbfConfig, tboConfig);
+					outputConfig);
 
 			EntityWriter writer = EntityWriters.create(type, osmOutput);
 

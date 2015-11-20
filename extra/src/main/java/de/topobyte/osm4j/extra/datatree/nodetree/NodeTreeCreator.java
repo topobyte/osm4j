@@ -43,10 +43,8 @@ import de.topobyte.osm4j.extra.datatree.DataTreeOpener;
 import de.topobyte.osm4j.extra.datatree.DataTreeUtil;
 import de.topobyte.osm4j.extra.datatree.Node;
 import de.topobyte.osm4j.extra.progress.NodeProgress;
-import de.topobyte.osm4j.utils.FileFormat;
 import de.topobyte.osm4j.utils.OsmIoUtils;
-import de.topobyte.osm4j.utils.config.PbfConfig;
-import de.topobyte.osm4j.utils.config.TboConfig;
+import de.topobyte.osm4j.utils.OsmOutputConfig;
 
 public class NodeTreeCreator
 {
@@ -54,29 +52,23 @@ public class NodeTreeCreator
 	private Path dirOutput;
 	private String fileNames;
 
-	private FileFormat outputFormat;
-	private PbfConfig pbfConfig;
-	private TboConfig tboConfig;
-	private boolean writeMetadata;
-
 	private OsmIterator input;
 	private DataTree tree;
+
+	private OsmOutputConfig outputConfig;
+
 	private Map<Node, NodeOutput> outputs = new HashMap<>();
 	private ClosingFileOutputStreamFactory outputStreamFactory = new SimpleClosingFileOutputStreamFactory();
 
 	private NodeProgress counter = new NodeProgress();
 
 	public NodeTreeCreator(OsmIterator input, Path dirOutput, String fileNames,
-			FileFormat outputFormat, PbfConfig pbfConfig, TboConfig tboConfig,
-			boolean writeMetadata)
+			OsmOutputConfig outputConfig)
 	{
 		this.input = input;
 		this.dirOutput = dirOutput;
 		this.fileNames = fileNames;
-		this.outputFormat = outputFormat;
-		this.pbfConfig = pbfConfig;
-		this.tboConfig = tboConfig;
-		this.writeMetadata = writeMetadata;
+		this.outputConfig = outputConfig;
 	}
 
 	public void initNewTree() throws IOException
@@ -157,8 +149,8 @@ public class NodeTreeCreator
 		System.out.println(file + ": " + leaf.getEnvelope());
 		OutputStream os = outputStreamFactory.create(file.toFile());
 		OutputStream bos = new BufferedOutputStream(os);
-		OsmOutputStream osmOutput = OsmIoUtils.setupOsmOutput(bos,
-				outputFormat, writeMetadata, pbfConfig, tboConfig);
+		OsmOutputStream osmOutput = OsmIoUtils
+				.setupOsmOutput(bos, outputConfig);
 		NodeOutput output = new NodeOutput(leaf, file, bos, osmOutput);
 		outputs.put(leaf, output);
 
