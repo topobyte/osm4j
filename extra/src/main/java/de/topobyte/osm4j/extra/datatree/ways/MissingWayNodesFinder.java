@@ -28,6 +28,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.Path;
 import java.text.NumberFormat;
 import java.util.List;
 import java.util.Locale;
@@ -43,38 +44,16 @@ import de.topobyte.osm4j.extra.datatree.DataTreeFiles;
 import de.topobyte.osm4j.extra.datatree.DataTreeOpener;
 import de.topobyte.osm4j.extra.datatree.Node;
 import de.topobyte.osm4j.extra.idlist.IdListOutputStream;
-import de.topobyte.osm4j.utils.AbstractExecutableInput;
 import de.topobyte.osm4j.utils.FileFormat;
 import de.topobyte.osm4j.utils.OsmIoUtils;
 import de.topobyte.osm4j.utils.StreamUtil;
-import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
-public class FindMissingWayNodes extends AbstractExecutableInput
+public class MissingWayNodesFinder
 {
 
-	private static final String OPTION_TREE = "tree";
-	private static final String OPTION_FILE_NAMES_NODES = "nodes";
-	private static final String OPTION_FILE_NAMES_WAYS = "ways";
-	private static final String OPTION_FILE_NAMES_OUTPUT = "output";
-
-	@Override
-	protected String getHelpMessage()
-	{
-		return FindMissingWayNodes.class.getSimpleName() + " [options]";
-	}
-
-	public static void main(String[] args) throws IOException
-	{
-		FindMissingWayNodes task = new FindMissingWayNodes();
-
-		task.setup(args);
-
-		task.execute();
-	}
-
-	private String pathNodeTree;
-	private String pathWayTree;
-	private String pathOutputTree;
+	private Path pathNodeTree;
+	private Path pathWayTree;
+	private Path pathOutputTree;
 
 	private String fileNamesNodes;
 	private String fileNamesWays;
@@ -83,32 +62,19 @@ public class FindMissingWayNodes extends AbstractExecutableInput
 	private FileFormat inputFormatNodes;
 	private FileFormat inputFormatWays;
 
-	public FindMissingWayNodes()
+	public MissingWayNodesFinder(Path pathNodeTree, Path pathWayTree,
+			Path pathOutputTree, String fileNamesNodes, String fileNamesWays,
+			String fileNamesOutput, FileFormat inputFormatNodes,
+			FileFormat inputFormatWays)
 	{
-		// @formatter:off
-		OptionHelper.add(options, OPTION_FILE_NAMES_OUTPUT, true, true, "names of the data files to create");
-		OptionHelper.add(options, OPTION_FILE_NAMES_NODES, true, true, "names of the node files in the tree");
-		OptionHelper.add(options, OPTION_FILE_NAMES_WAYS, true, true, "names of the way files in the tree");
-		OptionHelper.add(options, OPTION_TREE, true, true, "tree directory to work on");
-		// @formatter:on
-	}
-
-	@Override
-	protected void setup(String[] args)
-	{
-		super.setup(args);
-
-		inputFormatNodes = inputFormat;
-		inputFormatWays = inputFormat;
-
-		fileNamesNodes = line.getOptionValue(OPTION_FILE_NAMES_NODES);
-		fileNamesWays = line.getOptionValue(OPTION_FILE_NAMES_WAYS);
-		fileNamesOutput = line.getOptionValue(OPTION_FILE_NAMES_OUTPUT);
-
-		String pathTree = line.getOptionValue(OPTION_TREE);
-		pathNodeTree = pathTree;
-		pathWayTree = pathTree;
-		pathOutputTree = pathTree;
+		this.pathNodeTree = pathNodeTree;
+		this.pathWayTree = pathWayTree;
+		this.pathOutputTree = pathOutputTree;
+		this.fileNamesNodes = fileNamesNodes;
+		this.fileNamesWays = fileNamesWays;
+		this.fileNamesOutput = fileNamesOutput;
+		this.inputFormatNodes = inputFormatNodes;
+		this.inputFormatWays = inputFormatWays;
 	}
 
 	private List<Node> leafs;
@@ -123,16 +89,12 @@ public class FindMissingWayNodes extends AbstractExecutableInput
 
 	public void execute() throws IOException
 	{
-		DataTree tree = DataTreeOpener.open(new File(pathNodeTree));
+		DataTree tree = DataTreeOpener.open(pathNodeTree.toFile());
 
-		File dirNodeTree = new File(pathNodeTree);
-		File dirWayTree = new File(pathWayTree);
-		File dirOutputTree = new File(pathOutputTree);
-
-		DataTreeFiles filesNodes = new DataTreeFiles(dirNodeTree,
+		DataTreeFiles filesNodes = new DataTreeFiles(pathNodeTree,
 				fileNamesNodes);
-		DataTreeFiles filesWays = new DataTreeFiles(dirWayTree, fileNamesWays);
-		DataTreeFiles filesOutput = new DataTreeFiles(dirOutputTree,
+		DataTreeFiles filesWays = new DataTreeFiles(pathWayTree, fileNamesWays);
+		DataTreeFiles filesOutput = new DataTreeFiles(pathOutputTree,
 				fileNamesOutput);
 
 		leafs = tree.getLeafs();
