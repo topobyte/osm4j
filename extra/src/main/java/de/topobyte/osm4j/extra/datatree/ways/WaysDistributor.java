@@ -25,6 +25,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.Path;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -51,40 +52,15 @@ import de.topobyte.osm4j.extra.datatree.DataTreeFiles;
 import de.topobyte.osm4j.extra.datatree.DataTreeOpener;
 import de.topobyte.osm4j.extra.datatree.Node;
 import de.topobyte.osm4j.geometry.GeometryBuilder;
-import de.topobyte.osm4j.utils.AbstractExecutableInputOutput;
 import de.topobyte.osm4j.utils.FileFormat;
 import de.topobyte.osm4j.utils.OsmIoUtils;
+import de.topobyte.osm4j.utils.OsmOutputConfig;
 import de.topobyte.osm4j.utils.StreamUtil;
-import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
-public class DistributeWays extends AbstractExecutableInputOutput
+public class WaysDistributor
 {
 
-	private static final String OPTION_TREE = "tree";
-	private static final String OPTION_FILE_NAMES_NODES1 = "nodes1";
-	private static final String OPTION_FILE_NAMES_NODES2 = "nodes2";
-	private static final String OPTION_FILE_NAMES_WAYS = "ways";
-	private static final String OPTION_FILE_NAMES_OUTPUT_WAYS = "ways_out";
-	private static final String OPTION_FILE_NAMES_OUTPUT_NODES = "nodes_out";
-
-	@Override
-	protected String getHelpMessage()
-	{
-		return DistributeWays.class.getSimpleName() + " [options]";
-	}
-
-	public static void main(String[] args) throws IOException
-	{
-		DistributeWays task = new DistributeWays();
-
-		task.setup(args);
-
-		task.prepare();
-
-		task.execute();
-	}
-
-	private String pathTree;
+	private Path pathTree;
 
 	private String fileNamesNodes1;
 	private String fileNamesNodes2;
@@ -95,39 +71,33 @@ public class DistributeWays extends AbstractExecutableInputOutput
 	private FileFormat inputFormatNodes;
 	private FileFormat inputFormatWays;
 
-	public DistributeWays()
+	private OsmOutputConfig outputConfig;
+
+	public WaysDistributor(Path pathTree, String fileNamesNodes1,
+			String fileNamesNodes2, String fileNamesWays,
+			String fileNamesOutputWays, String fileNamesOutputNodes,
+			FileFormat inputFormatNodes, FileFormat inputFormatWays,
+			OsmOutputConfig outputConfig)
 	{
-		// @formatter:off
-		OptionHelper.add(options, OPTION_FILE_NAMES_NODES1, true, true, "names of the node files in the tree");
-		OptionHelper.add(options, OPTION_FILE_NAMES_NODES2, true, true, "names of the node files in the tree");
-		OptionHelper.add(options, OPTION_FILE_NAMES_WAYS, true, true, "names of the way files in the tree");
-		OptionHelper.add(options, OPTION_TREE, true, true, "tree directory to work on");
-		OptionHelper.add(options, OPTION_FILE_NAMES_OUTPUT_WAYS, true, true, "name of files for intersecting ways");
-		OptionHelper.add(options, OPTION_FILE_NAMES_OUTPUT_NODES, true, true, "name of files for intersecting ways' nodes");
-		// @formatter:on
+		this.pathTree = pathTree;
+		this.fileNamesNodes1 = fileNamesNodes1;
+		this.fileNamesNodes2 = fileNamesNodes2;
+		this.fileNamesWays = fileNamesWays;
+		this.fileNamesOutputWays = fileNamesOutputWays;
+		this.fileNamesOutputNodes = fileNamesOutputNodes;
+		this.inputFormatNodes = inputFormatNodes;
+		this.inputFormatWays = inputFormatWays;
+		this.outputConfig = outputConfig;
 	}
 
-	@Override
-	protected void setup(String[] args)
+	public void execute() throws IOException
 	{
-		super.setup(args);
+		prepare();
 
-		inputFormatNodes = inputFormat;
-		inputFormatWays = inputFormat;
-
-		fileNamesNodes1 = line.getOptionValue(OPTION_FILE_NAMES_NODES1);
-		fileNamesNodes2 = line.getOptionValue(OPTION_FILE_NAMES_NODES2);
-		fileNamesWays = line.getOptionValue(OPTION_FILE_NAMES_WAYS);
-		fileNamesOutputWays = line
-				.getOptionValue(OPTION_FILE_NAMES_OUTPUT_WAYS);
-		fileNamesOutputNodes = line
-				.getOptionValue(OPTION_FILE_NAMES_OUTPUT_NODES);
-
-		pathTree = line.getOptionValue(OPTION_TREE);
+		run();
 	}
 
 	private DataTree tree;
-	private File dirTree;
 	private List<Node> leafs;
 	private Map<Node, OsmStreamOutput> outputsWays = new HashMap<>();
 	private Map<Node, OsmStreamOutput> outputsNodes = new HashMap<>();
@@ -141,15 +111,14 @@ public class DistributeWays extends AbstractExecutableInputOutput
 	private NumberFormat format = NumberFormat.getNumberInstance(Locale.US);
 	private ClosingFileOutputStreamFactory factory = new SimpleClosingFileOutputStreamFactory();
 
-	public void prepare() throws IOException
+	private void prepare() throws IOException
 	{
-		tree = DataTreeOpener.open(new File(pathTree));
-		dirTree = new File(pathTree);
+		tree = DataTreeOpener.open(pathTree.toFile());
 		leafs = tree.getLeafs();
 
-		DataTreeFiles filesWays = new DataTreeFiles(dirTree,
+		DataTreeFiles filesWays = new DataTreeFiles(pathTree,
 				fileNamesOutputWays);
-		DataTreeFiles filesNodes = new DataTreeFiles(dirTree,
+		DataTreeFiles filesNodes = new DataTreeFiles(pathTree,
 				fileNamesOutputNodes);
 
 		for (Node leaf : leafs) {
@@ -165,15 +134,15 @@ public class DistributeWays extends AbstractExecutableInputOutput
 		OutputStream output = factory.create(file);
 		output = new BufferedOutputStream(output);
 		OsmOutputStream osmOutput = OsmIoUtils.setupOsmOutput(output,
-				outputFormat, writeMetadata, pbfConfig, tboConfig);
+				outputConfig);
 		return new OsmOutputStreamStreamOutput(output, osmOutput);
 	}
 
-	public void execute() throws IOException
+	private void run() throws IOException
 	{
-		DataTreeFiles filesNodes1 = new DataTreeFiles(dirTree, fileNamesNodes1);
-		DataTreeFiles filesNodes2 = new DataTreeFiles(dirTree, fileNamesNodes2);
-		DataTreeFiles filesWays = new DataTreeFiles(dirTree, fileNamesWays);
+		DataTreeFiles filesNodes1 = new DataTreeFiles(pathTree, fileNamesNodes1);
+		DataTreeFiles filesNodes2 = new DataTreeFiles(pathTree, fileNamesNodes2);
+		DataTreeFiles filesWays = new DataTreeFiles(pathTree, fileNamesWays);
 
 		int i = 0;
 		for (Node leaf : leafs) {
@@ -197,7 +166,7 @@ public class DistributeWays extends AbstractExecutableInputOutput
 
 			InMemoryListDataSet dataNodes1 = ListDataSetLoader.read(OsmIoUtils
 					.setupOsmIterator(inputNodes1, inputFormatNodes,
-							writeMetadata), true, true, true);
+							outputConfig.isWriteMetadata()), true, true, true);
 
 			long nodesSize2 = fileNodes2.length();
 			System.out.println(String.format(
@@ -206,16 +175,16 @@ public class DistributeWays extends AbstractExecutableInputOutput
 
 			InMemoryListDataSet dataNodes2 = ListDataSetLoader.read(OsmIoUtils
 					.setupOsmIterator(inputNodes2, inputFormatNodes,
-							writeMetadata), true, true, true);
+							outputConfig.isWriteMetadata()), true, true, true);
 
 			long waysSize = fileWays.length();
 			System.out.println(String.format(
 					"Loading ways file of size: %.3fMB",
 					waysSize / 1024. / 1024.));
 
-			InMemoryListDataSet dataWays = ListDataSetLoader.read(
-					OsmIoUtils.setupOsmIterator(inputWays, inputFormatWays,
-							writeMetadata), true, true, true);
+			InMemoryListDataSet dataWays = ListDataSetLoader.read(OsmIoUtils
+					.setupOsmIterator(inputWays, inputFormatWays,
+							outputConfig.isWriteMetadata()), true, true, true);
 
 			inputNodes1.close();
 			inputNodes2.close();
