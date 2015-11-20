@@ -2,6 +2,6 @@
 
 DIR=$(dirname $0)
 CMD="$DIR/osm4j-extra"
-CLASS="de.topobyte.osm4j.extra.query.BboxQuery"
+CLASS="de.topobyte.osm4j.extra.extracts.query.BboxQuery"
 
 exec "$CMD" "$CLASS" "$@"
