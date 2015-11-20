@@ -133,7 +133,7 @@ public class Query
 
 	private int tmpIndex = 0;
 
-	protected void execute() throws IOException
+	public void execute() throws IOException
 	{
 		createTemporaryDirectory();
 

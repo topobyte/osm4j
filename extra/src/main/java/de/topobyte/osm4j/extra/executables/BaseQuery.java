@@ -15,7 +15,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with osm4j. If not, see <http://www.gnu.org/licenses/>.
 
-package de.topobyte.osm4j.extra.extracts.query;
+package de.topobyte.osm4j.extra.executables;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -25,6 +25,7 @@ import com.vividsolutions.jts.geom.Envelope;
 
 import de.topobyte.jts.utils.predicate.ContainmentTest;
 import de.topobyte.osm4j.extra.datatree.DataTree;
+import de.topobyte.osm4j.extra.extracts.query.Query;
 import de.topobyte.osm4j.utils.AbstractExecutableInputOutput;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
