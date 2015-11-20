@@ -144,6 +144,29 @@ public class OsmIoUtils
 		}
 	}
 
+	public static OsmOutputStream setupOsmOutput(OutputStream out,
+			OsmOutputConfig outputConfig)
+	{
+		boolean writeMetadata = outputConfig.isWriteMetadata();
+
+		switch (outputConfig.getFileFormat()) {
+		default:
+		case PBF:
+			PbfConfig pbfConfig = outputConfig.getPbfConfig();
+			PbfWriter pbfWriter = new PbfWriter(out, writeMetadata);
+			pbfWriter.setCompression(pbfConfig.getCompression());
+			pbfWriter.setUseDense(pbfConfig.isUseDenseNodes());
+			return pbfWriter;
+		case TBO:
+			TboConfig tboConfig = outputConfig.getTboConfig();
+			TboWriter tboWriter = new TboWriter(out, writeMetadata, true);
+			tboWriter.setCompression(tboConfig.getCompression());
+			return tboWriter;
+		case XML:
+			return new OsmXmlOutputStream(out, writeMetadata);
+		}
+	}
+
 	public static String extension(FileFormat format)
 	{
 		switch (format) {
