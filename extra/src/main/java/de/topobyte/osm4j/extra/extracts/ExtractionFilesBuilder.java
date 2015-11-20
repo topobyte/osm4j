@@ -31,6 +31,8 @@ import de.topobyte.osm4j.extra.datatree.ways.MissingWayNodesExtractor;
 import de.topobyte.osm4j.extra.datatree.ways.MissingWayNodesFinder;
 import de.topobyte.osm4j.extra.datatree.ways.WaysDistributor;
 import de.topobyte.osm4j.extra.datatree.ways.WaysToTreeMapper;
+import de.topobyte.osm4j.extra.relations.RelationsSeparator;
+import de.topobyte.osm4j.extra.relations.RelationsSplitterAndMemberCollector;
 import de.topobyte.osm4j.extra.ways.WaysSorterByFirstNodeId;
 import de.topobyte.osm4j.utils.FileFormat;
 import de.topobyte.osm4j.utils.OsmFileInput;
@@ -57,6 +59,11 @@ public class ExtractionFilesBuilder
 	private Path pathWays;
 	private Path pathRelations;
 
+	private Path pathSimpleRelations;
+	private Path pathComplexRelations;
+	private Path pathSimpleRelationsDir;
+	private Path pathComplexRelationsDir;
+
 	public ExtractionFilesBuilder(Path pathInput, FileFormat inputFormat,
 			Path pathOutput, OsmOutputConfig outputConfig, int maxNodes)
 	{
@@ -80,15 +87,22 @@ public class ExtractionFilesBuilder
 			System.exit(1);
 		}
 
-		pathNodes = pathOutput.resolve("nodes"
-				+ OsmIoUtils.extension(outputConfig.getFileFormat()));
-		pathWays = pathOutput.resolve("ways"
-				+ OsmIoUtils.extension(outputConfig.getFileFormat()));
-		pathRelations = pathOutput.resolve("relations"
-				+ OsmIoUtils.extension(outputConfig.getFileFormat()));
+		String extension = OsmIoUtils.extension(outputConfig.getFileFormat());
+
+		pathNodes = pathOutput.resolve("nodes" + extension);
+		pathWays = pathOutput.resolve("ways" + extension);
+		pathRelations = pathOutput.resolve("relations" + extension);
 
 		pathTree = pathOutput.resolve("tree");
 		pathWaysByNodes = pathOutput.resolve("waysbynodes");
+
+		pathSimpleRelations = pathOutput
+				.resolve("relations.simple" + extension);
+		pathComplexRelations = pathOutput.resolve("relations.complex"
+				+ extension);
+
+		pathSimpleRelationsDir = pathOutput.resolve("relations.simple");
+		pathComplexRelationsDir = pathOutput.resolve("relations.complex");
 
 		OsmFileInput fileInput = new OsmFileInput(pathInput, inputFormat);
 
@@ -98,8 +112,6 @@ public class ExtractionFilesBuilder
 				outputConfig.getFileFormat());
 		OsmFileInput fileInputRelations = new OsmFileInput(pathRelations,
 				outputConfig.getFileFormat());
-
-		String extension = OsmIoUtils.extension(outputConfig.getFileFormat());
 
 		String fileNamesFinalNodes = "allnodes" + extension;
 		String fileNamesFinalWays = "allways" + extension;
@@ -112,6 +124,8 @@ public class ExtractionFilesBuilder
 		String fileNamesMissingNodes = "missing-nodes" + extension;
 		String fileNamesDistributedWays = "ways-unsorted" + extension;
 		String fileNamesDistributedNodes = "nodes-unsorted" + extension;
+
+		String fileNamesRelations = "relations" + extension;
 
 		// Split entities
 
@@ -215,6 +229,26 @@ public class ExtractionFilesBuilder
 				fileNamesSortedWays, fileNamesUnsortedWays, fileNamesFinalWays,
 				outputConfig.getFileFormat(), outputConfig, true);
 		waysMerger.execute();
+
+		// Separate relations
+
+		RelationsSeparator separator = new RelationsSeparator(
+				fileInputRelations, pathSimpleRelations, pathComplexRelations,
+				outputConfig);
+		separator.execute();
+
+		// Split relations and collect members
+
+		OsmFileInput inputSimpleRelations = new OsmFileInput(
+				pathSimpleRelations, outputConfig.getFileFormat());
+		OsmFileInput inputComplexRelations = new OsmFileInput(
+				pathComplexRelations, outputConfig.getFileFormat());
+
+		RelationsSplitterAndMemberCollector relationSplitter = new RelationsSplitterAndMemberCollector(
+				inputSimpleRelations, inputComplexRelations,
+				pathSimpleRelationsDir, pathComplexRelationsDir,
+				fileNamesRelations, fileInputWays, fileInputNodes, outputConfig);
+		relationSplitter.execute();
 	}
 
 }
