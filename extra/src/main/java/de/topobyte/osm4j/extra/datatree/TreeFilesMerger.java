@@ -21,111 +21,68 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import de.topobyte.osm4j.core.access.OsmIterator;
 import de.topobyte.osm4j.core.access.OsmOutputStream;
-import de.topobyte.osm4j.utils.AbstractExecutableInputOutput;
+import de.topobyte.osm4j.utils.FileFormat;
 import de.topobyte.osm4j.utils.OsmIoUtils;
+import de.topobyte.osm4j.utils.OsmOutputConfig;
 import de.topobyte.osm4j.utils.StreamUtil;
 import de.topobyte.osm4j.utils.merge.sorted.SortedMerge;
 import de.topobyte.osm4j.utils.sort.MemorySortIterator;
-import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
-public class MergeTreeFiles extends AbstractExecutableInputOutput
+public class TreeFilesMerger
 {
 
-	private static final String OPTION_TREE = "tree";
-	private static final String OPTION_FILE_NAMES_SORTED = "input_sorted";
-	private static final String OPTION_FILE_NAMES_UNSORTED = "input_unsorted";
-	private static final String OPTION_FILE_NAMES_OUTPUT = "output";
-	private static final String OPTION_DELETE = "delete";
-
-	@Override
-	protected String getHelpMessage()
-	{
-		return MergeTreeFiles.class.getSimpleName() + " [options]";
-	}
-
-	public static void main(String[] args) throws IOException
-	{
-		MergeTreeFiles task = new MergeTreeFiles();
-
-		task.setup(args);
-
-		task.prepare();
-
-		task.execute();
-	}
-
-	private String pathTree;
+	private Path pathTree;
 
 	private List<String> fileNamesSorted = new ArrayList<>();
 	private List<String> fileNamesUnsorted = new ArrayList<>();
 	private String fileNamesOutput;
 
+	private FileFormat inputFormat;
+	private OsmOutputConfig outputConfig;
+
 	private boolean deleteInput;
 
-	public MergeTreeFiles()
+	public TreeFilesMerger(Path pathTree, List<String> fileNamesSorted,
+			List<String> fileNamesUnsorted, String fileNamesOutput,
+			FileFormat inputFormat, OsmOutputConfig outputConfig,
+			boolean deleteInput)
 	{
-		// @formatter:off
-		OptionHelper.add(options, OPTION_FILE_NAMES_SORTED, true, false, "name of a data file with sorted data in the tree");
-		OptionHelper.add(options, OPTION_FILE_NAMES_UNSORTED, true, false, "name of a data file with unsorted data in the tree");
-		OptionHelper.add(options, OPTION_TREE, true, true, "tree directory to work on");
-		OptionHelper.add(options, OPTION_FILE_NAMES_OUTPUT, true, true, "name of files for merged data");
-		OptionHelper.add(options, OPTION_DELETE, false, false, "delete input files");
-		// @formatter:on
+		this.pathTree = pathTree;
+		this.fileNamesSorted = fileNamesSorted;
+		this.fileNamesUnsorted = fileNamesUnsorted;
+		this.fileNamesOutput = fileNamesOutput;
+		this.inputFormat = inputFormat;
+		this.outputConfig = outputConfig;
+		this.deleteInput = deleteInput;
 	}
 
-	@Override
-	protected void setup(String[] args)
+	public void execute() throws IOException
 	{
-		super.setup(args);
+		prepare();
 
-		pathTree = line.getOptionValue(OPTION_TREE);
-		fileNamesOutput = line.getOptionValue(OPTION_FILE_NAMES_OUTPUT);
-
-		String[] fileNamesSorted = line
-				.getOptionValues(OPTION_FILE_NAMES_SORTED);
-		String[] fileNamesUnsorted = line
-				.getOptionValues(OPTION_FILE_NAMES_UNSORTED);
-
-		if (fileNamesSorted != null) {
-			this.fileNamesSorted.addAll(Arrays.asList(fileNamesSorted));
-		}
-		if (fileNamesUnsorted != null) {
-			this.fileNamesUnsorted.addAll(Arrays.asList(fileNamesUnsorted));
-		}
-
-		int numFiles = this.fileNamesSorted.size()
-				+ this.fileNamesUnsorted.size();
-		if (numFiles < 2) {
-			System.out.println("not enough input files");
-			System.out.println("please specify at least two files to merge");
-			System.exit(1);
-		}
-
-		deleteInput = line.hasOption(OPTION_DELETE);
+		run();
 	}
 
 	private DataTree tree;
-	private File dirTree;
 	private List<Node> leafs;
 
 	private long start = System.currentTimeMillis();
 
 	public void prepare() throws IOException
 	{
-		tree = DataTreeOpener.open(new File(pathTree));
-		dirTree = new File(pathTree);
+		tree = DataTreeOpener.open(pathTree.toFile());
 		leafs = tree.getLeafs();
 	}
 
-	public void execute() throws IOException
+	public void run() throws IOException
 	{
-		DataTreeFiles filesOutputNodes = new DataTreeFiles(dirTree,
+		DataTreeFiles filesOutputNodes = new DataTreeFiles(pathTree,
 				fileNamesOutput);
 
 		int i = 0;
@@ -138,7 +95,7 @@ public class MergeTreeFiles extends AbstractExecutableInputOutput
 			List<OsmIterator> osmInputs = new ArrayList<>();
 
 			for (String fileName : fileNamesSorted) {
-				DataTreeFiles files = new DataTreeFiles(dirTree, fileName);
+				DataTreeFiles files = new DataTreeFiles(pathTree, fileName);
 				File file = files.getFile(leaf);
 				inputFiles.add(file);
 
@@ -146,12 +103,12 @@ public class MergeTreeFiles extends AbstractExecutableInputOutput
 				inputs.add(input);
 
 				OsmIterator osmInput = OsmIoUtils.setupOsmIterator(input,
-						inputFormat, writeMetadata);
+						inputFormat, outputConfig.isWriteMetadata());
 				osmInputs.add(osmInput);
 			}
 
 			for (String fileName : fileNamesUnsorted) {
-				DataTreeFiles files = new DataTreeFiles(dirTree, fileName);
+				DataTreeFiles files = new DataTreeFiles(pathTree, fileName);
 				File file = files.getFile(leaf);
 				inputFiles.add(file);
 
@@ -159,7 +116,7 @@ public class MergeTreeFiles extends AbstractExecutableInputOutput
 				inputs.add(input);
 
 				OsmIterator osmInput = OsmIoUtils.setupOsmIterator(input,
-						inputFormat, writeMetadata);
+						inputFormat, outputConfig.isWriteMetadata());
 				OsmIterator sorted = new MemorySortIterator(osmInput);
 				osmInputs.add(sorted);
 			}
@@ -169,7 +126,7 @@ public class MergeTreeFiles extends AbstractExecutableInputOutput
 			OutputStream output = StreamUtil
 					.bufferedOutputStream(fileOutputNodes);
 			OsmOutputStream osmOutput = OsmIoUtils.setupOsmOutput(output,
-					outputFormat, writeMetadata, pbfConfig, tboConfig);
+					outputConfig);
 
 			SortedMerge merge = new SortedMerge(osmOutput, osmInputs);
 			merge.run();
