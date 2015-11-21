@@ -64,9 +64,9 @@ public class RelationsMemberCollector
 		String fileNamesRelationNodeIds = FILE_NAMES_NODE_IDS;
 		String fileNamesRelationWayIds = FILE_NAMES_WAY_IDS;
 		String fileNamesWayNodeIds = FILE_NAMES_WAY_NODE_IDS;
-		String fileNamesWays = FILE_NAMES_NODE_BASENAME
+		String fileNamesWays = FILE_NAMES_WAY_BASENAME
 				+ OsmIoUtils.extension(outputConfig.getFileFormat());
-		String fileNamesNodes = FILE_NAMES_WAY_BASENAME
+		String fileNamesNodes = FILE_NAMES_NODE_BASENAME
 				+ OsmIoUtils.extension(outputConfig.getFileFormat());
 
 		// Extract relation member ids for each batch

@@ -290,14 +290,16 @@ public class ExtractionFilesBuilder
 				pathTree, pathSimpleRelationsDir, pathSimpleRelationsEmpty,
 				pathSimpleRelationsNonTree, pathSimpleRelationsNonTreeBboxes,
 				fileNamesRelations, fileNamesWays, fileNamesNodes,
-				fileNamesFinalRelationsSimple, inputFormat, outputConfig);
+				fileNamesFinalRelationsSimple, outputConfig.getFileFormat(),
+				outputConfig);
 		simpleRelationsDistributor.execute();
 
 		ComplexRelationsDistributor complexRelationsDistributor = new ComplexRelationsDistributor(
 				pathTree, pathComplexRelationsDir, pathComplexRelationsEmpty,
 				pathComplexRelationsNonTree, pathComplexRelationsNonTreeBboxes,
 				fileNamesRelations, fileNamesWays, fileNamesNodes,
-				fileNamesFinalRelationsComplex, inputFormat, outputConfig);
+				fileNamesFinalRelationsComplex, outputConfig.getFileFormat(),
+				outputConfig);
 		complexRelationsDistributor.execute();
 
 		// Sort non-tree relations
@@ -307,7 +309,8 @@ public class ExtractionFilesBuilder
 				pathSimpleRelationsNonTreeBboxes,
 				pathComplexRelationsNonTreeBboxes, pathSimpleRelationsDir,
 				pathComplexRelationsDir, pathSimpleRelationsSorted,
-				pathComplexRelationsSorted, inputFormat, outputConfig);
+				pathComplexRelationsSorted, outputConfig.getFileFormat(),
+				outputConfig);
 		nonTreeSplitter.execute();
 	}
 
