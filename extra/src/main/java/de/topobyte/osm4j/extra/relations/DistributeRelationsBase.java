@@ -17,45 +17,17 @@
 
 package de.topobyte.osm4j.extra.relations;
 
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.vividsolutions.jts.geom.Envelope;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.GeometryFactory;
-
-import de.topobyte.largescalefileio.ClosingFileOutputStreamFactory;
-import de.topobyte.largescalefileio.SimpleClosingFileOutputStreamFactory;
-import de.topobyte.osm4j.core.access.OsmIterator;
-import de.topobyte.osm4j.core.access.OsmOutputStream;
-import de.topobyte.osm4j.core.access.OsmOutputStreamStreamOutput;
 import de.topobyte.osm4j.core.access.OsmStreamOutput;
-import de.topobyte.osm4j.core.dataset.InMemoryMapDataSet;
-import de.topobyte.osm4j.core.dataset.MapDataSetLoader;
-import de.topobyte.osm4j.core.model.iface.OsmNode;
-import de.topobyte.osm4j.core.model.impl.Bounds;
 import de.topobyte.osm4j.extra.datatree.DataTree;
 import de.topobyte.osm4j.extra.datatree.DataTreeFiles;
-import de.topobyte.osm4j.extra.datatree.DataTreeOpener;
 import de.topobyte.osm4j.extra.datatree.Node;
 import de.topobyte.osm4j.extra.idbboxlist.IdBboxListOutputStream;
-import de.topobyte.osm4j.tbo.access.TboWriter;
 import de.topobyte.osm4j.utils.AbstractExecutableInputOutput;
-import de.topobyte.osm4j.utils.OsmIoUtils;
-import de.topobyte.osm4j.utils.StreamUtil;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
 public abstract class DistributeRelationsBase extends
@@ -128,164 +100,6 @@ public abstract class DistributeRelationsBase extends
 
 		fileNamesTreeRelations = line
 				.getOptionValue(OPTION_FILE_NAMES_TREE_RELATIONS);
-	}
-
-	protected void init() throws IOException
-	{
-		dirData = Paths.get(pathData);
-
-		if (!Files.isDirectory(dirData)) {
-			System.out.println("Input path is not a directory");
-			System.exit(1);
-		}
-
-		File dirTree = new File(pathTree);
-		tree = DataTreeOpener.open(dirTree);
-
-		treeFilesRelations = new DataTreeFiles(dirTree, fileNamesTreeRelations);
-
-		subdirs = new ArrayList<>();
-		File[] subs = dirData.toFile().listFiles();
-		for (File sub : subs) {
-			if (!sub.isDirectory()) {
-				continue;
-			}
-			Path subPath = sub.toPath();
-			Path relations = subPath.resolve(fileNamesRelations);
-			Path ways = subPath.resolve(fileNamesWays);
-			Path nodes = subPath.resolve(fileNamesNodes);
-			if (!Files.exists(relations) || !Files.exists(ways)
-					|| !Files.exists(nodes)) {
-				continue;
-			}
-			subdirs.add(subPath);
-		}
-
-		Collections.sort(subdirs, new Comparator<Path>() {
-
-			@Override
-			public int compare(Path o1, Path o2)
-			{
-				String name1 = o1.getFileName().toString();
-				String name2 = o2.getFileName().toString();
-				try {
-					int n1 = Integer.parseInt(name1);
-					int n2 = Integer.parseInt(name2);
-					return Integer.compare(n1, n2);
-				} catch (NumberFormatException e) {
-					// compare as paths
-				}
-				return o1.compareTo(o2);
-			}
-		});
-
-		// Setup output for non-geometry relations
-
-		File fileOutputEmpty = new File(pathOutputEmpty);
-		OutputStream outEmpty = StreamUtil
-				.bufferedOutputStream(fileOutputEmpty);
-		OsmOutputStream osmOutputEmpty = OsmIoUtils.setupOsmOutput(outEmpty,
-				outputFormat, writeMetadata, pbfConfig, tboConfig);
-		outputEmpty = new OsmOutputStreamStreamOutput(outEmpty, osmOutputEmpty);
-
-		// Setup output for non-tree relations
-
-		File fileOutputNonTree = new File(pathOutputNonTree);
-		OutputStream outNonTree = StreamUtil
-				.bufferedOutputStream(fileOutputNonTree);
-		OsmOutputStream osmOutputNonTree = OsmIoUtils.setupOsmOutput(
-				outNonTree, outputFormat, writeMetadata, pbfConfig, tboConfig);
-		outputNonTree = new OsmOutputStreamStreamOutput(outNonTree,
-				osmOutputNonTree);
-
-		// Setup output for non-tree relations' bboxes
-
-		OutputStream outBboxes = StreamUtil
-				.bufferedOutputStream(pathOutputBboxes);
-		outputBboxes = new IdBboxListOutputStream(outBboxes);
-
-		// Setup output for tree relations
-
-		ClosingFileOutputStreamFactory factory = new SimpleClosingFileOutputStreamFactory();
-
-		for (Node leaf : tree.getLeafs()) {
-			File file = treeFilesRelations.getFile(leaf);
-			OutputStream out = new BufferedOutputStream(factory.create(file));
-			OsmOutputStream osmOutput = OsmIoUtils.setupOsmOutput(out,
-					outputFormat, writeMetadata, pbfConfig, tboConfig);
-
-			if (osmOutput instanceof TboWriter) {
-				TboWriter tboWriter = (TboWriter) osmOutput;
-				tboWriter.setBatchSizeRelationsByMembers(1024);
-			}
-
-			outputs.put(leaf, new OsmOutputStreamStreamOutput(out, osmOutput));
-
-			Envelope box = leaf.getEnvelope();
-			osmOutput.write(new Bounds(box.getMinX(), box.getMaxX(), box
-					.getMaxY(), box.getMinY()));
-		}
-	}
-
-	int nWrittenEmpty = 0;
-	int nWrittenToTree = 0;
-	int nRemaining = 0;
-
-	protected void execute() throws IOException
-	{
-		int i = 0;
-		for (Path path : subdirs) {
-			System.out.println(String.format("Processing directory %d of %d",
-					++i, subdirs.size()));
-			build(path);
-			System.out.println(String.format(
-					"empty: %d, tree: %d, remaining: %d", nWrittenEmpty,
-					nWrittenToTree, nRemaining));
-		}
-	}
-
-	protected void finish() throws IOException
-	{
-		outputEmpty.getOsmOutput().complete();
-		outputEmpty.close();
-
-		outputNonTree.getOsmOutput().complete();
-		outputNonTree.close();
-
-		outputBboxes.close();
-
-		for (OsmStreamOutput output : outputs.values()) {
-			output.getOsmOutput().complete();
-			output.close();
-		}
-	}
-
-	protected abstract void build(Path path) throws IOException;
-
-	protected Envelope box(Collection<OsmNode> nodes)
-	{
-		Envelope env = new Envelope();
-		for (OsmNode node : nodes) {
-			env.expandToInclude(node.getLongitude(), node.getLatitude());
-		}
-		return env;
-	}
-
-	protected Geometry box(Envelope env)
-	{
-		return new GeometryFactory().toGeometry(env);
-	}
-
-	protected InMemoryMapDataSet read(Path path, boolean readMetadata,
-			boolean keepTags) throws IOException
-	{
-		InputStream input = StreamUtil.bufferedInputStream(path.toFile());
-		OsmIterator osmIterator = OsmIoUtils.setupOsmIterator(input,
-				inputFormat, readMetadata);
-		InMemoryMapDataSet data = MapDataSetLoader.read(osmIterator, keepTags,
-				keepTags, keepTags);
-		input.close();
-		return data;
 	}
 
 }
