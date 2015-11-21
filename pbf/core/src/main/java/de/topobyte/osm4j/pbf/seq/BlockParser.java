@@ -44,6 +44,8 @@ public abstract class BlockParser extends BlobParser
 			Osmformat.HeaderBlock headerBlock = Osmformat.HeaderBlock
 					.parseFrom(blockData.getBlobData());
 			parse(headerBlock);
+		} else {
+			throw new IOException("invalid PBF block");
 		}
 	}
 

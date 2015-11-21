@@ -75,6 +75,8 @@ public class PbfFile
 					} else {
 						throw new IOException("Multiple header blocks");
 					}
+				} else {
+					throw new IOException("invalid PBF block");
 				}
 			} catch (EOFException eof) {
 				break;

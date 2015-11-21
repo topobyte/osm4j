@@ -18,6 +18,7 @@
 package de.topobyte.osm4j.pbf.util;
 
 import java.io.DataInput;
+import java.io.EOFException;
 import java.io.IOException;
 import java.util.zip.DataFormatException;
 import java.util.zip.Inflater;
@@ -75,7 +76,11 @@ public class PbfUtil
 	public static BlobHeader parseHeader(DataInput input) throws IOException
 	{
 		int lengthHeader = input.readInt();
-		return parseHeader(input, lengthHeader);
+		try {
+			return parseHeader(input, lengthHeader);
+		} catch (EOFException e) {
+			throw new IOException("Unable to parse blob header", e);
+		}
 	}
 
 	public static BlobHeader parseHeader(DataInput input, int lengthHeader)

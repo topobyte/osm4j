@@ -163,6 +163,8 @@ public class PbfIterator implements OsmIterator
 				this.bounds = PbfUtil.bounds(bbox);
 			}
 			beyondBounds = true;
+		} else {
+			throw new IOException("invalid PBF block");
 		}
 	}
 
