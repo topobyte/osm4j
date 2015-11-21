@@ -15,21 +15,13 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with osm4j. If not, see <http://www.gnu.org/licenses/>.
 
-package de.topobyte.osm4j.extra.relations;
+package de.topobyte.osm4j.extra.executables;
 
 import java.io.IOException;
-import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 
-import de.topobyte.osm4j.extra.batch.BatchFilesUtil;
+import de.topobyte.osm4j.extra.relations.NonTreeRelationsSplitter;
 import de.topobyte.osm4j.utils.AbstractExecutableInputOutput;
-import de.topobyte.osm4j.utils.OsmFile;
-import de.topobyte.osm4j.utils.OsmFileInput;
-import de.topobyte.osm4j.utils.OsmFileSetInput;
-import de.topobyte.osm4j.utils.OsmIoUtils;
 import de.topobyte.osm4j.utils.OsmOutputConfig;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
@@ -106,70 +98,17 @@ public class SplitNonTreeRelations extends AbstractExecutableInputOutput
 
 	private void execute() throws IOException
 	{
-		List<Path> nodePathsSimple = BatchFilesUtil.getPaths(
-				Paths.get(pathInputSimpleOld),
-				"nodes" + OsmIoUtils.extension(inputFormat));
-		Collection<OsmFile> nodeFilesSimple = createOsmFiles(nodePathsSimple);
-
-		List<Path> wayPathsSimple = BatchFilesUtil.getPaths(
-				Paths.get(pathInputSimpleOld),
-				"ways" + OsmIoUtils.extension(inputFormat));
-		Collection<OsmFile> wayFilesSimple = createOsmFiles(wayPathsSimple);
-
-		List<Path> nodePathsComplex = BatchFilesUtil.getPaths(
-				Paths.get(pathInputComplexOld),
-				"nodes" + OsmIoUtils.extension(inputFormat));
-		Collection<OsmFile> nodeFilesComplex = createOsmFiles(nodePathsComplex);
-
-		List<Path> wayPathsComplex = BatchFilesUtil.getPaths(
-				Paths.get(pathInputComplexOld),
-				"ways" + OsmIoUtils.extension(inputFormat));
-		Collection<OsmFile> wayFilesComplex = createOsmFiles(wayPathsComplex);
-
-		OsmFileSetInput inputNodesSimple = new OsmFileSetInput(nodeFilesSimple);
-		OsmFileSetInput inputWaysSimple = new OsmFileSetInput(wayFilesSimple);
-
-		OsmFileSetInput inputNodesComplex = new OsmFileSetInput(
-				nodeFilesComplex);
-		OsmFileSetInput inputWaysComplex = new OsmFileSetInput(wayFilesComplex);
-
-		OsmFileInput inputSimpleRelations = new OsmFileInput(
-				Paths.get(pathInputSimple), inputFormat);
-		OsmFileInput inputComplexRelations = new OsmFileInput(
-				Paths.get(pathInputComplex), inputFormat);
-
-		Path pathOutputSimpleRelations = Paths.get(pathOutputSimple);
-		Path pathOutputComplexRelations = Paths.get(pathOutputComplex);
-
-		String fileNamesRelations = "relations"
-				+ OsmIoUtils.extension(outputFormat);
-
-		SimpleRelationsSorterAndMemberCollector task1 = new SimpleRelationsSorterAndMemberCollector(
-				inputSimpleRelations, Paths.get(pathInputSimpleBboxes),
-				pathOutputSimpleRelations, fileNamesRelations, inputWaysSimple,
-				inputNodesSimple, outputFormat, writeMetadata, pbfConfig,
-				tboConfig);
-
-		task1.execute();
-
 		OsmOutputConfig outputConfig = new OsmOutputConfig(outputFormat,
 				pbfConfig, tboConfig, writeMetadata);
 
-		ComplexRelationsSorterAndMemberCollector task2 = new ComplexRelationsSorterAndMemberCollector(
-				inputComplexRelations, Paths.get(pathInputComplexBboxes),
-				pathOutputComplexRelations, fileNamesRelations,
-				inputWaysComplex, inputNodesComplex, outputConfig);
-
-		task2.execute();
-	}
-
-	private Collection<OsmFile> createOsmFiles(List<Path> paths)
-	{
-		List<OsmFile> files = new ArrayList<>();
-		for (Path path : paths) {
-			files.add(new OsmFile(path, inputFormat));
-		}
-		return files;
+		NonTreeRelationsSplitter splitter = new NonTreeRelationsSplitter(
+				Paths.get(pathInputSimple), Paths.get(pathInputComplex),
+				Paths.get(pathInputSimpleBboxes),
+				Paths.get(pathInputComplexBboxes),
+				Paths.get(pathInputSimpleOld), Paths.get(pathInputComplexOld),
+				Paths.get(pathOutputSimple), Paths.get(pathOutputComplex),
+				inputFormat, outputConfig);
+		splitter.execute();
 	}
 
 }
