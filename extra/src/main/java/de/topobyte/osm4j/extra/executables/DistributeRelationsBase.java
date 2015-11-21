@@ -15,7 +15,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with osm4j. If not, see <http://www.gnu.org/licenses/>.
 
-package de.topobyte.osm4j.extra.relations;
+package de.topobyte.osm4j.extra.executables;
 
 import java.nio.file.Path;
 import java.util.HashMap;

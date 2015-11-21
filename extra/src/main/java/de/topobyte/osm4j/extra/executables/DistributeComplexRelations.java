@@ -15,12 +15,13 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with osm4j. If not, see <http://www.gnu.org/licenses/>.
 
-package de.topobyte.osm4j.extra.relations;
+package de.topobyte.osm4j.extra.executables;
 
 import java.io.IOException;
 import java.nio.file.Paths;
 
 import de.topobyte.osm4j.core.access.OsmInputException;
+import de.topobyte.osm4j.extra.relations.ComplexRelationsDistributor;
 import de.topobyte.osm4j.utils.OsmOutputConfig;
 
 public class DistributeComplexRelations extends DistributeRelationsBase
