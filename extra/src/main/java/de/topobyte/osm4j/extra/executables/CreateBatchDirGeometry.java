@@ -15,7 +15,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with osm4j. If not, see <http://www.gnu.org/licenses/>.
 
-package de.topobyte.osm4j.extra.batch;
+package de.topobyte.osm4j.extra.executables;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedWriter;
@@ -36,6 +36,7 @@ import com.vividsolutions.jts.io.WKTWriter;
 
 import de.topobyte.osm4j.core.access.OsmIterator;
 import de.topobyte.osm4j.core.model.iface.OsmBounds;
+import de.topobyte.osm4j.extra.batch.BatchFilesUtil;
 import de.topobyte.osm4j.extra.datatree.BoxUtil;
 import de.topobyte.osm4j.utils.AbstractExecutableInput;
 import de.topobyte.osm4j.utils.OsmIoUtils;
