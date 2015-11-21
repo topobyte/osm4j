@@ -15,21 +15,17 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with osm4j. If not, see <http://www.gnu.org/licenses/>.
 
-package de.topobyte.osm4j.extra.nodearray;
+package de.topobyte.osm4j.extra.executables;
 
-import java.io.DataOutputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.OutputStream;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 
 import de.topobyte.osm4j.core.access.OsmIterator;
-import de.topobyte.osm4j.core.model.iface.EntityContainer;
-import de.topobyte.osm4j.core.model.iface.EntityType;
-import de.topobyte.osm4j.core.model.iface.OsmNode;
+import de.topobyte.osm4j.extra.nodearray.NodeArrayCreator;
+import de.topobyte.osm4j.extra.nodearray.NodeArrayType;
 import de.topobyte.osm4j.utils.AbstractExecutableSingleInputStream;
-import de.topobyte.osm4j.utils.StreamUtil;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
 public class CreateNodeArray extends AbstractExecutableSingleInputStream
@@ -63,18 +59,13 @@ public class CreateNodeArray extends AbstractExecutableSingleInputStream
 
 		task.init();
 
-		task.initOutput();
-
 		task.execute();
 
 		task.finish();
 	}
 
 	private String outputPath;
-
 	private NodeArrayType type;
-
-	private NodeArrayWriter writer;
 
 	public CreateNodeArray()
 	{
@@ -100,46 +91,13 @@ public class CreateNodeArray extends AbstractExecutableSingleInputStream
 		}
 	}
 
-	private void initOutput() throws FileNotFoundException
-	{
-		OutputStream bos = StreamUtil.bufferedOutputStream(outputPath);
-		DataOutputStream out = new DataOutputStream(bos);
-
-		switch (type) {
-		default:
-		case DOUBLE:
-			writer = new NodeArrayWriterDouble(out);
-			break;
-		case FLOAT:
-			writer = new NodeArrayWriterFloat(out);
-			break;
-		case INTEGER:
-			writer = new NodeArrayWriterInteger(out);
-			break;
-		case SHORT:
-			writer = new NodeArrayWriterShort(out);
-			break;
-		}
-	}
-
 	private void execute() throws IOException
 	{
 		OsmIterator iterator = createIterator();
-		while (iterator.hasNext()) {
-			EntityContainer container = iterator.next();
-			if (container.getType() != EntityType.Node) {
-				break;
-			}
-			OsmNode node = (OsmNode) container.getEntity();
-			writer.write(node);
-		}
-	}
 
-	@Override
-	public void finish() throws IOException
-	{
-		writer.finish();
-		super.finish();
+		NodeArrayCreator creator = new NodeArrayCreator(iterator,
+				Paths.get(outputPath), type);
+		creator.execute();
 	}
 
 }
