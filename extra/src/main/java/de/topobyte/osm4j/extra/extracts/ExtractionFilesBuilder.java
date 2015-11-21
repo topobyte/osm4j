@@ -23,6 +23,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.topobyte.osm4j.core.access.OsmInputException;
 import de.topobyte.osm4j.core.access.OsmIteratorInput;
 import de.topobyte.osm4j.extra.batch.BatchFilesUtil;
 import de.topobyte.osm4j.extra.datatree.TreeFilesMerger;
@@ -31,8 +32,11 @@ import de.topobyte.osm4j.extra.datatree.ways.MissingWayNodesExtractor;
 import de.topobyte.osm4j.extra.datatree.ways.MissingWayNodesFinder;
 import de.topobyte.osm4j.extra.datatree.ways.WaysDistributor;
 import de.topobyte.osm4j.extra.datatree.ways.WaysToTreeMapper;
+import de.topobyte.osm4j.extra.relations.ComplexRelationsDistributor;
+import de.topobyte.osm4j.extra.relations.RelationsMemberCollector;
 import de.topobyte.osm4j.extra.relations.RelationsSeparator;
 import de.topobyte.osm4j.extra.relations.RelationsSplitterAndMemberCollector;
+import de.topobyte.osm4j.extra.relations.SimpleRelationsDistributor;
 import de.topobyte.osm4j.extra.ways.WaysSorterByFirstNodeId;
 import de.topobyte.osm4j.utils.FileFormat;
 import de.topobyte.osm4j.utils.OsmFileInput;
@@ -63,6 +67,12 @@ public class ExtractionFilesBuilder
 	private Path pathComplexRelations;
 	private Path pathSimpleRelationsDir;
 	private Path pathComplexRelationsDir;
+	private Path pathSimpleRelationsNonTree;
+	private Path pathComplexRelationsNonTree;
+	private Path pathSimpleRelationsNonTreeBboxes;
+	private Path pathComplexRelationsNonTreeBboxes;
+	private Path pathSimpleRelationsEmpty;
+	private Path pathComplexRelationsEmpty;
 
 	public ExtractionFilesBuilder(Path pathInput, FileFormat inputFormat,
 			Path pathOutput, OsmOutputConfig outputConfig, int maxNodes)
@@ -74,7 +84,7 @@ public class ExtractionFilesBuilder
 		this.maxNodes = maxNodes;
 	}
 
-	public void execute() throws IOException
+	public void execute() throws IOException, OsmInputException
 	{
 		System.out.println("Output directory: " + pathOutput);
 		Files.createDirectories(pathOutput);
@@ -103,6 +113,18 @@ public class ExtractionFilesBuilder
 
 		pathSimpleRelationsDir = pathOutput.resolve("relations.simple");
 		pathComplexRelationsDir = pathOutput.resolve("relations.complex");
+		pathSimpleRelationsNonTree = pathOutput
+				.resolve("relations.simple.nontree" + extension);
+		pathComplexRelationsNonTree = pathOutput
+				.resolve("relations.complex.nontree" + extension);
+		pathSimpleRelationsNonTreeBboxes = pathOutput
+				.resolve("relations.simple.nontree.bboxlist");
+		pathComplexRelationsNonTreeBboxes = pathOutput
+				.resolve("relations.complex.nontree.bboxlist");
+		pathSimpleRelationsEmpty = pathOutput.resolve("relations.simple.empty"
+				+ extension);
+		pathComplexRelationsEmpty = pathOutput
+				.resolve("relations.complex.empty" + extension);
 
 		OsmFileInput fileInput = new OsmFileInput(pathInput, inputFormat);
 
@@ -249,6 +271,27 @@ public class ExtractionFilesBuilder
 				pathSimpleRelationsDir, pathComplexRelationsDir,
 				fileNamesRelations, fileInputWays, fileInputNodes, outputConfig);
 		relationSplitter.execute();
+
+		// Distribute relations
+
+		String fileNamesNodes = RelationsMemberCollector.FILE_NAMES_NODE_BASENAME
+				+ extension;
+		String fileNamesWays = RelationsMemberCollector.FILE_NAMES_WAY_BASENAME
+				+ extension;
+
+		SimpleRelationsDistributor simpleRelationsDistributor = new SimpleRelationsDistributor(
+				pathTree, pathSimpleRelationsDir, pathSimpleRelationsEmpty,
+				pathSimpleRelationsNonTree, pathSimpleRelationsNonTreeBboxes,
+				fileNamesRelations, fileNamesWays, fileNamesNodes,
+				fileNamesFinalRelationsSimple, inputFormat, outputConfig);
+		simpleRelationsDistributor.execute();
+
+		ComplexRelationsDistributor complexRelationsDistributor = new ComplexRelationsDistributor(
+				pathTree, pathComplexRelationsDir, pathComplexRelationsEmpty,
+				pathComplexRelationsNonTree, pathComplexRelationsNonTreeBboxes,
+				fileNamesRelations, fileNamesWays, fileNamesNodes,
+				fileNamesFinalRelationsComplex, inputFormat, outputConfig);
+		complexRelationsDistributor.execute();
 	}
 
 }

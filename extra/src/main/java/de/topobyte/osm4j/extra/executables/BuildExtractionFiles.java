@@ -20,6 +20,7 @@ package de.topobyte.osm4j.extra.executables;
 import java.io.IOException;
 import java.nio.file.Paths;
 
+import de.topobyte.osm4j.core.access.OsmInputException;
 import de.topobyte.osm4j.extra.extracts.ExtractionFilesBuilder;
 import de.topobyte.osm4j.utils.AbstractExecutableInputOutput;
 import de.topobyte.osm4j.utils.OsmOutputConfig;
@@ -38,7 +39,8 @@ public class BuildExtractionFiles extends AbstractExecutableInputOutput
 		return BuildExtractionFiles.class.getSimpleName() + " [options]";
 	}
 
-	public static void main(String[] args) throws IOException
+	public static void main(String[] args) throws IOException,
+			OsmInputException
 	{
 		BuildExtractionFiles task = new BuildExtractionFiles();
 
@@ -77,7 +79,7 @@ public class BuildExtractionFiles extends AbstractExecutableInputOutput
 		}
 	}
 
-	private void execute() throws IOException
+	private void execute() throws IOException, OsmInputException
 	{
 		OsmOutputConfig outputConfig = new OsmOutputConfig(outputFormat,
 				pbfConfig, tboConfig, writeMetadata);

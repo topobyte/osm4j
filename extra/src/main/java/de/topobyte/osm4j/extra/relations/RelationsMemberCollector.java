@@ -34,6 +34,12 @@ import de.topobyte.osm4j.utils.OsmOutputConfig;
 public class RelationsMemberCollector
 {
 
+	public static final String FILE_NAMES_NODE_IDS = "nodes.ids";
+	public static final String FILE_NAMES_WAY_IDS = "ways.ids";
+	public static final String FILE_NAMES_WAY_NODE_IDS = "waynodes.ids";
+	public static final String FILE_NAMES_NODE_BASENAME = "nodes";
+	public static final String FILE_NAMES_WAY_BASENAME = "ways";
+
 	private OsmIteratorInputFactory inputWays;
 	private OsmIteratorInputFactory inputNodes;
 
@@ -55,12 +61,12 @@ public class RelationsMemberCollector
 
 	public void execute() throws IOException
 	{
-		String fileNamesRelationNodeIds = "nodes.ids";
-		String fileNamesRelationWayIds = "ways.ids";
-		String fileNamesWayNodeIds = "waynodes.ids";
-		String fileNamesWays = "ways"
+		String fileNamesRelationNodeIds = FILE_NAMES_NODE_IDS;
+		String fileNamesRelationWayIds = FILE_NAMES_WAY_IDS;
+		String fileNamesWayNodeIds = FILE_NAMES_WAY_NODE_IDS;
+		String fileNamesWays = FILE_NAMES_NODE_BASENAME
 				+ OsmIoUtils.extension(outputConfig.getFileFormat());
-		String fileNamesNodes = "nodes"
+		String fileNamesNodes = FILE_NAMES_WAY_BASENAME
 				+ OsmIoUtils.extension(outputConfig.getFileFormat());
 
 		// Extract relation member ids for each batch
