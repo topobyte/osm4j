@@ -15,7 +15,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with osm4j. If not, see <http://www.gnu.org/licenses/>.
 
-package de.topobyte.osm4j.extra.idextract;
+package de.topobyte.osm4j.extra.executables;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -26,6 +26,9 @@ import java.util.List;
 
 import de.topobyte.osm4j.core.access.OsmIterator;
 import de.topobyte.osm4j.core.model.iface.EntityType;
+import de.topobyte.osm4j.extra.idextract.ExtractionItem;
+import de.topobyte.osm4j.extra.idextract.ExtractionUtil;
+import de.topobyte.osm4j.extra.idextract.Extractor;
 import de.topobyte.osm4j.utils.AbstractExecutableSingleInputStreamOutput;
 import de.topobyte.osm4j.utils.OsmOutputConfig;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
