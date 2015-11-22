@@ -270,8 +270,10 @@ public class EntitySplitBlockwise
 			lastWayOnlyBlock -= 1;
 		}
 
-		// First copy all ways from the first partial block
-		copyPartial(ways.getStart(), EntityType.Way, blockWriterWays);
+		if (firstWayBlockMixed) {
+			// First copy all ways from the first partial block
+			copyPartial(ways.getStart(), EntityType.Way, blockWriterWays);
+		}
 
 		// Then copy all blocks that contain only ways block-wise
 		for (int i = firstWayOnlyBlock; i <= lastWayOnlyBlock; i++) {
@@ -301,9 +303,11 @@ public class EntitySplitBlockwise
 			firstRelationOnlyBlock += 1;
 		}
 
-		// First copy all relations from the first partial block
-		copyPartial(relations.getStart(), EntityType.Relation,
-				blockWriterRelations);
+		if (firstRelationBlockMixed) {
+			// First copy all relations from the first partial block
+			copyPartial(relations.getStart(), EntityType.Relation,
+					blockWriterRelations);
+		}
 
 		// Then copy all blocks that contain only relations block-wise
 		for (int i = firstRelationOnlyBlock; i <= relations.getEnd(); i++) {
