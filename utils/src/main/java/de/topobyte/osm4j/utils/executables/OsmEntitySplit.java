@@ -25,6 +25,7 @@ import de.topobyte.osm4j.core.access.OsmIterator;
 import de.topobyte.osm4j.utils.AbstractExecutableSingleInputStreamOutput;
 import de.topobyte.osm4j.utils.OsmOutputConfig;
 import de.topobyte.osm4j.utils.split.EntitySplitter;
+import de.topobyte.osm4j.utils.split.ThreadedEntitySplitter;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
 public class OsmEntitySplit extends AbstractExecutableSingleInputStreamOutput
@@ -33,6 +34,7 @@ public class OsmEntitySplit extends AbstractExecutableSingleInputStreamOutput
 	private static final String OPTION_OUTPUT_NODES = "output_nodes";
 	private static final String OPTION_OUTPUT_WAYS = "output_ways";
 	private static final String OPTION_OUTPUT_RELATIONS = "output_relations";
+	private static final String OPTION_THREADED = "threaded";
 
 	@Override
 	protected String getHelpMessage()
@@ -56,12 +58,15 @@ public class OsmEntitySplit extends AbstractExecutableSingleInputStreamOutput
 	private String pathWays = null;
 	private String pathRelations = null;
 
+	private boolean useThreadedVersion;
+
 	public OsmEntitySplit()
 	{
 		// @formatter:off
 		OptionHelper.add(options, OPTION_OUTPUT_NODES, true, false, "the file to write nodes to");
 		OptionHelper.add(options, OPTION_OUTPUT_WAYS, true, false, "the file to write ways to");
 		OptionHelper.add(options, OPTION_OUTPUT_RELATIONS, true, false, "the file to write relations to");
+		OptionHelper.add(options, OPTION_THREADED, false, false, "use a multi-threaded implementation");
 		// @formatter:on
 	}
 
@@ -85,6 +90,8 @@ public class OsmEntitySplit extends AbstractExecutableSingleInputStreamOutput
 					.println("You should specify an output for at least one entity");
 			System.exit(1);
 		}
+
+		useThreadedVersion = line.hasOption(OPTION_THREADED);
 	}
 
 	public void execute() throws IOException
@@ -94,10 +101,17 @@ public class OsmEntitySplit extends AbstractExecutableSingleInputStreamOutput
 		OsmOutputConfig outputConfig = new OsmOutputConfig(outputFormat,
 				pbfConfig, tboConfig, writeMetadata);
 
-		EntitySplitter splitter = new EntitySplitter(iterator, path(pathNodes),
-				path(pathWays), path(pathRelations), outputConfig);
-
-		splitter.execute();
+		if (!useThreadedVersion) {
+			EntitySplitter splitter = new EntitySplitter(iterator,
+					path(pathNodes), path(pathWays), path(pathRelations),
+					outputConfig);
+			splitter.execute();
+		} else {
+			ThreadedEntitySplitter splitter = new ThreadedEntitySplitter(
+					iterator, path(pathNodes), path(pathWays),
+					path(pathRelations), outputConfig);
+			splitter.execute();
+		}
 	}
 
 	private Path path(String path)
