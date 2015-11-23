@@ -22,8 +22,8 @@ import java.io.IOException;
 public interface OsmIteratorInputFactory
 {
 
-	public OsmIteratorInput createIterator(boolean readMetadata)
-			throws IOException;
+	public OsmIteratorInput createIterator(boolean readTags,
+			boolean readMetadata) throws IOException;
 
 	public OsmIdIteratorInput createIdIterator() throws IOException;
 

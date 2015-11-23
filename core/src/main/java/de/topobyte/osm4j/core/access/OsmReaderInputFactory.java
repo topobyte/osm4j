@@ -22,7 +22,8 @@ import java.io.IOException;
 public interface OsmReaderInputFactory
 {
 
-	public OsmReaderInput createReader(boolean readMetadata) throws IOException;
+	public OsmReaderInput createReader(boolean readTags, boolean readMetadata)
+			throws IOException;
 
 	public OsmIdReaderInput createIdReader() throws IOException;
 
