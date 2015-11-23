@@ -109,7 +109,7 @@ public class OsmEntitySplit extends AbstractExecutableSingleInputStreamOutput
 		} else {
 			ThreadedEntitySplitter splitter = new ThreadedEntitySplitter(
 					iterator, path(pathNodes), path(pathWays),
-					path(pathRelations), outputConfig);
+					path(pathRelations), outputConfig, 10000, 200);
 			splitter.execute();
 		}
 	}

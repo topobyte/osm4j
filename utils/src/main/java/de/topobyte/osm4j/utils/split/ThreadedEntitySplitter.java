@@ -29,10 +29,16 @@ import de.topobyte.osm4j.utils.buffer.RunnableBufferBridge;
 public class ThreadedEntitySplitter extends AbstractEntitySplitter
 {
 
+	private int bufferSize;
+	private int maxNumberOfBuffers;
+
 	public ThreadedEntitySplitter(OsmIterator iterator, Path pathNodes,
-			Path pathWays, Path pathRelations, OsmOutputConfig outputConfig)
+			Path pathWays, Path pathRelations, OsmOutputConfig outputConfig,
+			int bufferSize, int maxNumberOfBuffers)
 	{
 		super(iterator, pathNodes, pathWays, pathRelations, outputConfig);
+		this.bufferSize = bufferSize;
+		this.maxNumberOfBuffers = maxNumberOfBuffers;
 	}
 
 	public void execute() throws IOException
@@ -47,7 +53,7 @@ public class ThreadedEntitySplitter extends AbstractEntitySplitter
 
 	private void run() throws IOException
 	{
-		final OsmBuffer buffer = new OsmBuffer(1000, 20);
+		final OsmBuffer buffer = new OsmBuffer(bufferSize, maxNumberOfBuffers);
 
 		final RunnableBufferBridge bridge = new RunnableBufferBridge(iterator,
 				buffer);
