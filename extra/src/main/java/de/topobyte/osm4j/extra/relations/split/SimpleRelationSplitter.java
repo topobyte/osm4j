@@ -72,8 +72,8 @@ public class SimpleRelationSplitter
 
 		RelationBatch batch = new RelationBatch(maxMembers);
 
-		OsmIteratorInput iteratorInput = iteratorFactory
-				.createIterator(outputConfig.isWriteMetadata());
+		OsmIteratorInput iteratorInput = iteratorFactory.createIterator(true,
+				outputConfig.isWriteMetadata());
 		RelationIterator relations = new RelationIterator(
 				iteratorInput.getIterator());
 

@@ -64,7 +64,7 @@ public class RelationsSeparator
 
 	private void findComplexRelations() throws IOException
 	{
-		OsmIteratorInput input = inputFactory.createIterator(false);
+		OsmIteratorInput input = inputFactory.createIterator(false, false);
 
 		for (OsmRelation relation : new RelationIterator(input.getIterator())) {
 			boolean hasRelationMembers = false;
@@ -95,8 +95,8 @@ public class RelationsSeparator
 		OsmOutputStream osmOutputComplex = OsmIoUtils.setupOsmOutput(
 				outComplex, outputConfig);
 
-		OsmIteratorInput input = inputFactory.createIterator(outputConfig
-				.isWriteMetadata());
+		OsmIteratorInput input = inputFactory.createIterator(true,
+				outputConfig.isWriteMetadata());
 
 		for (OsmRelation relation : new RelationIterator(input.getIterator())) {
 			long id = relation.getId();

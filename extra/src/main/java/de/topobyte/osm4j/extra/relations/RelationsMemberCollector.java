@@ -88,8 +88,8 @@ public class RelationsMemberCollector
 
 		Extractor wayExtractor = new Extractor(EntityType.Way,
 				wayExtractionItems, outputConfig);
-		OsmIteratorInput wayInput = inputWays.createIterator(outputConfig
-				.isWriteMetadata());
+		OsmIteratorInput wayInput = inputWays.createIterator(true,
+				outputConfig.isWriteMetadata());
 		wayExtractor.execute(wayInput.getIterator());
 		wayInput.close();
 
@@ -113,10 +113,9 @@ public class RelationsMemberCollector
 
 		Extractor nodeExtractor = new Extractor(EntityType.Node,
 				nodeExtractionItems, outputConfig);
-		OsmIteratorInput nodeInput = inputNodes.createIterator(outputConfig
-				.isWriteMetadata());
+		OsmIteratorInput nodeInput = inputNodes.createIterator(true,
+				outputConfig.isWriteMetadata());
 		nodeExtractor.execute(nodeInput.getIterator());
 		nodeInput.close();
 	}
-
 }

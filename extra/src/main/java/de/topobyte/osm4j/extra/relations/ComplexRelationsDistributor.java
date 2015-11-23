@@ -197,8 +197,8 @@ public class ComplexRelationsDistributor extends RelationsDistributorBase
 			OsmFileInput fileInput = new OsmFileInput(path,
 					outputConfig.getFileFormat());
 			InMemoryListDataSet data = ListDataSetLoader.read(
-					fileInput.createIterator(outputConfig.isWriteMetadata()),
-					true, true, true);
+					fileInput.createIterator(true,
+							outputConfig.isWriteMetadata()), true, true, true);
 
 			data.sort();
 

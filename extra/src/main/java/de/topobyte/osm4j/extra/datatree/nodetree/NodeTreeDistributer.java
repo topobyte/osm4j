@@ -113,7 +113,7 @@ public class NodeTreeDistributer
 		NodeProgress counter = new NodeProgress();
 		counter.printTimed(1000);
 
-		OsmIteratorInput input = inputFactory.createIterator(false);
+		OsmIteratorInput input = inputFactory.createIterator(false, false);
 		OsmIterator iterator = input.getIterator();
 
 		loop: while (iterator.hasNext()) {
@@ -179,8 +179,8 @@ public class NodeTreeDistributer
 		NodeProgress counter = new NodeProgress();
 		counter.printTimed(1000);
 
-		OsmIteratorInput input = inputFactory.createIterator(outputConfig
-				.isWriteMetadata());
+		OsmIteratorInput input = inputFactory.createIterator(true,
+				outputConfig.isWriteMetadata());
 		OsmIterator iterator = input.getIterator();
 
 		loop: while (iterator.hasNext()) {

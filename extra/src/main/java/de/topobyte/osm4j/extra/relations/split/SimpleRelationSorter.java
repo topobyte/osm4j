@@ -44,8 +44,8 @@ public class SimpleRelationSorter extends RelationSorterBase
 
 		createBatchOutputs();
 
-		OsmIteratorInput iteratorInput = iteratorFactory
-				.createIterator(outputConfig.isWriteMetadata());
+		OsmIteratorInput iteratorInput = iteratorFactory.createIterator(true,
+				outputConfig.isWriteMetadata());
 		RelationIterator relations = new RelationIterator(
 				iteratorInput.getIterator());
 

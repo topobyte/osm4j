@@ -191,8 +191,8 @@ public class Query
 		List<OsmIteratorInput> mergeIteratorInputs = new ArrayList<>();
 		List<OsmIterator> mergeIterators = new ArrayList<>();
 		for (OsmFileInput input : mergeFiles) {
-			OsmIteratorInput iteratorInput = input
-					.createIterator(writeMetadata);
+			OsmIteratorInput iteratorInput = input.createIterator(true,
+					writeMetadata);
 			mergeIteratorInputs.add(iteratorInput);
 			mergeIterators.add(iteratorInput.getIterator());
 		}

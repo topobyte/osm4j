@@ -158,8 +158,8 @@ public class ExtractionFilesBuilder
 
 		// Split entities
 
-		OsmIteratorInput input = fileInput.createIterator(outputConfig
-				.isWriteMetadata());
+		OsmIteratorInput input = fileInput.createIterator(true,
+				outputConfig.isWriteMetadata());
 
 		EntitySplitter splitter = new EntitySplitter(input.getIterator(),
 				pathNodes, pathWays, pathRelations, outputConfig);
@@ -178,8 +178,8 @@ public class ExtractionFilesBuilder
 
 		// Sort ways by first node id
 
-		OsmIteratorInput inputWays = fileInputWays.createIterator(outputConfig
-				.isWriteMetadata());
+		OsmIteratorInput inputWays = fileInputWays.createIterator(true,
+				outputConfig.isWriteMetadata());
 
 		WaysSorterByFirstNodeId waysSorter = new WaysSorterByFirstNodeId(
 				inputWays.getIterator(), pathWaysByNodes, outputConfig);
@@ -189,8 +189,8 @@ public class ExtractionFilesBuilder
 
 		// Map ways to tree
 
-		OsmIteratorInput inputNodes = fileInputNodes
-				.createIterator(outputConfig.isWriteMetadata());
+		OsmIteratorInput inputNodes = fileInputNodes.createIterator(true,
+				outputConfig.isWriteMetadata());
 
 		WaysToTreeMapper waysMapper = new WaysToTreeMapper(
 				inputNodes.getIterator(), pathTree, pathWaysByNodes,
@@ -211,8 +211,8 @@ public class ExtractionFilesBuilder
 
 		// Extract missing way nodes
 
-		inputNodes = fileInputNodes.createIterator(outputConfig
-				.isWriteMetadata());
+		inputNodes = fileInputNodes.createIterator(true,
+				outputConfig.isWriteMetadata());
 
 		MissingWayNodesExtractor wayNodesExtractor = new MissingWayNodesExtractor(
 				inputNodes.getIterator(), pathTree, fileNamesMissingWayNodeIds,

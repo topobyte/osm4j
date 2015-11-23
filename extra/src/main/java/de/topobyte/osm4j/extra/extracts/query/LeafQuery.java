@@ -162,7 +162,7 @@ public class LeafQuery
 	private InMemoryListDataSet read(Path path) throws IOException
 	{
 		OsmFileInput fileInput = new OsmFileInput(path, inputFormat);
-		OsmIteratorInput input = fileInput.createIterator(writeMetadata);
+		OsmIteratorInput input = fileInput.createIterator(true, writeMetadata);
 		InMemoryListDataSet data = ListDataSetLoader.read(input.getIterator(),
 				true, true, true);
 		input.close();

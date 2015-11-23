@@ -58,7 +58,8 @@ public class ComplexRelationGrouper
 
 	public void buildGroups() throws IOException
 	{
-		OsmIteratorInput iteratorInput = iteratorFactory.createIterator(false);
+		OsmIteratorInput iteratorInput = iteratorFactory.createIterator(false,
+				false);
 		relationGraph.build(iteratorInput.getIterator());
 		iteratorInput.close();
 
@@ -78,8 +79,8 @@ public class ComplexRelationGrouper
 		TLongSet idsHasChildRelations = relationGraph.getIdsHasChildRelations();
 		TLongSet idsIsChildRelation = relationGraph.getIdsIsChildRelation();
 
-		OsmIteratorInput iteratorInput = iteratorFactory
-				.createIterator(readMetadata);
+		OsmIteratorInput iteratorInput = iteratorFactory.createIterator(true,
+				readMetadata);
 		RelationIterator relations = new RelationIterator(
 				iteratorInput.getIterator());
 

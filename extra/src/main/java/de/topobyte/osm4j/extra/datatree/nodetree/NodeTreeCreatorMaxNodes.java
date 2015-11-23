@@ -85,7 +85,7 @@ public class NodeTreeCreatorMaxNodes
 			System.exit(1);
 		}
 
-		OsmIteratorInput input = inputFactory.createIterator(false);
+		OsmIteratorInput input = inputFactory.createIterator(true, false);
 		OsmIterator iterator = input.getIterator();
 
 		if (!iterator.hasBounds()) {
