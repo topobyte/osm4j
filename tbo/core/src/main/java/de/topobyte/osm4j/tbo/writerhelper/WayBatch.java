@@ -17,9 +17,11 @@
 
 package de.topobyte.osm4j.tbo.writerhelper;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 import de.topobyte.compactio.CompactWriter;
+import de.topobyte.compactio.OutputStreamCompactWriter;
 import de.topobyte.osm4j.core.model.iface.OsmWay;
 
 public class WayBatch extends EntityBatch<OsmWay>
@@ -33,34 +35,38 @@ public class WayBatch extends EntityBatch<OsmWay>
 	@Override
 	public void write(CompactWriter writer) throws IOException
 	{
-		writeTagStringPool(writer);
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		CompactWriter bwriter = new OutputStreamCompactWriter(baos);
 
-		for (OsmWay way : elements) {
-			write(writer, way);
-		}
-		for (OsmWay way : elements) {
-			writeTags(writer, way);
-		}
+		writeTagStringPool(bwriter);
+		writeAndReset(writer, baos);
 
-		writeMetadata(writer);
+		writeIds(bwriter);
+		writeAndReset(writer, baos);
+
+		writeNodes(bwriter);
+		writeAndReset(writer, baos);
+
+		writeTags(bwriter);
+		writeAndReset(writer, baos);
+
+		writeMetadata(bwriter);
+		writeAndReset(writer, baos);
 	}
 
-	private long idOffset = 0;
 	private long nidOffset = 0;
 
-	private void write(CompactWriter writer, OsmWay way) throws IOException
+	private void writeNodes(CompactWriter writer) throws IOException
 	{
-		long id = way.getId();
-		int nNodes = way.getNumberOfNodes();
+		for (OsmWay way : elements) {
+			int nNodes = way.getNumberOfNodes();
 
-		writer.writeVariableLengthSignedInteger(id - idOffset);
-		idOffset = id;
-
-		writer.writeVariableLengthUnsignedInteger(nNodes);
-		for (int i = 0; i < nNodes; i++) {
-			long nid = way.getNodeId(i);
-			writer.writeVariableLengthSignedInteger(nid - nidOffset);
-			nidOffset = nid;
+			writer.writeVariableLengthUnsignedInteger(nNodes);
+			for (int i = 0; i < nNodes; i++) {
+				long nid = way.getNodeId(i);
+				writer.writeVariableLengthSignedInteger(nid - nidOffset);
+				nidOffset = nid;
+			}
 		}
 	}
 
@@ -68,7 +74,6 @@ public class WayBatch extends EntityBatch<OsmWay>
 	public void clear()
 	{
 		super.clear();
-		idOffset = 0;
 		nidOffset = 0;
 	}
 

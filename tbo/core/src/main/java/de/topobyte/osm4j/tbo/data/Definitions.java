@@ -28,7 +28,7 @@ public class Definitions
 	public static final int DEFAULT_BATCH_SIZE_WAY_NODES = 6144;
 	public static final int DEFAULT_BATCH_SIZE_RELATION_MEMBERS = 8192;
 
-	public static final int VERSION = 1;
+	public static final int VERSION = 2;
 
 	public static final String KEY_CREATION_TIME = "creation-time";
 

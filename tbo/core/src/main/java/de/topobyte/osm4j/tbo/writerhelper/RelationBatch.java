@@ -17,10 +17,11 @@
 
 package de.topobyte.osm4j.tbo.writerhelper;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.List;
 
 import de.topobyte.compactio.CompactWriter;
+import de.topobyte.compactio.OutputStreamCompactWriter;
 import de.topobyte.osm4j.core.model.iface.EntityType;
 import de.topobyte.osm4j.core.model.iface.OsmRelation;
 import de.topobyte.osm4j.core.model.iface.OsmRelationMember;
@@ -40,50 +41,54 @@ public class RelationBatch extends EntityBatch<OsmRelation>
 	@Override
 	public void write(CompactWriter writer) throws IOException
 	{
-		writeTagStringPool(writer);
-		writeMemberStringPool(writer, elements);
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		CompactWriter bwriter = new OutputStreamCompactWriter(baos);
 
-		for (OsmRelation relation : elements) {
-			write(writer, relation);
-		}
-		for (OsmRelation relation : elements) {
-			writeTags(writer, relation);
-		}
+		writeTagStringPool(bwriter);
+		writeAndReset(writer, baos);
 
-		writeMetadata(writer);
+		writeMemberStringPool(bwriter);
+		writeAndReset(writer, baos);
+
+		writeIds(bwriter);
+		writeAndReset(writer, baos);
+
+		writeMembers(bwriter);
+		writeAndReset(writer, baos);
+
+		writeTags(bwriter);
+		writeAndReset(writer, baos);
+
+		writeMetadata(bwriter);
+		writeAndReset(writer, baos);
 	}
 
-	private long idOffset = 0;
 	private long midOffset = 0;
 
-	private void write(CompactWriter writer, OsmRelation relation)
-			throws IOException
+	private void writeMembers(CompactWriter writer) throws IOException
 	{
-		long id = relation.getId();
-		int nMembers = relation.getNumberOfMembers();
+		for (OsmRelation relation : elements) {
+			int nMembers = relation.getNumberOfMembers();
 
-		writer.writeVariableLengthSignedInteger(id - idOffset);
-		idOffset = id;
-
-		writer.writeVariableLengthUnsignedInteger(nMembers);
-		for (int i = 0; i < nMembers; i++) {
-			OsmRelationMember member = relation.getMember(i);
-			long mid = member.getId();
-			EntityType type = member.getType();
-			int t = EntityTypeHelper.getByte(type);
-			int index = stringPoolMembers.getId(member.getRole());
-			writer.writeByte(t);
-			writer.writeVariableLengthSignedInteger(mid - midOffset);
-			writer.writeVariableLengthUnsignedInteger(index);
-			midOffset = mid;
+			writer.writeVariableLengthUnsignedInteger(nMembers);
+			for (int i = 0; i < nMembers; i++) {
+				OsmRelationMember member = relation.getMember(i);
+				long mid = member.getId();
+				EntityType type = member.getType();
+				int t = EntityTypeHelper.getByte(type);
+				int index = stringPoolMembers.getId(member.getRole());
+				writer.writeByte(t);
+				writer.writeVariableLengthSignedInteger(mid - midOffset);
+				writer.writeVariableLengthUnsignedInteger(index);
+				midOffset = mid;
+			}
 		}
 	}
 
-	public void writeMemberStringPool(CompactWriter writer,
-			List<OsmRelation> objects) throws IOException
+	public void writeMemberStringPool(CompactWriter writer) throws IOException
 	{
 		StringPoolBuilder poolBuilder = new StringPoolBuilder();
-		for (OsmRelation object : objects) {
+		for (OsmRelation object : elements) {
 			// add roles
 			int nMembers = object.getNumberOfMembers();
 			for (int i = 0; i < nMembers; i++) {
@@ -100,7 +105,6 @@ public class RelationBatch extends EntityBatch<OsmRelation>
 	public void clear()
 	{
 		super.clear();
-		idOffset = 0;
 		midOffset = 0;
 	}
 

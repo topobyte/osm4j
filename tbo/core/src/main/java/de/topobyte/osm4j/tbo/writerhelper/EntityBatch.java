@@ -17,6 +17,7 @@
 
 package de.topobyte.osm4j.tbo.writerhelper;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +37,8 @@ public abstract class EntityBatch<T extends OsmEntity> implements Blockable
 
 	protected List<T> elements;
 
+	private long idOffset = 0;
+
 	protected StringPool stringPoolTags;
 	protected StringPool stringPoolUsernames;
 
@@ -52,12 +55,32 @@ public abstract class EntityBatch<T extends OsmEntity> implements Blockable
 
 	public void clear()
 	{
+		idOffset = 0;
 		elements.clear();
 	}
 
 	public int size()
 	{
 		return elements.size();
+	}
+
+	public void writeAndReset(CompactWriter writer, ByteArrayOutputStream baos)
+			throws IOException
+	{
+		byte[] bytes = baos.toByteArray();
+		writer.writeVariableLengthUnsignedInteger(bytes.length);
+		writer.write(bytes);
+		baos.reset();
+	}
+
+	public void writeIds(CompactWriter writer) throws IOException
+	{
+		for (OsmEntity entity : elements) {
+			long id = entity.getId();
+
+			writer.writeVariableLengthSignedInteger(id - idOffset);
+			idOffset = id;
+		}
 	}
 
 	public void writeTagStringPool(CompactWriter writer) throws IOException
@@ -107,19 +130,20 @@ public abstract class EntityBatch<T extends OsmEntity> implements Blockable
 		}
 	}
 
-	protected void writeTags(CompactWriter writer, OsmEntity entity)
-			throws IOException
+	protected void writeTags(CompactWriter writer) throws IOException
 	{
-		int nTags = entity.getNumberOfTags();
-		writer.writeVariableLengthUnsignedInteger(nTags);
-		for (int i = 0; i < nTags; i++) {
-			OsmTag tag = entity.getTag(i);
-			String key = tag.getKey();
-			String value = tag.getValue();
-			int k = stringPoolTags.getId(key);
-			int v = stringPoolTags.getId(value);
-			writer.writeVariableLengthUnsignedInteger(k);
-			writer.writeVariableLengthUnsignedInteger(v);
+		for (OsmEntity entity : elements) {
+			int nTags = entity.getNumberOfTags();
+			writer.writeVariableLengthUnsignedInteger(nTags);
+			for (int i = 0; i < nTags; i++) {
+				OsmTag tag = entity.getTag(i);
+				String key = tag.getKey();
+				String value = tag.getValue();
+				int k = stringPoolTags.getId(key);
+				int v = stringPoolTags.getId(value);
+				writer.writeVariableLengthUnsignedInteger(k);
+				writer.writeVariableLengthUnsignedInteger(v);
+			}
 		}
 	}
 

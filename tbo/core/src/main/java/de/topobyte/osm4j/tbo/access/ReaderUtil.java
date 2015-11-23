@@ -119,6 +119,7 @@ public class ReaderUtil
 	public static List<Node> parseNodes(CompactReader reader, FileBlock block,
 			boolean hasMetadata, boolean fetchMetadata) throws IOException
 	{
+		reader.readVariableLengthUnsignedInteger();
 		List<String> poolTags = parsePool(reader);
 
 		int n = block.getNumObjects();
@@ -132,11 +133,13 @@ public class ReaderUtil
 		double[] lats = new double[n];
 		double[] lons = new double[n];
 
+		reader.readVariableLengthUnsignedInteger();
 		for (int i = 0; i < n; i++) {
 			long id = idOffset + reader.readVariableLengthSignedInteger();
 			ids[i] = idOffset = id;
 		}
 
+		reader.readVariableLengthUnsignedInteger();
 		for (int i = 0; i < n; i++) {
 			long mlat = latOffset + reader.readVariableLengthSignedInteger();
 			long mlon = lonOffset + reader.readVariableLengthSignedInteger();
@@ -146,6 +149,7 @@ public class ReaderUtil
 			lonOffset = mlon;
 		}
 
+		reader.readVariableLengthUnsignedInteger();
 		for (int i = 0; i < n; i++) {
 			List<Tag> tags = parseTags(reader, poolTags);
 			Node node = new Node(ids[i], lons[i], lats[i]);
@@ -154,6 +158,7 @@ public class ReaderUtil
 		}
 
 		if (hasMetadata && fetchMetadata) {
+			reader.readVariableLengthUnsignedInteger();
 			parseMetadata(reader, nodes);
 		}
 
@@ -163,14 +168,16 @@ public class ReaderUtil
 	public static TLongList parseNodeIds(CompactReader reader, FileBlock block)
 			throws IOException
 	{
-		parsePool(reader);
-
-		TLongList ids = new TLongArrayList();
+		// skip tag pool
+		long len = reader.readVariableLengthUnsignedInteger();
+		reader.skip(len);
 
 		long idOffset = 0;
 
 		int n = block.getNumObjects();
+		TLongList ids = new TLongArrayList(n);
 
+		reader.readVariableLengthUnsignedInteger();
 		for (int i = 0; i < n; i++) {
 			long id = idOffset + reader.readVariableLengthSignedInteger();
 			ids.add(id);
@@ -183,6 +190,7 @@ public class ReaderUtil
 	public static List<Way> parseWays(CompactReader reader, FileBlock block,
 			boolean hasMetadata, boolean fetchMetadata) throws IOException
 	{
+		reader.readVariableLengthUnsignedInteger();
 		List<String> poolTags = parsePool(reader);
 
 		int n = block.getNumObjects();
@@ -191,10 +199,16 @@ public class ReaderUtil
 		long idOffset = 0;
 		long nidOffset = 0;
 
+		long[] ids = new long[n];
+
+		reader.readVariableLengthUnsignedInteger();
 		for (int i = 0; i < n; i++) {
 			long id = idOffset + reader.readVariableLengthSignedInteger();
-			idOffset = id;
+			ids[i] = idOffset = id;
+		}
 
+		reader.readVariableLengthUnsignedInteger();
+		for (int i = 0; i < n; i++) {
 			TLongArrayList nodeIds = new TLongArrayList();
 			long numNodes = reader.readVariableLengthUnsignedInteger();
 			for (int k = 0; k < numNodes; k++) {
@@ -203,16 +217,18 @@ public class ReaderUtil
 				nidOffset = nid;
 			}
 
-			Way way = new Way(id, nodeIds);
+			Way way = new Way(ids[i], nodeIds);
 			ways.add(way);
 		}
 
+		reader.readVariableLengthUnsignedInteger();
 		for (int i = 0; i < n; i++) {
 			List<Tag> tags = parseTags(reader, poolTags);
 			ways.get(i).setTags(tags);
 		}
 
 		if (hasMetadata && fetchMetadata) {
+			reader.readVariableLengthUnsignedInteger();
 			parseMetadata(reader, ways);
 		}
 
@@ -222,21 +238,20 @@ public class ReaderUtil
 	public static TLongList parseWayIds(CompactReader reader, FileBlock block)
 			throws IOException
 	{
-		parsePool(reader);
-
-		TLongList ids = new TLongArrayList();
+		// skip tag pool
+		long len = reader.readVariableLengthUnsignedInteger();
+		reader.skip(len);
 
 		long idOffset = 0;
 
-		for (int i = 0; i < block.getNumObjects(); i++) {
+		int n = block.getNumObjects();
+		TLongList ids = new TLongArrayList(n);
+
+		reader.readVariableLengthUnsignedInteger();
+		for (int i = 0; i < n; i++) {
 			long id = idOffset + reader.readVariableLengthSignedInteger();
 			ids.add(id);
 			idOffset = id;
-
-			long numNodes = reader.readVariableLengthUnsignedInteger();
-			for (int k = 0; k < numNodes; k++) {
-				reader.readVariableLengthSignedInteger();
-			}
 		}
 
 		return ids;
@@ -246,7 +261,10 @@ public class ReaderUtil
 			FileBlock block, boolean hasMetadata, boolean fetchMetadata)
 			throws IOException
 	{
+		reader.readVariableLengthUnsignedInteger();
 		List<String> poolTags = parsePool(reader);
+
+		reader.readVariableLengthUnsignedInteger();
 		List<String> poolMembers = parsePool(reader);
 
 		int n = block.getNumObjects();
@@ -255,10 +273,16 @@ public class ReaderUtil
 		long idOffset = 0;
 		long midOffset = 0;
 
+		long[] ids = new long[n];
+
+		reader.readVariableLengthUnsignedInteger();
 		for (int i = 0; i < n; i++) {
 			long id = idOffset + reader.readVariableLengthSignedInteger();
-			idOffset = id;
+			ids[i] = idOffset = id;
+		}
 
+		reader.readVariableLengthUnsignedInteger();
+		for (int i = 0; i < n; i++) {
 			List<RelationMember> members = new ArrayList<RelationMember>();
 			long numMembers = reader.readVariableLengthUnsignedInteger();
 			for (int k = 0; k < numMembers; k++) {
@@ -272,16 +296,18 @@ public class ReaderUtil
 				members.add(new RelationMember(mid, type, role));
 			}
 
-			Relation relation = new Relation(id, members);
+			Relation relation = new Relation(ids[i], members);
 			relations.add(relation);
 		}
 
+		reader.readVariableLengthUnsignedInteger();
 		for (int i = 0; i < n; i++) {
 			List<Tag> tags = parseTags(reader, poolTags);
 			relations.get(i).setTags(tags);
 		}
 
 		if (hasMetadata && fetchMetadata) {
+			reader.readVariableLengthUnsignedInteger();
 			parseMetadata(reader, relations);
 		}
 
@@ -291,24 +317,23 @@ public class ReaderUtil
 	public static TLongList parseRelationIds(CompactReader reader,
 			FileBlock block) throws IOException
 	{
-		parsePool(reader);
-		parsePool(reader);
-
-		TLongList ids = new TLongArrayList();
+		// skip tag pool
+		long len = reader.readVariableLengthUnsignedInteger();
+		reader.skip(len);
+		// skip member pool
+		len = reader.readVariableLengthUnsignedInteger();
+		reader.skip(len);
 
 		long idOffset = 0;
 
-		for (int i = 0; i < block.getNumObjects(); i++) {
+		int n = block.getNumObjects();
+		TLongList ids = new TLongArrayList(n);
+
+		reader.readVariableLengthUnsignedInteger();
+		for (int i = 0; i < n; i++) {
 			long id = idOffset + reader.readVariableLengthSignedInteger();
 			ids.add(id);
 			idOffset = id;
-
-			long numMembers = reader.readVariableLengthUnsignedInteger();
-			for (int k = 0; k < numMembers; k++) {
-				reader.readByte();
-				reader.readVariableLengthSignedInteger();
-				reader.readVariableLengthUnsignedInteger();
-			}
 		}
 
 		return ids;

@@ -17,9 +17,11 @@
 
 package de.topobyte.osm4j.tbo.writerhelper;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 import de.topobyte.compactio.CompactWriter;
+import de.topobyte.compactio.OutputStreamCompactWriter;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
 
 public class NodeBatch extends EntityBatch<OsmNode>
@@ -33,47 +35,41 @@ public class NodeBatch extends EntityBatch<OsmNode>
 	@Override
 	public void write(CompactWriter writer) throws IOException
 	{
-		writeTagStringPool(writer);
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		CompactWriter bwriter = new OutputStreamCompactWriter(baos);
 
-		for (OsmNode node : elements) {
-			writeIds(writer, node);
-		}
-		for (OsmNode node : elements) {
-			writeCoords(writer, node);
-		}
-		for (OsmNode node : elements) {
-			writeTags(writer, node);
-		}
+		writeTagStringPool(bwriter);
+		writeAndReset(writer, baos);
 
-		writeMetadata(writer);
+		writeIds(bwriter);
+		writeAndReset(writer, baos);
+
+		writeCoords(bwriter);
+		writeAndReset(writer, baos);
+
+		writeTags(bwriter);
+		writeAndReset(writer, baos);
+
+		writeMetadata(bwriter);
+		writeAndReset(writer, baos);
 	}
-
-	private long idOffset = 0;
 
 	private long latOffset = 0;
 	private long lonOffset = 0;
 
-	private void writeIds(CompactWriter writer, OsmNode node)
-			throws IOException
+	private void writeCoords(CompactWriter writer) throws IOException
 	{
-		long id = node.getId();
+		for (OsmNode node : elements) {
+			double lat = node.getLatitude();
+			double lon = node.getLongitude();
+			long mlat = toLong(lat);
+			long mlon = toLong(lon);
 
-		writer.writeVariableLengthSignedInteger(id - idOffset);
-		idOffset = id;
-	}
-
-	private void writeCoords(CompactWriter writer, OsmNode node)
-			throws IOException
-	{
-		double lat = node.getLatitude();
-		double lon = node.getLongitude();
-		long mlat = toLong(lat);
-		long mlon = toLong(lon);
-
-		writer.writeVariableLengthSignedInteger(mlat - latOffset);
-		writer.writeVariableLengthSignedInteger(mlon - lonOffset);
-		latOffset = mlat;
-		lonOffset = mlon;
+			writer.writeVariableLengthSignedInteger(mlat - latOffset);
+			writer.writeVariableLengthSignedInteger(mlon - lonOffset);
+			latOffset = mlat;
+			lonOffset = mlon;
+		}
 	}
 
 	private long toLong(double degrees)
@@ -85,7 +81,6 @@ public class NodeBatch extends EntityBatch<OsmNode>
 	public void clear()
 	{
 		super.clear();
-		idOffset = 0;
 		latOffset = 0;
 		lonOffset = 0;
 	}
