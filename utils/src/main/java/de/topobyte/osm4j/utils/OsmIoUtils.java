@@ -50,12 +50,19 @@ public class OsmIoUtils
 	public static OsmIterator setupOsmIterator(InputStream in,
 			FileFormat format, boolean readMetadata) throws IOException
 	{
+		return setupOsmIterator(in, format, true, readMetadata);
+	}
+
+	public static OsmIterator setupOsmIterator(InputStream in,
+			FileFormat format, boolean readTags, boolean readMetadata)
+			throws IOException
+	{
 		switch (format) {
 		default:
 		case PBF:
 			return new PbfIterator(in, readMetadata);
 		case TBO:
-			return new TboIterator(in, readMetadata);
+			return new TboIterator(in, readTags, readMetadata);
 		case XML:
 			return new OsmXmlIterator(in, readMetadata);
 		}
@@ -64,12 +71,18 @@ public class OsmIoUtils
 	public static OsmReader setupOsmReader(InputStream in, FileFormat format,
 			boolean readMetadata) throws IOException
 	{
+		return setupOsmReader(in, format, true, readMetadata);
+	}
+
+	public static OsmReader setupOsmReader(InputStream in, FileFormat format,
+			boolean readTags, boolean readMetadata) throws IOException
+	{
 		switch (format) {
 		default:
 		case PBF:
 			return new PbfReader(in, readMetadata);
 		case TBO:
-			return new TboReader(in, readMetadata);
+			return new TboReader(in, readTags, readMetadata);
 		case XML:
 			return new OsmXmlReader(in, readMetadata);
 		}
@@ -116,7 +129,7 @@ public class OsmIoUtils
 			OsmReader pbfReader = new PbfReader(in, false);
 			return new OsmElementCounterReaderAdapter(pbfReader);
 		case TBO:
-			TboReader tboReader = new TboReader(in, false);
+			TboReader tboReader = new TboReader(in, false, false);
 			return new OsmElementCounterReaderAdapter(tboReader);
 		case XML:
 			OsmReader xmlReader = new OsmXmlReader(in, false);
