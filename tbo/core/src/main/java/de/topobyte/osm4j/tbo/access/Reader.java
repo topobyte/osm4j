@@ -35,20 +35,26 @@ import de.topobyte.osm4j.tbo.io.Decompression;
 public class Reader extends BlockReader
 {
 
+	private boolean fetchTags;
+
 	private boolean hasMetadata;
 	private boolean fetchMetadata;
 
 	private final Handler handler;
 
-	public Reader(InputStream is, Handler handler, boolean fetchMetadata)
+	public Reader(InputStream is, Handler handler, boolean fetchTags,
+			boolean fetchMetadata)
 	{
-		this(new InputStreamCompactReader(is), handler, fetchMetadata);
+		this(new InputStreamCompactReader(is), handler, fetchTags,
+				fetchMetadata);
 	}
 
-	public Reader(CompactReader reader, Handler handler, boolean fetchMetadata)
+	public Reader(CompactReader reader, Handler handler, boolean fetchTags,
+			boolean fetchMetadata)
 	{
 		super(reader);
 		this.handler = handler;
+		this.fetchTags = fetchTags;
 		this.fetchMetadata = fetchMetadata;
 	}
 
@@ -105,20 +111,20 @@ public class Reader extends BlockReader
 
 		// read objects
 		if (block.getType() == Definitions.BLOCK_TYPE_NODES) {
-			List<Node> nodes = ReaderUtil.parseNodes(reader, block,
+			List<Node> nodes = ReaderUtil.parseNodes(reader, block, fetchTags,
 					hasMetadata, fetchMetadata);
 			for (Node node : nodes) {
 				handler.handle(node);
 			}
 		} else if (block.getType() == Definitions.BLOCK_TYPE_WAYS) {
-			List<Way> ways = ReaderUtil.parseWays(reader, block, hasMetadata,
-					fetchMetadata);
+			List<Way> ways = ReaderUtil.parseWays(reader, block, fetchTags,
+					hasMetadata, fetchMetadata);
 			for (Way way : ways) {
 				handler.handle(way);
 			}
 		} else if (block.getType() == Definitions.BLOCK_TYPE_RELATIONS) {
 			List<Relation> relations = ReaderUtil.parseRelations(reader, block,
-					hasMetadata, fetchMetadata);
+					fetchTags, hasMetadata, fetchMetadata);
 			for (Relation relation : relations) {
 				handler.handle(relation);
 			}

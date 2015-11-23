@@ -44,7 +44,7 @@ public class TestCountIterator
 		FileInputStream input = new FileInputStream(file);
 		CompactReader compactReader = new InputStreamCompactReader(input);
 
-		TboIterator iterator = new TboIterator(compactReader, false);
+		TboIterator iterator = new TboIterator(compactReader, true, false);
 		while (iterator.hasNext()) {
 			EntityContainer container = iterator.next();
 			switch (container.getType()) {
@@ -64,5 +64,4 @@ public class TestCountIterator
 		System.out.println("ways:      " + wc);
 		System.out.println("relations: " + rc);
 	}
-
 }

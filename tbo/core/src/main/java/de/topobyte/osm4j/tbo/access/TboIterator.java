@@ -40,6 +40,8 @@ public class TboIterator extends BlockReader implements OsmIterator
 
 	private FileHeader header;
 	private boolean hasMetadata;
+
+	private boolean fetchTags;
 	private boolean fetchMetadata;
 
 	private int available = 0;
@@ -50,16 +52,17 @@ public class TboIterator extends BlockReader implements OsmIterator
 	private EntityType entityType = EntityType.Node;
 	private List<? extends OsmEntity> entities = null;
 
-	public TboIterator(InputStream input, boolean fetchMetadata)
-			throws IOException
+	public TboIterator(InputStream input, boolean fetchTags,
+			boolean fetchMetadata) throws IOException
 	{
-		this(new InputStreamCompactReader(input), fetchMetadata);
+		this(new InputStreamCompactReader(input), fetchTags, fetchMetadata);
 	}
 
-	public TboIterator(CompactReader reader, boolean fetchMetadata)
-			throws IOException
+	public TboIterator(CompactReader reader, boolean fetchTags,
+			boolean fetchMetadata) throws IOException
 	{
 		super(reader);
+		this.fetchTags = fetchTags;
 		this.fetchMetadata = fetchMetadata;
 
 		header = ReaderUtil.parseHeader(reader);
@@ -112,18 +115,18 @@ public class TboIterator extends BlockReader implements OsmIterator
 		switch (block.getType()) {
 		case Definitions.BLOCK_TYPE_NODES:
 			entityType = EntityType.Node;
-			entities = ReaderUtil.parseNodes(reader, block, hasMetadata,
-					fetchMetadata);
+			entities = ReaderUtil.parseNodes(reader, block, fetchTags,
+					hasMetadata, fetchMetadata);
 			break;
 		case Definitions.BLOCK_TYPE_WAYS:
 			entityType = EntityType.Way;
-			entities = ReaderUtil.parseWays(reader, block, hasMetadata,
-					fetchMetadata);
+			entities = ReaderUtil.parseWays(reader, block, fetchTags,
+					hasMetadata, fetchMetadata);
 			break;
 		case Definitions.BLOCK_TYPE_RELATIONS:
 			entityType = EntityType.Relation;
-			entities = ReaderUtil.parseRelations(reader, block, hasMetadata,
-					fetchMetadata);
+			entities = ReaderUtil.parseRelations(reader, block, fetchTags,
+					hasMetadata, fetchMetadata);
 			break;
 		}
 	}

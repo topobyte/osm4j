@@ -117,10 +117,16 @@ public class ReaderUtil
 	}
 
 	public static List<Node> parseNodes(CompactReader reader, FileBlock block,
-			boolean hasMetadata, boolean fetchMetadata) throws IOException
+			boolean fetchTags, boolean hasMetadata, boolean fetchMetadata)
+			throws IOException
 	{
-		reader.readVariableLengthUnsignedInteger();
-		List<String> poolTags = parsePool(reader);
+		long len = reader.readVariableLengthUnsignedInteger();
+		List<String> poolTags = null;
+		if (fetchTags) {
+			poolTags = parsePool(reader);
+		} else {
+			reader.skip(len);
+		}
 
 		int n = block.getNumObjects();
 		List<Node> nodes = new ArrayList<Node>(n);
@@ -149,12 +155,19 @@ public class ReaderUtil
 			lonOffset = mlon;
 		}
 
-		reader.readVariableLengthUnsignedInteger();
 		for (int i = 0; i < n; i++) {
-			List<Tag> tags = parseTags(reader, poolTags);
 			Node node = new Node(ids[i], lons[i], lats[i]);
 			nodes.add(node);
-			node.setTags(tags);
+		}
+
+		len = reader.readVariableLengthUnsignedInteger();
+		if (fetchTags) {
+			for (int i = 0; i < n; i++) {
+				List<Tag> tags = parseTags(reader, poolTags);
+				nodes.get(i).setTags(tags);
+			}
+		} else {
+			reader.skip(len);
 		}
 
 		if (hasMetadata && fetchMetadata) {
@@ -188,10 +201,16 @@ public class ReaderUtil
 	}
 
 	public static List<Way> parseWays(CompactReader reader, FileBlock block,
-			boolean hasMetadata, boolean fetchMetadata) throws IOException
+			boolean fetchTags, boolean hasMetadata, boolean fetchMetadata)
+			throws IOException
 	{
-		reader.readVariableLengthUnsignedInteger();
-		List<String> poolTags = parsePool(reader);
+		long len = reader.readVariableLengthUnsignedInteger();
+		List<String> poolTags = null;
+		if (fetchTags) {
+			poolTags = parsePool(reader);
+		} else {
+			reader.skip(len);
+		}
 
 		int n = block.getNumObjects();
 		List<Way> ways = new ArrayList<Way>(n);
@@ -221,10 +240,14 @@ public class ReaderUtil
 			ways.add(way);
 		}
 
-		reader.readVariableLengthUnsignedInteger();
-		for (int i = 0; i < n; i++) {
-			List<Tag> tags = parseTags(reader, poolTags);
-			ways.get(i).setTags(tags);
+		len = reader.readVariableLengthUnsignedInteger();
+		if (fetchTags) {
+			for (int i = 0; i < n; i++) {
+				List<Tag> tags = parseTags(reader, poolTags);
+				ways.get(i).setTags(tags);
+			}
+		} else {
+			reader.skip(len);
 		}
 
 		if (hasMetadata && fetchMetadata) {
@@ -258,11 +281,16 @@ public class ReaderUtil
 	}
 
 	public static List<Relation> parseRelations(CompactReader reader,
-			FileBlock block, boolean hasMetadata, boolean fetchMetadata)
-			throws IOException
+			FileBlock block, boolean fetchTags, boolean hasMetadata,
+			boolean fetchMetadata) throws IOException
 	{
-		reader.readVariableLengthUnsignedInteger();
-		List<String> poolTags = parsePool(reader);
+		long len = reader.readVariableLengthUnsignedInteger();
+		List<String> poolTags = null;
+		if (fetchTags) {
+			poolTags = parsePool(reader);
+		} else {
+			reader.skip(len);
+		}
 
 		reader.readVariableLengthUnsignedInteger();
 		List<String> poolMembers = parsePool(reader);
@@ -301,9 +329,14 @@ public class ReaderUtil
 		}
 
 		reader.readVariableLengthUnsignedInteger();
-		for (int i = 0; i < n; i++) {
-			List<Tag> tags = parseTags(reader, poolTags);
-			relations.get(i).setTags(tags);
+		len = reader.readVariableLengthUnsignedInteger();
+		if (fetchTags) {
+			for (int i = 0; i < n; i++) {
+				List<Tag> tags = parseTags(reader, poolTags);
+				relations.get(i).setTags(tags);
+			}
+		} else {
+			reader.skip(len);
 		}
 
 		if (hasMetadata && fetchMetadata) {
