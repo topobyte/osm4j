@@ -68,8 +68,8 @@ public class OsmFileSetInput implements OsmIteratorInputFactory
 	}
 
 	@Override
-	public OsmIteratorInput createIterator(boolean readMetadata)
-			throws IOException
+	public OsmIteratorInput createIterator(boolean readTags,
+			boolean readMetadata) throws IOException
 	{
 		Collection<InputStream> inputs = new ArrayList<>();
 		Collection<OsmIterator> iterators = new ArrayList<>();
@@ -78,7 +78,7 @@ public class OsmFileSetInput implements OsmIteratorInputFactory
 		for (OsmFile osmFile : osmFiles) {
 			InputStream input = factory.create(osmFile.getPath().toFile());
 			OsmIterator iterator = OsmIoUtils.setupOsmIterator(input,
-					osmFile.getFileFormat(), readMetadata);
+					osmFile.getFileFormat(), readTags, readMetadata);
 			inputs.add(input);
 			iterators.add(iterator);
 		}

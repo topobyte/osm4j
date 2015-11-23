@@ -70,13 +70,13 @@ public abstract class AbstractExecutableSingleInputStreamOutput extends
 	protected OsmIterator createIterator() throws IOException
 	{
 		OsmStreamInput input = new OsmStreamInput(osmStream);
-		return input.createIterator(readMetadata).getIterator();
+		return input.createIterator(readTags, readMetadata).getIterator();
 	}
 
 	protected OsmReader createReader() throws IOException
 	{
 		OsmStreamInput input = new OsmStreamInput(osmStream);
-		return input.createReader(readMetadata).getReader();
+		return input.createReader(readTags, readMetadata).getReader();
 	}
 
 	protected void finish() throws IOException

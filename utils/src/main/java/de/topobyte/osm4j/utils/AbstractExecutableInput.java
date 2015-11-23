@@ -25,6 +25,7 @@ public abstract class AbstractExecutableInput extends AbstractExecutable
 	private static final String OPTION_INPUT_FORMAT = "input_format";
 
 	protected FileFormat inputFormat;
+	protected boolean readTags = true;
 	protected boolean readMetadata = true;
 
 	public AbstractExecutableInput()

@@ -34,6 +34,8 @@ public abstract class AbstractExecutableInputOutput extends AbstractExecutable
 	protected PbfConfig pbfConfig;
 	protected TboConfig tboConfig;
 
+	protected boolean readTags = true;
+
 	protected boolean readMetadata = true;
 	protected boolean writeMetadata = true;
 

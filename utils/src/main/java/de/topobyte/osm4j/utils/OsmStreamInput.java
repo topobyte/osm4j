@@ -49,19 +49,20 @@ public class OsmStreamInput implements OsmInputAccessFactory
 	}
 
 	@Override
-	public OsmIteratorInput createIterator(boolean readMetadata)
-			throws IOException
+	public OsmIteratorInput createIterator(boolean readTags,
+			boolean readMetadata) throws IOException
 	{
 		OsmIterator iterator = OsmIoUtils.setupOsmIterator(input, fileFormat,
-				readMetadata);
+				readTags, readMetadata);
 		return new OsmSingleIteratorInput(input, iterator);
 	}
 
 	@Override
-	public OsmReaderInput createReader(boolean readMetadata) throws IOException
+	public OsmReaderInput createReader(boolean readTags, boolean readMetadata)
+			throws IOException
 	{
 		OsmReader reader = OsmIoUtils.setupOsmReader(input, fileFormat,
-				readMetadata);
+				readTags, readMetadata);
 		return new OsmSingleReaderInput(input, reader);
 	}
 

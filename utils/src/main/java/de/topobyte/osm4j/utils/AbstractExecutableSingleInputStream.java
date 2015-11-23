@@ -26,7 +26,8 @@ import de.topobyte.osm4j.core.access.OsmIterator;
 import de.topobyte.osm4j.core.access.OsmReader;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
-public abstract class AbstractExecutableSingleInputStream extends AbstractExecutableInput
+public abstract class AbstractExecutableSingleInputStream extends
+		AbstractExecutableInput
 {
 
 	private static final String OPTION_INPUT = "input";
@@ -69,13 +70,13 @@ public abstract class AbstractExecutableSingleInputStream extends AbstractExecut
 	protected OsmIterator createIterator() throws IOException
 	{
 		OsmStreamInput input = new OsmStreamInput(osmStream);
-		return input.createIterator(readMetadata).getIterator();
+		return input.createIterator(readTags, readMetadata).getIterator();
 	}
 
 	protected OsmReader createReader() throws IOException
 	{
 		OsmStreamInput input = new OsmStreamInput(osmStream);
-		return input.createReader(readMetadata).getReader();
+		return input.createReader(readTags, readMetadata).getReader();
 	}
 
 	protected void finish() throws IOException
