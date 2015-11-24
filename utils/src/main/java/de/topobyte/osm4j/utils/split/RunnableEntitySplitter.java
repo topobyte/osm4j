@@ -29,15 +29,15 @@ import de.topobyte.osm4j.utils.buffer.OsmBuffer;
 class RunnableEntitySplitter implements Runnable
 {
 
-	private OsmBuffer buffer;
+	private final OsmBuffer buffer;
 
-	private boolean passNodes = false;
-	private boolean passWays = false;
-	private boolean passRelations = false;
+	private final boolean passNodes;
+	private final boolean passWays;
+	private final boolean passRelations;
 
-	private OsmOutputStream oosNodes;
-	private OsmOutputStream oosWays;
-	private OsmOutputStream oosRelations;
+	private final OsmOutputStream oosNodes;
+	private final OsmOutputStream oosWays;
+	private final OsmOutputStream oosRelations;
 
 	public RunnableEntitySplitter(OsmBuffer buffer, OsmOutputStream oosNodes,
 			OsmOutputStream oosWays, OsmOutputStream oosRelations)

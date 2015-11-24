@@ -25,11 +25,11 @@ import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.osm4j.core.model.iface.OsmRelation;
 import de.topobyte.osm4j.core.model.iface.OsmWay;
 
-public class RunnableBufferBridge implements Runnable
+public class RunnableBufferBridge implements StoppableRunnable
 {
 
-	private OsmIterator input;
-	private OsmBuffer output;
+	private final OsmIterator input;
+	private final OsmBuffer output;
 
 	private boolean stopped = false;
 
@@ -39,6 +39,7 @@ public class RunnableBufferBridge implements Runnable
 		this.output = output;
 	}
 
+	@Override
 	public void stop()
 	{
 		stopped = true;

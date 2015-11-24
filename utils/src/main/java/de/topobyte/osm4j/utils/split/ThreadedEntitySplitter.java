@@ -18,12 +18,14 @@
 package de.topobyte.osm4j.utils.split;
 
 import java.io.IOException;
-import java.lang.Thread.UncaughtExceptionHandler;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 
 import de.topobyte.osm4j.core.access.OsmIterator;
 import de.topobyte.osm4j.utils.OsmOutputConfig;
 import de.topobyte.osm4j.utils.buffer.OsmBuffer;
+import de.topobyte.osm4j.utils.buffer.ParallelExecutor;
 import de.topobyte.osm4j.utils.buffer.RunnableBufferBridge;
 
 public class ThreadedEntitySplitter extends AbstractEntitySplitter
@@ -49,65 +51,21 @@ public class ThreadedEntitySplitter extends AbstractEntitySplitter
 		finish();
 	}
 
-	private Throwable exceptionFromThread = null;
-
 	private void run() throws IOException
 	{
-		final OsmBuffer buffer = new OsmBuffer(bufferSize, maxNumberOfBuffers);
+		OsmBuffer buffer = new OsmBuffer(bufferSize, maxNumberOfBuffers);
 
-		final RunnableBufferBridge bridge = new RunnableBufferBridge(iterator,
-				buffer);
+		RunnableBufferBridge bridge = new RunnableBufferBridge(iterator, buffer);
 
-		final RunnableEntitySplitter splitter = new RunnableEntitySplitter(
-				buffer, oosNodes, oosWays, oosRelations);
+		RunnableEntitySplitter splitter = new RunnableEntitySplitter(buffer,
+				oosNodes, oosWays, oosRelations);
 
-		final Thread readerThread = new Thread(bridge);
-		final Thread splitterThread = new Thread(splitter);
+		List<Runnable> tasks = new ArrayList<>();
+		tasks.add(bridge);
+		tasks.add(splitter);
 
-		readerThread
-				.setUncaughtExceptionHandler(new UncaughtExceptionHandler() {
-
-					@Override
-					public void uncaughtException(Thread t, Throwable e)
-					{
-						bridge.stop();
-						splitterThread.interrupt();
-						exceptionFromThread = e;
-					}
-				});
-
-		splitterThread
-				.setUncaughtExceptionHandler(new UncaughtExceptionHandler() {
-
-					@Override
-					public void uncaughtException(Thread t, Throwable e)
-					{
-						bridge.stop();
-						readerThread.interrupt();
-						exceptionFromThread = e;
-					}
-				});
-
-		readerThread.start();
-		splitterThread.start();
-
-		while (true) {
-			try {
-				readerThread.join();
-				splitterThread.join();
-				break;
-			} catch (InterruptedException e) {
-				// continue
-			}
-		}
-
-		if (exceptionFromThread != null) {
-			Throwable cause = exceptionFromThread.getCause();
-			if (cause instanceof IOException) {
-				throw ((IOException) cause);
-			}
-			throw new RuntimeException(exceptionFromThread);
-		}
+		ParallelExecutor executor = new ParallelExecutor(tasks);
+		executor.execute();
 	}
 
 }
