@@ -328,7 +328,6 @@ public class ReaderUtil
 			relations.add(relation);
 		}
 
-		reader.readVariableLengthUnsignedInteger();
 		len = reader.readVariableLengthUnsignedInteger();
 		if (fetchTags) {
 			for (int i = 0; i < n; i++) {
