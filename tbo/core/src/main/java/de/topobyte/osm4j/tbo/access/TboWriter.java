@@ -85,9 +85,15 @@ public class TboWriter implements OsmOutputStream
 	public TboWriter(BlockWriter blockWriter, boolean writeMetadata,
 			boolean lowMemoryFootPrint)
 	{
-		blockableWriter = new BlockableWriter(blockWriter, lowMemoryFootPrint);
+		this(blockWriter, new BlockableWriter(blockWriter, lowMemoryFootPrint),
+				writeMetadata);
+	}
 
+	public TboWriter(BlockWriter blockWriter, BlockableWriter blockableWriter,
+			boolean writeMetadata)
+	{
 		this.blockWriter = blockWriter;
+		this.blockableWriter = blockableWriter;
 		this.writeMetadata = writeMetadata;
 
 		nodeBatch = new NodeBatch(writeMetadata);
