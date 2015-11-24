@@ -15,27 +15,19 @@ import de.topobyte.osm4j.tbo.writerhelper.Blockable;
 public class BlockableWriter
 {
 
-	private BlockWriter blockWriter;
-
 	private ByteArrayOutputStream baos;
 
 	private boolean lowMemoryFootprint;
 
-	public BlockableWriter(BlockWriter blockWriter)
+	public BlockableWriter(boolean lowMemoryFootprint)
 	{
-		this(blockWriter, false);
-	}
-
-	public BlockableWriter(BlockWriter blockWriter, boolean lowMemoryFootprint)
-	{
-		this.blockWriter = blockWriter;
 		this.lowMemoryFootprint = lowMemoryFootprint;
 		if (!lowMemoryFootprint) {
 			baos = new ByteArrayOutputStream();
 		}
 	}
 
-	public void writeBlock(Blockable blockable, int type, int count,
+	public FileBlock writeBlock(Blockable blockable, int type, int count,
 			Compression compression) throws IOException
 	{
 		if (lowMemoryFootprint) {
@@ -75,11 +67,12 @@ public class BlockableWriter
 
 		FileBlock block = new FileBlock(type, compression, uncompressed.length,
 				count, compressed, length);
-		blockWriter.writeBlock(block);
 
 		if (lowMemoryFootprint) {
 			baos = null;
 		}
+
+		return block;
 	}
 
 	private LZ4Compressor lz4Compressor = null;

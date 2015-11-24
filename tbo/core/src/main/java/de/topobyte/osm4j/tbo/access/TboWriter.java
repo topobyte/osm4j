@@ -34,6 +34,7 @@ import de.topobyte.osm4j.tbo.batching.ElementCountBatchBuilder;
 import de.topobyte.osm4j.tbo.batching.MemberCountBatchBuilder;
 import de.topobyte.osm4j.tbo.batching.WayNodeCountBatchBuilder;
 import de.topobyte.osm4j.tbo.data.Definitions;
+import de.topobyte.osm4j.tbo.data.FileBlock;
 import de.topobyte.osm4j.tbo.data.FileHeader;
 import de.topobyte.osm4j.tbo.writerhelper.NodeBatch;
 import de.topobyte.osm4j.tbo.writerhelper.RelationBatch;
@@ -85,7 +86,7 @@ public class TboWriter implements OsmOutputStream
 	public TboWriter(BlockWriter blockWriter, boolean writeMetadata,
 			boolean lowMemoryFootPrint)
 	{
-		this(blockWriter, new BlockableWriter(blockWriter, lowMemoryFootPrint),
+		this(blockWriter, new BlockableWriter(lowMemoryFootPrint),
 				writeMetadata);
 	}
 
@@ -290,23 +291,26 @@ public class TboWriter implements OsmOutputStream
 
 	private void writeNodeBatch() throws IOException
 	{
-		blockableWriter.writeBlock(nodeBatch, Definitions.BLOCK_TYPE_NODES,
-				nodeBatch.size(), compression);
+		FileBlock block = blockableWriter.writeBlock(nodeBatch,
+				Definitions.BLOCK_TYPE_NODES, nodeBatch.size(), compression);
+		blockWriter.writeBlock(block);
 		nodeBatch.clear();
 	}
 
 	private void writeWayBatch() throws IOException
 	{
-		blockableWriter.writeBlock(wayBatch, Definitions.BLOCK_TYPE_WAYS,
-				wayBatch.size(), compression);
+		FileBlock block = blockableWriter.writeBlock(wayBatch,
+				Definitions.BLOCK_TYPE_WAYS, wayBatch.size(), compression);
+		blockWriter.writeBlock(block);
 		wayBatch.clear();
 	}
 
 	private void writeRelationBatch() throws IOException
 	{
-		blockableWriter.writeBlock(relationBatch,
+		FileBlock block = blockableWriter.writeBlock(relationBatch,
 				Definitions.BLOCK_TYPE_RELATIONS, relationBatch.size(),
 				compression);
+		blockWriter.writeBlock(block);
 		relationBatch.clear();
 	}
 
