@@ -17,11 +17,11 @@
 
 package de.topobyte.osm4j.tbo.access;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 import de.topobyte.compactio.CompactWriter;
 import de.topobyte.compactio.OutputStreamCompactWriter;
+import de.topobyte.osm4j.tbo.ByteArrayOutputStream;
 import de.topobyte.osm4j.tbo.Compression;
 import de.topobyte.osm4j.tbo.data.FileBlock;
 import de.topobyte.osm4j.tbo.data.FileHeader;

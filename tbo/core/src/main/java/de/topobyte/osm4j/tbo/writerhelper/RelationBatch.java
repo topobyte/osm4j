@@ -17,7 +17,6 @@
 
 package de.topobyte.osm4j.tbo.writerhelper;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 import de.topobyte.compactio.CompactWriter;
@@ -25,6 +24,7 @@ import de.topobyte.compactio.OutputStreamCompactWriter;
 import de.topobyte.osm4j.core.model.iface.EntityType;
 import de.topobyte.osm4j.core.model.iface.OsmRelation;
 import de.topobyte.osm4j.core.model.iface.OsmRelationMember;
+import de.topobyte.osm4j.tbo.ByteArrayOutputStream;
 import de.topobyte.osm4j.tbo.data.StringPool;
 import de.topobyte.osm4j.tbo.data.StringPoolBuilder;
 

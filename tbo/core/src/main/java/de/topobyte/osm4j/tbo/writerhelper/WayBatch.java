@@ -17,12 +17,12 @@
 
 package de.topobyte.osm4j.tbo.writerhelper;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 import de.topobyte.compactio.CompactWriter;
 import de.topobyte.compactio.OutputStreamCompactWriter;
 import de.topobyte.osm4j.core.model.iface.OsmWay;
+import de.topobyte.osm4j.tbo.ByteArrayOutputStream;
 
 public class WayBatch extends EntityBatch<OsmWay>
 {

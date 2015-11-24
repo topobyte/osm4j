@@ -1,6 +1,5 @@
 package de.topobyte.osm4j.tbo.access;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.zip.DeflaterOutputStream;
 
@@ -8,6 +7,7 @@ import net.jpountz.lz4.LZ4Compressor;
 import net.jpountz.lz4.LZ4Factory;
 import de.topobyte.compactio.CompactWriter;
 import de.topobyte.compactio.OutputStreamCompactWriter;
+import de.topobyte.osm4j.tbo.ByteArrayOutputStream;
 import de.topobyte.osm4j.tbo.Compression;
 import de.topobyte.osm4j.tbo.data.FileBlock;
 import de.topobyte.osm4j.tbo.writerhelper.Blockable;
