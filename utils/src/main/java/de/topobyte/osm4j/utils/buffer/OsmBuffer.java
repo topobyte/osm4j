@@ -62,6 +62,11 @@ public class OsmBuffer implements OsmOutputStream, OsmIterator
 		numberOfBuffers = 2;
 	}
 
+	public int getSize()
+	{
+		return buffers.size();
+	}
+
 	public void setInvalid()
 	{
 		valid = false;
