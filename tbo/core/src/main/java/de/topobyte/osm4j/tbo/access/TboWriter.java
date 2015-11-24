@@ -39,7 +39,7 @@ import de.topobyte.osm4j.tbo.writerhelper.NodeBatch;
 import de.topobyte.osm4j.tbo.writerhelper.RelationBatch;
 import de.topobyte.osm4j.tbo.writerhelper.WayBatch;
 
-public class TboWriter extends BlockWriter implements OsmOutputStream
+public class TboWriter implements OsmOutputStream
 {
 
 	private BatchBuilder<OsmNode> batchBuilderNodes = new ElementCountBatchBuilder<>(
@@ -48,6 +48,9 @@ public class TboWriter extends BlockWriter implements OsmOutputStream
 			Definitions.DEFAULT_BATCH_SIZE_WAY_NODES);
 	private BatchBuilder<OsmRelation> batchBuilderRelations = new MemberCountBatchBuilder(
 			Definitions.DEFAULT_BATCH_SIZE_RELATION_MEMBERS);
+
+	private BlockWriter blockWriter;
+	private BlockableWriter blockableWriter;
 
 	private Compression compression = Compression.NONE;
 	private boolean writeMetadata;
@@ -76,7 +79,15 @@ public class TboWriter extends BlockWriter implements OsmOutputStream
 	public TboWriter(CompactWriter writer, boolean writeMetadata,
 			boolean lowMemoryFootPrint)
 	{
-		super(writer, lowMemoryFootPrint);
+		this(new DefaultBlockWriter(writer), writeMetadata, lowMemoryFootPrint);
+	}
+
+	public TboWriter(BlockWriter blockWriter, boolean writeMetadata,
+			boolean lowMemoryFootPrint)
+	{
+		blockableWriter = new BlockableWriter(blockWriter, lowMemoryFootPrint);
+
+		this.blockWriter = blockWriter;
 		this.writeMetadata = writeMetadata;
 
 		nodeBatch = new NodeBatch(writeMetadata);
@@ -273,22 +284,23 @@ public class TboWriter extends BlockWriter implements OsmOutputStream
 
 	private void writeNodeBatch() throws IOException
 	{
-		writeBlock(nodeBatch, Definitions.BLOCK_TYPE_NODES, nodeBatch.size(),
-				compression);
+		blockableWriter.writeBlock(nodeBatch, Definitions.BLOCK_TYPE_NODES,
+				nodeBatch.size(), compression);
 		nodeBatch.clear();
 	}
 
 	private void writeWayBatch() throws IOException
 	{
-		writeBlock(wayBatch, Definitions.BLOCK_TYPE_WAYS, wayBatch.size(),
-				compression);
+		blockableWriter.writeBlock(wayBatch, Definitions.BLOCK_TYPE_WAYS,
+				wayBatch.size(), compression);
 		wayBatch.clear();
 	}
 
 	private void writeRelationBatch() throws IOException
 	{
-		writeBlock(relationBatch, Definitions.BLOCK_TYPE_RELATIONS,
-				relationBatch.size(), compression);
+		blockableWriter.writeBlock(relationBatch,
+				Definitions.BLOCK_TYPE_RELATIONS, relationBatch.size(),
+				compression);
 		relationBatch.clear();
 	}
 
@@ -307,7 +319,7 @@ public class TboWriter extends BlockWriter implements OsmOutputStream
 			if (header == null) {
 				header = WriterUtil.createHeader(writeMetadata, null);
 			}
-			header.write(writer);
+			blockWriter.writeHeader(header);
 			mode = Mode.NODE;
 		}
 	}
