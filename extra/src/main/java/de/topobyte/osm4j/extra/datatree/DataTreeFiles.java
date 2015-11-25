@@ -24,21 +24,31 @@ public class DataTreeFiles
 {
 
 	private File dirFile;
-	private Path pathFile;
+	private Path dirPath;
 	private String filename;
 
 	public DataTreeFiles(File dir, String filename)
 	{
-		this.pathFile = dir.toPath();
+		this.dirPath = dir.toPath();
 		this.dirFile = dir;
 		this.filename = filename;
 	}
 
 	public DataTreeFiles(Path dir, String filename)
 	{
-		this.pathFile = dir;
+		this.dirPath = dir;
 		this.dirFile = dir.toFile();
 		this.filename = filename;
+	}
+
+	public Path getSubdirPath(Node leaf)
+	{
+		return dirPath.resolve(Long.toHexString(leaf.getPath()));
+	}
+
+	public File getSubdirFile(Node leaf)
+	{
+		return new File(dirFile, Long.toHexString(leaf.getPath()));
 	}
 
 	public File getFile(Node leaf)
@@ -49,7 +59,19 @@ public class DataTreeFiles
 
 	public Path getPath(Node leaf)
 	{
-		Path subdir = pathFile.resolve(Long.toHexString(leaf.getPath()));
+		Path subdir = dirPath.resolve(Long.toHexString(leaf.getPath()));
+		return subdir.resolve(filename);
+	}
+
+	public File getFile(long leafPath)
+	{
+		File subdir = new File(dirFile, Long.toHexString(leafPath));
+		return new File(subdir, filename);
+	}
+
+	public Path getPath(long leafPath)
+	{
+		Path subdir = dirPath.resolve(Long.toHexString(leafPath));
 		return subdir.resolve(filename);
 	}
 
