@@ -28,6 +28,8 @@ import de.topobyte.osm4j.extra.datatree.DataTree;
 import de.topobyte.osm4j.extra.datatree.Node;
 import de.topobyte.osm4j.extra.datatree.output.DataTreeOutputFactory;
 import de.topobyte.osm4j.extra.threading.ObjectBuffer;
+import de.topobyte.osm4j.extra.threading.WriteRequest;
+import de.topobyte.osm4j.extra.threading.WriterRunner;
 import de.topobyte.osm4j.utils.buffer.ParallelExecutor;
 
 public class ThreadedNodeTreeDistributor extends AbstractNodeTreeDistributor
