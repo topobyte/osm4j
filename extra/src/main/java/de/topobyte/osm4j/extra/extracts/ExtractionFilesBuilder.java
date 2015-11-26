@@ -53,6 +53,8 @@ import de.topobyte.osm4j.utils.FileFormat;
 import de.topobyte.osm4j.utils.OsmFileInput;
 import de.topobyte.osm4j.utils.OsmIoUtils;
 import de.topobyte.osm4j.utils.OsmOutputConfig;
+import de.topobyte.osm4j.utils.config.PbfConfig;
+import de.topobyte.osm4j.utils.config.TboConfig;
 import de.topobyte.osm4j.utils.split.ThreadedEntitySplitter;
 
 public class ExtractionFilesBuilder
@@ -64,8 +66,8 @@ public class ExtractionFilesBuilder
 	private Path pathInput;
 	private FileFormat inputFormat;
 	private Path pathOutput;
-	private OsmOutputConfig outputConfig;
 	private int maxNodes;
+	private boolean includeMetadata;
 
 	private Path pathTree;
 	private Path pathWaysByNodes;
@@ -88,13 +90,13 @@ public class ExtractionFilesBuilder
 	private Path pathComplexRelationsSorted;
 
 	public ExtractionFilesBuilder(Path pathInput, FileFormat inputFormat,
-			Path pathOutput, OsmOutputConfig outputConfig, int maxNodes)
+			Path pathOutput, int maxNodes, boolean includeMetadata)
 	{
 		this.pathInput = pathInput;
 		this.inputFormat = inputFormat;
 		this.pathOutput = pathOutput;
-		this.outputConfig = outputConfig;
 		this.maxNodes = maxNodes;
+		this.includeMetadata = includeMetadata;
 	}
 
 	public void execute() throws IOException, OsmInputException
@@ -110,7 +112,9 @@ public class ExtractionFilesBuilder
 			System.exit(1);
 		}
 
-		String extension = OsmIoUtils.extension(outputConfig.getFileFormat());
+		FileFormat outputFormat = FileFormat.TBO;
+
+		String extension = OsmIoUtils.extension(outputFormat);
 
 		pathNodes = pathOutput.resolve("nodes" + extension);
 		pathWays = pathOutput.resolve("ways" + extension);
@@ -145,12 +149,10 @@ public class ExtractionFilesBuilder
 
 		OsmFileInput fileInput = new OsmFileInput(pathInput, inputFormat);
 
-		OsmFileInput fileInputNodes = new OsmFileInput(pathNodes,
-				outputConfig.getFileFormat());
-		OsmFileInput fileInputWays = new OsmFileInput(pathWays,
-				outputConfig.getFileFormat());
+		OsmFileInput fileInputNodes = new OsmFileInput(pathNodes, outputFormat);
+		OsmFileInput fileInputWays = new OsmFileInput(pathWays, outputFormat);
 		OsmFileInput fileInputRelations = new OsmFileInput(pathRelations,
-				outputConfig.getFileFormat());
+				outputFormat);
 
 		String fileNamesFinalNodes = "allnodes" + extension;
 		String fileNamesFinalWays = "allways" + extension;
@@ -165,6 +167,18 @@ public class ExtractionFilesBuilder
 		String fileNamesDistributedNodes = "nodes-unsorted" + extension;
 
 		String fileNamesRelations = "relations" + extension;
+
+		OsmOutputConfig outputConfigSplit = new OsmOutputConfig(outputFormat,
+				new PbfConfig(), new TboConfig(), includeMetadata);
+		OsmOutputConfig outputConfigTree = new OsmOutputConfig(outputFormat,
+				new PbfConfig(), new TboConfig(), includeMetadata);
+		OsmOutputConfig outputConfigWays = new OsmOutputConfig(outputFormat,
+				new PbfConfig(), new TboConfig(), includeMetadata);
+		OsmOutputConfig outputConfigRelations = new OsmOutputConfig(
+				outputFormat, new PbfConfig(), new TboConfig(), includeMetadata);
+
+		OsmOutputConfig outputConfigTreeFinal = new OsmOutputConfig(
+				outputFormat, new PbfConfig(), new TboConfig(), includeMetadata);
 
 		// Determine bounds
 
@@ -182,12 +196,12 @@ public class ExtractionFilesBuilder
 
 		// Split entities
 
-		OsmIteratorInput input = fileInput.createIterator(true,
-				outputConfig.isWriteMetadata());
+		OsmIteratorInput input = fileInput
+				.createIterator(true, includeMetadata);
 
 		ThreadedEntitySplitter splitter = new ThreadedEntitySplitter(
 				input.getIterator(), pathNodes, pathWays, pathRelations,
-				outputConfig, 10000, 200);
+				outputConfigSplit, 10000, 200);
 		splitter.execute();
 
 		input.close();
@@ -199,25 +213,25 @@ public class ExtractionFilesBuilder
 		DataTreeFiles treeFiles = new DataTreeFiles(pathTree,
 				fileNamesInitialNodes);
 		DataTreeOutputFactory dataTreeOutputFactory = new ClosingDataTreeOutputFactory(
-				treeFiles, outputConfig);
+				treeFiles, outputConfigTree);
 
 		NodeTreeLeafCounterFactory counterFactory = new ThreadedNodeTreeLeafCounterFactory();
 		NodeTreeDistributorFactory distributorFactory = new ThreadedNodeTreeDistributorFactory();
 
 		NodeTreeCreatorMaxNodes creator = new NodeTreeCreatorMaxNodes(tree,
 				fileInputNodes, dataTreeOutputFactory, maxNodes, SPLIT_INITIAL,
-				SPLIT_ITERATION, pathTree, fileNamesInitialNodes, outputConfig,
-				counterFactory, distributorFactory);
+				SPLIT_ITERATION, pathTree, fileNamesInitialNodes,
+				outputConfigTree, counterFactory, distributorFactory);
 
 		creator.buildTree();
 
 		// Sort ways by first node id
 
 		OsmIteratorInput inputWays = fileInputWays.createIterator(true,
-				outputConfig.isWriteMetadata());
+				includeMetadata);
 
 		WaysSorterByFirstNodeId waysSorter = new WaysSorterByFirstNodeId(
-				inputWays.getIterator(), pathWaysByNodes, outputConfig);
+				inputWays.getIterator(), pathWaysByNodes, outputConfigWays);
 		waysSorter.execute();
 
 		inputWays.close();
@@ -225,12 +239,11 @@ public class ExtractionFilesBuilder
 		// Map ways to tree
 
 		OsmIteratorInput inputNodes = fileInputNodes.createIterator(true,
-				outputConfig.isWriteMetadata());
+				includeMetadata);
 
 		WaysToTreeMapper waysMapper = new WaysToTreeMapper(
 				inputNodes.getIterator(), pathTree, pathWaysByNodes,
-				outputConfig.getFileFormat(), fileNamesInitialWays,
-				outputConfig);
+				outputFormat, fileNamesInitialWays, outputConfigTree);
 		waysMapper.prepare();
 		waysMapper.execute();
 
@@ -240,18 +253,17 @@ public class ExtractionFilesBuilder
 
 		MissingWayNodesFinder wayNodesFinder = new MissingWayNodesFinder(
 				pathTree, pathTree, pathTree, fileNamesInitialNodes,
-				fileNamesInitialWays, fileNamesMissingWayNodeIds,
-				outputConfig.getFileFormat(), outputConfig.getFileFormat());
+				fileNamesInitialWays, fileNamesMissingWayNodeIds, outputFormat,
+				outputFormat);
 		wayNodesFinder.execute();
 
 		// Extract missing way nodes
 
-		inputNodes = fileInputNodes.createIterator(true,
-				outputConfig.isWriteMetadata());
+		inputNodes = fileInputNodes.createIterator(true, includeMetadata);
 
 		MissingWayNodesExtractor wayNodesExtractor = new MissingWayNodesExtractor(
 				inputNodes.getIterator(), pathTree, fileNamesMissingWayNodeIds,
-				pathTree, fileNamesMissingNodes, outputConfig);
+				pathTree, fileNamesMissingNodes, outputConfigTree);
 		wayNodesExtractor.execute();
 
 		inputNodes.close();
@@ -266,8 +278,8 @@ public class ExtractionFilesBuilder
 		WaysDistributor waysDistributor = new WaysDistributor(pathTree,
 				fileNamesInitialNodes, fileNamesMissingNodes,
 				fileNamesInitialWays, fileNamesDistributedWays,
-				fileNamesDistributedNodes, outputConfig.getFileFormat(),
-				outputConfig.getFileFormat(), outputConfig);
+				fileNamesDistributedNodes, outputFormat, outputFormat,
+				outputConfigTree);
 		waysDistributor.execute();
 
 		// Merge nodes
@@ -279,8 +291,7 @@ public class ExtractionFilesBuilder
 		fileNamesUnsortedNodes.add(fileNamesDistributedNodes);
 		TreeFilesMerger nodesMerger = new TreeFilesMerger(pathTree,
 				fileNamesSortedNodes, fileNamesUnsortedNodes,
-				fileNamesFinalNodes, outputConfig.getFileFormat(),
-				outputConfig, true);
+				fileNamesFinalNodes, outputFormat, outputConfigTreeFinal, true);
 		nodesMerger.execute();
 
 		// Merge ways
@@ -291,27 +302,28 @@ public class ExtractionFilesBuilder
 		fileNamesUnsortedWays.add(fileNamesDistributedWays);
 		TreeFilesMerger waysMerger = new TreeFilesMerger(pathTree,
 				fileNamesSortedWays, fileNamesUnsortedWays, fileNamesFinalWays,
-				outputConfig.getFileFormat(), outputConfig, true);
+				outputFormat, outputConfigTreeFinal, true);
 		waysMerger.execute();
 
 		// Separate relations
 
 		RelationsSeparator separator = new RelationsSeparator(
 				fileInputRelations, pathSimpleRelations, pathComplexRelations,
-				outputConfig);
+				outputConfigRelations);
 		separator.execute();
 
 		// Split relations and collect members
 
 		OsmFileInput inputSimpleRelations = new OsmFileInput(
-				pathSimpleRelations, outputConfig.getFileFormat());
+				pathSimpleRelations, outputFormat);
 		OsmFileInput inputComplexRelations = new OsmFileInput(
-				pathComplexRelations, outputConfig.getFileFormat());
+				pathComplexRelations, outputFormat);
 
 		RelationsSplitterAndMemberCollector relationSplitter = new RelationsSplitterAndMemberCollector(
 				inputSimpleRelations, inputComplexRelations,
 				pathSimpleRelationsDir, pathComplexRelationsDir,
-				fileNamesRelations, fileInputWays, fileInputNodes, outputConfig);
+				fileNamesRelations, fileInputWays, fileInputNodes,
+				outputConfigRelations);
 		relationSplitter.execute();
 
 		// Distribute relations
@@ -325,16 +337,16 @@ public class ExtractionFilesBuilder
 				pathTree, pathSimpleRelationsDir, pathSimpleRelationsEmpty,
 				pathSimpleRelationsNonTree, pathSimpleRelationsNonTreeBboxes,
 				fileNamesRelations, fileNamesWays, fileNamesNodes,
-				fileNamesFinalRelationsSimple, outputConfig.getFileFormat(),
-				outputConfig);
+				fileNamesFinalRelationsSimple, outputFormat,
+				outputConfigRelations);
 		simpleRelationsDistributor.execute();
 
 		ComplexRelationsDistributor complexRelationsDistributor = new ComplexRelationsDistributor(
 				pathTree, pathComplexRelationsDir, pathComplexRelationsEmpty,
 				pathComplexRelationsNonTree, pathComplexRelationsNonTreeBboxes,
 				fileNamesRelations, fileNamesWays, fileNamesNodes,
-				fileNamesFinalRelationsComplex, outputConfig.getFileFormat(),
-				outputConfig);
+				fileNamesFinalRelationsComplex, outputFormat,
+				outputConfigRelations);
 		complexRelationsDistributor.execute();
 
 		// Sort non-tree relations
@@ -344,8 +356,7 @@ public class ExtractionFilesBuilder
 				pathSimpleRelationsNonTreeBboxes,
 				pathComplexRelationsNonTreeBboxes, pathSimpleRelationsDir,
 				pathComplexRelationsDir, pathSimpleRelationsSorted,
-				pathComplexRelationsSorted, outputConfig.getFileFormat(),
-				outputConfig);
+				pathComplexRelationsSorted, outputFormat, outputConfigRelations);
 		nonTreeSplitter.execute();
 	}
 

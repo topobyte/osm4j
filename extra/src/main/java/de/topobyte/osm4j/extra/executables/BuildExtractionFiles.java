@@ -22,11 +22,10 @@ import java.nio.file.Paths;
 
 import de.topobyte.osm4j.core.access.OsmInputException;
 import de.topobyte.osm4j.extra.extracts.ExtractionFilesBuilder;
-import de.topobyte.osm4j.utils.AbstractExecutableInputOutput;
-import de.topobyte.osm4j.utils.OsmOutputConfig;
+import de.topobyte.osm4j.utils.AbstractExecutableInput;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
-public class BuildExtractionFiles extends AbstractExecutableInputOutput
+public class BuildExtractionFiles extends AbstractExecutableInput
 {
 
 	private static final String OPTION_INPUT = "input";
@@ -52,6 +51,7 @@ public class BuildExtractionFiles extends AbstractExecutableInputOutput
 	private String pathInput;
 	private String pathOutput;
 	private int maxNodes;
+	private boolean includeMetadata = true;
 
 	public BuildExtractionFiles()
 	{
@@ -81,12 +81,9 @@ public class BuildExtractionFiles extends AbstractExecutableInputOutput
 
 	private void execute() throws IOException, OsmInputException
 	{
-		OsmOutputConfig outputConfig = new OsmOutputConfig(outputFormat,
-				pbfConfig, tboConfig, writeMetadata);
-
 		ExtractionFilesBuilder builder = new ExtractionFilesBuilder(
 				Paths.get(pathInput), inputFormat, Paths.get(pathOutput),
-				outputConfig, maxNodes);
+				maxNodes, includeMetadata);
 
 		builder.execute();
 	}
