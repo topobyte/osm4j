@@ -157,7 +157,7 @@ public class MultiThreadedNodeTreeDistributor extends
 			ObjectBuffer<WriteRequest> buffer = obuffers.get(bucket);
 
 			OsmStreamOutput output = outputs.get(leaf);
-			buffer.write(new WriteRequest(node, output));
+			buffer.write(new WriteRequest(node, output.getOsmOutput()));
 		}
 	}
 

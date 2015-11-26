@@ -90,7 +90,7 @@ public class ThreadedNodeTreeDistributor extends AbstractNodeTreeDistributor
 			if (leaf.getEnvelope().contains(node.getLongitude(),
 					node.getLatitude())) {
 				OsmStreamOutput output = outputs.get(leaf);
-				buffer.write(new WriteRequest(node, output));
+				buffer.write(new WriteRequest(node, output.getOsmOutput()));
 			}
 		}
 	}

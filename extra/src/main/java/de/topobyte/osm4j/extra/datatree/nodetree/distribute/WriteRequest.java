@@ -19,16 +19,16 @@ package de.topobyte.osm4j.extra.datatree.nodetree.distribute;
 
 import java.io.IOException;
 
-import de.topobyte.osm4j.core.access.OsmStreamOutput;
+import de.topobyte.osm4j.core.access.OsmOutputStream;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
 
 public class WriteRequest
 {
 
 	private OsmNode node;
-	private OsmStreamOutput output;
+	private OsmOutputStream output;
 
-	public WriteRequest(OsmNode node, OsmStreamOutput output)
+	public WriteRequest(OsmNode node, OsmOutputStream output)
 	{
 		this.node = node;
 		this.output = output;
@@ -36,7 +36,7 @@ public class WriteRequest
 
 	public void perform() throws IOException
 	{
-		output.getOsmOutput().write(node);
+		output.write(node);
 	}
 
 }
