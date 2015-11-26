@@ -48,6 +48,7 @@ import de.topobyte.osm4j.extra.relations.RelationsMemberCollector;
 import de.topobyte.osm4j.extra.relations.RelationsSeparator;
 import de.topobyte.osm4j.extra.relations.RelationsSplitterAndMemberCollector;
 import de.topobyte.osm4j.extra.relations.SimpleRelationsDistributor;
+import de.topobyte.osm4j.extra.ways.ThreadedWaysSorterByFirstNodeId;
 import de.topobyte.osm4j.extra.ways.WaysSorterByFirstNodeId;
 import de.topobyte.osm4j.utils.FileFormat;
 import de.topobyte.osm4j.utils.OsmFileInput;
@@ -240,7 +241,7 @@ public class ExtractionFilesBuilder
 		OsmIteratorInput inputWays = fileInputWays.createIterator(true,
 				includeMetadata);
 
-		WaysSorterByFirstNodeId waysSorter = new WaysSorterByFirstNodeId(
+		WaysSorterByFirstNodeId waysSorter = new ThreadedWaysSorterByFirstNodeId(
 				inputWays.getIterator(), pathWaysByNodes, outputConfigWays);
 		waysSorter.execute();
 

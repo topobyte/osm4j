@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.nio.file.Paths;
 
 import de.topobyte.osm4j.core.access.OsmIterator;
+import de.topobyte.osm4j.extra.ways.SimpleWaysSorterByFirstNodeId;
 import de.topobyte.osm4j.extra.ways.ThreadedWaysSorterByFirstNodeId;
 import de.topobyte.osm4j.extra.ways.WaysSorterByFirstNodeId;
 import de.topobyte.osm4j.utils.AbstractExecutableSingleInputStreamOutput;
@@ -75,17 +76,18 @@ public class SortWaysByFirstNodeId extends
 		OsmOutputConfig outputConfig = new OsmOutputConfig(outputFormat,
 				pbfConfig, tboConfig, writeMetadata);
 
-		boolean threaded = false;
+		boolean threaded = true;
 
+		WaysSorterByFirstNodeId sorter;
 		if (!threaded) {
-			WaysSorterByFirstNodeId sorter = new WaysSorterByFirstNodeId(
-					iterator, Paths.get(pathOutput), outputConfig);
-			sorter.execute();
+			sorter = new SimpleWaysSorterByFirstNodeId(iterator,
+					Paths.get(pathOutput), outputConfig);
 		} else {
-			ThreadedWaysSorterByFirstNodeId sorter = new ThreadedWaysSorterByFirstNodeId(
-					iterator, Paths.get(pathOutput), outputConfig);
-			sorter.execute();
+			sorter = new ThreadedWaysSorterByFirstNodeId(iterator,
+					Paths.get(pathOutput), outputConfig);
 		}
+
+		sorter.execute();
 	}
 
 }

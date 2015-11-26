@@ -23,21 +23,20 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.NumberFormat;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
 import de.topobyte.osm4j.core.access.OsmIterator;
 import de.topobyte.osm4j.core.access.OsmOutputStream;
+import de.topobyte.osm4j.core.model.iface.EntityContainer;
+import de.topobyte.osm4j.core.model.iface.EntityType;
 import de.topobyte.osm4j.core.model.iface.OsmWay;
-import de.topobyte.osm4j.extra.threading.Buffer;
 import de.topobyte.osm4j.utils.OsmIoUtils;
 import de.topobyte.osm4j.utils.OsmOutputConfig;
 import de.topobyte.osm4j.utils.StreamUtil;
-import de.topobyte.osm4j.utils.buffer.ParallelExecutor;
 
-public class ThreadedWaysSorterByFirstNodeId implements WaysSorterByFirstNodeId
+public class SimpleWaysSorterByFirstNodeId implements WaysSorterByFirstNodeId
 {
 
 	private OsmIterator input;
@@ -45,9 +44,7 @@ public class ThreadedWaysSorterByFirstNodeId implements WaysSorterByFirstNodeId
 
 	private OsmOutputConfig outputConfig;
 
-	private Buffer<WayBatch> buffer = new Buffer<>(1);
-
-	public ThreadedWaysSorterByFirstNodeId(OsmIterator input, Path dirOutput,
+	public SimpleWaysSorterByFirstNodeId(OsmIterator input, Path dirOutput,
 			OsmOutputConfig outputConfig)
 	{
 		this.input = input;
@@ -59,16 +56,7 @@ public class ThreadedWaysSorterByFirstNodeId implements WaysSorterByFirstNodeId
 	public void execute() throws IOException
 	{
 		init();
-
-		RunnableWayBatchBuilder batchBuilder = new RunnableWayBatchBuilder(
-				input, 800 * 1000, 10 * 1000 * 1000, buffer);
-
-		List<Runnable> tasks = new ArrayList<>();
-		tasks.add(batchBuilder);
-		tasks.add(sorterWriter);
-
-		ParallelExecutor executor = new ParallelExecutor(tasks);
-		executor.execute();
+		run();
 	}
 
 	private void init() throws IOException
@@ -87,27 +75,31 @@ public class ThreadedWaysSorterByFirstNodeId implements WaysSorterByFirstNodeId
 		}
 	}
 
-	Runnable sorterWriter = new Runnable() {
-
-		@Override
-		public void run()
-		{
-			try {
-				ThreadedWaysSorterByFirstNodeId.this.run();
-			} catch (IOException e) {
-				throw new RuntimeException(e);
-			}
-		}
-	};
-
 	private void run() throws IOException
 	{
-		for (WayBatch batch : buffer) {
+		WayBatch batch = new WayBatch(800 * 1000, 10 * 1000 * 1000);
+
+		for (EntityContainer container : input) {
+			if (container.getType() != EntityType.Way) {
+				continue;
+			}
+			OsmWay way = (OsmWay) container.getEntity();
+			if (way.getNumberOfNodes() == 0) {
+				continue;
+			}
+			if (batch.fits(way)) {
+				batch.add(way);
+			} else {
+				process(batch);
+				status();
+				batch.clear();
+				batch.add(way);
+			}
+		}
+		if (!batch.getElements().isEmpty()) {
 			process(batch);
 			status();
-			System.out.println("returning object");
-			buffer.returnObject(batch);
-			System.out.println("done returning object");
+			batch.clear();
 		}
 	}
 
@@ -134,10 +126,7 @@ public class ThreadedWaysSorterByFirstNodeId implements WaysSorterByFirstNodeId
 	private void process(WayBatch batch) throws IOException
 	{
 		List<OsmWay> ways = batch.getElements();
-		System.out.println("processing batch with " + ways.size());
-
 		Collections.sort(ways, new WayNodeIdComparator());
-		System.out.println("sorting done");
 
 		batchCount++;
 
@@ -155,7 +144,6 @@ public class ThreadedWaysSorterByFirstNodeId implements WaysSorterByFirstNodeId
 
 		osmOutput.complete();
 		output.close();
-		System.out.println("writing done");
 
 		wayCount += ways.size();
 	}
