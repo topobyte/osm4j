@@ -88,7 +88,7 @@ public class MissingWayNodesExtractor
 	private void run() throws IOException
 	{
 		Extractor extractor = new Extractor(EntityType.Node, extractionItems,
-				outputConfig);
+				outputConfig, true);
 
 		extractor.execute(iterator);
 	}

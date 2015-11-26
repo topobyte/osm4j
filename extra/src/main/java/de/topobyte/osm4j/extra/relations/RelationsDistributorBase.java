@@ -182,7 +182,7 @@ public abstract class RelationsDistributorBase
 			File file = treeFilesRelations.getFile(leaf);
 			OutputStream out = new BufferedOutputStream(factory.create(file));
 			OsmOutputStream osmOutput = OsmIoUtils.setupOsmOutput(out,
-					outputConfig);
+					outputConfig, true);
 
 			if (osmOutput instanceof TboWriter) {
 				TboWriter tboWriter = (TboWriter) osmOutput;

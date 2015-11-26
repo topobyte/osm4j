@@ -101,7 +101,7 @@ public class WaysToTreeMapper
 			OutputStream output = factoryOut.create(fileOutput);
 			output = new BufferedOutputStream(output);
 			OsmOutputStream osmOutput = OsmIoUtils.setupOsmOutput(output,
-					outputConfig);
+					outputConfig, true);
 
 			OsmStreamOutput out = new OsmOutputStreamStreamOutput(output,
 					osmOutput);

@@ -129,7 +129,8 @@ public class ExtractEntities extends AbstractExecutableSingleInputStreamOutput
 		OsmOutputConfig outputConfig = new OsmOutputConfig(outputFormat,
 				pbfConfig, tboConfig, writeMetadata);
 
-		Extractor extractor = new Extractor(type, extractionItems, outputConfig);
+		Extractor extractor = new Extractor(type, extractionItems,
+				outputConfig, true);
 		OsmIterator iterator = createIterator();
 		extractor.execute(iterator);
 		finish();

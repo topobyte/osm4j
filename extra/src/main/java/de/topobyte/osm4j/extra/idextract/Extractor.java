@@ -57,13 +57,15 @@ public class Extractor
 	private List<Item> items;
 
 	private OsmOutputConfig outputConfig;
+	private boolean lowMemory;
 
 	public Extractor(EntityType type, List<ExtractionItem> extractionItems,
-			OsmOutputConfig outputConfig)
+			OsmOutputConfig outputConfig, boolean lowMemory)
 	{
 		this.type = type;
 		this.extractionItems = extractionItems;
 		this.outputConfig = outputConfig;
+		this.lowMemory = lowMemory;
 	}
 
 	public void execute(OsmIterator iterator) throws IOException
@@ -99,7 +101,7 @@ public class Extractor
 			OutputStream output = factoryOut.create(fileOutput);
 			output = new BufferedOutputStream(output);
 			OsmOutputStream osmOutput = OsmIoUtils.setupOsmOutput(output,
-					outputConfig);
+					outputConfig, lowMemory);
 
 			EntityWriter writer = EntityWriters.create(type, osmOutput);
 

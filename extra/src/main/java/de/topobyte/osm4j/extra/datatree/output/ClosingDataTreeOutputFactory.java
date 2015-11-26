@@ -62,8 +62,8 @@ public class ClosingDataTreeOutputFactory implements DataTreeOutputFactory
 
 		OutputStream os = outputStreamFactory.create(file.toFile());
 		OutputStream bos = new BufferedOutputStream(os);
-		OsmOutputStream osmOutput = OsmIoUtils
-				.setupOsmOutput(bos, outputConfig);
+		OsmOutputStream osmOutput = OsmIoUtils.setupOsmOutput(bos,
+				outputConfig, true);
 		OsmStreamOutput output = new OsmOutputStreamStreamOutput(bos, osmOutput);
 
 		if (writeBounds) {

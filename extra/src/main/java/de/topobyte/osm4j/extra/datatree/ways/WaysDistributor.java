@@ -134,7 +134,7 @@ public class WaysDistributor
 		OutputStream output = factory.create(file);
 		output = new BufferedOutputStream(output);
 		OsmOutputStream osmOutput = OsmIoUtils.setupOsmOutput(output,
-				outputConfig);
+				outputConfig, true);
 		return new OsmOutputStreamStreamOutput(output, osmOutput);
 	}
 
