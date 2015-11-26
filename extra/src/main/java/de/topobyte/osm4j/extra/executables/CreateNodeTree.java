@@ -18,10 +18,19 @@
 package de.topobyte.osm4j.extra.executables;
 
 import java.io.IOException;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import de.topobyte.osm4j.core.access.OsmIterator;
+import de.topobyte.osm4j.extra.datatree.DataTree;
+import de.topobyte.osm4j.extra.datatree.DataTreeFiles;
+import de.topobyte.osm4j.extra.datatree.DataTreeUtil;
 import de.topobyte.osm4j.extra.datatree.nodetree.NodeTreeCreator;
+import de.topobyte.osm4j.extra.datatree.nodetree.distribute.NodeTreeDistributorFactory;
+import de.topobyte.osm4j.extra.datatree.nodetree.distribute.SimpleNodeTreeDistributorFactory;
+import de.topobyte.osm4j.extra.datatree.nodetree.distribute.ThreadedNodeTreeDistributorFactory;
+import de.topobyte.osm4j.extra.datatree.output.ClosingDataTreeOutputFactory;
+import de.topobyte.osm4j.extra.datatree.output.DataTreeOutputFactory;
 import de.topobyte.osm4j.utils.OsmOutputConfig;
 
 public class CreateNodeTree extends CreateNodeTreeBase
@@ -52,10 +61,25 @@ public class CreateNodeTree extends CreateNodeTreeBase
 		OsmOutputConfig outputConfig = new OsmOutputConfig(outputFormat,
 				pbfConfig, tboConfig, writeMetadata);
 
-		NodeTreeCreator creator = new NodeTreeCreator(iterator,
-				Paths.get(pathOutput), fileNames, outputConfig);
+		Path pathTree = Paths.get(pathOutput);
 
-		creator.openExistingTree();
+		DataTree tree = DataTreeUtil.openExistingTree(pathTree);
+
+		DataTreeFiles treeFiles = new DataTreeFiles(pathTree, fileNames);
+		DataTreeOutputFactory dataTreeOutputFactory = new ClosingDataTreeOutputFactory(
+				treeFiles, outputConfig);
+
+		boolean threaded = true;
+
+		NodeTreeDistributorFactory distributorFactory;
+		if (!threaded) {
+			distributorFactory = new SimpleNodeTreeDistributorFactory();
+		} else {
+			distributorFactory = new ThreadedNodeTreeDistributorFactory();
+		}
+
+		NodeTreeCreator creator = new NodeTreeCreator(tree, iterator,
+				dataTreeOutputFactory, distributorFactory);
 
 		creator.execute();
 	}

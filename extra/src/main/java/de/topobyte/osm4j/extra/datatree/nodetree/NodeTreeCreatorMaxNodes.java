@@ -22,21 +22,20 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Deque;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
-import com.vividsolutions.jts.geom.Envelope;
-
-import de.topobyte.adt.geo.BBox;
 import de.topobyte.osm4j.core.access.OsmInputAccessFactory;
-import de.topobyte.osm4j.core.access.OsmIterator;
 import de.topobyte.osm4j.core.access.OsmIteratorInput;
-import de.topobyte.osm4j.core.model.iface.OsmBounds;
 import de.topobyte.osm4j.extra.datatree.DataTree;
+import de.topobyte.osm4j.extra.datatree.DataTreeFiles;
 import de.topobyte.osm4j.extra.datatree.DataTreeUtil;
 import de.topobyte.osm4j.extra.datatree.Node;
+import de.topobyte.osm4j.extra.datatree.nodetree.count.NodeTreeLeafCounter;
+import de.topobyte.osm4j.extra.datatree.nodetree.count.NodeTreeLeafCounterFactory;
+import de.topobyte.osm4j.extra.datatree.nodetree.distribute.NodeTreeDistributor;
+import de.topobyte.osm4j.extra.datatree.nodetree.distribute.NodeTreeDistributorFactory;
+import de.topobyte.osm4j.extra.datatree.output.DataTreeOutputFactory;
 import de.topobyte.osm4j.utils.OsmFileInput;
 import de.topobyte.osm4j.utils.OsmOutputConfig;
 
@@ -44,6 +43,7 @@ public class NodeTreeCreatorMaxNodes
 {
 
 	private OsmInputAccessFactory inputFactory;
+	private DataTreeOutputFactory outputFactory;
 
 	private int maxNodes;
 	private int splitInitial;
@@ -54,69 +54,41 @@ public class NodeTreeCreatorMaxNodes
 
 	private OsmOutputConfig outputConfig;
 
-	private Envelope envelope;
 	private DataTree tree;
 
-	public NodeTreeCreatorMaxNodes(OsmInputAccessFactory inputFactory,
-			int maxNodes, int splitInitial, int splitIteration, Path dirOutput,
-			String fileNames, OsmOutputConfig outputConfig)
+	private NodeTreeLeafCounterFactory counterFactory;
+	private NodeTreeDistributorFactory distributorFactory;
+
+	public NodeTreeCreatorMaxNodes(DataTree tree,
+			OsmInputAccessFactory inputFactory,
+			DataTreeOutputFactory outputFactory, int maxNodes,
+			int splitInitial, int splitIteration, Path dirOutput,
+			String fileNames, OsmOutputConfig outputConfig,
+			NodeTreeLeafCounterFactory counterFactory,
+			NodeTreeDistributorFactory distributorFactory)
 	{
+		this.tree = tree;
 		this.inputFactory = inputFactory;
+		this.outputFactory = outputFactory;
 		this.maxNodes = maxNodes;
 		this.splitInitial = splitInitial;
 		this.splitIteration = splitIteration;
 		this.dirOutput = dirOutput;
 		this.fileNames = fileNames;
 		this.outputConfig = outputConfig;
+		this.counterFactory = counterFactory;
+		this.distributorFactory = distributorFactory;
 	}
 
-	public void init() throws IOException
-	{
-		if (!Files.exists(dirOutput)) {
-			System.out.println("Creating output directory");
-			Files.createDirectories(dirOutput);
-		}
-		if (!Files.isDirectory(dirOutput)) {
-			System.out.println("Output path is not a directory");
-			System.exit(1);
-		}
-		if (dirOutput.toFile().list().length != 0) {
-			System.out.println("Output directory is not empty");
-			System.exit(1);
-		}
-
-		OsmIteratorInput input = inputFactory.createIterator(true, false);
-		OsmIterator iterator = input.getIterator();
-
-		if (!iterator.hasBounds()) {
-			System.out.println("Input does not provide bounds");
-			System.exit(1);
-		}
-
-		OsmBounds bounds = iterator.getBounds();
-		System.out.println("bounds: " + bounds);
-
-		input.close();
-
-		envelope = new Envelope(bounds.getLeft(), bounds.getRight(),
-				bounds.getBottom(), bounds.getTop());
-	}
+	private Deque<NodeTreeLeafCounter> check = new LinkedList<>();
 
 	public void buildTree() throws IOException
 	{
-		BBox bbox = new BBox(envelope);
-		DataTreeUtil.writeTreeInfo(dirOutput.toFile(), bbox);
-
-		tree = new DataTree(envelope);
+		DataTreeFiles treeFiles = new DataTreeFiles(dirOutput, fileNames);
 
 		tree.getRoot().split(splitInitial);
-		NodeTreeDistributer initialDistributer = new NodeTreeDistributer(tree,
-				inputFactory, dirOutput, tree.getRoot(), maxNodes, fileNames,
-				outputConfig);
-		initialDistributer.execute();
 
-		Deque<NodeTreeDistributer> check = new LinkedList<>();
-		check.add(initialDistributer);
+		countAndDistribute(tree.getRoot(), inputFactory);
 
 		int iteration = 0;
 
@@ -124,11 +96,10 @@ public class NodeTreeCreatorMaxNodes
 			iteration++;
 			System.out.println(String.format("Iteration %d", iteration));
 
-			Map<Node, Path> paths = new HashMap<>();
 			List<Node> largeNodes = new ArrayList<>();
-			for (NodeTreeDistributer distributer : check) {
-				for (Node node : tree.getLeafs(distributer.getHead())) {
-					long count = distributer.getCounters().get(node.getPath());
+			for (NodeTreeLeafCounter counter : check) {
+				for (Node node : tree.getLeafs(counter.getHead())) {
+					long count = counter.getCounters().get(node.getPath());
 					if (count <= maxNodes) {
 						continue;
 					}
@@ -136,8 +107,6 @@ public class NodeTreeCreatorMaxNodes
 							"Node %s has too many nodes: %d",
 							Long.toHexString(node.getPath()), count));
 					largeNodes.add(node);
-					paths.put(node, distributer.getOutputs().get(node)
-							.getFile());
 				}
 			}
 			check.clear();
@@ -147,20 +116,46 @@ public class NodeTreeCreatorMaxNodes
 					largeNodes.size()));
 
 			for (Node node : largeNodes) {
-				Path path = paths.get(node);
+				Path path = treeFiles.getPath(node);
 				System.out.println(String.format("Splitting again: node %s",
 						Long.toHexString(node.getPath())));
 				node.split(splitIteration);
-				NodeTreeDistributer distributer = new NodeTreeDistributer(tree,
-						new OsmFileInput(path, outputConfig.getFileFormat()),
-						dirOutput, node, maxNodes, fileNames, outputConfig);
-				distributer.execute();
-				check.add(distributer);
+
+				countAndDistribute(node,
+						new OsmFileInput(path, outputConfig.getFileFormat()));
 
 				Files.delete(path);
 				Files.delete(path.getParent());
 			}
 		}
+	}
+
+	private void countAndDistribute(Node node,
+			OsmInputAccessFactory inputFactory) throws IOException
+	{
+		OsmIteratorInput input = inputFactory.createIterator(false, false);
+		NodeTreeLeafCounter counter = counterFactory.createLeafCounter(tree,
+				input.getIterator(), node);
+		try {
+			counter.execute();
+		} finally {
+			input.close();
+		}
+
+		DataTreeUtil.mergeUnderfilledSiblings(tree, node, maxNodes,
+				counter.getCounters());
+
+		input = inputFactory.createIterator(true,
+				outputConfig.isWriteMetadata());
+		NodeTreeDistributor distributor = distributorFactory.createDistributor(
+				tree, node, input.getIterator(), outputFactory);
+		try {
+			distributor.execute();
+		} finally {
+			input.close();
+		}
+
+		check.add(counter);
 	}
 
 }

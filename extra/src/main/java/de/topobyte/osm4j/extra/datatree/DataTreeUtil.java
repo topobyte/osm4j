@@ -23,14 +23,20 @@ import gnu.trove.map.hash.TObjectLongHashMap;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import com.vividsolutions.jts.geom.Envelope;
+
 import de.topobyte.adt.geo.BBox;
 import de.topobyte.adt.geo.BBoxString;
+import de.topobyte.osm4j.core.model.iface.OsmBounds;
 
 public class DataTreeUtil
 {
@@ -43,6 +49,41 @@ public class DataTreeUtil
 		PrintWriter pw = new PrintWriter(file);
 		pw.println(DataTree.PROPERTY_BBOX + ": " + BBoxString.create(bbox));
 		pw.close();
+	}
+
+	public static DataTree openExistingTree(Path dirOutput) throws IOException
+	{
+		if (!Files.exists(dirOutput)) {
+			throw new IOException("Output path does not exist");
+		}
+		if (!Files.isDirectory(dirOutput)) {
+			throw new IOException("Output path is not a directory");
+		}
+
+		return DataTreeOpener.open(dirOutput.toFile());
+	}
+
+	public static DataTree initNewTree(Path dirOutput, OsmBounds bounds)
+			throws IOException
+	{
+		if (!Files.exists(dirOutput)) {
+			System.out.println("Creating output directory");
+			Files.createDirectories(dirOutput);
+		}
+		if (!Files.isDirectory(dirOutput)) {
+			throw new IOException("Output path is not a directory");
+		}
+		if (dirOutput.toFile().list().length != 0) {
+			throw new IOException("Output directory is not empty");
+		}
+
+		Envelope envelope = new Envelope(bounds.getLeft(), bounds.getRight(),
+				bounds.getBottom(), bounds.getTop());
+
+		BBox bbox = new BBox(envelope);
+		DataTreeUtil.writeTreeInfo(dirOutput.toFile(), bbox);
+
+		return new DataTree(envelope);
 	}
 
 	public static void mergeUnderfilledSiblings(DataTree tree, Node head,

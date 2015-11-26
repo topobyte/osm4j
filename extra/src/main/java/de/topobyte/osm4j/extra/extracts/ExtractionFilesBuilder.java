@@ -25,9 +25,19 @@ import java.util.List;
 
 import de.topobyte.osm4j.core.access.OsmInputException;
 import de.topobyte.osm4j.core.access.OsmIteratorInput;
+import de.topobyte.osm4j.core.model.iface.OsmBounds;
 import de.topobyte.osm4j.extra.batch.BatchFilesUtil;
+import de.topobyte.osm4j.extra.datatree.DataTree;
+import de.topobyte.osm4j.extra.datatree.DataTreeFiles;
+import de.topobyte.osm4j.extra.datatree.DataTreeUtil;
 import de.topobyte.osm4j.extra.datatree.TreeFilesMerger;
 import de.topobyte.osm4j.extra.datatree.nodetree.NodeTreeCreatorMaxNodes;
+import de.topobyte.osm4j.extra.datatree.nodetree.count.NodeTreeLeafCounterFactory;
+import de.topobyte.osm4j.extra.datatree.nodetree.count.ThreadedNodeTreeLeafCounterFactory;
+import de.topobyte.osm4j.extra.datatree.nodetree.distribute.NodeTreeDistributorFactory;
+import de.topobyte.osm4j.extra.datatree.nodetree.distribute.ThreadedNodeTreeDistributorFactory;
+import de.topobyte.osm4j.extra.datatree.output.ClosingDataTreeOutputFactory;
+import de.topobyte.osm4j.extra.datatree.output.DataTreeOutputFactory;
 import de.topobyte.osm4j.extra.datatree.ways.MissingWayNodesExtractor;
 import de.topobyte.osm4j.extra.datatree.ways.MissingWayNodesFinder;
 import de.topobyte.osm4j.extra.datatree.ways.WaysDistributor;
@@ -43,7 +53,7 @@ import de.topobyte.osm4j.utils.FileFormat;
 import de.topobyte.osm4j.utils.OsmFileInput;
 import de.topobyte.osm4j.utils.OsmIoUtils;
 import de.topobyte.osm4j.utils.OsmOutputConfig;
-import de.topobyte.osm4j.utils.split.EntitySplitter;
+import de.topobyte.osm4j.utils.split.ThreadedEntitySplitter;
 
 public class ExtractionFilesBuilder
 {
@@ -156,24 +166,49 @@ public class ExtractionFilesBuilder
 
 		String fileNamesRelations = "relations" + extension;
 
+		// Determine bounds
+
+		OsmIteratorInput inputBounds = fileInput.createIterator(false, false);
+
+		if (!inputBounds.getIterator().hasBounds()) {
+			System.out.println("Input does not provide bounds");
+			System.exit(1);
+		}
+
+		OsmBounds bounds = inputBounds.getIterator().getBounds();
+		System.out.println("bounds: " + bounds);
+
+		inputBounds.close();
+
 		// Split entities
 
 		OsmIteratorInput input = fileInput.createIterator(true,
 				outputConfig.isWriteMetadata());
 
-		EntitySplitter splitter = new EntitySplitter(input.getIterator(),
-				pathNodes, pathWays, pathRelations, outputConfig);
+		ThreadedEntitySplitter splitter = new ThreadedEntitySplitter(
+				input.getIterator(), pathNodes, pathWays, pathRelations,
+				outputConfig, 10000, 200);
 		splitter.execute();
 
 		input.close();
 
 		// Create node tree
 
-		NodeTreeCreatorMaxNodes creator = new NodeTreeCreatorMaxNodes(
-				fileInputNodes, maxNodes, SPLIT_INITIAL, SPLIT_ITERATION,
-				pathTree, fileNamesInitialNodes, outputConfig);
+		DataTree tree = DataTreeUtil.initNewTree(pathTree, bounds);
 
-		creator.init();
+		DataTreeFiles treeFiles = new DataTreeFiles(pathTree,
+				fileNamesInitialNodes);
+		DataTreeOutputFactory dataTreeOutputFactory = new ClosingDataTreeOutputFactory(
+				treeFiles, outputConfig);
+
+		NodeTreeLeafCounterFactory counterFactory = new ThreadedNodeTreeLeafCounterFactory();
+		NodeTreeDistributorFactory distributorFactory = new ThreadedNodeTreeDistributorFactory();
+
+		NodeTreeCreatorMaxNodes creator = new NodeTreeCreatorMaxNodes(tree,
+				fileInputNodes, dataTreeOutputFactory, maxNodes, SPLIT_INITIAL,
+				SPLIT_ITERATION, pathTree, fileNamesInitialNodes, outputConfig,
+				counterFactory, distributorFactory);
+
 		creator.buildTree();
 
 		// Sort ways by first node id

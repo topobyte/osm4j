@@ -15,40 +15,47 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with osm4j. If not, see <http://www.gnu.org/licenses/>.
 
-package de.topobyte.osm4j.extra.datatree.nodetree;
+package de.topobyte.osm4j.extra.datatree.nodetree.count;
+
+import gnu.trove.map.TLongLongMap;
 
 import java.io.IOException;
 
 import de.topobyte.osm4j.core.access.OsmIterator;
 import de.topobyte.osm4j.extra.datatree.DataTree;
-import de.topobyte.osm4j.extra.datatree.nodetree.distribute.NodeTreeDistributor;
-import de.topobyte.osm4j.extra.datatree.nodetree.distribute.NodeTreeDistributorFactory;
-import de.topobyte.osm4j.extra.datatree.output.DataTreeOutputFactory;
+import de.topobyte.osm4j.extra.datatree.Node;
 
-public class NodeTreeCreator
+public class SimpleNodeTreeLeafCounter implements NodeTreeLeafCounter
 {
 
-	private DataTree tree;
 	private OsmIterator iterator;
-	private DataTreeOutputFactory outputFactory;
-	private NodeTreeDistributorFactory distributorFactory;
 
-	public NodeTreeCreator(DataTree tree, OsmIterator iterator,
-			DataTreeOutputFactory outputFactory,
-			NodeTreeDistributorFactory distributorFactory)
+	private IteratorNodeTreeLeafCounter counter;
+
+	public SimpleNodeTreeLeafCounter(DataTree tree, Node head,
+			OsmIterator iterator)
 	{
-		this.tree = tree;
-		this.outputFactory = outputFactory;
-		this.distributorFactory = distributorFactory;
 		this.iterator = iterator;
+
+		counter = new IteratorNodeTreeLeafCounter(tree, head);
 	}
 
+	@Override
+	public Node getHead()
+	{
+		return counter.getHead();
+	}
+
+	@Override
+	public TLongLongMap getCounters()
+	{
+		return counter.getCounters();
+	}
+
+	@Override
 	public void execute() throws IOException
 	{
-		NodeTreeDistributor distributor = distributorFactory.createDistributor(
-				tree, tree.getRoot(), iterator, outputFactory);
-
-		distributor.execute();
+		counter.execute(iterator);
 	}
 
 }

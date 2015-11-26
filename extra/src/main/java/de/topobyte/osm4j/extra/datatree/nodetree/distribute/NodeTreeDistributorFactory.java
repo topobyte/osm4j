@@ -15,53 +15,17 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with osm4j. If not, see <http://www.gnu.org/licenses/>.
 
-package de.topobyte.osm4j.extra.datatree.nodetree;
+package de.topobyte.osm4j.extra.datatree.nodetree.distribute;
 
-import java.io.OutputStream;
-import java.nio.file.Path;
-
-import de.topobyte.osm4j.core.access.OsmOutputStream;
-import de.topobyte.osm4j.core.access.OsmOutputStreamStreamOutput;
+import de.topobyte.osm4j.core.access.OsmIterator;
+import de.topobyte.osm4j.extra.datatree.DataTree;
 import de.topobyte.osm4j.extra.datatree.Node;
+import de.topobyte.osm4j.extra.datatree.output.DataTreeOutputFactory;
 
-class NodeOutput extends OsmOutputStreamStreamOutput
+public interface NodeTreeDistributorFactory
 {
 
-	private Node node;
-	private Path file;
-	private long count = 0;
-
-	NodeOutput(Node node, Path file, OutputStream output,
-			OsmOutputStream osmOutput)
-	{
-		super(output, osmOutput);
-		this.node = node;
-		this.file = file;
-	}
-
-	public Node getNode()
-	{
-		return node;
-	}
-
-	public Path getFile()
-	{
-		return file;
-	}
-
-	public long getCount()
-	{
-		return count;
-	}
-
-	public void incrementCounter()
-	{
-		count++;
-	}
-
-	public void setCount(long count)
-	{
-		this.count = count;
-	}
+	public NodeTreeDistributor createDistributor(DataTree tree, Node head,
+			OsmIterator iterator, DataTreeOutputFactory outputFactory);
 
 }

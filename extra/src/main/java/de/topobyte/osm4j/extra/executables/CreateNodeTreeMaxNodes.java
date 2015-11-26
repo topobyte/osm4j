@@ -18,9 +18,24 @@
 package de.topobyte.osm4j.extra.executables;
 
 import java.io.IOException;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import de.topobyte.osm4j.core.access.OsmIterator;
+import de.topobyte.osm4j.core.access.OsmIteratorInput;
+import de.topobyte.osm4j.core.model.iface.OsmBounds;
+import de.topobyte.osm4j.extra.datatree.DataTree;
+import de.topobyte.osm4j.extra.datatree.DataTreeFiles;
+import de.topobyte.osm4j.extra.datatree.DataTreeUtil;
 import de.topobyte.osm4j.extra.datatree.nodetree.NodeTreeCreatorMaxNodes;
+import de.topobyte.osm4j.extra.datatree.nodetree.count.NodeTreeLeafCounterFactory;
+import de.topobyte.osm4j.extra.datatree.nodetree.count.SimpleNodeTreeLeafCounterFactory;
+import de.topobyte.osm4j.extra.datatree.nodetree.count.ThreadedNodeTreeLeafCounterFactory;
+import de.topobyte.osm4j.extra.datatree.nodetree.distribute.NodeTreeDistributorFactory;
+import de.topobyte.osm4j.extra.datatree.nodetree.distribute.SimpleNodeTreeDistributorFactory;
+import de.topobyte.osm4j.extra.datatree.nodetree.distribute.ThreadedNodeTreeDistributorFactory;
+import de.topobyte.osm4j.extra.datatree.output.ClosingDataTreeOutputFactory;
+import de.topobyte.osm4j.extra.datatree.output.DataTreeOutputFactory;
 import de.topobyte.osm4j.utils.AbstractExecutableSingleInputFileOutput;
 import de.topobyte.osm4j.utils.OsmOutputConfig;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
@@ -83,14 +98,47 @@ public class CreateNodeTreeMaxNodes extends
 
 	private void execute() throws IOException
 	{
+		OsmIteratorInput input = getOsmFileInput().createIterator(false, false);
+		OsmIterator iterator = input.getIterator();
+
+		if (!iterator.hasBounds()) {
+			System.out.println("Input does not provide bounds");
+			System.exit(1);
+		}
+
+		OsmBounds bounds = iterator.getBounds();
+		System.out.println("bounds: " + bounds);
+
+		input.close();
+
+		Path pathTree = Paths.get(pathOutput);
+
+		DataTree tree = DataTreeUtil.initNewTree(pathTree, bounds);
+
 		OsmOutputConfig outputConfig = new OsmOutputConfig(outputFormat,
 				pbfConfig, tboConfig, writeMetadata);
 
-		NodeTreeCreatorMaxNodes creator = new NodeTreeCreatorMaxNodes(
-				getOsmFileInput(), maxNodes, SPLIT_INITIAL, SPLIT_ITERATION,
-				Paths.get(pathOutput), fileNames, outputConfig);
+		DataTreeFiles treeFiles = new DataTreeFiles(pathTree, fileNames);
+		DataTreeOutputFactory dataTreeOutputFactory = new ClosingDataTreeOutputFactory(
+				treeFiles, outputConfig);
 
-		creator.init();
+		boolean threaded = true;
+
+		NodeTreeLeafCounterFactory counterFactory;
+		NodeTreeDistributorFactory distributorFactory;
+
+		if (!threaded) {
+			counterFactory = new SimpleNodeTreeLeafCounterFactory();
+			distributorFactory = new SimpleNodeTreeDistributorFactory();
+		} else {
+			counterFactory = new ThreadedNodeTreeLeafCounterFactory();
+			distributorFactory = new ThreadedNodeTreeDistributorFactory();
+		}
+
+		NodeTreeCreatorMaxNodes creator = new NodeTreeCreatorMaxNodes(tree,
+				getOsmFileInput(), dataTreeOutputFactory, maxNodes,
+				SPLIT_INITIAL, SPLIT_ITERATION, pathTree, fileNames,
+				outputConfig, counterFactory, distributorFactory);
 
 		creator.buildTree();
 	}

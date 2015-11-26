@@ -18,11 +18,20 @@
 package de.topobyte.osm4j.extra.executables;
 
 import java.io.IOException;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import de.topobyte.osm4j.core.access.OsmIterator;
+import de.topobyte.osm4j.core.model.iface.OsmBounds;
 import de.topobyte.osm4j.extra.datatree.DataTree;
+import de.topobyte.osm4j.extra.datatree.DataTreeFiles;
+import de.topobyte.osm4j.extra.datatree.DataTreeUtil;
 import de.topobyte.osm4j.extra.datatree.nodetree.NodeTreeCreator;
+import de.topobyte.osm4j.extra.datatree.nodetree.distribute.NodeTreeDistributorFactory;
+import de.topobyte.osm4j.extra.datatree.nodetree.distribute.SimpleNodeTreeDistributorFactory;
+import de.topobyte.osm4j.extra.datatree.nodetree.distribute.ThreadedNodeTreeDistributorFactory;
+import de.topobyte.osm4j.extra.datatree.output.ClosingDataTreeOutputFactory;
+import de.topobyte.osm4j.extra.datatree.output.DataTreeOutputFactory;
 import de.topobyte.osm4j.utils.OsmOutputConfig;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
@@ -76,17 +85,38 @@ public class CreateNodeTreeSplitDepth extends CreateNodeTreeBase
 	private void execute() throws IOException
 	{
 		OsmIterator iterator = createIterator();
+		if (!iterator.hasBounds()) {
+			throw new IOException("Input does not provide bounds");
+		}
+
+		OsmBounds bounds = iterator.getBounds();
+		System.out.println("bounds: " + bounds);
+
+		Path pathTree = Paths.get(pathOutput);
+
 		OsmOutputConfig outputConfig = new OsmOutputConfig(outputFormat,
 				pbfConfig, tboConfig, writeMetadata);
 
-		NodeTreeCreator creator = new NodeTreeCreator(iterator,
-				Paths.get(pathOutput), fileNames, outputConfig);
+		DataTree tree = DataTreeUtil.initNewTree(pathTree, bounds);
 
-		creator.initNewTree();
-
-		DataTree tree = creator.getTree();
 		tree.getRoot().split(splitDepth);
 		tree.print();
+
+		DataTreeFiles treeFiles = new DataTreeFiles(pathTree, fileNames);
+		DataTreeOutputFactory dataTreeOutputFactory = new ClosingDataTreeOutputFactory(
+				treeFiles, outputConfig);
+
+		boolean threaded = true;
+
+		NodeTreeDistributorFactory distributorFactory;
+		if (!threaded) {
+			distributorFactory = new SimpleNodeTreeDistributorFactory();
+		} else {
+			distributorFactory = new ThreadedNodeTreeDistributorFactory();
+		}
+
+		NodeTreeCreator creator = new NodeTreeCreator(tree, iterator,
+				dataTreeOutputFactory, distributorFactory);
 
 		creator.execute();
 	}
