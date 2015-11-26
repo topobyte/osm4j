@@ -51,7 +51,6 @@ import de.topobyte.osm4j.extra.datatree.DataTreeFiles;
 import de.topobyte.osm4j.extra.datatree.DataTreeOpener;
 import de.topobyte.osm4j.extra.datatree.Node;
 import de.topobyte.osm4j.extra.idbboxlist.IdBboxListOutputStream;
-import de.topobyte.osm4j.tbo.access.TboWriter;
 import de.topobyte.osm4j.utils.FileFormat;
 import de.topobyte.osm4j.utils.OsmIoUtils;
 import de.topobyte.osm4j.utils.OsmOutputConfig;
@@ -183,11 +182,6 @@ public abstract class RelationsDistributorBase
 			OutputStream out = new BufferedOutputStream(factory.create(file));
 			OsmOutputStream osmOutput = OsmIoUtils.setupOsmOutput(out,
 					outputConfig, true);
-
-			if (osmOutput instanceof TboWriter) {
-				TboWriter tboWriter = (TboWriter) osmOutput;
-				tboWriter.setBatchSizeRelationsByMembers(1024);
-			}
 
 			outputs.put(leaf, new OsmOutputStreamStreamOutput(out, osmOutput));
 
