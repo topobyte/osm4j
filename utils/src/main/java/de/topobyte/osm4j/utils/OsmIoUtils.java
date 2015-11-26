@@ -147,6 +147,14 @@ public class OsmIoUtils
 			FileFormat format, boolean writeMetadata, PbfConfig pbfConfig,
 			TboConfig tboConfig)
 	{
+		return setupOsmOutput(out, format, writeMetadata, pbfConfig, tboConfig,
+				false);
+	}
+
+	public static OsmOutputStream setupOsmOutput(OutputStream out,
+			FileFormat format, boolean writeMetadata, PbfConfig pbfConfig,
+			TboConfig tboConfig, boolean lowMemory)
+	{
 		switch (format) {
 		default:
 		case PBF:
@@ -154,7 +162,7 @@ public class OsmIoUtils
 			applyPbfConfig(pbfWriter, pbfConfig);
 			return pbfWriter;
 		case TBO:
-			TboWriter tboWriter = new TboWriter(out, writeMetadata, true);
+			TboWriter tboWriter = new TboWriter(out, writeMetadata, lowMemory);
 			applyTboConfig(tboWriter, tboConfig);
 			return tboWriter;
 		case XML:
@@ -164,6 +172,12 @@ public class OsmIoUtils
 
 	public static OsmOutputStream setupOsmOutput(OutputStream out,
 			OsmOutputConfig outputConfig)
+	{
+		return setupOsmOutput(out, outputConfig, false);
+	}
+
+	public static OsmOutputStream setupOsmOutput(OutputStream out,
+			OsmOutputConfig outputConfig, boolean lowMemory)
 	{
 		boolean writeMetadata = outputConfig.isWriteMetadata();
 
@@ -176,7 +190,7 @@ public class OsmIoUtils
 			return pbfWriter;
 		case TBO:
 			TboConfig tboConfig = outputConfig.getTboConfig();
-			TboWriter tboWriter = new TboWriter(out, writeMetadata, true);
+			TboWriter tboWriter = new TboWriter(out, writeMetadata, lowMemory);
 			applyTboConfig(tboWriter, tboConfig);
 			return tboWriter;
 		case XML:
