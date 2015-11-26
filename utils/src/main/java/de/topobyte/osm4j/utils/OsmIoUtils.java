@@ -40,6 +40,12 @@ import de.topobyte.osm4j.tbo.access.TboReader;
 import de.topobyte.osm4j.tbo.access.TboWriter;
 import de.topobyte.osm4j.utils.config.PbfConfig;
 import de.topobyte.osm4j.utils.config.TboConfig;
+import de.topobyte.osm4j.utils.config.limit.ElementCountLimit;
+import de.topobyte.osm4j.utils.config.limit.NodeLimit;
+import de.topobyte.osm4j.utils.config.limit.RelationLimit;
+import de.topobyte.osm4j.utils.config.limit.RelationMemberLimit;
+import de.topobyte.osm4j.utils.config.limit.WayLimit;
+import de.topobyte.osm4j.utils.config.limit.WayNodeLimit;
 import de.topobyte.osm4j.xml.dynsax.OsmXmlIterator;
 import de.topobyte.osm4j.xml.dynsax.OsmXmlReader;
 import de.topobyte.osm4j.xml.output.OsmXmlOutputStream;
@@ -145,12 +151,11 @@ public class OsmIoUtils
 		default:
 		case PBF:
 			PbfWriter pbfWriter = new PbfWriter(out, writeMetadata);
-			pbfWriter.setCompression(pbfConfig.getCompression());
-			pbfWriter.setUseDense(pbfConfig.isUseDenseNodes());
+			applyPbfConfig(pbfWriter, pbfConfig);
 			return pbfWriter;
 		case TBO:
 			TboWriter tboWriter = new TboWriter(out, writeMetadata, true);
-			tboWriter.setCompression(tboConfig.getCompression());
+			applyTboConfig(tboWriter, tboConfig);
 			return tboWriter;
 		case XML:
 			return new OsmXmlOutputStream(out, writeMetadata);
@@ -167,13 +172,12 @@ public class OsmIoUtils
 		case PBF:
 			PbfConfig pbfConfig = outputConfig.getPbfConfig();
 			PbfWriter pbfWriter = new PbfWriter(out, writeMetadata);
-			pbfWriter.setCompression(pbfConfig.getCompression());
-			pbfWriter.setUseDense(pbfConfig.isUseDenseNodes());
+			applyPbfConfig(pbfWriter, pbfConfig);
 			return pbfWriter;
 		case TBO:
 			TboConfig tboConfig = outputConfig.getTboConfig();
 			TboWriter tboWriter = new TboWriter(out, writeMetadata, true);
-			tboWriter.setCompression(tboConfig.getCompression());
+			applyTboConfig(tboWriter, tboConfig);
 			return tboWriter;
 		case XML:
 			return new OsmXmlOutputStream(out, writeMetadata);
@@ -191,6 +195,43 @@ public class OsmIoUtils
 			return ".tbo";
 		case XML:
 			return ".xml";
+		}
+	}
+
+	private static void applyPbfConfig(PbfWriter pbfWriter, PbfConfig pbfConfig)
+	{
+		pbfWriter.setCompression(pbfConfig.getCompression());
+		pbfWriter.setUseDense(pbfConfig.isUseDenseNodes());
+	}
+
+	private static void applyTboConfig(TboWriter tboWriter, TboConfig tboConfig)
+	{
+		tboWriter.setCompression(tboConfig.getCompression());
+
+		NodeLimit nodeLimit = tboConfig.getLimitNodes();
+		WayLimit wayLimit = tboConfig.getLimitWays();
+		RelationLimit relationLimit = tboConfig.getLimitRelations();
+
+		if (nodeLimit instanceof ElementCountLimit) {
+			ElementCountLimit limit = (ElementCountLimit) nodeLimit;
+			tboWriter.setBatchSizeNodesByElementCount(limit.getMaxElements());
+		}
+
+		if (wayLimit instanceof ElementCountLimit) {
+			ElementCountLimit limit = (ElementCountLimit) wayLimit;
+			tboWriter.setBatchSizeWaysByElementCount(limit.getMaxElements());
+		} else if (wayLimit instanceof WayNodeLimit) {
+			WayNodeLimit limit = (WayNodeLimit) wayLimit;
+			tboWriter.setBatchSizeWaysByNodes(limit.getMaxWayNodes());
+		}
+
+		if (relationLimit instanceof ElementCountLimit) {
+			ElementCountLimit limit = (ElementCountLimit) relationLimit;
+			tboWriter.setBatchSizeRelationsByElementCount(limit
+					.getMaxElements());
+		} else if (relationLimit instanceof RelationMemberLimit) {
+			RelationMemberLimit limit = (RelationMemberLimit) relationLimit;
+			tboWriter.setBatchSizeRelationsByMembers(limit.getMaxMembers());
 		}
 	}
 
