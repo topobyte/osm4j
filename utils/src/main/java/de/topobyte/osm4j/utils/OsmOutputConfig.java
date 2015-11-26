@@ -28,6 +28,16 @@ public class OsmOutputConfig
 	private TboConfig tboConfig;
 	private boolean writeMetadata;
 
+	public OsmOutputConfig(FileFormat outputFormat)
+	{
+		this(outputFormat, new PbfConfig(), new TboConfig(), true);
+	}
+
+	public OsmOutputConfig(FileFormat outputFormat, boolean writeMetadata)
+	{
+		this(outputFormat, new PbfConfig(), new TboConfig(), writeMetadata);
+	}
+
 	public OsmOutputConfig(FileFormat outputFormat, PbfConfig pbfConfig,
 			TboConfig tboConfig, boolean writeMetadata)
 	{
