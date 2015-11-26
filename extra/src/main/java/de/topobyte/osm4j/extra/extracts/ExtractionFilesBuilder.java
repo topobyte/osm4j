@@ -53,6 +53,9 @@ import de.topobyte.osm4j.utils.FileFormat;
 import de.topobyte.osm4j.utils.OsmFileInput;
 import de.topobyte.osm4j.utils.OsmIoUtils;
 import de.topobyte.osm4j.utils.OsmOutputConfig;
+import de.topobyte.osm4j.utils.config.limit.ElementCountLimit;
+import de.topobyte.osm4j.utils.config.limit.RelationMemberLimit;
+import de.topobyte.osm4j.utils.config.limit.WayNodeLimit;
 import de.topobyte.osm4j.utils.split.ThreadedEntitySplitter;
 
 public class ExtractionFilesBuilder
@@ -174,6 +177,15 @@ public class ExtractionFilesBuilder
 				includeMetadata);
 		OsmOutputConfig outputConfigRelations = new OsmOutputConfig(
 				outputFormat, includeMetadata);
+
+		outputConfigTree.getTboConfig().setLimitNodes(
+				new ElementCountLimit(1024));
+		outputConfigTree.getTboConfig().setLimitWays(new WayNodeLimit(2048));
+		outputConfigTree.getTboConfig().setLimitRelations(
+				new RelationMemberLimit(2048));
+
+		outputConfigRelations.getTboConfig().setLimitRelations(
+				new RelationMemberLimit(1024));
 
 		OsmOutputConfig outputConfigTreeFinal = new OsmOutputConfig(
 				outputFormat, includeMetadata);
@@ -335,16 +347,14 @@ public class ExtractionFilesBuilder
 				pathTree, pathSimpleRelationsDir, pathSimpleRelationsEmpty,
 				pathSimpleRelationsNonTree, pathSimpleRelationsNonTreeBboxes,
 				fileNamesRelations, fileNamesWays, fileNamesNodes,
-				fileNamesFinalRelationsSimple, outputFormat,
-				outputConfigRelations);
+				fileNamesFinalRelationsSimple, outputFormat, outputConfigTree);
 		simpleRelationsDistributor.execute();
 
 		ComplexRelationsDistributor complexRelationsDistributor = new ComplexRelationsDistributor(
 				pathTree, pathComplexRelationsDir, pathComplexRelationsEmpty,
 				pathComplexRelationsNonTree, pathComplexRelationsNonTreeBboxes,
 				fileNamesRelations, fileNamesWays, fileNamesNodes,
-				fileNamesFinalRelationsComplex, outputFormat,
-				outputConfigRelations);
+				fileNamesFinalRelationsComplex, outputFormat, outputConfigTree);
 		complexRelationsDistributor.execute();
 
 		// Sort non-tree relations
