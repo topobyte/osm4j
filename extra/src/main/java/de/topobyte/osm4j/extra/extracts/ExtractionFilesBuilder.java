@@ -53,8 +53,6 @@ import de.topobyte.osm4j.utils.FileFormat;
 import de.topobyte.osm4j.utils.OsmFileInput;
 import de.topobyte.osm4j.utils.OsmIoUtils;
 import de.topobyte.osm4j.utils.OsmOutputConfig;
-import de.topobyte.osm4j.utils.config.PbfConfig;
-import de.topobyte.osm4j.utils.config.TboConfig;
 import de.topobyte.osm4j.utils.split.ThreadedEntitySplitter;
 
 public class ExtractionFilesBuilder
@@ -169,16 +167,16 @@ public class ExtractionFilesBuilder
 		String fileNamesRelations = "relations" + extension;
 
 		OsmOutputConfig outputConfigSplit = new OsmOutputConfig(outputFormat,
-				new PbfConfig(), new TboConfig(), includeMetadata);
+				includeMetadata);
 		OsmOutputConfig outputConfigTree = new OsmOutputConfig(outputFormat,
-				new PbfConfig(), new TboConfig(), includeMetadata);
+				includeMetadata);
 		OsmOutputConfig outputConfigWays = new OsmOutputConfig(outputFormat,
-				new PbfConfig(), new TboConfig(), includeMetadata);
+				includeMetadata);
 		OsmOutputConfig outputConfigRelations = new OsmOutputConfig(
-				outputFormat, new PbfConfig(), new TboConfig(), includeMetadata);
+				outputFormat, includeMetadata);
 
 		OsmOutputConfig outputConfigTreeFinal = new OsmOutputConfig(
-				outputFormat, new PbfConfig(), new TboConfig(), includeMetadata);
+				outputFormat, includeMetadata);
 
 		// Determine bounds
 
