@@ -45,6 +45,9 @@ public class MapWaysToTree extends AbstractExecutableSingleInputStreamOutput
 
 		task.setup(args);
 
+		task.readMetadata = false;
+		task.readTags = false;
+
 		task.init();
 
 		task.execute();
