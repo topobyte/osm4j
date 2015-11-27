@@ -17,14 +17,16 @@
 
 package de.topobyte.osm4j.extra.datatree.ways;
 
+import gnu.trove.map.TLongObjectMap;
+import gnu.trove.map.hash.TLongObjectHashMap;
+
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Path;
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import de.topobyte.largescalefileio.ClosingFileOutputStreamFactory;
 import de.topobyte.largescalefileio.SimpleClosingFileOutputStreamFactory;
@@ -33,34 +35,89 @@ import de.topobyte.osm4j.core.access.OsmOutputStream;
 import de.topobyte.osm4j.core.access.OsmOutputStreamStreamOutput;
 import de.topobyte.osm4j.core.access.OsmStreamOutput;
 import de.topobyte.osm4j.core.model.iface.OsmWay;
+import de.topobyte.osm4j.extra.datatree.DataTree;
 import de.topobyte.osm4j.extra.datatree.DataTreeFiles;
+import de.topobyte.osm4j.extra.datatree.DataTreeOpener;
 import de.topobyte.osm4j.extra.datatree.Node;
+import de.topobyte.osm4j.extra.threading.ObjectBuffer;
+import de.topobyte.osm4j.extra.threading.TaskRunnable;
+import de.topobyte.osm4j.extra.threading.write.WayWriteRequest;
+import de.topobyte.osm4j.extra.threading.write.WriteRequest;
+import de.topobyte.osm4j.extra.threading.write.WriterRunner;
 import de.topobyte.osm4j.utils.FileFormat;
 import de.topobyte.osm4j.utils.OsmIoUtils;
 import de.topobyte.osm4j.utils.OsmOutputConfig;
+import de.topobyte.osm4j.utils.buffer.ParallelExecutor;
 
-public class SimpleWaysToTreeMapper extends AbstractWaysToTreeMapper
+public class ThreadedWaysToTreeMapper implements WaysToTreeMapper
 {
 
+	private Path pathTree;
 	private String fileNamesOutput;
 	private OsmOutputConfig outputConfig;
 
-	public SimpleWaysToTreeMapper(OsmIterator nodeIterator, Path pathTree,
+	private AbstractWaysToTreeMapper mapper;
+
+	public ThreadedWaysToTreeMapper(OsmIterator nodeIterator, Path pathTree,
 			Path pathWays, FileFormat inputFormatWays, String fileNamesOutput,
 			OsmOutputConfig outputConfig)
 	{
-		super(nodeIterator, pathTree, pathWays, inputFormatWays, outputConfig
-				.isWriteMetadata());
+		this.pathTree = pathTree;
 		this.fileNamesOutput = fileNamesOutput;
 		this.outputConfig = outputConfig;
+
+		mapper = new AbstractWaysToTreeMapper(nodeIterator, pathTree, pathWays,
+				inputFormatWays, outputConfig.isWriteMetadata()) {
+
+			@Override
+			protected void process(OsmWay way, Node leaf) throws IOException
+			{
+				put(way, leaf);
+			}
+
+			@Override
+			protected void finish() throws IOException
+			{
+				super.finish();
+				buffer.close();
+			}
+
+		};
 	}
 
-	private Map<Node, OsmStreamOutput> outputs = new HashMap<>();
+	private ObjectBuffer<WriteRequest> buffer = new ObjectBuffer<>(10000, 100);
 
 	@Override
-	public void prepare() throws IOException
+	public void execute() throws IOException
 	{
-		super.prepare();
+		prepare();
+
+		Runnable runnableMapper = new TaskRunnable(mapper);
+		WriterRunner writer = new WriterRunner(buffer);
+
+		List<Runnable> tasks = new ArrayList<>();
+		tasks.add(runnableMapper);
+		tasks.add(writer);
+
+		ParallelExecutor executor = new ParallelExecutor(tasks);
+		executor.execute();
+
+		finish();
+	}
+
+	protected void put(OsmWay way, Node leaf) throws IOException
+	{
+		OsmStreamOutput output = outputs.get(leaf.getPath());
+		buffer.write(new WayWriteRequest(way, output.getOsmOutput()));
+	}
+
+	private DataTree tree;
+
+	private TLongObjectMap<OsmStreamOutput> outputs = new TLongObjectHashMap<>();
+
+	private void prepare() throws IOException
+	{
+		tree = DataTreeOpener.open(pathTree.toFile());
 
 		DataTreeFiles filesOutput = new DataTreeFiles(pathTree, fileNamesOutput);
 
@@ -78,27 +135,16 @@ public class SimpleWaysToTreeMapper extends AbstractWaysToTreeMapper
 
 			OsmStreamOutput out = new OsmOutputStreamStreamOutput(output,
 					osmOutput);
-			outputs.put(leaf, out);
+			outputs.put(leaf.getPath(), out);
 		}
-
 	}
 
-	@Override
-	public void execute() throws IOException
+	private void finish() throws IOException
 	{
-		super.execute();
-
-		for (OsmStreamOutput output : outputs.values()) {
+		for (OsmStreamOutput output : outputs.valueCollection()) {
 			output.getOsmOutput().complete();
 			output.close();
 		}
-	}
-
-	@Override
-	protected void process(OsmWay way, Node leaf) throws IOException
-	{
-		OsmStreamOutput output = outputs.get(leaf);
-		output.getOsmOutput().write(way);
 	}
 
 }

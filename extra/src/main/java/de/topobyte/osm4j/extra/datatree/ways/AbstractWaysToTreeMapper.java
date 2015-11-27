@@ -68,9 +68,10 @@ public abstract class AbstractWaysToTreeMapper implements WaysToTreeMapper
 	{
 		prepare();
 		map();
+		finish();
 	}
 
-	private DataTree tree;
+	protected DataTree tree;
 	private SortedMergeIterator wayIterator;
 
 	private List<InputStream> wayInputStreams = new ArrayList<>();
@@ -156,10 +157,6 @@ public abstract class AbstractWaysToTreeMapper implements WaysToTreeMapper
 		}
 
 		progress.stop();
-
-		for (InputStream input : wayInputStreams) {
-			input.close();
-		}
 	}
 
 	private void query(OsmNode node) throws IOException
@@ -167,6 +164,13 @@ public abstract class AbstractWaysToTreeMapper implements WaysToTreeMapper
 		List<Node> leafs = tree.query(node.getLongitude(), node.getLatitude());
 		for (Node leaf : leafs) {
 			process(way, leaf);
+		}
+	}
+
+	protected void finish() throws IOException
+	{
+		for (InputStream input : wayInputStreams) {
+			input.close();
 		}
 	}
 

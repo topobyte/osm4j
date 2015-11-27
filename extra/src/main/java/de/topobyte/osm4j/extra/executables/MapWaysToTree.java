@@ -22,6 +22,7 @@ import java.nio.file.Paths;
 
 import de.topobyte.osm4j.core.access.OsmIterator;
 import de.topobyte.osm4j.extra.datatree.ways.SimpleWaysToTreeMapper;
+import de.topobyte.osm4j.extra.datatree.ways.ThreadedWaysToTreeMapper;
 import de.topobyte.osm4j.extra.datatree.ways.WaysToTreeMapper;
 import de.topobyte.osm4j.utils.AbstractExecutableSingleInputStreamOutput;
 import de.topobyte.osm4j.utils.OsmOutputConfig;
@@ -86,9 +87,18 @@ public class MapWaysToTree extends AbstractExecutableSingleInputStreamOutput
 		OsmOutputConfig outputConfig = new OsmOutputConfig(outputFormat,
 				pbfConfig, tboConfig, writeMetadata);
 
-		WaysToTreeMapper mapper = new SimpleWaysToTreeMapper(iterator,
-				Paths.get(pathTree), Paths.get(pathWays), inputFormat,
-				fileNamesOutput, outputConfig);
+		boolean threaded = true;
+
+		WaysToTreeMapper mapper;
+		if (!threaded) {
+			mapper = new SimpleWaysToTreeMapper(iterator, Paths.get(pathTree),
+					Paths.get(pathWays), inputFormat, fileNamesOutput,
+					outputConfig);
+		} else {
+			mapper = new ThreadedWaysToTreeMapper(iterator,
+					Paths.get(pathTree), Paths.get(pathWays), inputFormat,
+					fileNamesOutput, outputConfig);
+		}
 
 		mapper.execute();
 	}
