@@ -77,6 +77,9 @@ public class MissingWayNodesFinder
 		this.inputFormatWays = inputFormatWays;
 	}
 
+	private DataTreeFiles filesNodes;
+	private DataTreeFiles filesWays;
+	private DataTreeFiles filesOutput;
 	private List<Node> leafs;
 
 	private long counter = 0;
@@ -89,76 +92,89 @@ public class MissingWayNodesFinder
 
 	public void execute() throws IOException
 	{
+		prepare();
+		processLeafs();
+	}
+
+	private void prepare() throws IOException
+	{
 		DataTree tree = DataTreeOpener.open(pathNodeTree.toFile());
 
-		DataTreeFiles filesNodes = new DataTreeFiles(pathNodeTree,
-				fileNamesNodes);
-		DataTreeFiles filesWays = new DataTreeFiles(pathWayTree, fileNamesWays);
-		DataTreeFiles filesOutput = new DataTreeFiles(pathOutputTree,
-				fileNamesOutput);
+		filesNodes = new DataTreeFiles(pathNodeTree, fileNamesNodes);
+		filesWays = new DataTreeFiles(pathWayTree, fileNamesWays);
+		filesOutput = new DataTreeFiles(pathOutputTree, fileNamesOutput);
 
 		leafs = tree.getLeafs();
+	}
 
+	public void processLeafs() throws IOException
+	{
 		int i = 0;
 		for (Node leaf : leafs) {
 			System.out.println(String.format("Processing leaf %d/%d", ++i,
 					leafs.size()));
 
-			File fileNodes = filesNodes.getFile(leaf);
-			File fileWays = filesWays.getFile(leaf);
-			File fileOutput = filesOutput.getFile(leaf);
-
-			InputStream inputNodes = StreamUtil.bufferedInputStream(fileNodes);
-			InputStream inputWays = StreamUtil.bufferedInputStream(fileWays);
-
-			long nodesSize = fileNodes.length();
-			System.out.println(String.format(
-					"Loading nodes file of size: %.3fMB",
-					nodesSize / 1024. / 1024.));
-
-			OsmIdIterator idIterator = OsmIoUtils.setupOsmIdIterator(
-					inputNodes, inputFormatNodes);
-			TLongSet nodeIds = read(idIterator);
-
-			long waysSize = fileWays.length();
-			System.out.println(String.format(
-					"Loading ways file of size: %.3fMB",
-					waysSize / 1024. / 1024.));
-
-			InMemoryMapDataSet dataWays = MapDataSetLoader.read(
-					OsmIoUtils.setupOsmIterator(inputWays, inputFormatWays,
-							false, false), true, true, true);
-
-			inputNodes.close();
-			inputWays.close();
-
-			System.out.println("Number of ways: " + dataWays.getWays().size());
-
-			TLongSet missingIds = new TLongHashSet();
-
-			TLongObjectIterator<OsmWay> ways = dataWays.getWays().iterator();
-			while (ways.hasNext()) {
-				ways.advance();
-				OsmWay way = ways.value();
-				build(way, nodeIds, missingIds);
-			}
-
-			System.out.println("Sorting id list of size: " + missingIds.size());
-
-			TLongList missingIdList = new TLongArrayList(missingIds);
-			missingIdList.sort();
-
-			System.out.println("Writing missing ids");
-			OutputStream bos = StreamUtil.bufferedOutputStream(fileOutput);
-			IdListOutputStream idOutput = new IdListOutputStream(bos);
-			TLongIterator iterator = missingIdList.iterator();
-			while (iterator.hasNext()) {
-				idOutput.write(iterator.next());
-			}
-			idOutput.close();
+			process(leaf);
 
 			stats(i);
 		}
+	}
+
+	private void process(Node leaf) throws IOException
+	{
+		File fileNodes = filesNodes.getFile(leaf);
+		File fileWays = filesWays.getFile(leaf);
+		File fileOutput = filesOutput.getFile(leaf);
+
+		InputStream inputNodes = StreamUtil.bufferedInputStream(fileNodes);
+		InputStream inputWays = StreamUtil.bufferedInputStream(fileWays);
+
+		long nodesSize = fileNodes.length();
+		System.out.println(String.format("Loading nodes file of size: %.3fMB",
+				nodesSize / 1024. / 1024.));
+
+		OsmIdIterator idIterator = OsmIoUtils.setupOsmIdIterator(inputNodes,
+				inputFormatNodes);
+		TLongSet nodeIds = read(idIterator);
+
+		long waysSize = fileWays.length();
+		System.out.println(String.format("Loading ways file of size: %.3fMB",
+				waysSize / 1024. / 1024.));
+
+		InMemoryMapDataSet dataWays = MapDataSetLoader.read(OsmIoUtils
+				.setupOsmIterator(inputWays, inputFormatWays, false, false),
+				true, true, true);
+
+		inputNodes.close();
+		inputWays.close();
+
+		System.out.println("Number of ways: " + dataWays.getWays().size());
+
+		TLongSet missingIds = new TLongHashSet();
+
+		TLongObjectIterator<OsmWay> ways = dataWays.getWays().iterator();
+		while (ways.hasNext()) {
+			ways.advance();
+			OsmWay way = ways.value();
+			build(way, nodeIds, missingIds);
+		}
+
+		System.out.println("Sorting id list of size: " + missingIds.size());
+
+		TLongList missingIdList = new TLongArrayList(missingIds);
+		missingIdList.sort();
+
+		System.out.println("Writing missing ids");
+		long a = System.currentTimeMillis();
+		OutputStream bos = StreamUtil.bufferedOutputStream(fileOutput);
+		IdListOutputStream idOutput = new IdListOutputStream(bos);
+		TLongIterator iterator = missingIdList.iterator();
+		while (iterator.hasNext()) {
+			idOutput.write(iterator.next());
+		}
+		idOutput.close();
+		long b = System.currentTimeMillis();
+		System.out.println(String.format("writing: %.3f", (b - a) / 1000.));
 	}
 
 	private TLongSet read(OsmIdIterator idIterator)
