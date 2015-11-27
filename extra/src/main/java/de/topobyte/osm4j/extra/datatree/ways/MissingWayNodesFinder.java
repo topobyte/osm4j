@@ -125,9 +125,9 @@ public class MissingWayNodesFinder
 					"Loading ways file of size: %.3fMB",
 					waysSize / 1024. / 1024.));
 
-			InMemoryMapDataSet dataWays = MapDataSetLoader.read(OsmIoUtils
-					.setupOsmIterator(inputWays, inputFormatWays, false),
-					false, false, false);
+			InMemoryMapDataSet dataWays = MapDataSetLoader.read(
+					OsmIoUtils.setupOsmIterator(inputWays, inputFormatWays,
+							false, false), true, true, true);
 
 			inputNodes.close();
 			inputWays.close();
