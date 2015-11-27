@@ -40,6 +40,7 @@ import de.topobyte.osm4j.extra.datatree.output.ClosingDataTreeOutputFactory;
 import de.topobyte.osm4j.extra.datatree.output.DataTreeOutputFactory;
 import de.topobyte.osm4j.extra.datatree.ways.MissingWayNodesExtractor;
 import de.topobyte.osm4j.extra.datatree.ways.MissingWayNodesFinder;
+import de.topobyte.osm4j.extra.datatree.ways.SimpleWaysToTreeMapper;
 import de.topobyte.osm4j.extra.datatree.ways.WaysDistributor;
 import de.topobyte.osm4j.extra.datatree.ways.WaysToTreeMapper;
 import de.topobyte.osm4j.extra.relations.ComplexRelationsDistributor;
@@ -252,10 +253,9 @@ public class ExtractionFilesBuilder
 		OsmIteratorInput inputNodes = fileInputNodes.createIterator(true,
 				includeMetadata);
 
-		WaysToTreeMapper waysMapper = new WaysToTreeMapper(
+		WaysToTreeMapper waysMapper = new SimpleWaysToTreeMapper(
 				inputNodes.getIterator(), pathTree, pathWaysByNodes,
 				outputFormat, fileNamesInitialWays, outputConfigTree);
-		waysMapper.prepare();
 		waysMapper.execute();
 
 		inputNodes.close();
