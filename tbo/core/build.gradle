@@ -5,7 +5,7 @@ if (project.hasProperty("topobyte")) {
 
 dependencies {
     compile 'de.topobyte:osm4j-core:0.0.3'
-    compile 'de.topobyte:compact-io:0.0.3'
+    compile 'de.topobyte:compact-io:0.0.5'
 
     compile 'net.jpountz.lz4:lz4:1.3.0'
     compile 'org.apache.commons:commons-lang3:3.3.2'
