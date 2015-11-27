@@ -15,16 +15,18 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with osm4j. If not, see <http://www.gnu.org/licenses/>.
 
-package de.topobyte.osm4j.extra.threading;
+package de.topobyte.osm4j.extra.threading.write;
 
 import java.io.IOException;
+
+import de.topobyte.osm4j.extra.threading.ObjectBuffer;
 
 public class WriterRunner implements Runnable
 {
 
-	private ObjectBuffer<WriteRequest> objectBuffer;
+	private ObjectBuffer<? extends WriteRequest> objectBuffer;
 
-	public WriterRunner(ObjectBuffer<WriteRequest> objectBuffer)
+	public WriterRunner(ObjectBuffer<? extends WriteRequest> objectBuffer)
 	{
 		this.objectBuffer = objectBuffer;
 	}

@@ -15,28 +15,25 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with osm4j. If not, see <http://www.gnu.org/licenses/>.
 
-package de.topobyte.osm4j.extra.threading;
+package de.topobyte.osm4j.extra.threading.write;
 
 import java.io.IOException;
 
 import de.topobyte.osm4j.core.access.OsmOutputStream;
-import de.topobyte.osm4j.core.model.iface.OsmNode;
+import de.topobyte.osm4j.core.model.iface.OsmWay;
 
-public class WriteRequest
+public class WayWriteRequest extends AbstractWriteRequest<OsmWay>
 {
 
-	private OsmNode node;
-	private OsmOutputStream output;
-
-	public WriteRequest(OsmNode node, OsmOutputStream output)
+	public WayWriteRequest(OsmWay way, OsmOutputStream output)
 	{
-		this.node = node;
-		this.output = output;
+		super(way, output);
 	}
 
+	@Override
 	public void perform() throws IOException
 	{
-		output.write(node);
+		output.write(object);
 	}
 
 }

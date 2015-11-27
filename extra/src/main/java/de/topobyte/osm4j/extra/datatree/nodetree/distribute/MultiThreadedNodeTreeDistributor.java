@@ -29,8 +29,9 @@ import de.topobyte.osm4j.extra.datatree.Node;
 import de.topobyte.osm4j.extra.datatree.output.DataTreeOutputFactory;
 import de.topobyte.osm4j.extra.threading.ObjectBuffer;
 import de.topobyte.osm4j.extra.threading.StatusRunnable;
-import de.topobyte.osm4j.extra.threading.WriteRequest;
-import de.topobyte.osm4j.extra.threading.WriterRunner;
+import de.topobyte.osm4j.extra.threading.write.NodeWriteRequest;
+import de.topobyte.osm4j.extra.threading.write.WriteRequest;
+import de.topobyte.osm4j.extra.threading.write.WriterRunner;
 import de.topobyte.osm4j.utils.buffer.OsmBuffer;
 import de.topobyte.osm4j.utils.buffer.ParallelExecutor;
 
@@ -159,7 +160,7 @@ public class MultiThreadedNodeTreeDistributor extends
 			ObjectBuffer<WriteRequest> buffer = obuffers.get(bucket);
 
 			OsmStreamOutput output = outputs.get(leaf);
-			buffer.write(new WriteRequest(node, output.getOsmOutput()));
+			buffer.write(new NodeWriteRequest(node, output.getOsmOutput()));
 		}
 	}
 
