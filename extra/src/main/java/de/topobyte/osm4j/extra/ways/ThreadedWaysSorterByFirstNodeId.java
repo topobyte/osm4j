@@ -105,9 +105,7 @@ public class ThreadedWaysSorterByFirstNodeId implements WaysSorterByFirstNodeId
 		for (WayBatch batch : buffer) {
 			process(batch);
 			status();
-			System.out.println("returning object");
 			buffer.returnObject(batch);
-			System.out.println("done returning object");
 		}
 	}
 
@@ -134,10 +132,8 @@ public class ThreadedWaysSorterByFirstNodeId implements WaysSorterByFirstNodeId
 	private void process(WayBatch batch) throws IOException
 	{
 		List<OsmWay> ways = batch.getElements();
-		System.out.println("processing batch with " + ways.size());
 
 		Collections.sort(ways, new WayNodeIdComparator());
-		System.out.println("sorting done");
 
 		batchCount++;
 
@@ -155,7 +151,6 @@ public class ThreadedWaysSorterByFirstNodeId implements WaysSorterByFirstNodeId
 
 		osmOutput.complete();
 		output.close();
-		System.out.println("writing done");
 
 		wayCount += ways.size();
 	}
