@@ -123,7 +123,7 @@ public class ThreadedWaysToTreeMapper implements WaysToTreeMapper
 
 		List<Node> leafs = tree.getLeafs();
 
-		// Node outputs
+		// Way outputs
 		ClosingFileOutputStreamFactory factoryOut = new SimpleClosingFileOutputStreamFactory();
 
 		for (Node leaf : leafs) {
