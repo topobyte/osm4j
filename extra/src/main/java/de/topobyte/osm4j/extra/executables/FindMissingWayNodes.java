@@ -21,6 +21,8 @@ import java.io.IOException;
 import java.nio.file.Paths;
 
 import de.topobyte.osm4j.extra.datatree.ways.MissingWayNodesFinder;
+import de.topobyte.osm4j.extra.datatree.ways.SimpleMissingWayNodesFinder;
+import de.topobyte.osm4j.extra.datatree.ways.ThreadedMissingWayNodesFinder;
 import de.topobyte.osm4j.utils.AbstractExecutableInput;
 import de.topobyte.osm4j.utils.FileFormat;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
@@ -89,10 +91,20 @@ public class FindMissingWayNodes extends AbstractExecutableInput
 
 	public void execute() throws IOException
 	{
-		MissingWayNodesFinder finder = new MissingWayNodesFinder(
-				Paths.get(pathNodeTree), Paths.get(pathWayTree),
-				Paths.get(pathOutputTree), fileNamesNodes, fileNamesWays,
-				fileNamesOutput, inputFormatNodes, inputFormatWays);
+		boolean threaded = true;
+
+		MissingWayNodesFinder finder;
+		if (!threaded) {
+			finder = new SimpleMissingWayNodesFinder(Paths.get(pathNodeTree),
+					Paths.get(pathWayTree), Paths.get(pathOutputTree),
+					fileNamesNodes, fileNamesWays, fileNamesOutput,
+					inputFormatNodes, inputFormatWays);
+		} else {
+			finder = new ThreadedMissingWayNodesFinder(Paths.get(pathNodeTree),
+					Paths.get(pathWayTree), Paths.get(pathOutputTree),
+					fileNamesNodes, fileNamesWays, fileNamesOutput,
+					inputFormatNodes, inputFormatWays);
+		}
 
 		finder.execute();
 	}

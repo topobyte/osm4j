@@ -40,7 +40,8 @@ import de.topobyte.osm4j.extra.datatree.output.ClosingDataTreeOutputFactory;
 import de.topobyte.osm4j.extra.datatree.output.DataTreeOutputFactory;
 import de.topobyte.osm4j.extra.datatree.ways.MissingWayNodesExtractor;
 import de.topobyte.osm4j.extra.datatree.ways.MissingWayNodesFinder;
-import de.topobyte.osm4j.extra.datatree.ways.SimpleWaysToTreeMapper;
+import de.topobyte.osm4j.extra.datatree.ways.ThreadedMissingWayNodesFinder;
+import de.topobyte.osm4j.extra.datatree.ways.ThreadedWaysToTreeMapper;
 import de.topobyte.osm4j.extra.datatree.ways.WaysDistributor;
 import de.topobyte.osm4j.extra.datatree.ways.WaysToTreeMapper;
 import de.topobyte.osm4j.extra.relations.ComplexRelationsDistributor;
@@ -253,7 +254,7 @@ public class ExtractionFilesBuilder
 		OsmIteratorInput inputNodes = fileInputNodes.createIterator(true,
 				includeMetadata);
 
-		WaysToTreeMapper waysMapper = new SimpleWaysToTreeMapper(
+		WaysToTreeMapper waysMapper = new ThreadedWaysToTreeMapper(
 				inputNodes.getIterator(), pathTree, pathWaysByNodes,
 				outputFormat, fileNamesInitialWays, outputConfigTree);
 		waysMapper.execute();
@@ -262,7 +263,7 @@ public class ExtractionFilesBuilder
 
 		// Find missing way nodes
 
-		MissingWayNodesFinder wayNodesFinder = new MissingWayNodesFinder(
+		MissingWayNodesFinder wayNodesFinder = new ThreadedMissingWayNodesFinder(
 				pathTree, pathTree, pathTree, fileNamesInitialNodes,
 				fileNamesInitialWays, fileNamesMissingWayNodeIds, outputFormat,
 				outputFormat);
