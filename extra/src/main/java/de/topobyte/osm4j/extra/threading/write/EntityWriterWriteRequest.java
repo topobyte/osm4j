@@ -15,11 +15,29 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with osm4j. If not, see <http://www.gnu.org/licenses/>.
 
-package de.topobyte.osm4j.extra.idextract;
+package de.topobyte.osm4j.extra.threading.write;
 
-import de.topobyte.osm4j.extra.threading.Task;
+import java.io.IOException;
 
-public interface Extractor extends Task
+import de.topobyte.osm4j.core.model.iface.OsmEntity;
+import de.topobyte.osm4j.extra.entitywriter.EntityWriter;
+
+public class EntityWriterWriteRequest implements WriteRequest
 {
+
+	private EntityWriter writer;
+	private OsmEntity element;
+
+	public EntityWriterWriteRequest(EntityWriter writer, OsmEntity element)
+	{
+		this.writer = writer;
+		this.element = element;
+	}
+
+	@Override
+	public void perform() throws IOException
+	{
+		writer.write(element);
+	}
 
 }

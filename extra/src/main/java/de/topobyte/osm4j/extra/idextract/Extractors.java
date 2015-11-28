@@ -17,9 +17,26 @@
 
 package de.topobyte.osm4j.extra.idextract;
 
-import de.topobyte.osm4j.extra.threading.Task;
+import java.util.List;
 
-public interface Extractor extends Task
+import de.topobyte.osm4j.core.access.OsmIterator;
+import de.topobyte.osm4j.core.model.iface.EntityType;
+import de.topobyte.osm4j.utils.OsmOutputConfig;
+
+public class Extractors
 {
+
+	public static Extractor create(EntityType type,
+			List<ExtractionItem> extractionItems, OsmOutputConfig outputConfig,
+			boolean lowMemory, OsmIterator iterator, boolean threaded)
+	{
+		if (!threaded) {
+			return new SimpleExtractor(type, extractionItems, outputConfig,
+					lowMemory, iterator);
+		} else {
+			return new ThreadedExtractor(type, extractionItems, outputConfig,
+					lowMemory, iterator);
+		}
+	}
 
 }

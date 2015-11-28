@@ -28,6 +28,7 @@ import de.topobyte.osm4j.core.model.iface.EntityType;
 import de.topobyte.osm4j.extra.idextract.ExtractionItem;
 import de.topobyte.osm4j.extra.idextract.ExtractionUtil;
 import de.topobyte.osm4j.extra.idextract.Extractor;
+import de.topobyte.osm4j.extra.idextract.Extractors;
 import de.topobyte.osm4j.utils.OsmIoUtils;
 import de.topobyte.osm4j.utils.OsmOutputConfig;
 
@@ -86,11 +87,14 @@ public class RelationsMemberCollector
 					path, fileNamesRelationWayIds, fileNamesWays));
 		}
 
-		Extractor wayExtractor = new Extractor(EntityType.Way,
-				wayExtractionItems, outputConfig, true);
+		boolean threaded = true;
+
 		OsmIteratorInput wayInput = inputWays.createIterator(true,
 				outputConfig.isWriteMetadata());
-		wayExtractor.execute(wayInput.getIterator());
+		Extractor wayExtractor = Extractors.create(EntityType.Way,
+				wayExtractionItems, outputConfig, true, wayInput.getIterator(),
+				threaded);
+		wayExtractor.execute();
 		wayInput.close();
 
 		// Extract way node ids for each batch
@@ -111,11 +115,12 @@ public class RelationsMemberCollector
 					path, fileNamesNodeIds, fileNamesNodes));
 		}
 
-		Extractor nodeExtractor = new Extractor(EntityType.Node,
-				nodeExtractionItems, outputConfig, true);
 		OsmIteratorInput nodeInput = inputNodes.createIterator(true,
 				outputConfig.isWriteMetadata());
-		nodeExtractor.execute(nodeInput.getIterator());
+		Extractor nodeExtractor = Extractors.create(EntityType.Node,
+				nodeExtractionItems, outputConfig, true,
+				nodeInput.getIterator(), threaded);
+		nodeExtractor.execute();
 		nodeInput.close();
 	}
 }

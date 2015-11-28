@@ -87,9 +87,12 @@ public class ExtractMissingWayNodes extends
 		OsmOutputConfig outputConfig = new OsmOutputConfig(outputFormat,
 				pbfConfig, tboConfig, writeMetadata);
 
+		boolean threaded = true;
+
 		MissingWayNodesExtractor extractor = new MissingWayNodesExtractor(
 				iterator, Paths.get(pathIdTree), fileNamesIds,
-				Paths.get(pathOutputTree), fileNamesOutput, outputConfig);
+				Paths.get(pathOutputTree), fileNamesOutput, outputConfig,
+				threaded);
 
 		extractor.execute();
 	}

@@ -31,6 +31,7 @@ import de.topobyte.osm4j.extra.datatree.DataTreeOpener;
 import de.topobyte.osm4j.extra.datatree.Node;
 import de.topobyte.osm4j.extra.idextract.ExtractionItem;
 import de.topobyte.osm4j.extra.idextract.Extractor;
+import de.topobyte.osm4j.extra.idextract.Extractors;
 import de.topobyte.osm4j.utils.OsmOutputConfig;
 
 public class MissingWayNodesExtractor
@@ -46,9 +47,11 @@ public class MissingWayNodesExtractor
 
 	private OsmOutputConfig outputConfig;
 
+	private boolean threaded;
+
 	public MissingWayNodesExtractor(OsmIterator iterator, Path pathIdTree,
 			String fileNamesIds, Path pathOutputTree, String fileNamesOutput,
-			OsmOutputConfig outputConfig)
+			OsmOutputConfig outputConfig, boolean threaded)
 	{
 		this.iterator = iterator;
 		this.pathIdTree = pathIdTree;
@@ -56,6 +59,7 @@ public class MissingWayNodesExtractor
 		this.pathOutputTree = pathOutputTree;
 		this.fileNamesOutput = fileNamesOutput;
 		this.outputConfig = outputConfig;
+		this.threaded = threaded;
 	}
 
 	public void execute() throws IOException
@@ -87,10 +91,10 @@ public class MissingWayNodesExtractor
 
 	private void run() throws IOException
 	{
-		Extractor extractor = new Extractor(EntityType.Node, extractionItems,
-				outputConfig, true);
+		Extractor extractor = Extractors.create(EntityType.Node,
+				extractionItems, outputConfig, true, iterator, threaded);
 
-		extractor.execute(iterator);
+		extractor.execute();
 	}
 
 }

@@ -273,9 +273,10 @@ public class ExtractionFilesBuilder
 
 		inputNodes = fileInputNodes.createIterator(true, includeMetadata);
 
+		boolean threaded = true;
 		MissingWayNodesExtractor wayNodesExtractor = new MissingWayNodesExtractor(
 				inputNodes.getIterator(), pathTree, fileNamesMissingWayNodeIds,
-				pathTree, fileNamesMissingNodes, outputConfigTree);
+				pathTree, fileNamesMissingNodes, outputConfigTree, threaded);
 		wayNodesExtractor.execute();
 
 		inputNodes.close();
