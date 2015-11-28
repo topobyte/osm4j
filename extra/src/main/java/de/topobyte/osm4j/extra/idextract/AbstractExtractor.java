@@ -118,6 +118,8 @@ public abstract class AbstractExtractor implements Extractor
 				queue.add(item);
 				items.add(item);
 			} catch (EOFException e) {
+				osmOutput.complete();
+				output.close();
 				continue;
 			}
 		}
