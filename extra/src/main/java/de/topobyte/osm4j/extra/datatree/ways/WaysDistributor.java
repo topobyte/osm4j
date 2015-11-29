@@ -247,10 +247,7 @@ public class WaysDistributor
 			if (ileaf == leaf) {
 				continue;
 			}
-			outputsWays.get(ileaf).getOsmOutput().write(way);
-			for (OsmNode node : nodes.valueCollection()) {
-				outputsNodes.get(ileaf).getOsmOutput().write(node);
-			}
+			write(ileaf, way, nodes);
 		}
 
 		if (leafs.size() == 0) {
@@ -258,6 +255,18 @@ public class WaysDistributor
 		}
 
 		counter++;
+	}
+
+	private void write(Node leaf, OsmWay way, TLongObjectMap<OsmNode> nodes)
+			throws IOException
+	{
+		OsmStreamOutput wayOutput = outputsWays.get(leaf);
+		OsmStreamOutput nodeOutput = outputsNodes.get(leaf);
+
+		wayOutput.getOsmOutput().write(way);
+		for (OsmNode node : nodes.valueCollection()) {
+			nodeOutput.getOsmOutput().write(node);
+		}
 	}
 
 	private void putNodes(OsmWay way, TLongObjectMap<OsmNode> nodes,
