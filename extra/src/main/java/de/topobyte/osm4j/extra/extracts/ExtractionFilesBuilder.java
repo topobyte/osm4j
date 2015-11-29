@@ -41,6 +41,7 @@ import de.topobyte.osm4j.extra.datatree.output.DataTreeOutputFactory;
 import de.topobyte.osm4j.extra.datatree.ways.MissingWayNodesExtractor;
 import de.topobyte.osm4j.extra.datatree.ways.MissingWayNodesFinder;
 import de.topobyte.osm4j.extra.datatree.ways.ThreadedMissingWayNodesFinder;
+import de.topobyte.osm4j.extra.datatree.ways.ThreadedWaysDistributor;
 import de.topobyte.osm4j.extra.datatree.ways.ThreadedWaysToTreeMapper;
 import de.topobyte.osm4j.extra.datatree.ways.WaysDistributor;
 import de.topobyte.osm4j.extra.datatree.ways.WaysToTreeMapper;
@@ -288,7 +289,7 @@ public class ExtractionFilesBuilder
 
 		// Distribute ways
 
-		WaysDistributor waysDistributor = new WaysDistributor(pathTree,
+		WaysDistributor waysDistributor = new ThreadedWaysDistributor(pathTree,
 				fileNamesInitialNodes, fileNamesMissingNodes,
 				fileNamesInitialWays, fileNamesDistributedWays,
 				fileNamesDistributedNodes, outputFormat, outputFormat,

@@ -20,6 +20,8 @@ package de.topobyte.osm4j.extra.executables;
 import java.io.IOException;
 import java.nio.file.Paths;
 
+import de.topobyte.osm4j.extra.datatree.ways.SimpleWaysDistributor;
+import de.topobyte.osm4j.extra.datatree.ways.ThreadedWaysDistributor;
 import de.topobyte.osm4j.extra.datatree.ways.WaysDistributor;
 import de.topobyte.osm4j.utils.AbstractExecutableInputOutput;
 import de.topobyte.osm4j.utils.FileFormat;
@@ -98,12 +100,21 @@ public class DistributeWays extends AbstractExecutableInputOutput
 		OsmOutputConfig outputConfig = new OsmOutputConfig(outputFormat,
 				pbfConfig, tboConfig, writeMetadata);
 
-		WaysDistributor distributor = new WaysDistributor(Paths.get(pathTree),
-				fileNamesNodes1, fileNamesNodes2, fileNamesWays,
-				fileNamesOutputWays, fileNamesOutputNodes, inputFormatNodes,
-				inputFormatWays, outputConfig);
+		boolean threaded = true;
+
+		WaysDistributor distributor;
+		if (!threaded) {
+			distributor = new SimpleWaysDistributor(Paths.get(pathTree),
+					fileNamesNodes1, fileNamesNodes2, fileNamesWays,
+					fileNamesOutputWays, fileNamesOutputNodes,
+					inputFormatNodes, inputFormatWays, outputConfig);
+		} else {
+			distributor = new ThreadedWaysDistributor(Paths.get(pathTree),
+					fileNamesNodes1, fileNamesNodes2, fileNamesWays,
+					fileNamesOutputWays, fileNamesOutputNodes,
+					inputFormatNodes, inputFormatWays, outputConfig);
+		}
 
 		distributor.execute();
 	}
-
 }
