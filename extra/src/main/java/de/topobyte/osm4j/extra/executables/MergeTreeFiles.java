@@ -23,7 +23,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import de.topobyte.osm4j.extra.datatree.TreeFilesMerger;
+import de.topobyte.osm4j.extra.datatree.merge.SimpleTreeFilesMerger;
+import de.topobyte.osm4j.extra.datatree.merge.ThreadedTreeFilesMerger;
+import de.topobyte.osm4j.extra.datatree.merge.TreeFilesMerger;
 import de.topobyte.osm4j.utils.AbstractExecutableInputOutput;
 import de.topobyte.osm4j.utils.OsmOutputConfig;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
@@ -107,9 +109,18 @@ public class MergeTreeFiles extends AbstractExecutableInputOutput
 		OsmOutputConfig outputConfig = new OsmOutputConfig(outputFormat,
 				pbfConfig, tboConfig, deleteInput);
 
-		TreeFilesMerger merger = new TreeFilesMerger(Paths.get(pathTree),
-				fileNamesSorted, fileNamesUnsorted, fileNamesOutput,
-				inputFormat, outputConfig, deleteInput);
+		boolean threaded = true;
+
+		TreeFilesMerger merger;
+		if (!threaded) {
+			merger = new SimpleTreeFilesMerger(Paths.get(pathTree),
+					fileNamesSorted, fileNamesUnsorted, fileNamesOutput,
+					inputFormat, outputConfig, deleteInput);
+		} else {
+			merger = new ThreadedTreeFilesMerger(Paths.get(pathTree),
+					fileNamesSorted, fileNamesUnsorted, fileNamesOutput,
+					inputFormat, outputConfig, deleteInput);
+		}
 
 		merger.execute();
 	}

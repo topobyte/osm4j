@@ -30,7 +30,8 @@ import de.topobyte.osm4j.extra.batch.BatchFilesUtil;
 import de.topobyte.osm4j.extra.datatree.DataTree;
 import de.topobyte.osm4j.extra.datatree.DataTreeFiles;
 import de.topobyte.osm4j.extra.datatree.DataTreeUtil;
-import de.topobyte.osm4j.extra.datatree.TreeFilesMerger;
+import de.topobyte.osm4j.extra.datatree.merge.ThreadedTreeFilesMerger;
+import de.topobyte.osm4j.extra.datatree.merge.TreeFilesMerger;
 import de.topobyte.osm4j.extra.datatree.nodetree.NodeTreeCreatorMaxNodes;
 import de.topobyte.osm4j.extra.datatree.nodetree.count.NodeTreeLeafCounterFactory;
 import de.topobyte.osm4j.extra.datatree.nodetree.count.ThreadedNodeTreeLeafCounterFactory;
@@ -303,7 +304,7 @@ public class ExtractionFilesBuilder
 		fileNamesSortedNodes.add(fileNamesInitialNodes);
 		fileNamesSortedNodes.add(fileNamesMissingNodes);
 		fileNamesUnsortedNodes.add(fileNamesDistributedNodes);
-		TreeFilesMerger nodesMerger = new TreeFilesMerger(pathTree,
+		TreeFilesMerger nodesMerger = new ThreadedTreeFilesMerger(pathTree,
 				fileNamesSortedNodes, fileNamesUnsortedNodes,
 				fileNamesFinalNodes, outputFormat, outputConfigTreeFinal, true);
 		nodesMerger.execute();
@@ -314,7 +315,7 @@ public class ExtractionFilesBuilder
 		List<String> fileNamesUnsortedWays = new ArrayList<>();
 		fileNamesSortedWays.add(fileNamesInitialWays);
 		fileNamesUnsortedWays.add(fileNamesDistributedWays);
-		TreeFilesMerger waysMerger = new TreeFilesMerger(pathTree,
+		TreeFilesMerger waysMerger = new ThreadedTreeFilesMerger(pathTree,
 				fileNamesSortedWays, fileNamesUnsortedWays, fileNamesFinalWays,
 				outputFormat, outputConfigTreeFinal, true);
 		waysMerger.execute();
