@@ -25,6 +25,7 @@ import java.nio.file.Path;
 import de.topobyte.osm4j.core.access.OsmStreamOutput;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.osm4j.core.model.iface.OsmWay;
+import de.topobyte.osm4j.core.resolve.OsmEntityProvider;
 import de.topobyte.osm4j.extra.datatree.Node;
 import de.topobyte.osm4j.utils.FileFormat;
 import de.topobyte.osm4j.utils.OsmOutputConfig;
@@ -41,6 +42,15 @@ public class SimpleWaysDistributor extends AbstractWaysDistributor
 		super(pathTree, fileNamesNodes1, fileNamesNodes2, fileNamesWays,
 				fileNamesOutputWays, fileNamesOutputNodes, inputFormatNodes,
 				inputFormatWays, outputConfig);
+	}
+
+	@Override
+	protected void leafData(LeafData leafData) throws IOException
+	{
+		OsmEntityProvider entityProvider = leafData.getNodeProvider();
+		for (OsmWay way : leafData.getDataWays().getWays()) {
+			build(leafData.getLeaf(), way, entityProvider);
+		}
 	}
 
 	@Override

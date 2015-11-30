@@ -27,7 +27,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Path;
 import java.text.NumberFormat;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -46,7 +45,6 @@ import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.osm4j.core.model.iface.OsmWay;
 import de.topobyte.osm4j.core.resolve.EntityNotFoundException;
 import de.topobyte.osm4j.core.resolve.OsmEntityProvider;
-import de.topobyte.osm4j.core.resolve.UnionOsmEntityProvider;
 import de.topobyte.osm4j.extra.datatree.DataTree;
 import de.topobyte.osm4j.extra.datatree.DataTreeFiles;
 import de.topobyte.osm4j.extra.datatree.DataTreeOpener;
@@ -153,6 +151,11 @@ public abstract class AbstractWaysDistributor implements WaysDistributor
 		}
 	}
 
+	protected abstract void leafData(LeafData leafData) throws IOException;
+
+	protected abstract void write(Node leaf, OsmWay way,
+			TLongObjectMap<OsmNode> nodes) throws IOException;
+
 	protected void distribute() throws IOException
 	{
 		DataTreeFiles filesNodes1 = new DataTreeFiles(pathTree, fileNamesNodes1);
@@ -207,22 +210,14 @@ public abstract class AbstractWaysDistributor implements WaysDistributor
 
 			System.out.println("Number of ways: " + dataWays.getWays().size());
 
-			List<OsmEntityProvider> providers = new ArrayList<>();
-			providers.add(dataNodes1);
-			providers.add(dataNodes2);
-			UnionOsmEntityProvider entityProvider = new UnionOsmEntityProvider(
-					providers);
-
-			for (OsmWay way : dataWays.getWays()) {
-				build(leaf, way, entityProvider);
-			}
+			leafData(new LeafData(leaf, dataWays, dataNodes1, dataNodes2));
 
 			stats(i);
 		}
 	}
 
-	private void build(Node leaf, OsmWay way,
-			UnionOsmEntityProvider entityProvider) throws IOException
+	protected void build(Node leaf, OsmWay way, OsmEntityProvider entityProvider)
+			throws IOException
 	{
 		TLongObjectMap<OsmNode> nodes = new TLongObjectHashMap<>();
 		List<Node> leafs;
@@ -263,12 +258,8 @@ public abstract class AbstractWaysDistributor implements WaysDistributor
 		counter++;
 	}
 
-	protected abstract void write(Node leaf, OsmWay way,
-			TLongObjectMap<OsmNode> nodes) throws IOException;
-
 	private void putNodes(OsmWay way, TLongObjectMap<OsmNode> nodes,
-			UnionOsmEntityProvider entityProvider)
-			throws EntityNotFoundException
+			OsmEntityProvider entityProvider) throws EntityNotFoundException
 	{
 		for (int i = 0; i < way.getNumberOfNodes(); i++) {
 			long nodeId = way.getNodeId(i);

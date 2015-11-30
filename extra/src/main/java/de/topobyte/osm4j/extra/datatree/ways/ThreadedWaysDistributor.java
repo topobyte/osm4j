@@ -27,7 +27,9 @@ import java.util.List;
 import de.topobyte.osm4j.core.access.OsmStreamOutput;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.osm4j.core.model.iface.OsmWay;
+import de.topobyte.osm4j.core.resolve.OsmEntityProvider;
 import de.topobyte.osm4j.extra.datatree.Node;
+import de.topobyte.osm4j.extra.threading.Buffer;
 import de.topobyte.osm4j.extra.threading.ObjectBuffer;
 import de.topobyte.osm4j.extra.threading.write.NodeWriteRequest;
 import de.topobyte.osm4j.extra.threading.write.WayWriteRequest;
@@ -51,12 +53,28 @@ public class ThreadedWaysDistributor extends AbstractWaysDistributor
 				inputFormatWays, outputConfig);
 	}
 
-	private ObjectBuffer<WriteRequest> buffer = new ObjectBuffer<>(10000, 100);
+	private Buffer<LeafData> bufferData = new Buffer<>(1);
+	private ObjectBuffer<WriteRequest> bufferWriter = new ObjectBuffer<>(1000,
+			100);
 
 	@Override
 	public void execute() throws IOException
 	{
 		prepare();
+
+		Runnable loader = new Runnable() {
+
+			@Override
+			public void run()
+			{
+				try {
+					distribute();
+					bufferData.complete();
+				} catch (IOException e) {
+					throw new RuntimeException(e);
+				}
+			}
+		};
 
 		Runnable distributor = new Runnable() {
 
@@ -64,16 +82,20 @@ public class ThreadedWaysDistributor extends AbstractWaysDistributor
 			public void run()
 			{
 				try {
-					distribute();
-					buffer.close();
+					for (LeafData data : bufferData) {
+						processLeafData(data);
+					}
+					bufferWriter.close();
 				} catch (IOException e) {
 					throw new RuntimeException(e);
 				}
 			}
 		};
-		WriterRunner writer = new WriterRunner(buffer);
+
+		WriterRunner writer = new WriterRunner(bufferWriter);
 
 		List<Runnable> tasks = new ArrayList<>();
+		tasks.add(loader);
 		tasks.add(distributor);
 		tasks.add(writer);
 
@@ -84,15 +106,31 @@ public class ThreadedWaysDistributor extends AbstractWaysDistributor
 	}
 
 	@Override
+	protected void leafData(LeafData leafData) throws IOException
+	{
+		bufferData.write(leafData);
+	}
+
+	private void processLeafData(LeafData leafData) throws IOException
+	{
+		OsmEntityProvider entityProvider = leafData.getNodeProvider();
+		for (OsmWay way : leafData.getDataWays().getWays()) {
+			build(leafData.getLeaf(), way, entityProvider);
+		}
+		bufferData.returnObject(leafData);
+	}
+
+	@Override
 	protected void write(Node leaf, OsmWay way, TLongObjectMap<OsmNode> nodes)
 			throws IOException
 	{
 		OsmStreamOutput wayOutput = outputsWays.get(leaf);
 		OsmStreamOutput nodeOutput = outputsNodes.get(leaf);
 
-		buffer.write(new WayWriteRequest(way, wayOutput.getOsmOutput()));
+		bufferWriter.write(new WayWriteRequest(way, wayOutput.getOsmOutput()));
 		for (OsmNode node : nodes.valueCollection()) {
-			buffer.write(new NodeWriteRequest(node, nodeOutput.getOsmOutput()));
+			bufferWriter.write(new NodeWriteRequest(node, nodeOutput
+					.getOsmOutput()));
 		}
 	}
 
