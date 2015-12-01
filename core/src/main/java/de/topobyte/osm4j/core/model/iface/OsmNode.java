@@ -17,6 +17,11 @@
 
 package de.topobyte.osm4j.core.model.iface;
 
+/**
+ * Interface for OpenStreetMap nodes. A node stores a coordinate whose values
+ * can be retrieved using the {@link #getLongitude()} and {@link #getLatitude()}
+ * methods.
+ */
 public interface OsmNode extends OsmEntity
 {
 

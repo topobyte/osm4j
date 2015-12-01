@@ -17,6 +17,12 @@
 
 package de.topobyte.osm4j.core.model.iface;
 
+/**
+ * Interface for OpenStreetMap relations. A relation is a list of references to
+ * other objects, also called the members of the relation. Each reference points
+ * to some object (defined by its type and its identifier) and has an additional
+ * role to describe the type of membership.
+ */
 public interface OsmRelation extends OsmEntity
 {
 

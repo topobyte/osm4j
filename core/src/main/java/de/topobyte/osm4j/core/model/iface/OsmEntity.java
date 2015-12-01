@@ -17,6 +17,11 @@
 
 package de.topobyte.osm4j.core.model.iface;
 
+/**
+ * Common interface for the three basic OpenStreetMap types. It defines all
+ * traits common to the basic types, i.e. an integer identifier, a list of tags
+ * and optional meta data.
+ */
 public interface OsmEntity
 {
 

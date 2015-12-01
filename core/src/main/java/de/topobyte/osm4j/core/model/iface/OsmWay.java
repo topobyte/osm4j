@@ -17,6 +17,10 @@
 
 package de.topobyte.osm4j.core.model.iface;
 
+/**
+ * Interface for OpenStreetMap ways. A way is a list of nodes referenced by
+ * their identifier.
+ */
 public interface OsmWay extends OsmEntity
 {
 
