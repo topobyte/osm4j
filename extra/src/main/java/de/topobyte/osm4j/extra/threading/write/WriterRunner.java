@@ -20,10 +20,12 @@ package de.topobyte.osm4j.extra.threading.write;
 import java.io.IOException;
 
 import de.topobyte.osm4j.extra.threading.ObjectBuffer;
+import de.topobyte.osm4j.utils.buffer.StoppableRunnable;
 
-public class WriterRunner implements Runnable
+public class WriterRunner implements StoppableRunnable
 {
 
+	private boolean stopped = false;
 	private ObjectBuffer<? extends WriteRequest> objectBuffer;
 
 	public WriterRunner(ObjectBuffer<? extends WriteRequest> objectBuffer)
@@ -34,7 +36,7 @@ public class WriterRunner implements Runnable
 	@Override
 	public void run()
 	{
-		while (objectBuffer.hasNext()) {
+		while (!stopped && objectBuffer.hasNext()) {
 			WriteRequest request = objectBuffer.next();
 			try {
 				request.perform();
@@ -42,6 +44,12 @@ public class WriterRunner implements Runnable
 				throw new RuntimeException(e);
 			}
 		}
+	}
+
+	@Override
+	public void stop()
+	{
+		stopped = true;
 	}
 
 }
