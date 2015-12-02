@@ -38,6 +38,7 @@ import de.topobyte.osm4j.extra.threading.write.WriterRunner;
 import de.topobyte.osm4j.utils.FileFormat;
 import de.topobyte.osm4j.utils.OsmOutputConfig;
 import de.topobyte.osm4j.utils.buffer.ParallelExecutor;
+import de.topobyte.osm4j.utils.buffer.StoppableRunnable;
 
 public class ThreadedWaysDistributor extends AbstractWaysDistributor
 {
@@ -62,7 +63,7 @@ public class ThreadedWaysDistributor extends AbstractWaysDistributor
 	{
 		prepare();
 
-		Runnable loader = new Runnable() {
+		Runnable loader = new StoppableRunnable() {
 
 			@Override
 			public void run()
@@ -74,9 +75,17 @@ public class ThreadedWaysDistributor extends AbstractWaysDistributor
 					throw new RuntimeException(e);
 				}
 			}
+
+			@Override
+			public void stop()
+			{
+				stopped = true;
+				bufferData.setInvalid();
+			}
+
 		};
 
-		Runnable distributor = new Runnable() {
+		Runnable distributor = new StoppableRunnable() {
 
 			@Override
 			public void run()
@@ -90,6 +99,13 @@ public class ThreadedWaysDistributor extends AbstractWaysDistributor
 					throw new RuntimeException(e);
 				}
 			}
+
+			@Override
+			public void stop()
+			{
+				bufferWriter.setInvalid();
+			}
+
 		};
 
 		WriterRunner writer = new WriterRunner(bufferWriter);
