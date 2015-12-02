@@ -76,7 +76,9 @@ public class ObjectBuffer<T> implements Iterable<T>, Iterator<T>
 
 	public void close() throws IOException
 	{
-		enqueueCurrentWriteBuffer();
+		if (!currentWriteBuffer.isEmpty()) {
+			enqueueCurrentWriteBuffer();
+		}
 		synchronized (sync) {
 			done = true;
 			sync.notify();
