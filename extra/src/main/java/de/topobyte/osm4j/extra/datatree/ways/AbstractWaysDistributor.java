@@ -27,12 +27,19 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Path;
 import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
+import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LineString;
+import com.vividsolutions.jts.geom.LinearRing;
+import com.vividsolutions.jts.geom.Polygon;
 
 import de.topobyte.largescalefileio.ClosingFileOutputStreamFactory;
 import de.topobyte.largescalefileio.SimpleClosingFileOutputStreamFactory;
@@ -43,6 +50,7 @@ import de.topobyte.osm4j.core.dataset.InMemoryListDataSet;
 import de.topobyte.osm4j.core.dataset.ListDataSetLoader;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.osm4j.core.model.iface.OsmWay;
+import de.topobyte.osm4j.core.model.util.OsmModelUtil;
 import de.topobyte.osm4j.core.resolve.EntityNotFoundException;
 import de.topobyte.osm4j.core.resolve.OsmEntityProvider;
 import de.topobyte.osm4j.extra.datatree.DataTree;
@@ -156,6 +164,8 @@ public abstract class AbstractWaysDistributor implements WaysDistributor
 	protected abstract void write(Node leaf, OsmWay way,
 			TLongObjectMap<OsmNode> nodes) throws IOException;
 
+	protected boolean stopped = false;
+
 	protected void distribute() throws IOException
 	{
 		DataTreeFiles filesNodes1 = new DataTreeFiles(pathTree, fileNamesNodes1);
@@ -163,7 +173,9 @@ public abstract class AbstractWaysDistributor implements WaysDistributor
 		DataTreeFiles filesWays = new DataTreeFiles(pathTree, fileNamesWays);
 
 		int i = 0;
-		for (Node leaf : leafs) {
+		Iterator<Node> iterator = leafs.iterator();
+		while (!stopped && iterator.hasNext()) {
+			Node leaf = iterator.next();
 			System.out.println(String.format("Processing leaf %d/%d", ++i,
 					leafs.size()));
 
@@ -221,27 +233,19 @@ public abstract class AbstractWaysDistributor implements WaysDistributor
 	{
 		TLongObjectMap<OsmNode> nodes = new TLongObjectHashMap<>();
 		List<Node> leafs;
-		if (way.getNumberOfNodes() == 1) {
-			try {
-				long nodeId = way.getNodeId(0);
-				OsmNode node = entityProvider.getNode(nodeId);
-				nodes.put(nodeId, node);
-				leafs = tree.query(node.getLongitude(), node.getLatitude());
-			} catch (EntityNotFoundException e) {
-				System.out.println("Entity not found while building way: "
-						+ way.getId());
-				return;
+		try {
+			if (way.getNumberOfNodes() == 1) {
+				leafs = buildSingleNodeWay(way, nodes, entityProvider);
+			} else if (way.getNumberOfNodes() < 4
+					|| !OsmModelUtil.isClosed(way)) {
+				leafs = buildNonClosedWay(way, nodes, entityProvider);
+			} else {
+				leafs = buildClosedWay(way, nodes, entityProvider);
 			}
-		} else {
-			try {
-				LineString line = GeometryBuilder.build(way, entityProvider);
-				putNodes(way, nodes, entityProvider);
-				leafs = tree.query(line);
-			} catch (EntityNotFoundException e) {
-				System.out.println("Entity not found while building way: "
-						+ way.getId());
-				return;
-			}
+		} catch (EntityNotFoundException e) {
+			System.out.println("Entity not found while building way: "
+					+ way.getId());
+			return;
 		}
 
 		for (Node ileaf : leafs) {
@@ -256,6 +260,70 @@ public abstract class AbstractWaysDistributor implements WaysDistributor
 		}
 
 		counter++;
+	}
+
+	private List<Node> buildSingleNodeWay(OsmWay way,
+			TLongObjectMap<OsmNode> nodes, OsmEntityProvider entityProvider)
+			throws EntityNotFoundException
+	{
+		long nodeId = way.getNodeId(0);
+		OsmNode node = entityProvider.getNode(nodeId);
+		nodes.put(nodeId, node);
+		return tree.query(node.getLongitude(), node.getLatitude());
+	}
+
+	private List<Node> buildNonClosedWay(OsmWay way,
+			TLongObjectMap<OsmNode> nodes, OsmEntityProvider entityProvider)
+			throws EntityNotFoundException
+	{
+		LineString line = GeometryBuilder.build(way, entityProvider);
+		putNodes(way, nodes, entityProvider);
+		return tree.query(line);
+	}
+
+	private GeometryFactory f = new GeometryFactory();
+
+	private List<Node> buildClosedWay(OsmWay way,
+			TLongObjectMap<OsmNode> nodes, OsmEntityProvider entityProvider)
+			throws EntityNotFoundException
+	{
+		LineString line = GeometryBuilder.build(way, entityProvider);
+		LinearRing ring = f.createLinearRing(line.getCoordinateSequence());
+		Polygon polygon = f.createPolygon(ring);
+		putNodes(way, nodes, entityProvider);
+
+		List<Node> leafs1 = new ArrayList<>(tree.query(line));
+		List<Node> leafs2 = new ArrayList<>(tree.query(polygon));
+		if (leafs1.size() == 1 && leafs2.size() == 1
+				&& leafs1.get(0) == leafs2.get(0)) {
+			return leafs1;
+		} else {
+			List<Node> merged = merge(leafs1, leafs2);
+			if (merged.size() > leafs1.size()) {
+				System.out
+						.println(String
+								.format("found way that contains leafs. outline: %d polygon: %d merged: %d",
+										leafs1.size(), leafs2.size(),
+										merged.size()));
+			}
+			return merged;
+		}
+	}
+
+	private List<Node> merge(List<Node> a, List<Node> b)
+	{
+		List<Node> result = new ArrayList<>();
+		Set<Node> set = new HashSet<>();
+		for (Node node : a) {
+			result.add(node);
+			set.add(node);
+		}
+		for (Node node : b) {
+			if (!set.contains(node)) {
+				result.add(node);
+			}
+		}
+		return result;
 	}
 
 	private void putNodes(OsmWay way, TLongObjectMap<OsmNode> nodes,
