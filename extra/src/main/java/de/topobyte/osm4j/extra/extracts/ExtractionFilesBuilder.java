@@ -66,6 +66,21 @@ import de.topobyte.osm4j.utils.split.ThreadedEntitySplitter;
 public class ExtractionFilesBuilder
 {
 
+	private static final String KEY_TOTAL = "total";
+	private static final String KEY_SPLIT = "split";
+	private static final String KEY_NODE_TREE = "build nodetree";
+	private static final String KEY_SORT_WAYS = "sort ways by first node id";
+	private static final String KEY_MAP_WAYS = "map ways to tree";
+	private static final String KEY_FIND_MISSING_WAY_NODES = "find missing way nodes";
+	private static final String KEY_EXTRACT_MISSING_WAY_NODES = "extract missing way nodes";
+	private static final String KEY_DISTRIBUTE_WAYS = "distribute ways";
+	private static final String KEY_MERGE_NODES = "merge tree node files";
+	private static final String KEY_MERGE_WAYS = "merge tree way files";
+	private static final String KEY_SEPARATE_RELATIONS = "separate simple/complex relations";
+	private static final String KEY_SPLIT_RELATIONS = "split relations, collect members";
+	private static final String KEY_DISTRIBUTE_RELATIONS = "distribute relations";
+	private static final String KEY_SORT_RELATIONS = "sort non-tree relations";
+
 	private static final int SPLIT_INITIAL = 20;
 	private static final int SPLIT_ITERATION = 8;
 
@@ -94,6 +109,8 @@ public class ExtractionFilesBuilder
 	private Path pathComplexRelationsEmpty;
 	private Path pathSimpleRelationsSorted;
 	private Path pathComplexRelationsSorted;
+
+	private TimeTable t = new TimeTable();
 
 	public ExtractionFilesBuilder(Path pathInput, FileFormat inputFormat,
 			Path pathOutput, int maxNodes, boolean includeMetadata)
@@ -210,6 +227,8 @@ public class ExtractionFilesBuilder
 		inputBounds.close();
 
 		// Split entities
+		t.start(KEY_TOTAL);
+		t.start(KEY_SPLIT);
 
 		OsmIteratorInput input = fileInput
 				.createIterator(true, includeMetadata);
@@ -221,7 +240,11 @@ public class ExtractionFilesBuilder
 
 		input.close();
 
+		t.stop(KEY_SPLIT);
+		printInfo();
+
 		// Create node tree
+		t.start(KEY_NODE_TREE);
 
 		DataTree tree = DataTreeUtil.initNewTree(pathTree, bounds);
 
@@ -240,7 +263,11 @@ public class ExtractionFilesBuilder
 
 		creator.buildTree();
 
+		t.stop(KEY_NODE_TREE);
+		printInfo();
+
 		// Sort ways by first node id
+		t.start(KEY_SORT_WAYS);
 
 		OsmIteratorInput inputWays = fileInputWays.createIterator(true,
 				includeMetadata);
@@ -251,7 +278,10 @@ public class ExtractionFilesBuilder
 
 		inputWays.close();
 
+		t.stop(KEY_SORT_WAYS);
+
 		// Map ways to tree
+		t.start(KEY_MAP_WAYS);
 
 		OsmIteratorInput inputNodes = fileInputNodes.createIterator(true,
 				includeMetadata);
@@ -263,7 +293,11 @@ public class ExtractionFilesBuilder
 
 		inputNodes.close();
 
+		t.stop(KEY_MAP_WAYS);
+		printInfo();
+
 		// Find missing way nodes
+		t.start(KEY_FIND_MISSING_WAY_NODES);
 
 		MissingWayNodesFinder wayNodesFinder = new ThreadedMissingWayNodesFinder(
 				pathTree, pathTree, pathTree, fileNamesInitialNodes,
@@ -271,7 +305,11 @@ public class ExtractionFilesBuilder
 				outputFormat);
 		wayNodesFinder.execute();
 
+		t.stop(KEY_FIND_MISSING_WAY_NODES);
+		printInfo();
+
 		// Extract missing way nodes
+		t.start(KEY_EXTRACT_MISSING_WAY_NODES);
 
 		inputNodes = fileInputNodes.createIterator(true, includeMetadata);
 
@@ -288,7 +326,11 @@ public class ExtractionFilesBuilder
 			Files.delete(path);
 		}
 
+		t.stop(KEY_EXTRACT_MISSING_WAY_NODES);
+		printInfo();
+
 		// Distribute ways
+		t.start(KEY_DISTRIBUTE_WAYS);
 
 		WaysDistributor waysDistributor = new ThreadedWaysDistributor(pathTree,
 				fileNamesInitialNodes, fileNamesMissingNodes,
@@ -297,7 +339,11 @@ public class ExtractionFilesBuilder
 				outputConfigTree);
 		waysDistributor.execute();
 
+		t.stop(KEY_DISTRIBUTE_WAYS);
+		printInfo();
+
 		// Merge nodes
+		t.start(KEY_MERGE_NODES);
 
 		List<String> fileNamesSortedNodes = new ArrayList<>();
 		List<String> fileNamesUnsortedNodes = new ArrayList<>();
@@ -309,7 +355,11 @@ public class ExtractionFilesBuilder
 				fileNamesFinalNodes, outputFormat, outputConfigTreeFinal, true);
 		nodesMerger.execute();
 
+		t.stop(KEY_MERGE_NODES);
+		printInfo();
+
 		// Merge ways
+		t.start(KEY_MERGE_WAYS);
 
 		List<String> fileNamesSortedWays = new ArrayList<>();
 		List<String> fileNamesUnsortedWays = new ArrayList<>();
@@ -320,14 +370,22 @@ public class ExtractionFilesBuilder
 				outputFormat, outputConfigTreeFinal, true);
 		waysMerger.execute();
 
+		t.stop(KEY_MERGE_WAYS);
+		printInfo();
+
 		// Separate relations
+		t.start(KEY_SEPARATE_RELATIONS);
 
 		RelationsSeparator separator = new RelationsSeparator(
 				fileInputRelations, pathSimpleRelations, pathComplexRelations,
 				outputConfigRelations);
 		separator.execute();
 
+		t.stop(KEY_SEPARATE_RELATIONS);
+		printInfo();
+
 		// Split relations and collect members
+		t.start(KEY_SPLIT_RELATIONS);
 
 		OsmFileInput inputSimpleRelations = new OsmFileInput(
 				pathSimpleRelations, outputFormat);
@@ -341,7 +399,11 @@ public class ExtractionFilesBuilder
 				outputConfigRelations);
 		relationSplitter.execute();
 
+		t.stop(KEY_SPLIT_RELATIONS);
+		printInfo();
+
 		// Distribute relations
+		t.start(KEY_DISTRIBUTE_RELATIONS);
 
 		String fileNamesNodes = RelationsMemberCollector.FILE_NAMES_NODE_BASENAME
 				+ extension;
@@ -362,7 +424,11 @@ public class ExtractionFilesBuilder
 				fileNamesFinalRelationsComplex, outputFormat, outputConfigTree);
 		complexRelationsDistributor.execute();
 
+		t.stop(KEY_DISTRIBUTE_RELATIONS);
+		printInfo();
+
 		// Sort non-tree relations
+		t.start(KEY_SORT_RELATIONS);
 
 		NonTreeRelationsSplitter nonTreeSplitter = new NonTreeRelationsSplitter(
 				pathSimpleRelationsNonTree, pathComplexRelationsNonTree,
@@ -371,6 +437,24 @@ public class ExtractionFilesBuilder
 				pathComplexRelationsDir, pathSimpleRelationsSorted,
 				pathComplexRelationsSorted, outputFormat, outputConfigRelations);
 		nonTreeSplitter.execute();
+
+		t.stop(KEY_SORT_RELATIONS);
+		t.stop(KEY_TOTAL);
+		printInfo();
+	}
+
+	public void printInfo()
+	{
+		String[] keys = new String[] { KEY_TOTAL, KEY_SPLIT, KEY_NODE_TREE,
+				KEY_SORT_WAYS, KEY_MAP_WAYS, KEY_FIND_MISSING_WAY_NODES,
+				KEY_EXTRACT_MISSING_WAY_NODES, KEY_DISTRIBUTE_WAYS,
+				KEY_MERGE_NODES, KEY_MERGE_WAYS, KEY_SEPARATE_RELATIONS,
+				KEY_SPLIT_RELATIONS, KEY_DISTRIBUTE_RELATIONS,
+				KEY_SORT_RELATIONS };
+
+		for (String key : keys) {
+			System.out.println(String.format("%s: %s", key, t.htime(key)));
+		}
 	}
 
 }
