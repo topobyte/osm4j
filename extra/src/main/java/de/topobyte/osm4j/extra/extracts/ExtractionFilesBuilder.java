@@ -363,7 +363,7 @@ public class ExtractionFilesBuilder
 
 		List<String> fileNamesSortedWays = new ArrayList<>();
 		List<String> fileNamesUnsortedWays = new ArrayList<>();
-		fileNamesSortedWays.add(fileNamesInitialWays);
+		fileNamesUnsortedWays.add(fileNamesInitialWays);
 		fileNamesUnsortedWays.add(fileNamesDistributedWays);
 		TreeFilesMerger waysMerger = new ThreadedTreeFilesMerger(pathTree,
 				fileNamesSortedWays, fileNamesUnsortedWays, fileNamesFinalWays,
