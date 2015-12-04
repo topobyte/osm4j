@@ -129,6 +129,7 @@ public class LeafQuery
 		this.pathOutAdditionalNodes = pathOutAdditionalNodes;
 		this.pathOutAdditionalWays = pathOutAdditionalWays;
 
+		System.out.println("loading data");
 		readData(leaf);
 
 		providerSimple = new CompositeOsmEntityProvider(dataNodes, dataWays,
@@ -136,16 +137,22 @@ public class LeafQuery
 
 		createOutputs();
 
+		System.out.println("querying nodes");
 		queryNodes();
 
+		System.out.println("querying ways");
 		queryWays();
 
+		System.out.println("querying simple relations");
 		querySimpleRelations();
 
+		System.out.println("writing additional nodes");
 		writeAdditionalNodes();
 
+		System.out.println("writing additional ways");
 		writeAdditionalWays();
 
+		System.out.println("closing output");
 		finishOutputs();
 
 		return new QueryResult(nodeIds.size(), wayIds.size(), nSimple, nComplex);
