@@ -249,4 +249,29 @@ public class QueryUtil
 		}
 	}
 
+	public static boolean anyNodeContainedIn(OsmWay way, TLongSet nodeIds)
+	{
+		for (int i = 0; i < way.getNumberOfNodes(); i++) {
+			if (nodeIds.contains(way.getNodeId(i))) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public static boolean anyMemberContainedIn(OsmRelation relation,
+			TLongSet nodeIds, TLongSet wayIds)
+	{
+		for (int i = 0; i < relation.getNumberOfMembers(); i++) {
+			OsmRelationMember member = relation.getMember(i);
+			if (member.getType() == EntityType.Node
+					&& nodeIds.contains(member.getId())
+					|| member.getType() == EntityType.Way
+					&& wayIds.contains(member.getId())) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 }

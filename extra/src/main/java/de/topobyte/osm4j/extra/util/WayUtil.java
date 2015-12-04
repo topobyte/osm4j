@@ -15,38 +15,33 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with osm4j. If not, see <http://www.gnu.org/licenses/>.
 
-package de.topobyte.osm4j.extra.relations;
+package de.topobyte.osm4j.extra.util;
 
 import java.util.Collection;
 import java.util.Set;
 
 import de.topobyte.osm4j.core.model.iface.OsmNode;
-import de.topobyte.osm4j.core.model.iface.OsmRelation;
+import de.topobyte.osm4j.core.model.iface.OsmWay;
 import de.topobyte.osm4j.core.resolve.EntityNotFoundException;
 import de.topobyte.osm4j.core.resolve.OsmEntityProvider;
-import de.topobyte.osm4j.extra.util.RelationUtil;
 
-public class RelationGroupMultiple implements RelationGroup
+public class WayUtil
 {
 
-	private Collection<OsmRelation> relations;
-
-	public RelationGroupMultiple(Collection<OsmRelation> relations)
+	public static void findNodes(OsmWay way, Set<OsmNode> nodes,
+			OsmEntityProvider entityProvider) throws EntityNotFoundException
 	{
-		this.relations = relations;
+		for (int i = 0; i < way.getNumberOfNodes(); i++) {
+			nodes.add(entityProvider.getNode(way.getNodeId(i)));
+		}
 	}
 
-	@Override
-	public Set<OsmNode> findNodes(OsmEntityProvider entityProvider)
-			throws EntityNotFoundException
+	public static void findNodes(Collection<OsmWay> ways, Set<OsmNode> nodes,
+			OsmEntityProvider entityProvider) throws EntityNotFoundException
 	{
-		return RelationUtil.findNodes(relations, entityProvider);
-	}
-
-	@Override
-	public Collection<OsmRelation> getRelations()
-	{
-		return relations;
+		for (OsmWay w : ways) {
+			findNodes(w, nodes, entityProvider);
+		}
 	}
 
 }

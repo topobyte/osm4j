@@ -17,7 +17,6 @@
 
 package de.topobyte.osm4j.extra.relations.split;
 
-import gnu.trove.iterator.TLongIterator;
 import gnu.trove.map.TLongObjectMap;
 import gnu.trove.set.TLongSet;
 
@@ -29,6 +28,7 @@ import de.topobyte.osm4j.core.access.OsmIteratorInputFactory;
 import de.topobyte.osm4j.core.access.OsmStreamOutput;
 import de.topobyte.osm4j.core.model.iface.OsmRelation;
 import de.topobyte.osm4j.extra.relations.Group;
+import de.topobyte.osm4j.extra.util.IdUtil;
 import de.topobyte.osm4j.utils.OsmOutputConfig;
 
 public class ComplexRelationSorter extends RelationSorterBase
@@ -59,7 +59,7 @@ public class ComplexRelationSorter extends RelationSorterBase
 
 		int relationCount = 0;
 		for (Group group : groups) {
-			long representative = lowestId(group.getRelationIds());
+			long representative = IdUtil.lowestId(group.getRelationIds());
 			if (!idToBatch.containsKey(representative)) {
 				System.out.println("not available: " + representative);
 			}
@@ -78,16 +78,6 @@ public class ComplexRelationSorter extends RelationSorterBase
 
 		System.out.println(String.format("Wrote %s relations in %d batches",
 				format.format(relationCount), batches.size()));
-	}
-
-	private long lowestId(TLongSet ids)
-	{
-		long lowest = Long.MAX_VALUE;
-		TLongIterator iterator = ids.iterator();
-		while (iterator.hasNext()) {
-			lowest = Math.min(lowest, iterator.next());
-		}
-		return lowest;
 	}
 
 }

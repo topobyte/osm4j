@@ -26,6 +26,7 @@ import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.osm4j.core.model.iface.OsmRelation;
 import de.topobyte.osm4j.core.resolve.EntityNotFoundException;
 import de.topobyte.osm4j.core.resolve.OsmEntityProvider;
+import de.topobyte.osm4j.extra.util.RelationUtil;
 
 public class RelationGroupSingle implements RelationGroup
 {

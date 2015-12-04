@@ -220,13 +220,7 @@ public class LeafQuery
 	private void queryWays() throws IOException
 	{
 		for (OsmWay way : dataWays.getWays()) {
-			boolean in = false;
-			for (int i = 0; i < way.getNumberOfNodes(); i++) {
-				if (nodeIds.contains(way.getNodeId(i))) {
-					in = true;
-					break;
-				}
-			}
+			boolean in = QueryUtil.anyNodeContainedIn(way, nodeIds);
 			if (!in && way.getNumberOfNodes() > 1) {
 				try {
 					LineString string = GeometryBuilder.build(way, dataNodes);
@@ -254,17 +248,8 @@ public class LeafQuery
 	private void querySimpleRelations() throws IOException
 	{
 		for (OsmRelation relation : dataSimpleRelations.getRelations()) {
-			boolean in = false;
-			for (int i = 0; i < relation.getNumberOfMembers(); i++) {
-				OsmRelationMember member = relation.getMember(i);
-				if (member.getType() == EntityType.Node
-						&& nodeIds.contains(member.getId())
-						|| member.getType() == EntityType.Way
-						&& wayIds.contains(member.getId())) {
-					in = true;
-					break;
-				}
-			}
+			boolean in = QueryUtil.anyMemberContainedIn(relation, nodeIds,
+					wayIds);
 			if (!in) {
 				try {
 					MultiPolygon polygon = GeometryBuilder.build(relation,

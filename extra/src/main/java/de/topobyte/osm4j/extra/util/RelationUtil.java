@@ -15,7 +15,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with osm4j. If not, see <http://www.gnu.org/licenses/>.
 
-package de.topobyte.osm4j.extra.relations;
+package de.topobyte.osm4j.extra.util;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -41,7 +41,7 @@ public class RelationUtil
 
 		findNodesAndWays(relation, ways, nodes, entityProvider);
 
-		findNodes(ways, nodes, entityProvider);
+		WayUtil.findNodes(ways, nodes, entityProvider);
 
 		return nodes;
 	}
@@ -56,25 +56,9 @@ public class RelationUtil
 			findNodesAndWays(r, ways, nodes, entityProvider);
 		}
 
-		findNodes(ways, nodes, entityProvider);
+		WayUtil.findNodes(ways, nodes, entityProvider);
 
 		return nodes;
-	}
-
-	public static void findNodes(OsmWay way, Set<OsmNode> nodes,
-			OsmEntityProvider entityProvider) throws EntityNotFoundException
-	{
-		for (int i = 0; i < way.getNumberOfNodes(); i++) {
-			nodes.add(entityProvider.getNode(way.getNodeId(i)));
-		}
-	}
-
-	public static void findNodes(Collection<OsmWay> ways, Set<OsmNode> nodes,
-			OsmEntityProvider entityProvider) throws EntityNotFoundException
-	{
-		for (OsmWay w : ways) {
-			findNodes(w, nodes, entityProvider);
-		}
 	}
 
 	public static void findNodesAndWays(OsmRelation relation, Set<OsmWay> ways,
