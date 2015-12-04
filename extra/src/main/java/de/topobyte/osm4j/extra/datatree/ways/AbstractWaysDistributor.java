@@ -53,6 +53,7 @@ import de.topobyte.osm4j.core.model.iface.OsmWay;
 import de.topobyte.osm4j.core.model.util.OsmModelUtil;
 import de.topobyte.osm4j.core.resolve.EntityNotFoundException;
 import de.topobyte.osm4j.core.resolve.OsmEntityProvider;
+import de.topobyte.osm4j.extra.QueryUtil;
 import de.topobyte.osm4j.extra.datatree.DataTree;
 import de.topobyte.osm4j.extra.datatree.DataTreeFiles;
 import de.topobyte.osm4j.extra.datatree.DataTreeOpener;
@@ -277,7 +278,7 @@ public abstract class AbstractWaysDistributor implements WaysDistributor
 			throws EntityNotFoundException
 	{
 		LineString line = GeometryBuilder.build(way, entityProvider);
-		putNodes(way, nodes, entityProvider);
+		QueryUtil.putNodes(way, nodes, entityProvider);
 		return tree.query(line);
 	}
 
@@ -290,7 +291,7 @@ public abstract class AbstractWaysDistributor implements WaysDistributor
 		LineString line = GeometryBuilder.build(way, entityProvider);
 		LinearRing ring = f.createLinearRing(line.getCoordinateSequence());
 		Polygon polygon = f.createPolygon(ring);
-		putNodes(way, nodes, entityProvider);
+		QueryUtil.putNodes(way, nodes, entityProvider);
 
 		List<Node> leafs1 = new ArrayList<>(tree.query(line));
 		List<Node> leafs2 = new ArrayList<>(tree.query(polygon));
@@ -324,15 +325,6 @@ public abstract class AbstractWaysDistributor implements WaysDistributor
 			}
 		}
 		return result;
-	}
-
-	private void putNodes(OsmWay way, TLongObjectMap<OsmNode> nodes,
-			OsmEntityProvider entityProvider) throws EntityNotFoundException
-	{
-		for (int i = 0; i < way.getNumberOfNodes(); i++) {
-			long nodeId = way.getNodeId(i);
-			nodes.put(nodeId, entityProvider.getNode(nodeId));
-		}
 	}
 
 	private void stats(int leafsDone)
