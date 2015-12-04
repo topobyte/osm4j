@@ -111,6 +111,8 @@ public class Query
 	private Path pathTmpWays;
 	private Path pathTmpSimpleRelations;
 	private Path pathTmpComplexRelations;
+	private Path pathTmpAdditionalNodes;
+	private Path pathTmpAdditionalWays;
 
 	private GeometryFactory factory = new GeometryFactory();
 
@@ -240,11 +242,15 @@ public class Query
 		pathTmpWays = pathTmp.resolve("ways");
 		pathTmpSimpleRelations = pathTmp.resolve("relations.simple");
 		pathTmpComplexRelations = pathTmp.resolve("relations.complex");
+		pathTmpAdditionalNodes = pathTmp.resolve("nodes-extra");
+		pathTmpAdditionalWays = pathTmp.resolve("ways-extra");
 
 		Files.createDirectory(pathTmpNodes);
 		Files.createDirectory(pathTmpWays);
 		Files.createDirectory(pathTmpSimpleRelations);
 		Files.createDirectory(pathTmpComplexRelations);
+		Files.createDirectory(pathTmpAdditionalNodes);
+		Files.createDirectory(pathTmpAdditionalWays);
 	}
 
 	private void openTree() throws IOException
@@ -284,9 +290,14 @@ public class Query
 				.resolve(tmpFilenames);
 		Path pathOutComplexRelations = pathTmpComplexRelations
 				.resolve(tmpFilenames);
+		Path pathOutAdditionalNodes = pathTmpAdditionalNodes
+				.resolve(tmpFilenames);
+		Path pathOutAdditionalWays = pathTmpAdditionalWays
+				.resolve(tmpFilenames);
 
 		QueryResult results = leafQuery.execute(leaf, pathOutNodes,
-				pathOutWays, pathOutSimpleRelations, pathOutComplexRelations);
+				pathOutWays, pathOutSimpleRelations, pathOutComplexRelations,
+				pathOutAdditionalNodes, pathOutAdditionalWays);
 
 		nNodes += results.getNumNodes();
 		nWays += results.getNumWays();
@@ -294,7 +305,9 @@ public class Query
 		nComplexRelations += results.getNumComplexRelations();
 
 		pathsNodes.add(pathOutNodes);
+		pathsNodes.add(pathOutAdditionalNodes);
 		pathsWays.add(pathOutWays);
+		pathsWays.add(pathOutAdditionalWays);
 		pathsSimpleRelations.add(pathOutSimpleRelations);
 		pathsComplexRelations.add(pathOutComplexRelations);
 

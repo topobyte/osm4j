@@ -17,6 +17,8 @@
 
 package de.topobyte.osm4j.extra.extracts.query;
 
+import gnu.trove.map.TLongObjectMap;
+import gnu.trove.map.hash.TLongObjectHashMap;
 import gnu.trove.set.TLongSet;
 import gnu.trove.set.hash.TLongHashSet;
 
@@ -43,6 +45,7 @@ import de.topobyte.osm4j.core.model.iface.OsmWay;
 import de.topobyte.osm4j.core.resolve.CompositeOsmEntityProvider;
 import de.topobyte.osm4j.core.resolve.EntityNotFoundException;
 import de.topobyte.osm4j.core.resolve.NullOsmEntityProvider;
+import de.topobyte.osm4j.extra.QueryUtil;
 import de.topobyte.osm4j.extra.datatree.DataTreeFiles;
 import de.topobyte.osm4j.extra.datatree.Node;
 import de.topobyte.osm4j.geometry.GeometryBuilder;
@@ -90,6 +93,8 @@ public class LeafQuery
 
 	private Path pathOutNodes;
 	private Path pathOutWays;
+	private Path pathOutAdditionalNodes;
+	private Path pathOutAdditionalWays;
 	private Path pathOutSimpleRelations;
 	private Path pathOutComplexRelations;
 
@@ -107,16 +112,22 @@ public class LeafQuery
 	private int nSimple = 0;
 	private int nComplex = 0;
 
+	private TLongObjectMap<OsmNode> additionalNodes = new TLongObjectHashMap<>();
+	private TLongObjectMap<OsmWay> additionalWays = new TLongObjectHashMap<>();
+
 	private CompositeOsmEntityProvider providerSimple;
 
 	public QueryResult execute(Node leaf, Path pathOutNodes, Path pathOutWays,
-			Path pathOutSimpleRelations, Path pathOutComplexRelations)
+			Path pathOutSimpleRelations, Path pathOutComplexRelations,
+			Path pathOutAdditionalNodes, Path pathOutAdditionalWays)
 			throws IOException
 	{
 		this.pathOutNodes = pathOutNodes;
 		this.pathOutWays = pathOutWays;
 		this.pathOutSimpleRelations = pathOutSimpleRelations;
 		this.pathOutComplexRelations = pathOutComplexRelations;
+		this.pathOutAdditionalNodes = pathOutAdditionalNodes;
+		this.pathOutAdditionalWays = pathOutAdditionalWays;
 
 		readData(leaf);
 
@@ -130,6 +141,10 @@ public class LeafQuery
 		queryWays();
 
 		querySimpleRelations();
+
+		writeAdditionalNodes();
+
+		writeAdditionalWays();
 
 		finishOutputs();
 
@@ -215,9 +230,16 @@ public class LeafQuery
 					System.out.println("Unable to build way: " + way.getId());
 				}
 			}
-			if (in) {
-				wayIds.add(way.getId());
-				outWays.getOsmOutput().write(way);
+			if (!in) {
+				continue;
+			}
+			wayIds.add(way.getId());
+			outWays.getOsmOutput().write(way);
+			try {
+				QueryUtil.putNodes(way, additionalNodes, dataNodes, nodeIds);
+			} catch (EntityNotFoundException e) {
+				System.out.println("Unable to find all nodes for way: "
+						+ way.getId());
 			}
 		}
 	}
@@ -248,11 +270,35 @@ public class LeafQuery
 							+ relation.getId());
 				}
 			}
-			if (in) {
-				outSimpleRelations.getOsmOutput().write(relation);
-				nSimple++;
+			if (!in) {
+				continue;
+			}
+			outSimpleRelations.getOsmOutput().write(relation);
+			nSimple++;
+			try {
+				QueryUtil.putNodes(relation, additionalNodes, dataNodes,
+						nodeIds);
+				QueryUtil.putWaysAndWayNodes(relation, additionalNodes,
+						additionalWays, providerSimple, nodeIds, wayIds);
+			} catch (EntityNotFoundException e) {
+				System.out.println("Unable to find all members for relation: "
+						+ relation.getId());
 			}
 		}
+	}
+
+	private void writeAdditionalNodes() throws IOException
+	{
+		OsmStreamOutput output = createOutput(pathOutAdditionalNodes);
+		QueryUtil.writeNodes(additionalNodes, output.getOsmOutput());
+		finish(output);
+	}
+
+	private void writeAdditionalWays() throws IOException
+	{
+		OsmStreamOutput output = createOutput(pathOutAdditionalWays);
+		QueryUtil.writeWays(additionalWays, output.getOsmOutput());
+		finish(output);
 	}
 
 }

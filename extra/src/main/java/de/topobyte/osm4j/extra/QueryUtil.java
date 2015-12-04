@@ -18,6 +18,7 @@
 package de.topobyte.osm4j.extra;
 
 import gnu.trove.map.TLongObjectMap;
+import gnu.trove.set.TLongSet;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -34,6 +35,18 @@ import de.topobyte.osm4j.core.resolve.OsmEntityProvider;
 public class QueryUtil
 {
 
+	/**
+	 * Retrieve all nodes of the specified way from the entityProvider and
+	 * insert them into the map.
+	 * 
+	 * @param way
+	 *            the way to retrieve nodes for.
+	 * @param nodes
+	 *            the map to put found nodes into.
+	 * @param entityProvider
+	 *            the store to query for nodes.
+	 * @throws EntityNotFoundException
+	 */
 	public static void putNodes(OsmWay way, TLongObjectMap<OsmNode> nodes,
 			OsmEntityProvider entityProvider) throws EntityNotFoundException
 	{
@@ -43,6 +56,48 @@ public class QueryUtil
 		}
 	}
 
+	/**
+	 * Retrieve all nodes of the specified way from the entityProvider and
+	 * insert them into the map if they are not already present in the specified
+	 * set of identifiers. The identifiers of added nodes will also be added to
+	 * the set.
+	 * 
+	 * @param way
+	 *            the way to retrieve nodes for.
+	 * @param nodes
+	 *            the map to put found nodes into.
+	 * @param entityProvider
+	 *            the store to query for nodes.
+	 * @param nodeIds
+	 *            the set of identifiers to check for existing nodes.
+	 * @throws EntityNotFoundException
+	 */
+	public static void putNodes(OsmWay way, TLongObjectMap<OsmNode> nodes,
+			OsmEntityProvider entityProvider, TLongSet nodeIds)
+			throws EntityNotFoundException
+	{
+		for (int i = 0; i < way.getNumberOfNodes(); i++) {
+			long nodeId = way.getNodeId(i);
+			if (nodeIds.contains(nodeId)) {
+				continue;
+			}
+			nodes.put(nodeId, entityProvider.getNode(nodeId));
+			nodeIds.add(nodeId);
+		}
+	}
+
+	/**
+	 * Retrieve all nodes directly referenced by the specified relation from the
+	 * entityProvider and insert them into the map.
+	 * 
+	 * @param relation
+	 *            the relation to retrieve nodes for.
+	 * @param nodes
+	 *            the map to put found nodes into.
+	 * @param entityProvider
+	 *            the store to query for nodes.
+	 * @throws EntityNotFoundException
+	 */
 	public static void putNodes(OsmRelation relation,
 			TLongObjectMap<OsmNode> nodes, OsmEntityProvider entityProvider)
 			throws EntityNotFoundException
@@ -56,29 +111,107 @@ public class QueryUtil
 		}
 	}
 
+	/**
+	 * Retrieve all nodes directly referenced by the specified relation from the
+	 * entityProvider and insert them into the map if they are not already
+	 * present in the specified set of identifiers. The identifiers of added
+	 * nodes will also be added to the set.
+	 * 
+	 * @param relation
+	 *            the relation to retrieve nodes for.
+	 * @param nodes
+	 *            the map to put found nodes into.
+	 * @param entityProvider
+	 *            the store to query for nodes.
+	 * @param nodeIds
+	 *            the set of identifiers to check for existing nodes.
+	 * @throws EntityNotFoundException
+	 */
+	public static void putNodes(OsmRelation relation,
+			TLongObjectMap<OsmNode> nodes, OsmEntityProvider entityProvider,
+			TLongSet nodeIds) throws EntityNotFoundException
+	{
+		for (int i = 0; i < relation.getNumberOfMembers(); i++) {
+			OsmRelationMember member = relation.getMember(i);
+			if (member.getType() == EntityType.Node) {
+				long nodeId = member.getId();
+				if (nodeIds.contains(nodeId)) {
+					continue;
+				}
+				nodes.put(nodeId, entityProvider.getNode(nodeId));
+				nodeIds.add(nodeId);
+			}
+		}
+	}
+
+	/**
+	 * Retrieve all ways directly referenced by the specified relation from the
+	 * entityProvider and insert them into the map if they are not already
+	 * present in the specified set of identifiers. The identifiers of added
+	 * ways will also be added to the set.
+	 * 
+	 * @param relation
+	 *            the relation to retrieve ways for.
+	 * @param ways
+	 *            the map to put found ways into.
+	 * @param entityProvider
+	 *            the store to query for ways.
+	 * @param wayIds
+	 *            the set of identifiers to check for existing ways.
+	 * @throws EntityNotFoundException
+	 */
 	public static void putWays(OsmRelation relation,
-			TLongObjectMap<OsmWay> ways, OsmEntityProvider entityProvider)
+			TLongObjectMap<OsmWay> ways, OsmEntityProvider entityProvider,
+			TLongSet wayIds) throws EntityNotFoundException
+	{
+		for (int i = 0; i < relation.getNumberOfMembers(); i++) {
+			OsmRelationMember member = relation.getMember(i);
+			if (member.getType() == EntityType.Way) {
+				long wayId = member.getId();
+				if (wayIds.contains(wayId)) {
+					continue;
+				}
+				ways.put(wayId, entityProvider.getWay(wayId));
+			}
+		}
+	}
+
+	/**
+	 * Retrieve all ways directly referenced by the specified relation and the
+	 * nodes referenced by those ways from the entityProvider and insert them
+	 * into the maps if they are not already present in the specified sets of
+	 * identifiers. The identifiers of added nodes and ways will also be added
+	 * to these sets.
+	 * 
+	 * @param relation
+	 *            the relation to retrieve ways and way-nodes for.
+	 * @param nodes
+	 *            the map to put found way-nodes into.
+	 * @param ways
+	 *            the map to put found ways into.
+	 * @param entityProvider
+	 *            the store to query for ways and nodes.
+	 * @param nodeIds
+	 *            the set of identifiers to check for existing nodes.
+	 * @param wayIds
+	 *            the set of identifiers to check for existing ways.
+	 * @throws EntityNotFoundException
+	 */
+	public static void putWaysAndWayNodes(OsmRelation relation,
+			TLongObjectMap<OsmNode> nodes, TLongObjectMap<OsmWay> ways,
+			OsmEntityProvider entityProvider, TLongSet nodeIds, TLongSet wayIds)
 			throws EntityNotFoundException
 	{
 		for (int i = 0; i < relation.getNumberOfMembers(); i++) {
 			OsmRelationMember member = relation.getMember(i);
 			if (member.getType() == EntityType.Way) {
 				long wayId = member.getId();
-				ways.put(wayId, entityProvider.getWay(wayId));
-			}
-		}
-	}
-
-	public static void putWayNodes(OsmRelation relation,
-			TLongObjectMap<OsmNode> additionalNodes,
-			OsmEntityProvider entityProvider) throws EntityNotFoundException
-	{
-		for (int i = 0; i < relation.getNumberOfMembers(); i++) {
-			OsmRelationMember member = relation.getMember(i);
-			if (member.getType() == EntityType.Way) {
-				long wayId = member.getId();
+				if (wayIds.contains(wayId)) {
+					continue;
+				}
 				OsmWay way = entityProvider.getWay(wayId);
-				putNodes(way, additionalNodes, entityProvider);
+				ways.put(wayId, way);
+				putNodes(way, nodes, entityProvider, nodeIds);
 			}
 		}
 	}
