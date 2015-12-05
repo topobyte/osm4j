@@ -30,14 +30,14 @@ import de.topobyte.osm4j.core.model.iface.OsmWay;
 public interface EntityFinder
 {
 
-	public List<OsmNode> findNodes(TLongCollection ids,
-			OsmEntityProvider entityProvider) throws EntityNotFoundException;
+	public List<OsmNode> findNodes(TLongCollection ids)
+			throws EntityNotFoundException;
 
-	public List<OsmWay> findWays(TLongCollection ids,
-			OsmEntityProvider entityProvider) throws EntityNotFoundException;
+	public List<OsmWay> findWays(TLongCollection ids)
+			throws EntityNotFoundException;
 
-	public List<OsmRelation> findRelations(TLongCollection ids,
-			OsmEntityProvider entityProvider) throws EntityNotFoundException;
+	public List<OsmRelation> findRelations(TLongCollection ids)
+			throws EntityNotFoundException;
 
 	public void findWayNodes(OsmWay way, Collection<OsmNode> outNodes)
 			throws EntityNotFoundException;

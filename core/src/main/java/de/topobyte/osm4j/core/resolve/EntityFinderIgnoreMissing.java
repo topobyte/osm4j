@@ -43,8 +43,8 @@ public class EntityFinderIgnoreMissing extends AbstractEntityFinder
 	}
 
 	@Override
-	public List<OsmNode> findNodes(TLongCollection ids,
-			OsmEntityProvider entityProvider) throws EntityNotFoundException
+	public List<OsmNode> findNodes(TLongCollection ids)
+			throws EntityNotFoundException
 	{
 		List<OsmNode> nodes = new ArrayList<>();
 		TLongIterator idIterator = ids.iterator();
@@ -59,8 +59,8 @@ public class EntityFinderIgnoreMissing extends AbstractEntityFinder
 	}
 
 	@Override
-	public List<OsmWay> findWays(TLongCollection ids,
-			OsmEntityProvider entityProvider) throws EntityNotFoundException
+	public List<OsmWay> findWays(TLongCollection ids)
+			throws EntityNotFoundException
 	{
 		List<OsmWay> ways = new ArrayList<>();
 		TLongIterator idIterator = ids.iterator();
@@ -75,8 +75,7 @@ public class EntityFinderIgnoreMissing extends AbstractEntityFinder
 	}
 
 	@Override
-	public List<OsmRelation> findRelations(TLongCollection ids,
-			OsmEntityProvider entityProvider)
+	public List<OsmRelation> findRelations(TLongCollection ids)
 	{
 		List<OsmRelation> relations = new ArrayList<>();
 		TLongIterator idIterator = ids.iterator();
