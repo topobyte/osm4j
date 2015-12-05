@@ -17,7 +17,10 @@
 
 package de.topobyte.osm4j.core.resolve;
 
+import gnu.trove.TLongCollection;
+
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
 import de.topobyte.osm4j.core.model.iface.OsmNode;
@@ -26,6 +29,15 @@ import de.topobyte.osm4j.core.model.iface.OsmWay;
 
 public interface EntityFinder
 {
+
+	public List<OsmNode> findNodes(TLongCollection ids,
+			OsmEntityProvider entityProvider) throws EntityNotFoundException;
+
+	public List<OsmWay> findWays(TLongCollection ids,
+			OsmEntityProvider entityProvider) throws EntityNotFoundException;
+
+	public List<OsmRelation> findRelations(TLongCollection ids,
+			OsmEntityProvider entityProvider) throws EntityNotFoundException;
 
 	public void findWayNodes(OsmWay way, Collection<OsmNode> outNodes)
 			throws EntityNotFoundException;

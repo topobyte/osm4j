@@ -17,8 +17,13 @@
 
 package de.topobyte.osm4j.core.resolve;
 
+import gnu.trove.TLongCollection;
+import gnu.trove.iterator.TLongIterator;
+
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.slf4j.Logger;
@@ -45,6 +50,25 @@ public abstract class EntityFinderLogMissing extends AbstractEntityFinder
 
 	protected abstract void log(String message);
 
+	private void logNodeNotFound(long id)
+	{
+		String message = String.format("Unable to find node with id %d", id);
+		log(message);
+	}
+
+	private void logWayNotFound(long id)
+	{
+		String message = String.format("Unable to find way with id %d", id);
+		log(message);
+	}
+
+	private void logRelationNotFound(long id)
+	{
+		String message = String
+				.format("Unable to find relation with id %d", id);
+		log(message);
+	}
+
 	private void logWayNodeNotFound(OsmWay way, long nodeId)
 	{
 		String message = String.format(
@@ -60,6 +84,57 @@ public abstract class EntityFinderLogMissing extends AbstractEntityFinder
 				"Unable to find member: relation id %d, member %s:%d",
 				relation.getId(), member.getType().toString(), member.getId());
 		log(message);
+	}
+
+	@Override
+	public List<OsmNode> findNodes(TLongCollection ids,
+			OsmEntityProvider entityProvider) throws EntityNotFoundException
+	{
+		List<OsmNode> nodes = new ArrayList<>();
+		TLongIterator idIterator = ids.iterator();
+		while (idIterator.hasNext()) {
+			long id = idIterator.next();
+			try {
+				nodes.add(entityProvider.getNode(id));
+			} catch (EntityNotFoundException e) {
+				logNodeNotFound(id);
+			}
+		}
+		return nodes;
+	}
+
+	@Override
+	public List<OsmWay> findWays(TLongCollection ids,
+			OsmEntityProvider entityProvider) throws EntityNotFoundException
+	{
+		List<OsmWay> ways = new ArrayList<>();
+		TLongIterator idIterator = ids.iterator();
+		while (idIterator.hasNext()) {
+			long id = idIterator.next();
+			try {
+				ways.add(entityProvider.getWay(id));
+			} catch (EntityNotFoundException e) {
+				logWayNotFound(id);
+			}
+		}
+		return ways;
+	}
+
+	@Override
+	public List<OsmRelation> findRelations(TLongCollection ids,
+			OsmEntityProvider entityProvider)
+	{
+		List<OsmRelation> relations = new ArrayList<>();
+		TLongIterator idIterator = ids.iterator();
+		while (idIterator.hasNext()) {
+			long id = idIterator.next();
+			try {
+				relations.add(entityProvider.getRelation(id));
+			} catch (EntityNotFoundException e) {
+				logRelationNotFound(id);
+			}
+		}
+		return relations;
 	}
 
 	@Override

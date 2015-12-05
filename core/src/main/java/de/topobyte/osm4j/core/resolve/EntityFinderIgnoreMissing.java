@@ -17,8 +17,13 @@
 
 package de.topobyte.osm4j.core.resolve;
 
+import gnu.trove.TLongCollection;
+import gnu.trove.iterator.TLongIterator;
+
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import de.topobyte.osm4j.core.model.iface.OsmNode;
@@ -35,6 +40,54 @@ public class EntityFinderIgnoreMissing extends AbstractEntityFinder
 	public EntityFinderIgnoreMissing(OsmEntityProvider entityProvider)
 	{
 		this.entityProvider = entityProvider;
+	}
+
+	@Override
+	public List<OsmNode> findNodes(TLongCollection ids,
+			OsmEntityProvider entityProvider) throws EntityNotFoundException
+	{
+		List<OsmNode> nodes = new ArrayList<>();
+		TLongIterator idIterator = ids.iterator();
+		while (idIterator.hasNext()) {
+			try {
+				nodes.add(entityProvider.getNode(idIterator.next()));
+			} catch (EntityNotFoundException e) {
+				// ignore silently
+			}
+		}
+		return nodes;
+	}
+
+	@Override
+	public List<OsmWay> findWays(TLongCollection ids,
+			OsmEntityProvider entityProvider) throws EntityNotFoundException
+	{
+		List<OsmWay> ways = new ArrayList<>();
+		TLongIterator idIterator = ids.iterator();
+		while (idIterator.hasNext()) {
+			try {
+				ways.add(entityProvider.getWay(idIterator.next()));
+			} catch (EntityNotFoundException e) {
+				// ignore silently
+			}
+		}
+		return ways;
+	}
+
+	@Override
+	public List<OsmRelation> findRelations(TLongCollection ids,
+			OsmEntityProvider entityProvider)
+	{
+		List<OsmRelation> relations = new ArrayList<>();
+		TLongIterator idIterator = ids.iterator();
+		while (idIterator.hasNext()) {
+			try {
+				relations.add(entityProvider.getRelation(idIterator.next()));
+			} catch (EntityNotFoundException e) {
+				// ignore silently
+			}
+		}
+		return relations;
 	}
 
 	@Override
