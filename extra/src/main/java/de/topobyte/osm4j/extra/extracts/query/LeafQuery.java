@@ -25,6 +25,7 @@ import gnu.trove.set.hash.TLongHashSet;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Path;
+import java.util.List;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.LineString;
@@ -37,10 +38,8 @@ import de.topobyte.osm4j.core.access.OsmOutputStreamStreamOutput;
 import de.topobyte.osm4j.core.access.OsmStreamOutput;
 import de.topobyte.osm4j.core.dataset.InMemoryListDataSet;
 import de.topobyte.osm4j.core.dataset.ListDataSetLoader;
-import de.topobyte.osm4j.core.model.iface.EntityType;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.osm4j.core.model.iface.OsmRelation;
-import de.topobyte.osm4j.core.model.iface.OsmRelationMember;
 import de.topobyte.osm4j.core.model.iface.OsmWay;
 import de.topobyte.osm4j.core.resolve.CompositeOsmEntityProvider;
 import de.topobyte.osm4j.core.resolve.EntityNotFoundException;
@@ -48,6 +47,8 @@ import de.topobyte.osm4j.core.resolve.NullOsmEntityProvider;
 import de.topobyte.osm4j.extra.QueryUtil;
 import de.topobyte.osm4j.extra.datatree.DataTreeFiles;
 import de.topobyte.osm4j.extra.datatree.Node;
+import de.topobyte.osm4j.extra.relations.Group;
+import de.topobyte.osm4j.extra.relations.RelationGraph;
 import de.topobyte.osm4j.geometry.GeometryBuilder;
 import de.topobyte.osm4j.utils.FileFormat;
 import de.topobyte.osm4j.utils.OsmFileInput;
@@ -106,6 +107,7 @@ public class LeafQuery
 	private InMemoryListDataSet dataNodes;
 	private InMemoryListDataSet dataWays;
 	private InMemoryListDataSet dataSimpleRelations;
+	private InMemoryListDataSet dataComplexRelations;
 
 	private TLongSet nodeIds = new TLongHashSet();
 	private TLongSet wayIds = new TLongHashSet();
@@ -116,6 +118,7 @@ public class LeafQuery
 	private TLongObjectMap<OsmWay> additionalWays = new TLongObjectHashMap<>();
 
 	private CompositeOsmEntityProvider providerSimple;
+	private CompositeOsmEntityProvider providerComplex;
 
 	public QueryResult execute(Node leaf, Path pathOutNodes, Path pathOutWays,
 			Path pathOutSimpleRelations, Path pathOutComplexRelations,
@@ -134,6 +137,8 @@ public class LeafQuery
 
 		providerSimple = new CompositeOsmEntityProvider(dataNodes, dataWays,
 				new NullOsmEntityProvider());
+		providerComplex = new CompositeOsmEntityProvider(dataNodes, dataWays,
+				dataComplexRelations);
 
 		createOutputs();
 
@@ -145,6 +150,9 @@ public class LeafQuery
 
 		System.out.println("querying simple relations");
 		querySimpleRelations();
+
+		System.out.println("querying complex relations");
+		queryComplexRelations();
 
 		System.out.println("writing additional nodes");
 		writeAdditionalNodes();
@@ -179,6 +187,7 @@ public class LeafQuery
 		dataNodes = read(filesTreeNodes.getPath(leaf));
 		dataWays = read(filesTreeWays.getPath(leaf));
 		dataSimpleRelations = read(filesTreeSimpleRelations.getPath(leaf));
+		dataComplexRelations = read(filesTreeComplexRelations.getPath(leaf));
 	}
 
 	private InMemoryListDataSet read(Path path) throws IOException
@@ -277,6 +286,18 @@ public class LeafQuery
 						+ relation.getId());
 			}
 		}
+	}
+
+	private void queryComplexRelations() throws IOException
+	{
+		RelationGraph relationGraph = new RelationGraph(false, true);
+		relationGraph.build(dataComplexRelations.getRelations());
+		List<Group> groups = relationGraph.buildGroups();
+		for (Group group : groups) {
+			TLongSet ids = group.getRelationIds();
+
+		}
+		System.out.println("number of groups: " + groups.size());
 	}
 
 	private void writeAdditionalNodes() throws IOException
