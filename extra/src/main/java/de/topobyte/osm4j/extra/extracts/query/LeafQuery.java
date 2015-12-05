@@ -44,6 +44,7 @@ import de.topobyte.osm4j.core.model.iface.OsmWay;
 import de.topobyte.osm4j.core.resolve.CompositeOsmEntityProvider;
 import de.topobyte.osm4j.core.resolve.EntityNotFoundException;
 import de.topobyte.osm4j.core.resolve.NullOsmEntityProvider;
+import de.topobyte.osm4j.core.util.IdUtil;
 import de.topobyte.osm4j.extra.QueryUtil;
 import de.topobyte.osm4j.extra.datatree.DataTreeFiles;
 import de.topobyte.osm4j.extra.datatree.Node;

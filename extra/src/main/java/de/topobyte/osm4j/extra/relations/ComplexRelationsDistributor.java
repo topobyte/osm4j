@@ -26,6 +26,7 @@ import java.io.OutputStream;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -44,7 +45,10 @@ import de.topobyte.osm4j.core.dataset.ListDataSetReader;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.osm4j.core.model.iface.OsmRelation;
 import de.topobyte.osm4j.core.resolve.CompositeOsmEntityProvider;
+import de.topobyte.osm4j.core.resolve.EntityFinder;
+import de.topobyte.osm4j.core.resolve.EntityFinders;
 import de.topobyte.osm4j.core.resolve.EntityNotFoundException;
+import de.topobyte.osm4j.core.resolve.EntityNotFoundStrategy;
 import de.topobyte.osm4j.core.resolve.OsmEntityProvider;
 import de.topobyte.osm4j.extra.datatree.Node;
 import de.topobyte.osm4j.extra.idbboxlist.IdBboxEntry;
@@ -131,16 +135,20 @@ public class ComplexRelationsDistributor extends RelationsDistributorBase
 
 			OsmEntityProvider entityProvider = new CompositeOsmEntityProvider(
 					dataNodes, dataWays, dataRelations);
+			EntityFinder finder = EntityFinders.create(entityProvider,
+					EntityNotFoundStrategy.IGNORE);
 
 			for (RelationGroup relation : relationGroups) {
 				try {
-					Set<OsmNode> nodes = relation.findNodes(entityProvider);
+					Collection<OsmRelation> relations = relation.getRelations();
+					Set<OsmNode> nodes = new HashSet<>();
+					finder.findMemberNodesAndWayNodes(relations, nodes);
 					Envelope envelope = box(nodes);
 					List<Node> leafs = tree.query(box(envelope));
 
 					write(relation, leafs, envelope, nodes.size());
 				} catch (EntityNotFoundException e) {
-					//
+					// Can't happen, because we're using the IGNORE strategy
 				}
 			}
 		}

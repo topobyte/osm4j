@@ -18,18 +18,11 @@
 package de.topobyte.osm4j.extra.relations;
 
 import java.util.Collection;
-import java.util.Set;
 
-import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.osm4j.core.model.iface.OsmRelation;
-import de.topobyte.osm4j.core.resolve.EntityNotFoundException;
-import de.topobyte.osm4j.core.resolve.OsmEntityProvider;
 
 public interface RelationGroup
 {
-
-	public Set<OsmNode> findNodes(OsmEntityProvider entityProvider)
-			throws EntityNotFoundException;
 
 	public Collection<OsmRelation> getRelations();
 

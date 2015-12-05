@@ -20,13 +20,8 @@ package de.topobyte.osm4j.extra.relations;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
-import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.osm4j.core.model.iface.OsmRelation;
-import de.topobyte.osm4j.core.resolve.EntityNotFoundException;
-import de.topobyte.osm4j.core.resolve.OsmEntityProvider;
-import de.topobyte.osm4j.extra.util.RelationUtil;
 
 public class RelationGroupSingle implements RelationGroup
 {
@@ -36,13 +31,6 @@ public class RelationGroupSingle implements RelationGroup
 	public RelationGroupSingle(OsmRelation relation)
 	{
 		this.relation = relation;
-	}
-
-	@Override
-	public Set<OsmNode> findNodes(OsmEntityProvider entityProvider)
-			throws EntityNotFoundException
-	{
-		return RelationUtil.findNodes(relation, entityProvider);
 	}
 
 	@Override

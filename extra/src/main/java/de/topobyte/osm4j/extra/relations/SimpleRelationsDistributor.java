@@ -20,6 +20,7 @@ package de.topobyte.osm4j.extra.relations;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -32,12 +33,14 @@ import de.topobyte.osm4j.core.dataset.InMemoryMapDataSet;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.osm4j.core.model.iface.OsmRelation;
 import de.topobyte.osm4j.core.resolve.CompositeOsmEntityProvider;
+import de.topobyte.osm4j.core.resolve.EntityFinder;
+import de.topobyte.osm4j.core.resolve.EntityFinders;
 import de.topobyte.osm4j.core.resolve.EntityNotFoundException;
+import de.topobyte.osm4j.core.resolve.EntityNotFoundStrategy;
 import de.topobyte.osm4j.core.resolve.NullOsmEntityProvider;
 import de.topobyte.osm4j.core.resolve.OsmEntityProvider;
 import de.topobyte.osm4j.extra.datatree.Node;
 import de.topobyte.osm4j.extra.idbboxlist.IdBboxEntry;
-import de.topobyte.osm4j.extra.util.RelationUtil;
 import de.topobyte.osm4j.utils.FileFormat;
 import de.topobyte.osm4j.utils.OsmIoUtils;
 import de.topobyte.osm4j.utils.OsmOutputConfig;
@@ -85,11 +88,14 @@ public class SimpleRelationsDistributor extends RelationsDistributorBase
 				inputFormat, outputConfig.isWriteMetadata());
 		RelationIterator relationIterator = new RelationIterator(osmIterator);
 
+		EntityFinder finder = EntityFinders.create(entityProvider,
+				EntityNotFoundStrategy.IGNORE);
 		for (OsmRelation relation : relationIterator) {
-			Set<OsmNode> nodes;
+			Set<OsmNode> nodes = new HashSet<>();
 			try {
-				nodes = RelationUtil.findNodes(relation, entityProvider);
+				finder.findMemberNodesAndWayNodes(relation, nodes);
 			} catch (EntityNotFoundException e) {
+				// Can't happen, because we're using the IGNORE strategy
 				continue;
 			}
 
