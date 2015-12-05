@@ -22,7 +22,7 @@ repositories {
 }
 
 dependencies {
-    compile 'de.topobyte:osm4j-core:0.0.9'
+    compile 'de.topobyte:osm4j-core:0.0.11'
     compile 'de.topobyte:osm4j-tbo:0.0.9'
     compile 'de.topobyte:adt-geo:0.0.2'
     compile 'de.topobyte:adt-graph:0.0.1'

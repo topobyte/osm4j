@@ -17,9 +17,6 @@
 
 package de.topobyte.osm4j.extra.relations;
 
-import gnu.trove.iterator.TLongIterator;
-import gnu.trove.set.TLongSet;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -112,10 +109,12 @@ public class ComplexRelationsDistributor extends RelationsDistributorBase
 
 		List<RelationGroup> relationGroups = new ArrayList<>();
 
+		EntityFinder relationFinder = EntityFinders.create(dataRelations,
+				EntityNotFoundStrategy.IGNORE);
 		for (Group group : groups) {
 			try {
-				List<OsmRelation> groupRelations = findRelations(
-						group.getRelationIds(), dataRelations);
+				List<OsmRelation> groupRelations = relationFinder
+						.findRelations(group.getRelationIds());
 				relationGroups.add(new RelationGroupMultiple(groupRelations));
 			} catch (EntityNotFoundException e) {
 				System.out.println("unable to build relation group");
@@ -184,17 +183,6 @@ public class ComplexRelationsDistributor extends RelationsDistributorBase
 		for (OsmRelation relation : relations) {
 			output.getOsmOutput().write(relation);
 		}
-	}
-
-	private List<OsmRelation> findRelations(TLongSet ids,
-			OsmEntityProvider entityProvider) throws EntityNotFoundException
-	{
-		List<OsmRelation> relations = new ArrayList<>();
-		TLongIterator idIterator = ids.iterator();
-		while (idIterator.hasNext()) {
-			relations.add(entityProvider.getRelation(idIterator.next()));
-		}
-		return relations;
 	}
 
 	private void sortFiles() throws IOException, OsmInputException
