@@ -22,6 +22,7 @@ import java.util.List;
 
 import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.GeometryFactory;
 
 public class DataTree
 {
@@ -132,6 +133,11 @@ public class DataTree
 		results.clear();
 		root.query(results, geometry);
 		return results;
+	}
+
+	public List<Node> query(Envelope envelope)
+	{
+		return query(new GeometryFactory().toGeometry(envelope));
 	}
 
 }

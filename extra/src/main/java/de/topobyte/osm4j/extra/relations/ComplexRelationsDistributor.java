@@ -49,6 +49,7 @@ import de.topobyte.osm4j.core.resolve.EntityNotFoundStrategy;
 import de.topobyte.osm4j.core.resolve.OsmEntityProvider;
 import de.topobyte.osm4j.extra.datatree.Node;
 import de.topobyte.osm4j.extra.idbboxlist.IdBboxEntry;
+import de.topobyte.osm4j.geometry.BboxBuilder;
 import de.topobyte.osm4j.utils.FileFormat;
 import de.topobyte.osm4j.utils.OsmFileInput;
 import de.topobyte.osm4j.utils.OsmIoUtils;
@@ -123,8 +124,9 @@ public class ComplexRelationsDistributor extends RelationsDistributorBase
 
 		if (relationGroups.size() == 1) {
 			InMemoryMapDataSet dataNodes = read(pathNodes, false, false);
-			Envelope envelope = box(dataNodes.getNodes().valueCollection());
-			List<Node> leafs = tree.query(box(envelope));
+			Envelope envelope = BboxBuilder.box(dataNodes.getNodes()
+					.valueCollection());
+			List<Node> leafs = tree.query(envelope);
 
 			write(relationGroups.get(0), leafs, envelope, dataNodes.getNodes()
 					.size());
@@ -142,8 +144,8 @@ public class ComplexRelationsDistributor extends RelationsDistributorBase
 					Collection<OsmRelation> relations = relation.getRelations();
 					Set<OsmNode> nodes = new HashSet<>();
 					finder.findMemberNodesAndWayNodes(relations, nodes);
-					Envelope envelope = box(nodes);
-					List<Node> leafs = tree.query(box(envelope));
+					Envelope envelope = BboxBuilder.box(nodes);
+					List<Node> leafs = tree.query(envelope);
 
 					write(relation, leafs, envelope, nodes.size());
 				} catch (EntityNotFoundException e) {

@@ -25,7 +25,6 @@ import java.util.List;
 import java.util.Set;
 
 import com.vividsolutions.jts.geom.Envelope;
-import com.vividsolutions.jts.geom.Geometry;
 
 import de.topobyte.osm4j.core.access.OsmIterator;
 import de.topobyte.osm4j.core.access.OsmStreamOutput;
@@ -41,6 +40,7 @@ import de.topobyte.osm4j.core.resolve.NullOsmEntityProvider;
 import de.topobyte.osm4j.core.resolve.OsmEntityProvider;
 import de.topobyte.osm4j.extra.datatree.Node;
 import de.topobyte.osm4j.extra.idbboxlist.IdBboxEntry;
+import de.topobyte.osm4j.geometry.BboxBuilder;
 import de.topobyte.osm4j.utils.FileFormat;
 import de.topobyte.osm4j.utils.OsmIoUtils;
 import de.topobyte.osm4j.utils.OsmOutputConfig;
@@ -105,9 +105,8 @@ public class SimpleRelationsDistributor extends RelationsDistributorBase
 				continue;
 			}
 
-			Envelope envelope = box(nodes);
-			Geometry box = box(envelope);
-			List<Node> leafs = tree.query(box);
+			Envelope envelope = BboxBuilder.box(nodes);
+			List<Node> leafs = tree.query(envelope);
 
 			if (leafs.size() == 1) {
 				nWrittenToTree++;

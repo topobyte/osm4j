@@ -25,7 +25,6 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -33,8 +32,6 @@ import java.util.List;
 import java.util.Map;
 
 import com.vividsolutions.jts.geom.Envelope;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.GeometryFactory;
 
 import de.topobyte.largescalefileio.ClosingFileOutputStreamFactory;
 import de.topobyte.largescalefileio.SimpleClosingFileOutputStreamFactory;
@@ -44,7 +41,6 @@ import de.topobyte.osm4j.core.access.OsmOutputStreamStreamOutput;
 import de.topobyte.osm4j.core.access.OsmStreamOutput;
 import de.topobyte.osm4j.core.dataset.InMemoryMapDataSet;
 import de.topobyte.osm4j.core.dataset.MapDataSetLoader;
-import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.osm4j.core.model.impl.Bounds;
 import de.topobyte.osm4j.extra.datatree.DataTree;
 import de.topobyte.osm4j.extra.datatree.DataTreeFiles;
@@ -225,20 +221,6 @@ public abstract class RelationsDistributorBase
 	}
 
 	protected abstract void build(Path path) throws IOException;
-
-	protected Envelope box(Collection<OsmNode> nodes)
-	{
-		Envelope env = new Envelope();
-		for (OsmNode node : nodes) {
-			env.expandToInclude(node.getLongitude(), node.getLatitude());
-		}
-		return env;
-	}
-
-	protected Geometry box(Envelope env)
-	{
-		return new GeometryFactory().toGeometry(env);
-	}
 
 	protected InMemoryMapDataSet read(Path path, boolean readMetadata,
 			boolean keepTags) throws IOException
