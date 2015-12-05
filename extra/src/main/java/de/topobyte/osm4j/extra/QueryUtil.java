@@ -22,6 +22,7 @@ import gnu.trove.set.TLongSet;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collection;
 
 import de.topobyte.osm4j.core.access.OsmOutputStream;
 import de.topobyte.osm4j.core.model.iface.EntityType;
@@ -268,6 +269,17 @@ public class QueryUtil
 					&& nodeIds.contains(member.getId())
 					|| member.getType() == EntityType.Way
 					&& wayIds.contains(member.getId())) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public static boolean anyMemberContainedIn(
+			Collection<OsmRelation> relations, TLongSet nodeIds, TLongSet wayIds)
+	{
+		for (OsmRelation relation : relations) {
+			if (anyMemberContainedIn(relation, nodeIds, wayIds)) {
 				return true;
 			}
 		}

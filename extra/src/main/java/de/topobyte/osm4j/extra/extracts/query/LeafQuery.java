@@ -25,9 +25,12 @@ import gnu.trove.set.hash.TLongHashSet;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Path;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.MultiPolygon;
 
@@ -42,14 +45,17 @@ import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.osm4j.core.model.iface.OsmRelation;
 import de.topobyte.osm4j.core.model.iface.OsmWay;
 import de.topobyte.osm4j.core.resolve.CompositeOsmEntityProvider;
+import de.topobyte.osm4j.core.resolve.EntityFinder;
+import de.topobyte.osm4j.core.resolve.EntityFinders;
 import de.topobyte.osm4j.core.resolve.EntityNotFoundException;
+import de.topobyte.osm4j.core.resolve.EntityNotFoundStrategy;
 import de.topobyte.osm4j.core.resolve.NullOsmEntityProvider;
-import de.topobyte.osm4j.core.util.IdUtil;
 import de.topobyte.osm4j.extra.QueryUtil;
 import de.topobyte.osm4j.extra.datatree.DataTreeFiles;
 import de.topobyte.osm4j.extra.datatree.Node;
 import de.topobyte.osm4j.extra.relations.Group;
 import de.topobyte.osm4j.extra.relations.RelationGraph;
+import de.topobyte.osm4j.geometry.BboxBuilder;
 import de.topobyte.osm4j.geometry.GeometryBuilder;
 import de.topobyte.osm4j.utils.FileFormat;
 import de.topobyte.osm4j.utils.OsmFileInput;
@@ -73,6 +79,8 @@ public class LeafQuery
 	private boolean writeMetadata;
 	private PbfConfig pbfConfig;
 	private TboConfig tboConfig;
+
+	private boolean fastRelationTests = true;
 
 	public LeafQuery(ContainmentTest test, DataTreeFiles filesTreeNodes,
 			DataTreeFiles filesTreeWays,
@@ -257,10 +265,28 @@ public class LeafQuery
 
 	private void querySimpleRelations() throws IOException
 	{
+		EntityFinder finder = EntityFinders.create(providerSimple,
+				EntityNotFoundStrategy.IGNORE);
+
 		for (OsmRelation relation : dataSimpleRelations.getRelations()) {
 			boolean in = QueryUtil.anyMemberContainedIn(relation, nodeIds,
 					wayIds);
-			if (!in) {
+
+			if (!in && fastRelationTests) {
+				Set<OsmNode> nodes = new HashSet<>();
+				try {
+					finder.findMemberNodesAndWayNodes(relation, nodes);
+				} catch (EntityNotFoundException e) {
+					// Can't happen, because we're using the IGNORE strategy
+				}
+
+				Envelope envelope = BboxBuilder.box(nodes);
+				if (test.intersects(envelope)) {
+					in = true;
+				}
+			}
+
+			if (!in && !fastRelationTests) {
 				try {
 					MultiPolygon polygon = GeometryBuilder.build(relation,
 							providerSimple);
@@ -291,14 +317,63 @@ public class LeafQuery
 
 	private void queryComplexRelations() throws IOException
 	{
+		EntityFinder finder = EntityFinders.create(dataComplexRelations,
+				EntityNotFoundStrategy.IGNORE);
+
 		RelationGraph relationGraph = new RelationGraph(false, true);
 		relationGraph.build(dataComplexRelations.getRelations());
 		List<Group> groups = relationGraph.buildGroups();
 		for (Group group : groups) {
 			TLongSet ids = group.getRelationIds();
+			List<OsmRelation> relations;
+			try {
+				relations = finder.findRelations(ids);
+			} catch (EntityNotFoundException e) {
+				// Can't happen, using the IGNORE strategy
+				continue;
+			}
+			boolean in = QueryUtil.anyMemberContainedIn(relations, nodeIds,
+					wayIds);
 
+			if (!in && fastRelationTests) {
+				Set<OsmNode> nodes = new HashSet<>();
+				try {
+					finder.findMemberNodesAndWayNodes(relations, nodes);
+				} catch (EntityNotFoundException e) {
+					// Can't happen, because we're using the IGNORE strategy
+				}
+
+				Envelope envelope = BboxBuilder.box(nodes);
+				if (test.intersects(envelope)) {
+					in = true;
+				}
+			}
+
+			if (!in && !fastRelationTests) {
+				// TODO: perform exact test
+			}
+
+			if (!in) {
+				continue;
+			}
+
+			for (OsmRelation relation : relations) {
+				outComplexRelations.getOsmOutput().write(relation);
+			}
+			nComplex++;
+			for (OsmRelation relation : relations) {
+				try {
+					QueryUtil.putNodes(relation, additionalNodes, dataNodes,
+							nodeIds);
+					QueryUtil.putWaysAndWayNodes(relation, additionalNodes,
+							additionalWays, providerSimple, nodeIds, wayIds);
+				} catch (EntityNotFoundException e) {
+					System.out
+							.println("Unable to find all members for relation: "
+									+ relation.getId());
+				}
+			}
 		}
-		System.out.println("number of groups: " + groups.size());
 	}
 
 	private void writeAdditionalNodes() throws IOException
