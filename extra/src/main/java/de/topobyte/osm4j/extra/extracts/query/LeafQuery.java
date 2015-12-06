@@ -320,60 +320,87 @@ public class LeafQuery
 		EntityFinder finder = EntityFinders.create(dataComplexRelations,
 				EntityNotFoundStrategy.IGNORE);
 
+		Set<OsmRelation> found = new HashSet<>();
+
 		RelationGraph relationGraph = new RelationGraph(false, true);
 		relationGraph.build(dataComplexRelations.getRelations());
 		List<Group> groups = relationGraph.buildGroups();
 		for (Group group : groups) {
 			TLongSet ids = group.getRelationIds();
-			List<OsmRelation> relations;
+			System.out.println(String.format("group with %d relations",
+					ids.size()));
+
+			List<OsmRelation> groupRelations;
 			try {
-				relations = finder.findRelations(ids);
+				groupRelations = finder.findRelations(ids);
 			} catch (EntityNotFoundException e) {
 				// Can't happen, using the IGNORE strategy
 				continue;
 			}
-			boolean in = QueryUtil.anyMemberContainedIn(relations, nodeIds,
-					wayIds);
+			RelationGraph groupGraph = new RelationGraph(true, false);
+			groupGraph.build(groupRelations);
+			List<Group> groupGroups = groupGraph.buildGroups();
+			System.out.println("subgroups: " + groupGroups.size());
 
-			if (!in && fastRelationTests) {
-				Set<OsmNode> nodes = new HashSet<>();
+			for (Group subGroup : groupGroups) {
+				List<OsmRelation> subRelations;
 				try {
-					finder.findMemberNodesAndWayNodes(relations, nodes);
+					subRelations = finder.findRelations(subGroup
+							.getRelationIds());
 				} catch (EntityNotFoundException e) {
-					// Can't happen, because we're using the IGNORE strategy
+					// Can't happen, using the IGNORE strategy
+					continue;
 				}
-
-				Envelope envelope = BboxBuilder.box(nodes);
-				if (test.intersects(envelope)) {
-					in = true;
-				}
-			}
-
-			if (!in && !fastRelationTests) {
-				// TODO: perform exact test
-			}
-
-			if (!in) {
-				continue;
-			}
-
-			for (OsmRelation relation : relations) {
-				outComplexRelations.getOsmOutput().write(relation);
-			}
-			nComplex++;
-			for (OsmRelation relation : relations) {
-				try {
-					QueryUtil.putNodes(relation, additionalNodes, dataNodes,
-							nodeIds);
-					QueryUtil.putWaysAndWayNodes(relation, additionalNodes,
-							additionalWays, providerSimple, nodeIds, wayIds);
-				} catch (EntityNotFoundException e) {
-					System.out
-							.println("Unable to find all members for relation: "
-									+ relation.getId());
+				if (intersects(subRelations)) {
+					found.addAll(subRelations);
 				}
 			}
 		}
+
+		nComplex += found.size();
+
+		for (OsmRelation relation : found) {
+			outComplexRelations.getOsmOutput().write(relation);
+		}
+		for (OsmRelation relation : found) {
+			try {
+				QueryUtil.putNodes(relation, additionalNodes, dataNodes,
+						nodeIds);
+				QueryUtil.putWaysAndWayNodes(relation, additionalNodes,
+						additionalWays, providerSimple, nodeIds, wayIds);
+			} catch (EntityNotFoundException e) {
+				System.out.println("Unable to find all members for relation: "
+						+ relation.getId());
+			}
+		}
+	}
+
+	private boolean intersects(List<OsmRelation> relations) throws IOException
+	{
+		EntityFinder finder = EntityFinders.create(dataComplexRelations,
+				EntityNotFoundStrategy.IGNORE);
+
+		boolean in = QueryUtil.anyMemberContainedIn(relations, nodeIds, wayIds);
+
+		if (!in && fastRelationTests) {
+			Set<OsmNode> nodes = new HashSet<>();
+			try {
+				finder.findMemberNodesAndWayNodes(relations, nodes);
+			} catch (EntityNotFoundException e) {
+				// Can't happen, because we're using the IGNORE strategy
+			}
+
+			Envelope envelope = BboxBuilder.box(nodes);
+			if (test.intersects(envelope)) {
+				in = true;
+			}
+		}
+
+		if (!in && !fastRelationTests) {
+			// TODO: perform exact test
+		}
+
+		return in;
 	}
 
 	private void writeAdditionalNodes() throws IOException
