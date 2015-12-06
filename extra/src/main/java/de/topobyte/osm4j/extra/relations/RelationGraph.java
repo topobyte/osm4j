@@ -203,6 +203,8 @@ public class RelationGraph
 	{
 		List<Group> groups = new LinkedList<>();
 
+		// First determine 'start' relations, i.e. relations without incoming
+		// edges in the relation graph
 		TLongSet starts = new TLongHashSet();
 		Collection<Long> ids = graph.getNodes();
 		for (long id : ids) {
@@ -210,9 +212,30 @@ public class RelationGraph
 				starts.add(id);
 			}
 		}
+		// Build sub-graphs reachable from 'start' relations
 		System.out.println("Number of start relations: " + starts.size());
 		for (long start : starts.toArray()) {
 			groups.add(build(start));
+		}
+
+		// In case of circles within the relation graph that are not reachable
+		// from any start relation, there may be some relations left, that have
+		// not been put into groups yet.
+		TLongSet remaining = new TLongHashSet();
+		remaining.addAll(ids);
+		for (Group group : groups) {
+			remaining.removeAll(group.getRelationIds());
+		}
+		if (remaining.size() > 0) {
+			System.out.println("remaining: " + remaining.size());
+			while (!remaining.isEmpty()) {
+				long id = any(remaining);
+
+				TLongSet reachable = reachable(graph, id);
+				remaining.removeAll(reachable);
+
+				groups.add(new Group(id, reachable));
+			}
 		}
 
 		return groups;
