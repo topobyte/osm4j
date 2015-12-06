@@ -19,13 +19,18 @@ package de.topobyte.osm4j.core.resolve;
 
 import gnu.trove.TLongCollection;
 import gnu.trove.iterator.TLongIterator;
+import gnu.trove.set.TLongSet;
+import gnu.trove.set.hash.TLongHashSet;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Deque;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import de.topobyte.osm4j.core.model.iface.EntityType;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.osm4j.core.model.iface.OsmRelation;
 import de.topobyte.osm4j.core.model.iface.OsmRelationMember;
@@ -134,6 +139,52 @@ public class EntityFinderIgnoreMissing extends AbstractEntityFinder
 				addMember(member, null, null, outRelations, entityProvider);
 			} catch (EntityNotFoundException e) {
 				// ignore silently
+			}
+		}
+	}
+
+	@Override
+	public void findMemberRelationsRecursively(OsmRelation relation,
+			Set<OsmRelation> outRelations)
+	{
+		Deque<OsmRelation> queue = new LinkedList<>();
+		queue.add(relation);
+		findMemberRelationsRecursively(queue, outRelations);
+	}
+
+	@Override
+	public void findMemberRelationsRecursively(
+			Collection<OsmRelation> relations, Set<OsmRelation> outRelations)
+	{
+		Deque<OsmRelation> queue = new LinkedList<>();
+		queue.addAll(relations);
+		findMemberRelationsRecursively(queue, outRelations);
+	}
+
+	private void findMemberRelationsRecursively(Deque<OsmRelation> queue,
+			Set<OsmRelation> outRelations)
+	{
+		TLongSet ids = new TLongHashSet();
+		while (!queue.isEmpty()) {
+			OsmRelation relation = queue.remove();
+			for (OsmRelationMember member : OsmModelUtil
+					.membersAsList(relation)) {
+				if (member.getType() != EntityType.Relation) {
+					continue;
+				}
+				long id = member.getId();
+				if (ids.contains(id)) {
+					continue;
+				}
+				ids.add(id);
+
+				try {
+					OsmRelation child = entityProvider.getRelation(id);
+					outRelations.add(child);
+					queue.add(child);
+				} catch (EntityNotFoundException e) {
+					// ignore silently
+				}
 			}
 		}
 	}

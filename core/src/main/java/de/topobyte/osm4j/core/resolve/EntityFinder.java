@@ -63,6 +63,13 @@ public interface EntityFinder
 	public void findMemberRelations(Collection<OsmRelation> relations,
 			Set<OsmRelation> outRelations) throws EntityNotFoundException;
 
+	public void findMemberRelationsRecursively(OsmRelation relation,
+			Set<OsmRelation> outRelations) throws EntityNotFoundException;
+
+	public void findMemberRelationsRecursively(
+			Collection<OsmRelation> relations, Set<OsmRelation> outRelations)
+			throws EntityNotFoundException;
+
 	public void findMemberNodesAndWays(OsmRelation relation,
 			Set<OsmNode> outNodes, Set<OsmWay> outWays)
 			throws EntityNotFoundException;
