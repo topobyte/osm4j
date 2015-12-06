@@ -37,6 +37,7 @@ import de.topobyte.osm4j.core.model.iface.EntityType;
 import de.topobyte.osm4j.core.model.iface.OsmRelation;
 import de.topobyte.osm4j.core.model.iface.OsmRelationMember;
 import de.topobyte.osm4j.core.model.util.OsmModelUtil;
+import de.topobyte.osm4j.core.util.IdUtil;
 
 public class RelationGraph
 {
@@ -234,7 +235,8 @@ public class RelationGraph
 				TLongSet reachable = reachable(graph, id);
 				remaining.removeAll(reachable);
 
-				groups.add(new Group(id, reachable));
+				long lowest = IdUtil.lowestId(reachable);
+				groups.add(new Group(lowest, reachable));
 			}
 		}
 
