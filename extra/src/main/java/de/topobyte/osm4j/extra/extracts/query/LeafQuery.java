@@ -31,6 +31,7 @@ import java.util.Set;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Envelope;
+import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.MultiPolygon;
 
@@ -57,6 +58,7 @@ import de.topobyte.osm4j.extra.relations.Group;
 import de.topobyte.osm4j.extra.relations.RelationGraph;
 import de.topobyte.osm4j.geometry.BboxBuilder;
 import de.topobyte.osm4j.geometry.GeometryBuilder;
+import de.topobyte.osm4j.geometry.RelationBuilder;
 import de.topobyte.osm4j.utils.FileFormat;
 import de.topobyte.osm4j.utils.OsmFileInput;
 import de.topobyte.osm4j.utils.OsmIoUtils;
@@ -287,6 +289,14 @@ public class LeafQuery
 			}
 
 			if (!in && !fastRelationTests) {
+				Geometry pointsAndLines = RelationBuilder.buildPointsAndLines(
+						relation, providerSimple);
+				if (test.intersects(pointsAndLines)) {
+					in = true;
+				}
+			}
+
+			if (!in && !fastRelationTests) {
 				try {
 					MultiPolygon polygon = GeometryBuilder.build(relation,
 							providerSimple);
@@ -392,6 +402,14 @@ public class LeafQuery
 
 			Envelope envelope = BboxBuilder.box(nodes);
 			if (test.intersects(envelope)) {
+				in = true;
+			}
+		}
+
+		if (!in && !fastRelationTests) {
+			Geometry pointsAndLines = RelationBuilder.buildPointsAndLines(
+					relations, providerComplex);
+			if (test.intersects(pointsAndLines)) {
 				in = true;
 			}
 		}
