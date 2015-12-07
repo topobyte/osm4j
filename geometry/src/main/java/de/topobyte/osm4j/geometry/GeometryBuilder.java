@@ -35,6 +35,10 @@ import de.topobyte.osm4j.core.resolve.OsmEntityProvider;
 public class GeometryBuilder
 {
 
+	private GeometryFactory factory = new GeometryFactory();
+	private PolylineBuilder polylineBuilder = new PolylineBuilder();
+	private RegionBuilder regionBuilder = new RegionBuilder();
+
 	/**
 	 * Build a Coordinate from the given node.
 	 * 
@@ -42,7 +46,7 @@ public class GeometryBuilder
 	 *            the node to use for building.
 	 * @return the constructed Coordinate.
 	 */
-	public static Coordinate buildCoordinate(OsmNode node)
+	public Coordinate buildCoordinate(OsmNode node)
 	{
 		double lon = node.getLongitude();
 		double lat = node.getLatitude();
@@ -56,9 +60,9 @@ public class GeometryBuilder
 	 *            the node to use for building.
 	 * @return the constructed Point.
 	 */
-	public static Point build(OsmNode node)
+	public Point build(OsmNode node)
 	{
-		return new GeometryFactory().createPoint(buildCoordinate(node));
+		return factory.createPoint(buildCoordinate(node));
 	}
 
 	/**
@@ -70,10 +74,10 @@ public class GeometryBuilder
 	 * @throws EntityNotFoundException
 	 *             if a node cannot be resolved.
 	 */
-	public static LineString build(OsmWay way, OsmEntityProvider resolver)
+	public LineString build(OsmWay way, OsmEntityProvider resolver)
 			throws EntityNotFoundException
 	{
-		return PolylineBuilder.build(way, resolver);
+		return polylineBuilder.build(way, resolver);
 	}
 
 	/**
@@ -85,10 +89,10 @@ public class GeometryBuilder
 	 * @throws EntityNotFoundException
 	 *             when a required entity cannot be obtained.
 	 */
-	public static MultiPolygon build(OsmRelation relation,
-			OsmEntityProvider resolver) throws EntityNotFoundException
+	public MultiPolygon build(OsmRelation relation, OsmEntityProvider resolver)
+			throws EntityNotFoundException
 	{
-		return RegionBuilder.build(relation, resolver);
+		return regionBuilder.build(relation, resolver);
 	}
 
 }

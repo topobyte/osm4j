@@ -39,12 +39,13 @@ import de.topobyte.osm4j.core.resolve.EntityFinders;
 import de.topobyte.osm4j.core.resolve.EntityNotFoundException;
 import de.topobyte.osm4j.core.resolve.EntityNotFoundStrategy;
 import de.topobyte.osm4j.core.resolve.OsmEntityProvider;
-import de.topobyte.osm4j.geometry.GeometryBuilder;
 
 public class RelationBuilder
 {
 
-	public static Geometry buildPointsAndLines(OsmRelation relation,
+	private GeometryBuilder geometryBuilder = new GeometryBuilder();
+
+	public Geometry buildPointsAndLines(OsmRelation relation,
 			OsmEntityProvider provider)
 	{
 		EntityFinder finder = EntityFinders.create(provider,
@@ -60,7 +61,7 @@ public class RelationBuilder
 		return buildPointsAndLines(nodes, ways, provider);
 	}
 
-	public static GeometryCollection buildPointsAndLines(
+	public GeometryCollection buildPointsAndLines(
 			Collection<OsmRelation> relations, OsmEntityProvider provider)
 	{
 		EntityFinder finder = EntityFinders.create(provider,
@@ -76,18 +77,18 @@ public class RelationBuilder
 		return buildPointsAndLines(nodes, ways, provider);
 	}
 
-	private static GeometryCollection buildPointsAndLines(Set<OsmNode> nodes,
+	private GeometryCollection buildPointsAndLines(Set<OsmNode> nodes,
 			Set<OsmWay> ways, OsmEntityProvider provider)
 	{
 		List<Coordinate> coords = new ArrayList<>();
 		for (OsmNode node : nodes) {
-			coords.add(GeometryBuilder.buildCoordinate(node));
+			coords.add(geometryBuilder.buildCoordinate(node));
 		}
 
 		List<LineString> lines = new ArrayList<>();
 		for (OsmWay way : ways) {
 			try {
-				lines.add(GeometryBuilder.build(way, provider));
+				lines.add(geometryBuilder.build(way, provider));
 			} catch (EntityNotFoundException e) {
 				// TODO: we need an IGNORE strategy for the GeometryBuilder
 			}

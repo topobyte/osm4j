@@ -57,8 +57,8 @@ public class RegionBuilder
 	 * @throws EntityNotFoundException
 	 *             when a required entity cannot be obtained.
 	 */
-	public static MultiPolygon build(OsmRelation relation,
-			OsmEntityProvider resolver) throws EntityNotFoundException
+	public MultiPolygon build(OsmRelation relation, OsmEntityProvider resolver)
+			throws EntityNotFoundException
 	{
 		logger.debug("building region id:" + relation.getId());
 		Set<OsmRelation> relations = RelationUtil.gatherRelations(relation,
@@ -76,8 +76,8 @@ public class RegionBuilder
 	 * @throws EntityNotFoundException
 	 *             when a required entity cannot be obtained.
 	 */
-	public static MultiPolygon build(MultiSet<OsmWay> ways,
-			OsmEntityProvider resolver) throws EntityNotFoundException
+	public MultiPolygon build(MultiSet<OsmWay> ways, OsmEntityProvider resolver)
+			throws EntityNotFoundException
 	{
 		logger.debug("Have " + ways.keySet().size() + " ways");
 
@@ -99,9 +99,8 @@ public class RegionBuilder
 		return mp;
 	}
 
-	private static MultiPolygon buildMultipolygon(
-			Collection<SegmentRing> rings, OsmEntityProvider resolver)
-			throws EntityNotFoundException
+	private MultiPolygon buildMultipolygon(Collection<SegmentRing> rings,
+			OsmEntityProvider resolver) throws EntityNotFoundException
 	{
 		Set<LinearRing> linearRings = RelationUtil.toLinearRings(rings,
 				resolver);

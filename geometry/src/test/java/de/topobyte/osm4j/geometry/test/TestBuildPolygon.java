@@ -73,7 +73,8 @@ public class TestBuildPolygon
 		String filename = String.format("relation-%d.wkt", relation.getId());
 		File file = new File(outputDir, filename);
 
-		MultiPolygon polygon = GeometryBuilder.build(relation, data);
+		GeometryBuilder geometryBuilder = new GeometryBuilder();
+		MultiPolygon polygon = geometryBuilder.build(relation, data);
 		WKTWriter writer = new WKTWriter();
 		FileWriter fileWriter = new FileWriter(file);
 		writer.write(polygon, fileWriter);

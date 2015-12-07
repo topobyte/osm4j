@@ -37,6 +37,8 @@ public class PolylineBuilder
 
 	final static Logger logger = LoggerFactory.getLogger(PolylineBuilder.class);
 
+	private GeometryFactory factory = new GeometryFactory();
+
 	/**
 	 * Build a LinesString from the given way.
 	 * 
@@ -46,11 +48,9 @@ public class PolylineBuilder
 	 * @throws EntityNotFoundException
 	 *             if a node cannot be resolved.
 	 */
-	public static LineString build(OsmWay way, OsmEntityProvider resolver)
+	public LineString build(OsmWay way, OsmEntityProvider resolver)
 			throws EntityNotFoundException
 	{
-		GeometryFactory factory = new GeometryFactory();
-
 		CoordinateSequence cs = factory.getCoordinateSequenceFactory().create(
 				way.getNumberOfNodes(), 2);
 
