@@ -138,7 +138,7 @@ public class EntityFinderIgnoreMissing extends AbstractEntityFinder
 		for (OsmRelationMember member : OsmModelUtil.membersAsList(relation)) {
 			if (member.getType() == EntityType.Way) {
 				try {
-					outWays.put(entityProvider.getWay(member.getId()));
+					outWays.add(entityProvider.getWay(member.getId()));
 				} catch (EntityNotFoundException e) {
 					// ignore silently
 				}

@@ -117,7 +117,7 @@ public class EntityFinderThrowMissing extends AbstractEntityFinder
 	{
 		for (OsmRelationMember member : OsmModelUtil.membersAsList(relation)) {
 			if (member.getType() == EntityType.Way) {
-				outWays.put(entityProvider.getWay(member.getId()));
+				outWays.add(entityProvider.getWay(member.getId()));
 			}
 		}
 	}

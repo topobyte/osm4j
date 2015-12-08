@@ -22,7 +22,7 @@ repositories {
 }
 
 dependencies {
-    compile 'de.topobyte:adt-multicollections:0.0.1'
+    compile 'de.topobyte:adt-multicollections:0.0.2'
     compile 'net.sf.trove4j:trove4j:3.0.3'
 
     compile 'org.slf4j:slf4j-api:1.6.1'
