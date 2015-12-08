@@ -34,12 +34,12 @@ import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.osm4j.core.resolve.EntityNotFoundException;
 import de.topobyte.osm4j.core.resolve.OsmEntityProvider;
 
-public class SegmentRing
+public class ChainOfNodes
 {
 
 	private TLongList nodeIds;
 
-	public SegmentRing(TLongList nodeIds)
+	public ChainOfNodes(TLongList nodeIds)
 	{
 		this.nodeIds = nodeIds;
 	}
@@ -58,10 +58,18 @@ public class SegmentRing
 		return nodeIds.get(0) == nodeIds.get(size - 1);
 	}
 
-	public boolean hasEnoughSegments()
+	public int getLength()
 	{
+		return nodeIds.size();
+	}
+
+	public boolean isValidRing()
+	{
+		if (!isClosed()) {
+			return false;
+		}
 		int size = nodeIds.size();
-		return size >= 4;
+		return size == 0 || size >= 4;
 	}
 
 	public LinearRing toLinearRing(OsmEntityProvider resolver)
@@ -120,9 +128,9 @@ public class SegmentRing
 	/**
 	 * Build a new set of rings by splitting at node intersections.
 	 */
-	public List<SegmentRing> resolveNodeIntersections()
+	public List<ChainOfNodes> resolveNodeIntersections()
 	{
-		List<SegmentRing> results = new ArrayList<>();
+		List<ChainOfNodes> results = new ArrayList<>();
 
 		// Walk along the nodes in the ring and put them on the stack. Once an
 		// id is encountered that is already on the stack somewhere, we found an
@@ -148,7 +156,7 @@ public class SegmentRing
 						break;
 					}
 				}
-				results.add(new SegmentRing(list));
+				results.add(new ChainOfNodes(list));
 				// We need to push the current id to restore the state of the
 				// structures as if the ring we just created had not existed at
 				// all.
@@ -165,7 +173,7 @@ public class SegmentRing
 			while (!stack.isEmpty()) {
 				list.add(stack.pop());
 			}
-			results.add(new SegmentRing(list));
+			results.add(new ChainOfNodes(list));
 		}
 		return results;
 	}

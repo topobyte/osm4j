@@ -38,6 +38,7 @@ import de.topobyte.osm4j.core.model.iface.OsmWay;
 import de.topobyte.osm4j.core.model.impl.Way;
 import de.topobyte.osm4j.core.resolve.EntityNotFoundException;
 import de.topobyte.osm4j.core.resolve.OsmEntityProvider;
+import de.topobyte.osm4j.geometry.MissingEntitiesStrategy;
 
 public class RelationUtil
 {
@@ -48,16 +49,16 @@ public class RelationUtil
 	 * Given a set of ways and their head's and tail's in the wayTailMap,
 	 * construct valid rings by combining ways with same tail-ids.
 	 */
-	public static List<WayRing> buildRings(MultiSet<OsmWay> ways,
+	public static List<ChainOfWays> buildRings(MultiSet<OsmWay> ways,
 			CountingMultiValMap<Long, OsmWay> wayTailMap)
 	{
-		List<WayRing> rings = new ArrayList<WayRing>();
+		List<ChainOfWays> rings = new ArrayList<>();
 
 		while (ways.keySet().size() > 0) {
 
 			// Pick a way as part of a new ring
 			OsmWay way = ways.keySet().iterator().next();
-			WayRing ring = new WayRing(way);
+			ChainOfWays ring = new ChainOfWays(way);
 			rings.add(ring);
 
 			// Remove it from the set of ways...
@@ -120,12 +121,13 @@ public class RelationUtil
 	public static CountingMultiValMap<Long, OsmWay> buildWayTailMap(
 			MultiSet<OsmWay> ways)
 	{
-		CountingMultiValMap<Long, OsmWay> waysNodes = new CountingMultiValMap<Long, OsmWay>();
+		CountingMultiValMap<Long, OsmWay> waysNodes = new CountingMultiValMap<>();
 		for (OsmWay way : ways) {
 			// add all of them to waysNodes. implement iterator correctly...
 			int nnodes = way.getNumberOfNodes();
-			if (nnodes == 0) {
-				logger.debug("zero size list....");
+			if (nnodes < 2) {
+				throw new IllegalArgumentException(
+						"Only ways with 2 or more nodes are allowed");
 			}
 			long node1 = way.getNodeId(0);
 			long nodeN = way.getNodeId(nnodes - 1);
@@ -139,60 +141,58 @@ public class RelationUtil
 	 * For each ring in this collection of rings, check whether it is closed. If
 	 * not, print some status information.
 	 * 
+	 * @param missingEntitiesStrategy
+	 * 
 	 * @return whether all rings are closed.
 	 */
-	public static boolean checkRings(Collection<WayRing> rings,
-			OsmEntityProvider resolver) throws EntityNotFoundException
+	public static void checkRings(Collection<ChainOfWays> rings,
+			OsmEntityProvider resolver,
+			MissingEntitiesStrategy missingEntitiesStrategy)
+			throws EntityNotFoundException
 	{
-		boolean allClosed = true;
-		for (WayRing ring : rings) {
+		for (ChainOfWays ring : rings) {
 			if (ring.isClosed()) {
 				continue;
 			}
-			allClosed = false;
-			List<WayRingSegment> segments = ring.getSegments();
+			List<WaySegment> segments = ring.getSegments();
 			int len = 0;
-			for (WayRingSegment rs : segments) {
+			for (WaySegment rs : segments) {
 				len += rs.getWay().getNumberOfNodes();
 			}
-			WayRingSegment seg0 = segments.get(0);
-			WayRingSegment segN = segments.get(segments.size() - 1);
+			WaySegment seg0 = segments.get(0);
+			WaySegment segN = segments.get(segments.size() - 1);
 			long nodeId1 = seg0.getNodeId(0);
 			long nodeIdN = segN.getNodeId(segN.getNumberOfNodes() - 1);
 
-			OsmNode node1 = resolver.getNode(nodeId1);
-			OsmNode nodeN = resolver.getNode(nodeIdN);
+			try {
+				OsmNode node1 = resolver.getNode(nodeId1);
+				OsmNode nodeN = resolver.getNode(nodeIdN);
 
-			logger.debug("we have an unclosed ring of size " + len);
-			logger.debug(String.format("start/end: %f,%f %f,%f",
-					node1.getLongitude(), node1.getLatitude(),
-					nodeN.getLongitude(), nodeN.getLatitude()));
+				logger.debug("we have an unclosed ring of size " + len);
+				logger.debug(String.format("start/end: %f,%f %f,%f",
+						node1.getLongitude(), node1.getLatitude(),
+						nodeN.getLongitude(), nodeN.getLatitude()));
+			} catch (EntityNotFoundException e) {
+				switch (missingEntitiesStrategy) {
+				case BUILD_PARTIAL:
+					continue;
+				default:
+				case BUILD_EMPTY:
+				case THROW_EXCEPTION:
+					throw (e);
+				}
+			}
 		}
-		return allClosed;
 	}
 
-	public static Set<LinearRing> toLinearRings(Collection<SegmentRing> rings,
-			OsmEntityProvider resolver) throws EntityNotFoundException
+	public static Set<LinearRing> toLinearRings(
+			Collection<ChainOfNodes> rings, OsmEntityProvider resolver)
+			throws EntityNotFoundException
 	{
-		Set<LinearRing> linearRings = new HashSet<LinearRing>();
-		List<SegmentRing> fixedRings = new ArrayList<>();
-		for (SegmentRing ring : rings) {
-			if (!ring.hasEnoughSegments()) {
-				continue;
-			}
-			if (!ring.hasNodeIntersections()) {
-				if (!ring.isClosed()) {
-					continue;
-				}
-				fixedRings.add(ring);
-			} else {
-				logger.debug("has node intersections");
-				List<SegmentRing> newRings = ring.resolveNodeIntersections();
-				fixedRings.addAll(newRings);
-			}
-		}
-		for (SegmentRing ring : fixedRings) {
-			if (!ring.isClosed() || !ring.hasEnoughSegments()) {
+		Set<LinearRing> linearRings = new HashSet<>();
+		for (ChainOfNodes ring : rings) {
+			if (!ring.isValidRing()) {
+				logger.warn("isValidRing() failed for ChainOfSegments, but this point should never be reached");
 				continue;
 			}
 			LinearRing linearRing = ring.toLinearRing(resolver);
@@ -201,41 +201,26 @@ public class RelationUtil
 		return linearRings;
 	}
 
-	public static List<SegmentRing> convertToSegmentRings(List<WayRing> rings)
+	public static List<ChainOfNodes> convertToSegmentRings(
+			List<ChainOfWays> rings)
 	{
-		List<SegmentRing> segmentRings = new ArrayList<>();
-		for (WayRing ring : rings) {
+		List<ChainOfNodes> segmentRings = new ArrayList<>();
+		for (ChainOfWays ring : rings) {
 			segmentRings.add(ring.toSegmentRing());
 		}
 		return segmentRings;
 	}
 
-	public static List<SegmentRing> fixNodeIntersections(List<SegmentRing> rings)
-	{
-		List<SegmentRing> results = new ArrayList<>();
-		for (SegmentRing ring : rings) {
-			results.addAll(fixNodeIntersections(ring));
-		}
-		return results;
-	}
-
-	private static List<SegmentRing> fixNodeIntersections(SegmentRing ring)
-	{
-		List<SegmentRing> results = new ArrayList<>();
-		results.add(ring);
-		return results;
-	}
-
 	public static void closeUnclosedRingWithStraightLine(
-			Collection<WayRing> rings)
+			Collection<ChainOfWays> rings)
 	{
-		for (WayRing ring : rings) {
+		for (ChainOfWays ring : rings) {
 			if (!ring.isClosed()) {
 				logger.debug("unclosed ring with " + ring.getSegments().size()
 						+ " segments");
-				List<WayRingSegment> segments = ring.getSegments();
-				WayRingSegment rs1 = segments.get(0);
-				WayRingSegment rs2 = segments.get(segments.size() - 1);
+				List<WaySegment> segments = ring.getSegments();
+				WaySegment rs1 = segments.get(0);
+				WaySegment rs2 = segments.get(segments.size() - 1);
 
 				long n1 = rs1.getNodeId(0);
 				long n2 = rs2.getNodeId(rs2.getNumberOfNodes() - 1);
@@ -245,6 +230,25 @@ public class RelationUtil
 				ids.add(n2);
 				OsmWay filler = new Way(0L, ids);
 				ring.addWay(filler);
+			}
+		}
+	}
+
+	public static void convertToSegmentChainsAndResolveNodeIntersections(
+			List<ChainOfWays> chains, List<ChainOfNodes> outNoIntersections,
+			List<ChainOfNodes> outRings, List<ChainOfNodes> outNonRings)
+	{
+		for (ChainOfNodes s : RelationUtil.convertToSegmentRings(chains)) {
+			if (!s.hasNodeIntersections()) {
+				outNoIntersections.add(s);
+			} else {
+				for (ChainOfNodes t : s.resolveNodeIntersections()) {
+					if (t.isValidRing()) {
+						outRings.add(t);
+					} else if (t.getLength() > 1) {
+						outNonRings.add(t);
+					}
+				}
 			}
 		}
 	}

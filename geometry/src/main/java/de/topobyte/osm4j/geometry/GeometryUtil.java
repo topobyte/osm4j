@@ -17,11 +17,19 @@
 
 package de.topobyte.osm4j.geometry;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.GeometryCollection;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LineString;
+import com.vividsolutions.jts.geom.MultiPolygon;
 import com.vividsolutions.jts.geom.Point;
+
+import de.topobyte.osm4j.core.model.iface.OsmNode;
 
 public class GeometryUtil
 {
@@ -41,9 +49,37 @@ public class GeometryUtil
 		} else {
 			Geometry points = points(coordinates, factory);
 			Geometry lines = lines(lineStrings, factory);
-			return factory.createGeometryCollection(new Geometry[] { points,
-					lines });
+			return createGeometryCollection(factory, points, lines);
 		}
+	}
+
+	public static Geometry createGeometry(Coordinate[] coordinates,
+			LineString[] lineStrings, MultiPolygon multiPolygon,
+			GeometryFactory factory)
+	{
+		int numPoints = coordinates.length;
+		int numLines = lineStrings.length;
+
+		if (numPoints == 0 && numLines == 0) {
+			return multiPolygon;
+		} else if (numPoints == 0) {
+			return createGeometryCollection(factory, multiPolygon,
+					lines(lineStrings, factory));
+		} else if (numLines == 0) {
+			return createGeometryCollection(factory, multiPolygon,
+					points(coordinates, factory));
+		} else {
+			Geometry points = points(coordinates, factory);
+			Geometry lines = lines(lineStrings, factory);
+			return createGeometryCollection(factory, multiPolygon, lines,
+					points);
+		}
+	}
+
+	public static GeometryCollection createGeometryCollection(
+			GeometryFactory factory, Geometry... parts)
+	{
+		return factory.createGeometryCollection(parts);
 	}
 
 	public static Geometry points(Coordinate[] coordinates,
@@ -62,6 +98,16 @@ public class GeometryUtil
 			return lineStrings[0];
 		}
 		return factory.createMultiLineString(lineStrings);
+	}
+
+	public static List<Coordinate> buildNodes(NodeBuilder nodeBuilder,
+			Collection<OsmNode> nodes)
+	{
+		List<Coordinate> coords = new ArrayList<>();
+		for (OsmNode node : nodes) {
+			coords.add(nodeBuilder.buildCoordinate(node));
+		}
+		return coords;
 	}
 
 }

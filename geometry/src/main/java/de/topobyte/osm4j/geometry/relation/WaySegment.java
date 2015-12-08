@@ -22,15 +22,15 @@ import org.slf4j.LoggerFactory;
 
 import de.topobyte.osm4j.core.model.iface.OsmWay;
 
-public class WayRingSegment
+public class WaySegment
 {
 
-	final static Logger logger = LoggerFactory.getLogger(WayRingSegment.class);
+	final static Logger logger = LoggerFactory.getLogger(WaySegment.class);
 
 	private OsmWay way;
 	private boolean reverse;
 
-	public WayRingSegment(OsmWay way, boolean reverse)
+	public WaySegment(OsmWay way, boolean reverse)
 	{
 		this.way = way;
 		this.reverse = reverse;
@@ -49,8 +49,8 @@ public class WayRingSegment
 	@Override
 	public boolean equals(Object o)
 	{
-		if (o instanceof WayRingSegment) {
-			WayRingSegment other = (WayRingSegment) o;
+		if (o instanceof WaySegment) {
+			WaySegment other = (WaySegment) o;
 			return other.getWay().equals(way);
 		}
 		return false;

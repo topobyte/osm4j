@@ -20,7 +20,6 @@ package de.topobyte.osm4j.geometry;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.MultiPolygon;
 import com.vividsolutions.jts.geom.Point;
 
 import de.topobyte.osm4j.core.model.iface.OsmNode;
@@ -102,7 +101,7 @@ public class GeometryBuilder
 	 * @throws EntityNotFoundException
 	 *             when a required entity cannot be obtained.
 	 */
-	public MultiPolygon build(OsmRelation relation, OsmEntityProvider resolver)
+	public Geometry build(OsmRelation relation, OsmEntityProvider resolver)
 			throws EntityNotFoundException
 	{
 		return regionBuilder.build(relation, resolver);

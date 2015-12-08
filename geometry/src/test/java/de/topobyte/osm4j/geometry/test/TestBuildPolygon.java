@@ -31,7 +31,7 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.xml.sax.SAXException;
 
-import com.vividsolutions.jts.geom.MultiPolygon;
+import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.io.WKTWriter;
 
 import de.topobyte.osm4j.core.access.OsmIterator;
@@ -74,7 +74,7 @@ public class TestBuildPolygon
 		File file = new File(outputDir, filename);
 
 		GeometryBuilder geometryBuilder = new GeometryBuilder();
-		MultiPolygon polygon = geometryBuilder.build(relation, data);
+		Geometry polygon = geometryBuilder.build(relation, data);
 		WKTWriter writer = new WKTWriter();
 		FileWriter fileWriter = new FileWriter(file);
 		writer.write(polygon, fileWriter);

@@ -43,7 +43,7 @@ public class RelationBuilder
 
 	private GeometryFactory factory;
 
-	private GeometryBuilder geometryBuilder;
+	private NodeBuilder nodeBuilder;
 	private WayBuilder wayBuilder;
 
 	private MissingEntitiesStrategy missingEntitiesStrategy = MissingEntitiesStrategy.THROW_EXCEPTION;
@@ -53,7 +53,7 @@ public class RelationBuilder
 	public RelationBuilder(GeometryFactory factory)
 	{
 		this.factory = factory;
-		geometryBuilder = new GeometryBuilder(factory);
+		nodeBuilder = new NodeBuilder(factory);
 	}
 
 	public boolean isLog()
@@ -148,10 +148,7 @@ public class RelationBuilder
 	{
 		wayBuilder.setMissingEntitesStrategy(missingEntitiesStrategy);
 
-		List<Coordinate> coords = new ArrayList<>();
-		for (OsmNode node : nodes) {
-			coords.add(geometryBuilder.buildCoordinate(node));
-		}
+		List<Coordinate> coords = GeometryUtil.buildNodes(nodeBuilder, nodes);
 
 		List<Geometry> lines = new ArrayList<>();
 		for (OsmWay way : ways) {

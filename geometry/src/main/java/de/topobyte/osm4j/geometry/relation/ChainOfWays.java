@@ -39,22 +39,26 @@ import de.topobyte.osm4j.core.resolve.OsmEntityProvider;
 /*
  * A structure for building rings consisting of a chain of ways.
  */
-public class WayRing
+public class ChainOfWays
 {
 
 	private static GeometryFactory factory = new GeometryFactory();
 
-	private List<WayRingSegment> segments;
+	private List<WaySegment> segments;
 	private Set<OsmWay> waySet;
 	private long first;
 	private long last;
 	private boolean closed = false;
 
-	public WayRing(OsmWay way)
+	public ChainOfWays(OsmWay way)
 	{
-		segments = new ArrayList<WayRingSegment>();
-		waySet = new HashSet<OsmWay>();
-		segments.add(new WayRingSegment(way, false));
+		if (way.getNumberOfNodes() < 2) {
+			throw new IllegalArgumentException(
+					"Only ways with 2 or more nodes are allowed");
+		}
+		segments = new ArrayList<>();
+		waySet = new HashSet<>();
+		segments.add(new WaySegment(way, false));
 		waySet.add(way);
 
 		first = way.getNodeId(0);
@@ -66,16 +70,12 @@ public class WayRing
 	 * The WayRing is valid, iff it is closed and has either none or at least 4
 	 * points (the last one equals the first one).
 	 */
-	public boolean isValid()
+	public boolean isValidRing()
 	{
 		if (!closed) {
 			return false;
 		}
-		int len = 0;
-		for (WayRingSegment segment : segments) {
-			len += segment.getWay().getNumberOfNodes();
-		}
-		return len == 0 || len >= 4;
+		return lengthIsZero() || !lengthIsLessThan(4);
 	}
 
 	/*
@@ -85,6 +85,10 @@ public class WayRing
 	 */
 	public void addWay(OsmWay way)
 	{
+		if (way.getNumberOfNodes() < 2) {
+			throw new IllegalArgumentException(
+					"Only ways with 2 or more nodes are allowed");
+		}
 		long id0 = way.getNodeId(0);
 		long idN = way.getNodeId(way.getNumberOfNodes() - 1);
 		boolean reverse = false;
@@ -103,7 +107,7 @@ public class WayRing
 			// System.out.println("case " + 3);
 			first = id0;
 		}
-		segments.add(new WayRingSegment(way, reverse));
+		segments.add(new WaySegment(way, reverse));
 		waySet.add(way);
 		if (first == last) {
 			closed = true;
@@ -125,7 +129,7 @@ public class WayRing
 		return closed;
 	}
 
-	public List<WayRingSegment> getSegments()
+	public List<WaySegment> getSegments()
 	{
 		return segments;
 	}
@@ -158,13 +162,41 @@ public class WayRing
 		return shell;
 	}
 
-	private int getLength()
+	public int getLength()
+	{
+		if (segments.isEmpty()) {
+			return 0;
+		}
+		return getLengthNonEmpty();
+	}
+
+	private int getLengthNonEmpty()
 	{
 		int len = 1;
-		for (WayRingSegment segment : segments) {
+		for (WaySegment segment : segments) {
 			len += segment.getWay().getNumberOfNodes() - 1;
 		}
 		return len;
+	}
+
+	private boolean lengthIsZero()
+	{
+		return segments.isEmpty();
+	}
+
+	private boolean lengthIsLessThan(int maxLen)
+	{
+		if (segments.isEmpty()) {
+			return true;
+		}
+		int len = 1;
+		for (WaySegment segment : segments) {
+			len += segment.getWay().getNumberOfNodes() - 1;
+			if (len >= maxLen) {
+				return false;
+			}
+		}
+		return len < maxLen;
 	}
 
 	private CoordinateSequence toCoordinateSequence(OsmEntityProvider resolver)
@@ -177,7 +209,7 @@ public class WayRing
 
 		int n = 0;
 		for (int i = 0; i < segments.size(); i++) {
-			WayRingSegment segment = segments.get(i);
+			WaySegment segment = segments.get(i);
 			OsmWay way = segment.getWay();
 			for (int k = 0; k < way.getNumberOfNodes(); k++) {
 				if (k > 0 || i == 0) {
@@ -192,21 +224,18 @@ public class WayRing
 		return points;
 	}
 
-	public SegmentRing toSegmentRing()
+	public ChainOfNodes toSegmentRing()
 	{
 		if (segments.isEmpty()) {
-			return new SegmentRing(new TLongArrayList());
+			return new ChainOfNodes(new TLongArrayList());
 		}
 
-		int len = 1;
-		for (WayRingSegment segment : segments) {
-			len += segment.getWay().getNumberOfNodes() - 1;
-		}
+		int len = getLengthNonEmpty();
 
 		TLongList ids = new TLongArrayList(len);
 
 		for (int i = 0; i < segments.size(); i++) {
-			WayRingSegment segment = segments.get(i);
+			WaySegment segment = segments.get(i);
 			OsmWay way = segment.getWay();
 			for (int k = 0; k < way.getNumberOfNodes(); k++) {
 				if (k > 0 || i == 0) {
@@ -215,7 +244,7 @@ public class WayRing
 			}
 		}
 
-		return new SegmentRing(ids);
+		return new ChainOfNodes(ids);
 	}
 
 }
