@@ -32,12 +32,8 @@ import org.slf4j.LoggerFactory;
 import com.vividsolutions.jts.geom.LinearRing;
 
 import de.topobyte.adt.multicollections.CountingMultiValMap;
-import de.topobyte.adt.multicollections.HashMultiSet;
 import de.topobyte.adt.multicollections.MultiSet;
-import de.topobyte.osm4j.core.model.iface.EntityType;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
-import de.topobyte.osm4j.core.model.iface.OsmRelation;
-import de.topobyte.osm4j.core.model.iface.OsmRelationMember;
 import de.topobyte.osm4j.core.model.iface.OsmWay;
 import de.topobyte.osm4j.core.model.impl.Way;
 import de.topobyte.osm4j.core.resolve.EntityNotFoundException;
@@ -47,94 +43,6 @@ public class RelationUtil
 {
 
 	final static Logger logger = LoggerFactory.getLogger(RelationUtil.class);
-
-	/**
-	 * Given a relation find all referenced relations. Recursively repeat until
-	 * no more relations are found. Return a set containing all these relations
-	 * (including the original one) TODO: this version is only using
-	 * child-regions one level nested
-	 */
-	public static Set<OsmRelation> gatherRelations(OsmRelation relation,
-			OsmEntityProvider resolver)
-	{
-		HashSet<OsmRelation> set = new HashSet<OsmRelation>();
-		set.add(relation);
-		for (int i = 0; i < relation.getNumberOfMembers(); i++) {
-			OsmRelationMember member = relation.getMember(i);
-			if (member.getType() == EntityType.Relation) {
-				try {
-					OsmRelation childRelation = resolver.getRelation(member
-							.getId());
-					if (childRelation == null) {
-						logger.warn("unable to find child region");
-						continue;
-					}
-					set.add(childRelation);
-				} catch (EntityNotFoundException e) {
-					logger.warn("unable to find child region");
-				}
-			}
-		}
-		return set;
-	}
-
-	/**
-	 * Gather all ways referenced by this set of relations.
-	 */
-	public static MultiSet<OsmWay> gatherWays(Set<OsmRelation> relations,
-			OsmEntityProvider resolver)
-	{
-		MultiSet<OsmWay> ways = new HashMultiSet<OsmWay>();
-		for (OsmRelation relation : relations) {
-			ways.putAll(gatherWays(relation, resolver));
-		}
-		return ways;
-	}
-
-	/**
-	 * Gather all ways referenced by this relation.
-	 */
-	public static Set<OsmWay> gatherWays(OsmRelation relation,
-			OsmEntityProvider resolver)
-	{
-		Set<OsmWay> ways = new HashSet<OsmWay>();
-		for (int i = 0; i < relation.getNumberOfMembers(); i++) {
-			OsmRelationMember member = relation.getMember(i);
-			if (member.getType() == EntityType.Way) {
-				try {
-					OsmWay way = resolver.getWay(member.getId());
-					ways.add(way);
-				} catch (EntityNotFoundException e) {
-					logger.debug("way not found");
-				}
-			}
-		}
-		return ways;
-	}
-
-	public static Set<OsmNode> gatherNodes(Set<OsmWay> ways,
-			OsmEntityProvider resolver)
-	{
-		Set<OsmNode> nodes = new HashSet<>();
-		for (OsmWay way : ways) {
-			nodes.addAll(gatherNodes(way, resolver));
-		}
-		return nodes;
-	}
-
-	public static Set<OsmNode> gatherNodes(OsmWay way,
-			OsmEntityProvider resolver)
-	{
-		Set<OsmNode> nodes = new HashSet<>();
-		for (int i = 0; i < way.getNumberOfNodes(); i++) {
-			try {
-				nodes.add(resolver.getNode(way.getNodeId(i)));
-			} catch (EntityNotFoundException e) {
-				logger.debug("node not found");
-			}
-		}
-		return nodes;
-	}
 
 	/**
 	 * Given a set of ways and their head's and tail's in the wayTailMap,
@@ -210,7 +118,7 @@ public class RelationUtil
 	 * tail of each way are put as key and the way as value.
 	 */
 	public static CountingMultiValMap<Long, OsmWay> buildWayTailMap(
-			MultiSet<OsmWay> ways) throws EntityNotFoundException
+			MultiSet<OsmWay> ways)
 	{
 		CountingMultiValMap<Long, OsmWay> waysNodes = new CountingMultiValMap<Long, OsmWay>();
 		for (OsmWay way : ways) {

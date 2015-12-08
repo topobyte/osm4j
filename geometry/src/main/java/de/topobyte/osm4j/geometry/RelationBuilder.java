@@ -25,11 +25,9 @@ import java.util.Set;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.GeometryCollection;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LineString;
-import com.vividsolutions.jts.geom.MultiLineString;
-import com.vividsolutions.jts.geom.MultiPoint;
+import com.vividsolutions.jts.geom.Point;
 
 import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.osm4j.core.model.iface.OsmRelation;
@@ -43,66 +41,134 @@ import de.topobyte.osm4j.core.resolve.OsmEntityProvider;
 public class RelationBuilder
 {
 
-	private GeometryBuilder geometryBuilder = new GeometryBuilder();
+	private GeometryFactory factory;
+
+	private GeometryBuilder geometryBuilder;
+	private WayBuilder wayBuilder;
+
+	private MissingEntitiesStrategy missingEntitiesStrategy = MissingEntitiesStrategy.THROW_EXCEPTION;
+	private boolean log = false;
+	private LogLevel logLevel = LogLevel.WARN;
+
+	public RelationBuilder(GeometryFactory factory)
+	{
+		this.factory = factory;
+		geometryBuilder = new GeometryBuilder(factory);
+	}
+
+	public boolean isLog()
+	{
+		return log;
+	}
+
+	public void setLog(boolean log)
+	{
+		this.log = log;
+	}
+
+	public LogLevel getLogLevel()
+	{
+		return logLevel;
+	}
+
+	public void setLogLevel(LogLevel logLevel)
+	{
+		this.logLevel = logLevel;
+	}
+
+	public MissingEntitiesStrategy getMissingEntitiesStrategy()
+	{
+		return missingEntitiesStrategy;
+	}
+
+	public void setMissingEntitesStrategy(
+			MissingEntitiesStrategy missingEntitesStrategy)
+	{
+		this.missingEntitiesStrategy = missingEntitesStrategy;
+	}
 
 	public Geometry buildPointsAndLines(OsmRelation relation,
-			OsmEntityProvider provider)
+			OsmEntityProvider provider) throws EntityNotFoundException
 	{
-		EntityFinder finder = EntityFinders.create(provider,
-				EntityNotFoundStrategy.IGNORE);
+		EntityNotFoundStrategy enfs = Util.strategy(missingEntitiesStrategy,
+				log, logLevel);
+
+		EntityFinder finder = EntityFinders.create(provider, enfs);
 		Set<OsmNode> nodes = new HashSet<>();
 		Set<OsmWay> ways = new HashSet<>();
 		try {
 			finder.findMemberNodesAndWays(relation, nodes, ways);
 		} catch (EntityNotFoundException e) {
-			// Can't happen because we're using the IGNORE strategy
+			switch (missingEntitiesStrategy) {
+			default:
+			case THROW_EXCEPTION:
+				throw (e);
+			case BUILD_EMPTY:
+				return newEmptyPoint();
+			case BUILD_PARTIAL:
+				// Can't happen, because we're using the IGNORE strategy in this
+				// case
+				break;
+			}
 		}
 
 		return buildPointsAndLines(nodes, ways, provider);
 	}
 
-	public GeometryCollection buildPointsAndLines(
-			Collection<OsmRelation> relations, OsmEntityProvider provider)
+	public Geometry buildPointsAndLines(Collection<OsmRelation> relations,
+			OsmEntityProvider provider) throws EntityNotFoundException
 	{
-		EntityFinder finder = EntityFinders.create(provider,
-				EntityNotFoundStrategy.IGNORE);
+		EntityNotFoundStrategy enfs = Util.strategy(missingEntitiesStrategy,
+				log, logLevel);
+
+		EntityFinder finder = EntityFinders.create(provider, enfs);
 		Set<OsmNode> nodes = new HashSet<>();
 		Set<OsmWay> ways = new HashSet<>();
 		try {
 			finder.findMemberNodesAndWays(relations, nodes, ways);
 		} catch (EntityNotFoundException e) {
-			// Can't happen because we're using the IGNORE strategy
+			switch (missingEntitiesStrategy) {
+			default:
+			case THROW_EXCEPTION:
+				throw (e);
+			case BUILD_EMPTY:
+				return newEmptyPoint();
+			case BUILD_PARTIAL:
+				// Can't happen, because we're using the IGNORE strategy in this
+				// case
+				break;
+			}
 		}
 
 		return buildPointsAndLines(nodes, ways, provider);
 	}
 
-	private GeometryCollection buildPointsAndLines(Set<OsmNode> nodes,
-			Set<OsmWay> ways, OsmEntityProvider provider)
+	private Geometry buildPointsAndLines(Set<OsmNode> nodes, Set<OsmWay> ways,
+			OsmEntityProvider provider) throws EntityNotFoundException
 	{
+		wayBuilder.setMissingEntitesStrategy(missingEntitiesStrategy);
+
 		List<Coordinate> coords = new ArrayList<>();
 		for (OsmNode node : nodes) {
 			coords.add(geometryBuilder.buildCoordinate(node));
 		}
 
-		List<LineString> lines = new ArrayList<>();
+		List<Geometry> lines = new ArrayList<>();
 		for (OsmWay way : ways) {
-			try {
-				lines.add(geometryBuilder.build(way, provider));
-			} catch (EntityNotFoundException e) {
-				// TODO: we need an IGNORE strategy for the GeometryBuilder
+			Geometry line = wayBuilder.build(way, provider);
+			if (!line.isEmpty()) {
+				lines.add(line);
 			}
 		}
 
-		GeometryFactory f = new GeometryFactory();
+		Coordinate[] cs = coords.toArray(new Coordinate[0]);
+		LineString[] ls = lines.toArray(new LineString[0]);
+		return GeometryUtil.createGeometry(cs, ls, factory);
+	}
 
-		MultiPoint multiPoint = f.createMultiPoint(coords
-				.toArray(new Coordinate[0]));
-		MultiLineString multiLine = f.createMultiLineString(lines
-				.toArray(new LineString[0]));
-
-		return f.createGeometryCollection(new Geometry[] { multiPoint,
-				multiLine });
+	private Point newEmptyPoint()
+	{
+		return new Point(null, factory);
 	}
 
 }

@@ -18,8 +18,8 @@
 package de.topobyte.osm4j.geometry;
 
 import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.MultiPolygon;
 import com.vividsolutions.jts.geom.Point;
 
@@ -35,9 +35,24 @@ import de.topobyte.osm4j.core.resolve.OsmEntityProvider;
 public class GeometryBuilder
 {
 
-	private GeometryFactory factory = new GeometryFactory();
-	private PolylineBuilder polylineBuilder = new PolylineBuilder();
-	private RegionBuilder regionBuilder = new RegionBuilder();
+	private GeometryFactory factory;
+
+	private NodeBuilder nodeBuilder;
+	private WayBuilder polylineBuilder;
+	private RegionBuilder regionBuilder;
+
+	public GeometryBuilder()
+	{
+		this(new GeometryFactory());
+	}
+
+	public GeometryBuilder(GeometryFactory factory)
+	{
+		this.factory = factory;
+		nodeBuilder = new NodeBuilder(factory);
+		polylineBuilder = new WayBuilder(factory);
+		regionBuilder = new RegionBuilder(factory);
+	}
 
 	/**
 	 * Build a Coordinate from the given node.
@@ -48,9 +63,7 @@ public class GeometryBuilder
 	 */
 	public Coordinate buildCoordinate(OsmNode node)
 	{
-		double lon = node.getLongitude();
-		double lat = node.getLatitude();
-		return new Coordinate(lon, lat);
+		return nodeBuilder.buildCoordinate(node);
 	}
 
 	/**
@@ -62,7 +75,7 @@ public class GeometryBuilder
 	 */
 	public Point build(OsmNode node)
 	{
-		return factory.createPoint(buildCoordinate(node));
+		return nodeBuilder.build(node);
 	}
 
 	/**
@@ -74,10 +87,10 @@ public class GeometryBuilder
 	 * @throws EntityNotFoundException
 	 *             if a node cannot be resolved.
 	 */
-	public LineString build(OsmWay way, OsmEntityProvider resolver)
+	public Geometry build(OsmWay way, OsmEntityProvider resolver)
 			throws EntityNotFoundException
 	{
-		return polylineBuilder.build(way, resolver);
+		return polylineBuilder.buildThrowExceptionIfNodeMissing(way, resolver);
 	}
 
 	/**
