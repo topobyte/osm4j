@@ -179,11 +179,9 @@ public class WayRing
 		for (int i = 0; i < segments.size(); i++) {
 			WayRingSegment segment = segments.get(i);
 			OsmWay way = segment.getWay();
-			int nnodes = way.getNumberOfNodes();
 			for (int k = 0; k < way.getNumberOfNodes(); k++) {
 				if (k > 0 || i == 0) {
-					int p = segment.isReverse() ? nnodes - k - 1 : k;
-					OsmNode node = resolver.getNode(way.getNodeId(p));
+					OsmNode node = resolver.getNode(segment.getNodeId(k));
 					points.setOrdinate(n, 0, node.getLongitude());
 					points.setOrdinate(n, 1, node.getLatitude());
 					n++;
@@ -210,11 +208,9 @@ public class WayRing
 		for (int i = 0; i < segments.size(); i++) {
 			WayRingSegment segment = segments.get(i);
 			OsmWay way = segment.getWay();
-			int nnodes = way.getNumberOfNodes();
 			for (int k = 0; k < way.getNumberOfNodes(); k++) {
 				if (k > 0 || i == 0) {
-					int p = segment.isReverse() ? nnodes - k - 1 : k;
-					ids.add(way.getNodeId(p));
+					ids.add(segment.getNodeId(k));
 				}
 			}
 		}

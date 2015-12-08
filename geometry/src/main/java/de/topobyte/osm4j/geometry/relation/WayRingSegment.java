@@ -62,4 +62,18 @@ public class WayRingSegment
 		return (int) way.getId();
 	}
 
+	public int getNumberOfNodes()
+	{
+		return way.getNumberOfNodes();
+	}
+
+	public long getNodeId(int n)
+	{
+		if (!reverse) {
+			return way.getNodeId(n);
+		} else {
+			return way.getNodeId(way.getNumberOfNodes() - 1 - n);
+		}
+	}
+
 }

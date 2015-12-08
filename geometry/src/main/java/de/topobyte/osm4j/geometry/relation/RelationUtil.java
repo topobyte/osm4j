@@ -157,16 +157,8 @@ public class RelationUtil
 			}
 			WayRingSegment seg0 = segments.get(0);
 			WayRingSegment segN = segments.get(segments.size() - 1);
-			long nodeId1 = seg0
-					.getWay()
-					.getNodeId(
-							seg0.isReverse() ? seg0.getWay().getNumberOfNodes() - 1
-									: 0);
-			long nodeIdN = segN
-					.getWay()
-					.getNodeId(
-							segN.isReverse() ? segN.getWay().getNumberOfNodes() - 1
-									: 0);
+			long nodeId1 = seg0.getNodeId(0);
+			long nodeIdN = segN.getNodeId(segN.getNumberOfNodes() - 1);
 
 			OsmNode node1 = resolver.getNode(nodeId1);
 			OsmNode nodeN = resolver.getNode(nodeIdN);
@@ -244,12 +236,10 @@ public class RelationUtil
 				List<WayRingSegment> segments = ring.getSegments();
 				WayRingSegment rs1 = segments.get(0);
 				WayRingSegment rs2 = segments.get(segments.size() - 1);
-				long n1 = rs1.getWay().getNodeId(
-						rs1.isReverse() ? rs1.getWay().getNumberOfNodes() - 1
-								: 0);
-				long n2 = rs2.getWay().getNodeId(
-						rs2.isReverse() ? 0
-								: rs2.getWay().getNumberOfNodes() - 1);
+
+				long n1 = rs1.getNodeId(0);
+				long n2 = rs2.getNodeId(rs2.getNumberOfNodes() - 1);
+
 				TLongArrayList ids = new TLongArrayList();
 				ids.add(n1);
 				ids.add(n2);
