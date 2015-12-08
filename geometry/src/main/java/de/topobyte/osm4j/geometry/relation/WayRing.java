@@ -50,7 +50,7 @@ public class WayRing
 	private long last;
 	private boolean closed = false;
 
-	public WayRing(OsmWay way) throws EntityNotFoundException
+	public WayRing(OsmWay way)
 	{
 		segments = new ArrayList<WayRingSegment>();
 		waySet = new HashSet<OsmWay>();

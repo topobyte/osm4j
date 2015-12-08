@@ -142,7 +142,6 @@ public class RelationUtil
 	 */
 	public static List<WayRing> buildRings(MultiSet<OsmWay> ways,
 			CountingMultiValMap<Long, OsmWay> wayTailMap)
-			throws EntityNotFoundException
 	{
 		List<WayRing> rings = new ArrayList<WayRing>();
 
