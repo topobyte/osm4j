@@ -33,6 +33,7 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import de.topobyte.adt.multicollections.MultiSet;
 import de.topobyte.osm4j.core.model.iface.EntityType;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.osm4j.core.model.iface.OsmRelation;
@@ -174,6 +175,21 @@ public abstract class EntityFinderLogMissing extends AbstractEntityFinder
 				addMember(member, null, outWays, null, entityProvider);
 			} catch (EntityNotFoundException e) {
 				logMemberNotFound(relation, member);
+			}
+		}
+	}
+
+	@Override
+	public void findMemberWays(OsmRelation relation, MultiSet<OsmWay> outWays)
+			throws EntityNotFoundException
+	{
+		for (OsmRelationMember member : OsmModelUtil.membersAsList(relation)) {
+			if (member.getType() == EntityType.Way) {
+				try {
+					outWays.put(entityProvider.getWay(member.getId()));
+				} catch (EntityNotFoundException e) {
+					logMemberNotFound(relation, member);
+				}
 			}
 		}
 	}

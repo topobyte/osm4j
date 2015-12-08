@@ -23,6 +23,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
+import de.topobyte.adt.multicollections.MultiSet;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.osm4j.core.model.iface.OsmRelation;
 import de.topobyte.osm4j.core.model.iface.OsmWay;
@@ -56,6 +57,12 @@ public interface EntityFinder
 
 	public void findMemberWays(Collection<OsmRelation> relations,
 			Set<OsmWay> outWays) throws EntityNotFoundException;
+
+	public void findMemberWays(OsmRelation relation, MultiSet<OsmWay> outWays)
+			throws EntityNotFoundException;
+
+	public void findMemberWays(Collection<OsmRelation> relations,
+			MultiSet<OsmWay> outWays) throws EntityNotFoundException;
 
 	public void findMemberRelations(OsmRelation relation,
 			Set<OsmRelation> outRelations) throws EntityNotFoundException;

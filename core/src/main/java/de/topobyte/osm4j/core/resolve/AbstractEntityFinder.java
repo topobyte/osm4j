@@ -20,6 +20,7 @@ package de.topobyte.osm4j.core.resolve;
 import java.util.Collection;
 import java.util.Set;
 
+import de.topobyte.adt.multicollections.MultiSet;
 import de.topobyte.osm4j.core.model.iface.EntityType;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.osm4j.core.model.iface.OsmRelation;
@@ -50,6 +51,15 @@ public abstract class AbstractEntityFinder implements EntityFinder
 	@Override
 	public void findMemberWays(Collection<OsmRelation> relations,
 			Set<OsmWay> outWays) throws EntityNotFoundException
+	{
+		for (OsmRelation relation : relations) {
+			findMemberWays(relation, outWays);
+		}
+	}
+
+	@Override
+	public void findMemberWays(Collection<OsmRelation> relations,
+			MultiSet<OsmWay> outWays) throws EntityNotFoundException
 	{
 		for (OsmRelation relation : relations) {
 			findMemberWays(relation, outWays);

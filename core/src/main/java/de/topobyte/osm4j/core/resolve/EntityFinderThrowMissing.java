@@ -30,6 +30,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import de.topobyte.adt.multicollections.MultiSet;
 import de.topobyte.osm4j.core.model.iface.EntityType;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.osm4j.core.model.iface.OsmRelation;
@@ -107,6 +108,17 @@ public class EntityFinderThrowMissing extends AbstractEntityFinder
 	{
 		for (OsmRelationMember member : OsmModelUtil.membersAsList(relation)) {
 			addMember(member, null, outWays, null, entityProvider);
+		}
+	}
+
+	@Override
+	public void findMemberWays(OsmRelation relation, MultiSet<OsmWay> outWays)
+			throws EntityNotFoundException
+	{
+		for (OsmRelationMember member : OsmModelUtil.membersAsList(relation)) {
+			if (member.getType() == EntityType.Way) {
+				outWays.put(entityProvider.getWay(member.getId()));
+			}
 		}
 	}
 
