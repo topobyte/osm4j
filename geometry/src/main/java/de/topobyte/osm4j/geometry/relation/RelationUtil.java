@@ -21,15 +21,12 @@ import gnu.trove.list.array.TLongArrayList;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.vividsolutions.jts.geom.LinearRing;
 
 import de.topobyte.adt.multicollections.CountingMultiValMap;
 import de.topobyte.adt.multicollections.MultiSet;
@@ -183,22 +180,6 @@ public class RelationUtil
 				}
 			}
 		}
-	}
-
-	public static Set<LinearRing> toLinearRings(
-			Collection<ChainOfNodes> rings, OsmEntityProvider resolver)
-			throws EntityNotFoundException
-	{
-		Set<LinearRing> linearRings = new HashSet<>();
-		for (ChainOfNodes ring : rings) {
-			if (!ring.isValidRing()) {
-				logger.warn("isValidRing() failed for ChainOfSegments, but this point should never be reached");
-				continue;
-			}
-			LinearRing linearRing = ring.toLinearRing(resolver);
-			linearRings.add(linearRing);
-		}
-		return linearRings;
 	}
 
 	public static List<ChainOfNodes> convertToSegmentRings(

@@ -22,9 +22,7 @@ import java.util.List;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.CoordinateSequence;
-import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.LineString;
 
 class CoordinateSequencesBuilder
 {
@@ -59,9 +57,11 @@ class CoordinateSequencesBuilder
 		current.add(c);
 	}
 
-	public Geometry createGeometry(GeometryFactory factory,
-			boolean includePuntal)
+	public WayBuilderResult createWayBuilderResult(GeometryFactory factory,
+			boolean includePuntal, boolean closed, boolean firstMissing)
 	{
+		WayBuilderResult result = new WayBuilderResult();
+
 		int numPoints = 0;
 		int numLines = 0;
 		for (int i = 0; i < results.size(); i++) {
@@ -73,23 +73,62 @@ class CoordinateSequencesBuilder
 			}
 		}
 
-		Coordinate[] points = new Coordinate[numPoints];
-		LineString[] lineStrings = new LineString[numLines];
-
-		int indexPoints = 0;
-		int indexLines = 0;
-
-		for (List<Coordinate> coords : results) {
-			if (coords.size() == 1) {
-				points[indexPoints++] = coords.get(0);
-			} else {
-				CoordinateSequence cs = factory.getCoordinateSequenceFactory()
-						.create(coords.toArray(new Coordinate[0]));
-				lineStrings[indexLines++] = factory.createLineString(cs);
+		// If the input way is closed, the first coordinate is not missing and
+		// there have been no gaps (only one line constructed), then we try to
+		// create a linear ring instead of a line string.
+		if (closed && !firstMissing && numPoints == 0 && numLines == 1) {
+			List<Coordinate> coords = results.get(0);
+			if (coords.size() > 3) {
+				result.setLinearRing(factory.createLinearRing(coords
+						.toArray(new Coordinate[0])));
+				return result;
 			}
 		}
 
-		return GeometryUtil.createGeometry(points, lineStrings, factory);
+		// Indices to the first and last list of coordinates.
+		int first = 0;
+		int last = results.size() - 1;
+
+		// If the input way is closed and the first coordinate is not missing,
+		// combine the first and the last chain of coordinates to a single
+		// segment without the common coordinate repeated.
+		if (closed && !firstMissing) {
+			List<Coordinate> coords = new ArrayList<>();
+			List<Coordinate> c1 = results.get(first);
+			List<Coordinate> c2 = results.get(last);
+			coords.addAll(c2);
+			coords.addAll(c1.subList(1, c1.size()));
+
+			result.setLinearRing(factory.createLinearRing(coords
+					.toArray(new Coordinate[0])));
+
+			first++;
+			last--;
+
+			if (c1.size() == 1) {
+				numPoints--;
+			} else {
+				numLines--;
+			}
+			if (c2.size() == 1) {
+				numPoints--;
+			} else {
+				numLines--;
+			}
+		}
+
+		for (int i = first; i <= last; i++) {
+			List<Coordinate> coords = results.get(i);
+			if (coords.size() == 1) {
+				result.getCoordinates().add(coords.get(0));
+			} else {
+				CoordinateSequence cs = factory.getCoordinateSequenceFactory()
+						.create(coords.toArray(new Coordinate[0]));
+				result.getLineStrings().add(factory.createLineString(cs));
+			}
+		}
+
+		return result;
 	}
 
 }

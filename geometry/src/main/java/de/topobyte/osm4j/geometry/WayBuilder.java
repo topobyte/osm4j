@@ -17,19 +17,11 @@
 
 package de.topobyte.osm4j.geometry;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.CoordinateSequence;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LineString;
 
-import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.osm4j.core.model.iface.OsmWay;
 import de.topobyte.osm4j.core.resolve.EntityNotFoundException;
 import de.topobyte.osm4j.core.resolve.OsmEntityProvider;
@@ -37,71 +29,17 @@ import de.topobyte.osm4j.core.resolve.OsmEntityProvider;
 /**
  * @author Sebastian Kuerten (sebastian@topobyte.de)
  */
-public class WayBuilder
+public class WayBuilder extends WayGeometryBuilder
 {
-
-	final static Logger logger = LoggerFactory.getLogger(WayBuilder.class);
-
-	private GeometryFactory factory;
-	private NodeBuilder nodeBuilder;
-
-	private MissingEntitiesStrategy missingEntitiesStrategy = MissingEntitiesStrategy.THROW_EXCEPTION;
-	private MissingWayNodeStrategy missingWayNodeStrategy = MissingWayNodeStrategy.OMIT_VERTEX_FROM_POLYLINE;
-	private boolean includePuntal = true;
-	private boolean log = false;
-	private LogLevel logLevel = LogLevel.WARN;
 
 	public WayBuilder()
 	{
-		this(new GeometryFactory());
+		super();
 	}
 
 	public WayBuilder(GeometryFactory factory)
 	{
-		this.factory = factory;
-		nodeBuilder = new NodeBuilder(factory);
-	}
-
-	public MissingEntitiesStrategy getMissingEntitiesStrategy()
-	{
-		return missingEntitiesStrategy;
-	}
-
-	public void setMissingEntitesStrategy(
-			MissingEntitiesStrategy missingEntitesStrategy)
-	{
-		this.missingEntitiesStrategy = missingEntitesStrategy;
-	}
-
-	public MissingWayNodeStrategy getMissingWayNodeStrategy()
-	{
-		return missingWayNodeStrategy;
-	}
-
-	public void setMissingWayNodeStrategy(
-			MissingWayNodeStrategy missingWayNodeStrategy)
-	{
-		this.missingWayNodeStrategy = missingWayNodeStrategy;
-	}
-
-	public boolean isLog()
-	{
-		return log;
-	}
-
-	public void setLog(boolean log)
-	{
-		this.log = log;
-	}
-
-	public LogLevel getLogLevel()
-	{
-		return logLevel;
-	}
-
-	public void setLogLevel(LogLevel logLevel)
-	{
-		this.logLevel = logLevel;
+		super(factory);
 	}
 
 	/**
@@ -116,168 +54,47 @@ public class WayBuilder
 	public Geometry build(OsmWay way, OsmEntityProvider resolver)
 			throws EntityNotFoundException
 	{
-		switch (missingEntitiesStrategy) {
-		default:
-		case THROW_EXCEPTION:
-			return buildThrowExceptionIfNodeMissing(way, resolver);
-		case BUILD_EMPTY:
-			return buildReturnEmptyIfNodeMissing(way, resolver);
-		case BUILD_PARTIAL:
-			switch (missingWayNodeStrategy) {
-			default:
-			case OMIT_VERTEX_FROM_POLYLINE:
-				return buildOmitVertexIfNodeMissing(way, resolver);
-			case SPLIT_POLYLINE:
-				return buildSplitIfNodeMissing(way, resolver);
-			}
-		}
+		WayBuilderResult result = buildResult(way, resolver);
+		return geometry(result);
 	}
 
 	public Geometry buildThrowExceptionIfNodeMissing(OsmWay way,
 			OsmEntityProvider resolver) throws EntityNotFoundException
 	{
-		int numNodes = way.getNumberOfNodes();
-		if (numNodes == 0) {
-			return newEmptyLineString();
-		}
-		if (numNodes == 1) {
-			if (!includePuntal) {
-				return newEmptyLineString();
-			} else {
-				OsmNode node = resolver.getNode(way.getNodeId(0));
-				return nodeBuilder.build(node);
-			}
-		}
-
-		CoordinateSequence cs = factory.getCoordinateSequenceFactory().create(
-				numNodes, 2);
-
-		for (int i = 0; i < way.getNumberOfNodes(); i++) {
-			OsmNode node = resolver.getNode(way.getNodeId(i));
-			cs.setOrdinate(i, 0, node.getLongitude());
-			cs.setOrdinate(i, 1, node.getLatitude());
-		}
-		return factory.createLineString(cs);
+		return geometry(buildResultThrowExceptionIfNodeMissing(way, resolver));
 	}
 
 	public Geometry buildReturnEmptyIfNodeMissing(OsmWay way,
 			OsmEntityProvider resolver)
 	{
-		int numNodes = way.getNumberOfNodes();
-		if (numNodes == 0) {
-			return newEmptyLineString();
-		}
-		if (numNodes == 1) {
-			if (!includePuntal) {
-				return newEmptyLineString();
-			} else {
-				try {
-					OsmNode node = resolver.getNode(way.getNodeId(0));
-					return nodeBuilder.build(node);
-				} catch (EntityNotFoundException e) {
-					return newEmptyLineString();
-				}
-			}
-		}
-
-		CoordinateSequence cs = factory.getCoordinateSequenceFactory().create(
-				numNodes, 2);
-
-		for (int i = 0; i < way.getNumberOfNodes(); i++) {
-			OsmNode node;
-			try {
-				node = resolver.getNode(way.getNodeId(i));
-			} catch (EntityNotFoundException e) {
-				return newEmptyLineString();
-			}
-			cs.setOrdinate(i, 0, node.getLongitude());
-			cs.setOrdinate(i, 1, node.getLatitude());
-		}
-		return factory.createLineString(cs);
+		return geometry(buildResultReturnEmptyIfNodeMissing(way, resolver));
 	}
 
 	public Geometry buildOmitVertexIfNodeMissing(OsmWay way,
 			OsmEntityProvider resolver)
 	{
-		List<Coordinate> coords = new ArrayList<>();
-		for (int i = 0; i < way.getNumberOfNodes(); i++) {
-			OsmNode node;
-			try {
-				node = resolver.getNode(way.getNodeId(i));
-			} catch (EntityNotFoundException e) {
-				if (log) {
-					logMissingNode(way.getNodeId(i));
-				}
-				continue;
-			}
-			coords.add(new Coordinate(node.getLongitude(), node.getLatitude()));
-		}
-
-		if (coords.size() == 0) {
-			return newEmptyLineString();
-		}
-		if (coords.size() == 1) {
-			if (!includePuntal) {
-				return newEmptyLineString();
-			} else {
-				return factory.createPoint(coords.get(0));
-			}
-		}
-
-		CoordinateSequence cs = factory.getCoordinateSequenceFactory().create(
-				coords.toArray(new Coordinate[0]));
-		return factory.createLineString(cs);
+		return geometry(buildResultOmitVertexIfNodeMissing(way, resolver));
 	}
 
 	public Geometry buildSplitIfNodeMissing(OsmWay way,
 			OsmEntityProvider resolver)
 	{
-		CoordinateSequencesBuilder builder = new CoordinateSequencesBuilder();
-		builder.beginNewSequence();
+		return geometry(buildResultSplitIfNodeMissing(way, resolver));
+	}
 
-		for (int i = 0; i < way.getNumberOfNodes(); i++) {
-			OsmNode node;
-			try {
-				node = resolver.getNode(way.getNodeId(i));
-			} catch (EntityNotFoundException e) {
-				if (log) {
-					logMissingNode(way.getNodeId(i));
-				}
-				builder.beginNewSequence();
-				continue;
-			}
-			builder.add(new Coordinate(node.getLongitude(), node.getLatitude()));
+	private Geometry geometry(WayBuilderResult result)
+	{
+		Coordinate[] coordinates = result.getCoordinates().toArray(
+				new Coordinate[0]);
+		LineString[] lineStrings = result.getLineStrings().toArray(
+				new LineString[0]);
+		if (result.getLinearRing() == null) {
+			return GeometryUtil.createGeometry(coordinates, lineStrings,
+					result.getLinearRing(), factory);
+		} else {
+			return GeometryUtil.createGeometry(coordinates, lineStrings,
+					factory);
 		}
-		builder.finishSequence();
-
-		return builder.createGeometry(factory, includePuntal);
-	}
-
-	private void logMissingNode(long nodeId)
-	{
-		String message = String.format("Node not found: %d", nodeId);
-		log(message);
-	}
-
-	private void log(String message)
-	{
-		switch (logLevel) {
-		default:
-		case INFO:
-			logger.info(message);
-			break;
-		case DEBUG:
-			logger.debug(message);
-			break;
-		case WARN:
-			logger.warn(message);
-			break;
-		}
-	}
-
-	private LineString newEmptyLineString()
-	{
-		return new LineString(null, factory);
 	}
 
 }

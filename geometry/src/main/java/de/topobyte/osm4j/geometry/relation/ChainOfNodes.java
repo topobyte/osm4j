@@ -25,15 +25,6 @@ import gnu.trove.set.hash.TLongHashSet;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.vividsolutions.jts.geom.CoordinateSequence;
-import com.vividsolutions.jts.geom.CoordinateSequenceFactory;
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.LinearRing;
-
-import de.topobyte.osm4j.core.model.iface.OsmNode;
-import de.topobyte.osm4j.core.resolve.EntityNotFoundException;
-import de.topobyte.osm4j.core.resolve.OsmEntityProvider;
-
 public class ChainOfNodes
 {
 
@@ -70,28 +61,6 @@ public class ChainOfNodes
 		}
 		int size = nodeIds.size();
 		return size == 0 || size >= 4;
-	}
-
-	public LinearRing toLinearRing(OsmEntityProvider resolver)
-			throws EntityNotFoundException
-	{
-		GeometryFactory factory = new GeometryFactory();
-		CoordinateSequenceFactory csf = factory.getCoordinateSequenceFactory();
-
-		int len = nodeIds.size();
-		if (len < 4) {
-			return new LinearRing(null, factory);
-		}
-		CoordinateSequence points = csf.create(len, 2);
-
-		for (int i = 0; i < len; i++) {
-			OsmNode node = resolver.getNode(nodeIds.get(i));
-			points.setOrdinate(i, 0, node.getLongitude());
-			points.setOrdinate(i, 1, node.getLatitude());
-		}
-
-		LinearRing shell = new LinearRing(points, factory);
-		return shell;
 	}
 
 	/**

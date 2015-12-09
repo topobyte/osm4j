@@ -44,6 +44,7 @@ import de.topobyte.jts.utils.SelfIntersectionUtil;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.osm4j.core.model.iface.OsmRelation;
 import de.topobyte.osm4j.core.model.iface.OsmWay;
+import de.topobyte.osm4j.core.model.impl.Way;
 import de.topobyte.osm4j.core.model.util.OsmModelUtil;
 import de.topobyte.osm4j.core.resolve.EntityFinder;
 import de.topobyte.osm4j.core.resolve.EntityFinders;
@@ -64,6 +65,7 @@ public class RegionBuilder
 
 	private GeometryFactory factory;
 	private NodeBuilder nodeBuilder;
+	private WayBuilder wayBuilder;
 
 	private MissingEntitiesStrategy missingEntitiesStrategy = MissingEntitiesStrategy.THROW_EXCEPTION;
 	private boolean includePuntal = true;
@@ -80,6 +82,7 @@ public class RegionBuilder
 	{
 		this.factory = factory;
 		nodeBuilder = new NodeBuilder(factory);
+		wayBuilder = new WayBuilder(factory);
 	}
 
 	public boolean isLog()
@@ -244,7 +247,7 @@ public class RegionBuilder
 			}
 		}
 
-		// This could be used to closed non-closed chains
+		// This could be used to close non-closed chains
 		// RelationUtil.closeUnclosedRingWithStraightLine(rings);
 
 		MultiPolygon mp = buildMultipolygon(rings, resolver);
@@ -290,8 +293,10 @@ public class RegionBuilder
 	private MultiPolygon buildMultipolygon(Collection<ChainOfNodes> rings,
 			OsmEntityProvider resolver) throws EntityNotFoundException
 	{
-		Set<LinearRing> linearRings = RelationUtil.toLinearRings(rings,
-				resolver);
+		Set<Coordinate> coordinates = new HashSet<>();
+		Set<LineString> lineStrings = new HashSet<>();
+		Set<LinearRing> linearRings = new HashSet<>();
+		toLinearRings(rings, resolver, coordinates, lineStrings, linearRings);
 
 		Set<LinearRing> validRings = new HashSet<>();
 		for (LinearRing r : linearRings) {
@@ -302,6 +307,33 @@ public class RegionBuilder
 		}
 
 		return PolygonHelper.multipolygonFromRings(validRings, false);
+	}
+
+	private void toLinearRings(Collection<ChainOfNodes> rings,
+			OsmEntityProvider resolver, Collection<Coordinate> coordinates,
+			Collection<LineString> lineStrings,
+			Collection<LinearRing> linearRings) throws EntityNotFoundException
+	{
+		for (ChainOfNodes ring : rings) {
+			if (!ring.isValidRing()) {
+				logger.warn("isValidRing() failed for ChainOfSegments, but this point should never be reached");
+				continue;
+			}
+
+			TLongList nodeIds = ring.getNodes();
+			Way way = new Way(-1, nodeIds);
+			WayBuilderResult result = wayBuilder.buildResult(way, resolver);
+
+			if (includePuntal) {
+				coordinates.addAll(result.getCoordinates());
+			}
+			if (includeLineal) {
+				lineStrings.addAll(result.getLineStrings());
+			}
+			if (result.getLinearRing() != null) {
+				linearRings.add(result.getLinearRing());
+			}
+		}
 	}
 
 }

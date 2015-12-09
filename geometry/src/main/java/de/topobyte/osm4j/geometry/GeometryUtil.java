@@ -26,7 +26,6 @@ import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryCollection;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LineString;
-import com.vividsolutions.jts.geom.MultiPolygon;
 import com.vividsolutions.jts.geom.Point;
 
 import de.topobyte.osm4j.core.model.iface.OsmNode;
@@ -53,26 +52,25 @@ public class GeometryUtil
 		}
 	}
 
-	public static Geometry createGeometry(Coordinate[] coordinates,
-			LineString[] lineStrings, MultiPolygon multiPolygon,
+	public static <T extends Geometry> Geometry createGeometry(
+			Coordinate[] coordinates, LineString[] lineStrings, T geometry,
 			GeometryFactory factory)
 	{
 		int numPoints = coordinates.length;
 		int numLines = lineStrings.length;
 
 		if (numPoints == 0 && numLines == 0) {
-			return multiPolygon;
+			return geometry;
 		} else if (numPoints == 0) {
-			return createGeometryCollection(factory, multiPolygon,
+			return createGeometryCollection(factory, geometry,
 					lines(lineStrings, factory));
 		} else if (numLines == 0) {
-			return createGeometryCollection(factory, multiPolygon,
+			return createGeometryCollection(factory, geometry,
 					points(coordinates, factory));
 		} else {
 			Geometry points = points(coordinates, factory);
 			Geometry lines = lines(lineStrings, factory);
-			return createGeometryCollection(factory, multiPolygon, lines,
-					points);
+			return createGeometryCollection(factory, geometry, lines, points);
 		}
 	}
 
