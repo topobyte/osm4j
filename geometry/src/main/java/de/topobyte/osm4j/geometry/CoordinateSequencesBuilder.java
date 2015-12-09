@@ -81,11 +81,11 @@ class CoordinateSequencesBuilder
 
 		for (List<Coordinate> coords : results) {
 			if (coords.size() == 1) {
-				points[indexPoints] = coords.get(0);
+				points[indexPoints++] = coords.get(0);
 			} else {
 				CoordinateSequence cs = factory.getCoordinateSequenceFactory()
 						.create(coords.toArray(new Coordinate[0]));
-				lineStrings[indexLines] = factory.createLineString(cs);
+				lineStrings[indexLines++] = factory.createLineString(cs);
 			}
 		}
 
