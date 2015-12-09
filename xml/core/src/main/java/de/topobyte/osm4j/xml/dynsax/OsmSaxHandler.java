@@ -240,6 +240,10 @@ class OsmSaxHandler extends DynamicSaxHandler
 				uid = Long.parseLong(aUid);
 			}
 
+			if (user == null) {
+				user = "";
+			}
+
 			int version = -1;
 			if (aVersion != null) {
 				version = Integer.parseInt(aVersion);
