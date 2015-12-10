@@ -34,8 +34,6 @@ import de.topobyte.osm4j.core.resolve.OsmEntityProvider;
 public class GeometryBuilder
 {
 
-	private GeometryFactory factory;
-
 	private NodeBuilder nodeBuilder;
 	private WayBuilder polylineBuilder;
 	private RegionBuilder regionBuilder;
@@ -47,7 +45,6 @@ public class GeometryBuilder
 
 	public GeometryBuilder(GeometryFactory factory)
 	{
-		this.factory = factory;
 		nodeBuilder = new NodeBuilder(factory);
 		polylineBuilder = new WayBuilder(factory);
 		regionBuilder = new RegionBuilder(factory);
