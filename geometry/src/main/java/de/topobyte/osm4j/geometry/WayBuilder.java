@@ -90,10 +90,10 @@ public class WayBuilder extends WayGeometryBuilder
 				new LineString[0]);
 		if (result.getLinearRing() == null) {
 			return GeometryUtil.createGeometry(coordinates, lineStrings,
-					result.getLinearRing(), factory);
+					factory);
 		} else {
 			return GeometryUtil.createGeometry(coordinates, lineStrings,
-					factory);
+					result.getLinearRing(), factory);
 		}
 	}
 

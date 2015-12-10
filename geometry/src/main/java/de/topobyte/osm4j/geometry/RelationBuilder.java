@@ -59,6 +59,7 @@ public class RelationBuilder
 	{
 		this.factory = factory;
 		nodeBuilder = new NodeBuilder(factory);
+		wayBuilder = new WayBuilder(factory);
 	}
 
 	public boolean isLog()
