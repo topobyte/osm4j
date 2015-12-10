@@ -108,11 +108,11 @@ public class RegionBuilder
 		return missingEntitiesStrategy;
 	}
 
-	public void setMissingEntitesStrategy(
-			MissingEntitiesStrategy missingEntitesStrategy)
+	public void setMissingEntitiesStrategy(
+			MissingEntitiesStrategy missingEntitiesStrategy)
 	{
-		this.missingEntitiesStrategy = missingEntitesStrategy;
-		wayBuilder.setMissingEntitesStrategy(missingEntitesStrategy);
+		this.missingEntitiesStrategy = missingEntitiesStrategy;
+		wayBuilder.setMissingEntitiesStrategy(missingEntitiesStrategy);
 	}
 
 	public MissingWayNodeStrategy getMissingWayNodeStrategy()

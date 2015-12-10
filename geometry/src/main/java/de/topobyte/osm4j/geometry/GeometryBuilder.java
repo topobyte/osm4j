@@ -102,7 +102,7 @@ public class GeometryBuilder
 			throws EntityNotFoundException
 	{
 		regionBuilder
-				.setMissingEntitesStrategy(MissingEntitiesStrategy.BUILD_PARTIAL);
+				.setMissingEntitiesStrategy(MissingEntitiesStrategy.BUILD_PARTIAL);
 		return regionBuilder.build(relation, resolver);
 	}
 

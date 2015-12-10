@@ -67,10 +67,10 @@ public class WayGeometryBuilder
 		return missingEntitiesStrategy;
 	}
 
-	public void setMissingEntitesStrategy(
-			MissingEntitiesStrategy missingEntitesStrategy)
+	public void setMissingEntitiesStrategy(
+			MissingEntitiesStrategy missingEntitiesStrategy)
 	{
-		this.missingEntitiesStrategy = missingEntitesStrategy;
+		this.missingEntitiesStrategy = missingEntitiesStrategy;
 	}
 
 	public MissingWayNodeStrategy getMissingWayNodeStrategy()

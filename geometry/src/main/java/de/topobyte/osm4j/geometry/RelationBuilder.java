@@ -87,10 +87,10 @@ public class RelationBuilder
 		return missingEntitiesStrategy;
 	}
 
-	public void setMissingEntitesStrategy(
-			MissingEntitiesStrategy missingEntitesStrategy)
+	public void setMissingEntitiesStrategy(
+			MissingEntitiesStrategy missingEntitiesStrategy)
 	{
-		this.missingEntitiesStrategy = missingEntitesStrategy;
+		this.missingEntitiesStrategy = missingEntitiesStrategy;
 	}
 
 	public Geometry buildPointsAndLines(OsmRelation relation,
@@ -152,7 +152,7 @@ public class RelationBuilder
 	private Geometry buildPointsAndLines(Set<OsmNode> nodes, Set<OsmWay> ways,
 			OsmEntityProvider provider) throws EntityNotFoundException
 	{
-		wayBuilder.setMissingEntitesStrategy(missingEntitiesStrategy);
+		wayBuilder.setMissingEntitiesStrategy(missingEntitiesStrategy);
 
 		List<Coordinate> coords = GeometryUtil.buildNodes(nodeBuilder, nodes);
 
