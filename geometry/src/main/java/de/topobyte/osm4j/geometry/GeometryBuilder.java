@@ -35,8 +35,11 @@ public class GeometryBuilder
 {
 
 	private NodeBuilder nodeBuilder;
-	private WayBuilder polylineBuilder;
+	private WayBuilder wayBuilder;
 	private RegionBuilder regionBuilder;
+
+	private MissingEntitiesStrategy missingEntitiesStrategy = MissingEntitiesStrategy.THROW_EXCEPTION;
+	private MissingWayNodeStrategy missingWayNodeStrategy = MissingWayNodeStrategy.OMIT_VERTEX_FROM_POLYLINE;
 
 	public GeometryBuilder()
 	{
@@ -46,8 +49,38 @@ public class GeometryBuilder
 	public GeometryBuilder(GeometryFactory factory)
 	{
 		nodeBuilder = new NodeBuilder(factory);
-		polylineBuilder = new WayBuilder(factory);
+		wayBuilder = new WayBuilder(factory);
 		regionBuilder = new RegionBuilder(factory);
+		wayBuilder.setMissingEntitiesStrategy(missingEntitiesStrategy);
+		wayBuilder.setMissingWayNodeStrategy(missingWayNodeStrategy);
+		regionBuilder.setMissingEntitiesStrategy(missingEntitiesStrategy);
+		regionBuilder.setMissingWayNodeStrategy(missingWayNodeStrategy);
+	}
+
+	public MissingEntitiesStrategy getMissingEntitiesStrategy()
+	{
+		return missingEntitiesStrategy;
+	}
+
+	public void setMissingEntitiesStrategy(
+			MissingEntitiesStrategy missingEntitiesStrategy)
+	{
+		this.missingEntitiesStrategy = missingEntitiesStrategy;
+		wayBuilder.setMissingEntitiesStrategy(missingEntitiesStrategy);
+		regionBuilder.setMissingEntitiesStrategy(missingEntitiesStrategy);
+	}
+
+	public MissingWayNodeStrategy getMissingWayNodeStrategy()
+	{
+		return missingWayNodeStrategy;
+	}
+
+	public void setMissingWayNodeStrategy(
+			MissingWayNodeStrategy missingWayNodeStrategy)
+	{
+		this.missingWayNodeStrategy = missingWayNodeStrategy;
+		wayBuilder.setMissingWayNodeStrategy(missingWayNodeStrategy);
+		regionBuilder.setMissingWayNodeStrategy(missingWayNodeStrategy);
 	}
 
 	/**
@@ -86,7 +119,7 @@ public class GeometryBuilder
 	public Geometry build(OsmWay way, OsmEntityProvider resolver)
 			throws EntityNotFoundException
 	{
-		return polylineBuilder.buildThrowExceptionIfNodeMissing(way, resolver);
+		return wayBuilder.buildThrowExceptionIfNodeMissing(way, resolver);
 	}
 
 	/**
@@ -101,8 +134,6 @@ public class GeometryBuilder
 	public Geometry build(OsmRelation relation, OsmEntityProvider resolver)
 			throws EntityNotFoundException
 	{
-		regionBuilder
-				.setMissingEntitiesStrategy(MissingEntitiesStrategy.BUILD_PARTIAL);
 		return regionBuilder.build(relation, resolver);
 	}
 

@@ -81,6 +81,8 @@ public class RegionBuilder
 		this.factory = factory;
 		nodeBuilder = new NodeBuilder(factory);
 		wayBuilder = new WayBuilder(factory);
+		wayBuilder.setMissingEntitiesStrategy(missingEntitiesStrategy);
+		wayBuilder.setMissingWayNodeStrategy(missingWayNodeStrategy);
 	}
 
 	public boolean isLog()

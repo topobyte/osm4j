@@ -47,6 +47,7 @@ public class RelationBuilder
 	private WayBuilder wayBuilder;
 
 	private MissingEntitiesStrategy missingEntitiesStrategy = MissingEntitiesStrategy.THROW_EXCEPTION;
+	private MissingWayNodeStrategy missingWayNodeStrategy = MissingWayNodeStrategy.OMIT_VERTEX_FROM_POLYLINE;
 	private boolean log = false;
 	private LogLevel logLevel = LogLevel.WARN;
 
@@ -60,6 +61,8 @@ public class RelationBuilder
 		this.factory = factory;
 		nodeBuilder = new NodeBuilder(factory);
 		wayBuilder = new WayBuilder(factory);
+		wayBuilder.setMissingEntitiesStrategy(missingEntitiesStrategy);
+		wayBuilder.setMissingWayNodeStrategy(missingWayNodeStrategy);
 	}
 
 	public boolean isLog()
@@ -91,6 +94,19 @@ public class RelationBuilder
 			MissingEntitiesStrategy missingEntitiesStrategy)
 	{
 		this.missingEntitiesStrategy = missingEntitiesStrategy;
+		wayBuilder.setMissingEntitiesStrategy(missingEntitiesStrategy);
+	}
+
+	public MissingWayNodeStrategy getMissingWayNodeStrategy()
+	{
+		return missingWayNodeStrategy;
+	}
+
+	public void setMissingWayNodeStrategy(
+			MissingWayNodeStrategy missingWayNodeStrategy)
+	{
+		this.missingWayNodeStrategy = missingWayNodeStrategy;
+		wayBuilder.setMissingWayNodeStrategy(missingWayNodeStrategy);
 	}
 
 	public Geometry buildPointsAndLines(OsmRelation relation,
@@ -152,8 +168,6 @@ public class RelationBuilder
 	private Geometry buildPointsAndLines(Set<OsmNode> nodes, Set<OsmWay> ways,
 			OsmEntityProvider provider) throws EntityNotFoundException
 	{
-		wayBuilder.setMissingEntitiesStrategy(missingEntitiesStrategy);
-
 		List<Coordinate> coords = GeometryUtil.buildNodes(nodeBuilder, nodes);
 
 		List<Geometry> lines = new ArrayList<>();
