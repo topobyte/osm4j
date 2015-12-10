@@ -50,6 +50,11 @@ public class RelationBuilder
 	private boolean log = false;
 	private LogLevel logLevel = LogLevel.WARN;
 
+	public RelationBuilder()
+	{
+		this(new GeometryFactory());
+	}
+
 	public RelationBuilder(GeometryFactory factory)
 	{
 		this.factory = factory;
