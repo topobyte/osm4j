@@ -17,9 +17,6 @@
 
 package de.topobyte.osm4j.geometry;
 
-import gnu.trove.iterator.TLongIterator;
-import gnu.trove.list.TLongList;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -68,6 +65,7 @@ public class RegionBuilder
 	private WayBuilder wayBuilder;
 
 	private MissingEntitiesStrategy missingEntitiesStrategy = MissingEntitiesStrategy.THROW_EXCEPTION;
+	private MissingWayNodeStrategy missingWayNodeStrategy = MissingWayNodeStrategy.OMIT_VERTEX_FROM_POLYLINE;
 	private boolean includePuntal = true;
 	private boolean includeLineal = true;
 	private boolean log = false;
@@ -114,6 +112,19 @@ public class RegionBuilder
 			MissingEntitiesStrategy missingEntitesStrategy)
 	{
 		this.missingEntitiesStrategy = missingEntitesStrategy;
+		wayBuilder.setMissingEntitesStrategy(missingEntitesStrategy);
+	}
+
+	public MissingWayNodeStrategy getMissingWayNodeStrategy()
+	{
+		return missingWayNodeStrategy;
+	}
+
+	public void setMissingWayNodeStrategy(
+			MissingWayNodeStrategy missingWayNodeStrategy)
+	{
+		this.missingWayNodeStrategy = missingWayNodeStrategy;
+		wayBuilder.setMissingWayNodeStrategy(missingWayNodeStrategy);
 	}
 
 	public boolean isIncludePuntal()
@@ -207,32 +218,14 @@ public class RegionBuilder
 
 		List<ChainOfWays> chains = RelationUtil.buildRings(ways, wayTailMap);
 
-		// Chains that are closed and have enough nodes
-		List<ChainOfWays> ringChains = new ArrayList<>();
-		// Chains that are not closed or do not have enough nodes
-		List<ChainOfWays> nonRingChains = new ArrayList<>();
-
-		for (ChainOfWays chain : chains) {
-			if (chain.isValidRing()) {
-				ringChains.add(chain);
-			} else {
-				nonRingChains.add(chain);
-			}
-		}
-		logger.debug("Number of ring chains: " + ringChains.size());
-		logger.debug("Number of non-ring chains: " + nonRingChains.size());
-
 		List<ChainOfNodes> rings = new ArrayList<>();
 		List<ChainOfNodes> nonRings = new ArrayList<>();
 
-		RelationUtil.convertToSegmentChainsAndResolveNodeIntersections(
-				ringChains, rings, rings, nonRings);
-		RelationUtil.convertToSegmentChainsAndResolveNodeIntersections(
-				nonRingChains, nonRings, rings, nonRings);
+		RelationUtil.convertToSegmentChainsAndResolveNodeIntersections(chains,
+				rings, nonRings);
 
 		try {
-			RelationUtil.checkRings(nonRingChains, resolver,
-					missingEntitiesStrategy);
+			RelationUtil.checkRings(chains, resolver, missingEntitiesStrategy);
 		} catch (EntityNotFoundException e) {
 			switch (missingEntitiesStrategy) {
 			case BUILD_PARTIAL:
@@ -250,53 +243,12 @@ public class RegionBuilder
 		// This could be used to close non-closed chains
 		// RelationUtil.closeUnclosedRingWithStraightLine(rings);
 
-		MultiPolygon mp = buildMultipolygon(rings, resolver);
+		List<Coordinate> coordinates = new ArrayList<>();
+		List<LineString> lineStrings = new ArrayList<>();
+		List<LinearRing> linearRings = new ArrayList<>();
 
-		Coordinate[] cs;
-		if (!includePuntal) {
-			cs = new Coordinate[0];
-		} else {
-			List<Coordinate> coords = GeometryUtil.buildNodes(nodeBuilder,
-					nodes);
-			cs = coords.toArray(new Coordinate[0]);
-		}
-
-		LineString[] ls;
-		if (!includeLineal) {
-			ls = new LineString[0];
-		} else {
-			ls = buildWays(nonRings, resolver);
-		}
-
-		return GeometryUtil.createGeometry(cs, ls, mp, factory);
-	}
-
-	private LineString[] buildWays(List<ChainOfNodes> nonRings,
-			OsmEntityProvider resolver) throws EntityNotFoundException
-	{
-		List<LineString> lines = new ArrayList<>();
-
-		for (ChainOfNodes chain : nonRings) {
-			List<Coordinate> coords = new ArrayList<>();
-			TLongList nodes = chain.getNodes();
-			TLongIterator iterator = nodes.iterator();
-			while (iterator.hasNext()) {
-				long id = iterator.next();
-				OsmNode node = resolver.getNode(id);
-				coords.add(nodeBuilder.buildCoordinate(node));
-			}
-			factory.createLinearRing(coords.toArray(new Coordinate[0]));
-		}
-		return lines.toArray(new LineString[0]);
-	}
-
-	private MultiPolygon buildMultipolygon(Collection<ChainOfNodes> rings,
-			OsmEntityProvider resolver) throws EntityNotFoundException
-	{
-		Set<Coordinate> coordinates = new HashSet<>();
-		Set<LineString> lineStrings = new HashSet<>();
-		Set<LinearRing> linearRings = new HashSet<>();
-		toLinearRings(rings, resolver, coordinates, lineStrings, linearRings);
+		convert(rings, nonRings, resolver, coordinates, lineStrings,
+				linearRings);
 
 		Set<LinearRing> validRings = new HashSet<>();
 		for (LinearRing r : linearRings) {
@@ -306,33 +258,58 @@ public class RegionBuilder
 			}
 		}
 
-		return PolygonHelper.multipolygonFromRings(validRings, false);
+		MultiPolygon mp = PolygonHelper
+				.multipolygonFromRings(validRings, false);
+
+		Coordinate[] cs;
+		LineString[] ls;
+		if (!includePuntal) {
+			cs = new Coordinate[0];
+		} else {
+			List<Coordinate> coords = GeometryUtil.buildNodes(nodeBuilder,
+					nodes);
+			cs = coords.toArray(new Coordinate[0]);
+		}
+		if (!includeLineal) {
+			ls = new LineString[0];
+		} else {
+			ls = lineStrings.toArray(new LineString[0]);
+		}
+
+		return GeometryUtil.createGeometry(cs, ls, mp, factory);
 	}
 
-	private void toLinearRings(Collection<ChainOfNodes> rings,
-			OsmEntityProvider resolver, Collection<Coordinate> coordinates,
+	private void convert(Collection<ChainOfNodes> rings,
+			Collection<ChainOfNodes> nonRings, OsmEntityProvider resolver,
+			Collection<Coordinate> coordinates,
 			Collection<LineString> lineStrings,
 			Collection<LinearRing> linearRings) throws EntityNotFoundException
 	{
 		for (ChainOfNodes ring : rings) {
-			if (!ring.isValidRing()) {
-				logger.warn("isValidRing() failed for ChainOfSegments, but this point should never be reached");
-				continue;
-			}
-
-			TLongList nodeIds = ring.getNodes();
-			Way way = new Way(-1, nodeIds);
+			Way way = new Way(-1, ring.getNodes());
 			WayBuilderResult result = wayBuilder.buildResult(way, resolver);
+			add(result, coordinates, lineStrings, linearRings);
+		}
+		for (ChainOfNodes ring : nonRings) {
+			Way way = new Way(-1, ring.getNodes());
+			WayBuilderResult result = wayBuilder.buildResult(way, resolver);
+			add(result, coordinates, lineStrings, linearRings);
+		}
+	}
 
-			if (includePuntal) {
-				coordinates.addAll(result.getCoordinates());
-			}
-			if (includeLineal) {
-				lineStrings.addAll(result.getLineStrings());
-			}
-			if (result.getLinearRing() != null) {
-				linearRings.add(result.getLinearRing());
-			}
+	private void add(WayBuilderResult result,
+			Collection<Coordinate> coordinates,
+			Collection<LineString> lineStrings,
+			Collection<LinearRing> linearRings)
+	{
+		if (includePuntal) {
+			coordinates.addAll(result.getCoordinates());
+		}
+		if (includeLineal) {
+			lineStrings.addAll(result.getLineStrings());
+		}
+		if (result.getLinearRing() != null) {
+			linearRings.add(result.getLinearRing());
 		}
 	}
 

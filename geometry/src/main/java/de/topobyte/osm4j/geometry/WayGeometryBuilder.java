@@ -320,8 +320,9 @@ public class WayGeometryBuilder
 	{
 		if (close && cs.size() > 3) {
 			result.setLinearRing(factory.createLinearRing(cs));
+		} else {
+			result.getLineStrings().add(factory.createLineString(cs));
 		}
-		result.getLineStrings().add(factory.createLineString(cs));
 	}
 
 }

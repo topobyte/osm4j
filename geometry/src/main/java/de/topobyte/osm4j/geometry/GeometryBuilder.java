@@ -104,6 +104,8 @@ public class GeometryBuilder
 	public Geometry build(OsmRelation relation, OsmEntityProvider resolver)
 			throws EntityNotFoundException
 	{
+		regionBuilder
+				.setMissingEntitesStrategy(MissingEntitiesStrategy.BUILD_PARTIAL);
 		return regionBuilder.build(relation, resolver);
 	}
 

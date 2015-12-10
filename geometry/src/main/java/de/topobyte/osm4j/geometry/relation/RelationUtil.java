@@ -216,12 +216,16 @@ public class RelationUtil
 	}
 
 	public static void convertToSegmentChainsAndResolveNodeIntersections(
-			List<ChainOfWays> chains, List<ChainOfNodes> outNoIntersections,
-			List<ChainOfNodes> outRings, List<ChainOfNodes> outNonRings)
+			List<ChainOfWays> chains, List<ChainOfNodes> outRings,
+			List<ChainOfNodes> outNonRings)
 	{
 		for (ChainOfNodes s : RelationUtil.convertToSegmentRings(chains)) {
 			if (!s.hasNodeIntersections()) {
-				outNoIntersections.add(s);
+				if (s.isValidRing()) {
+					outRings.add(s);
+				} else {
+					outNonRings.add(s);
+				}
 			} else {
 				for (ChainOfNodes t : s.resolveNodeIntersections()) {
 					if (t.isValidRing()) {
