@@ -53,6 +53,28 @@ public class GeometryUtil
 	}
 
 	public static <T extends Geometry> Geometry createGeometry(
+			List<Coordinate> coordinates, List<LineString> lineStrings,
+			T geometry, GeometryFactory factory)
+	{
+		int numPoints = coordinates.size();
+		int numLines = lineStrings.size();
+
+		if (numPoints == 0 && numLines == 0) {
+			return geometry;
+		} else if (numPoints == 0) {
+			return createGeometryCollection(factory, geometry,
+					lines(lineStrings, factory));
+		} else if (numLines == 0) {
+			return createGeometryCollection(factory, geometry,
+					points(coordinates, factory));
+		} else {
+			Geometry points = points(coordinates, factory);
+			Geometry lines = lines(lineStrings, factory);
+			return createGeometryCollection(factory, geometry, lines, points);
+		}
+	}
+
+	public static <T extends Geometry> Geometry createGeometry(
 			Coordinate[] coordinates, LineString[] lineStrings, T geometry,
 			GeometryFactory factory)
 	{
@@ -80,6 +102,16 @@ public class GeometryUtil
 		return factory.createGeometryCollection(parts);
 	}
 
+	public static Geometry points(List<Coordinate> coordinates,
+			GeometryFactory factory)
+	{
+		if (coordinates.size() == 1) {
+			return factory.createPoint(coordinates.get(0));
+		}
+		return factory.createMultiPoint(coordinates
+				.toArray(new Coordinate[coordinates.size()]));
+	}
+
 	public static Geometry points(Coordinate[] coordinates,
 			GeometryFactory factory)
 	{
@@ -87,6 +119,16 @@ public class GeometryUtil
 			return factory.createPoint(coordinates[0]);
 		}
 		return factory.createMultiPoint(coordinates);
+	}
+
+	public static Geometry lines(List<LineString> lineStrings,
+			GeometryFactory factory)
+	{
+		if (lineStrings.size() == 1) {
+			return lineStrings.get(0);
+		}
+		return factory.createMultiLineString(lineStrings
+				.toArray(new LineString[lineStrings.size()]));
 	}
 
 	public static Geometry lines(LineString[] lineStrings,
@@ -102,10 +144,16 @@ public class GeometryUtil
 			Collection<OsmNode> nodes)
 	{
 		List<Coordinate> coords = new ArrayList<>();
-		for (OsmNode node : nodes) {
-			coords.add(nodeBuilder.buildCoordinate(node));
-		}
+		buildNodes(nodeBuilder, nodes, coords);
 		return coords;
+	}
+
+	public static void buildNodes(NodeBuilder nodeBuilder,
+			Collection<OsmNode> nodes, List<Coordinate> output)
+	{
+		for (OsmNode node : nodes) {
+			output.add(nodeBuilder.buildCoordinate(node));
+		}
 	}
 
 }
