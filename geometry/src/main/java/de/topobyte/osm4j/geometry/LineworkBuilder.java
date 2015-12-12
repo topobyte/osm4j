@@ -38,7 +38,7 @@ import de.topobyte.osm4j.core.resolve.EntityNotFoundException;
 import de.topobyte.osm4j.core.resolve.EntityNotFoundStrategy;
 import de.topobyte.osm4j.core.resolve.OsmEntityProvider;
 
-public class RelationBuilder
+public class LineworkBuilder
 {
 
 	private GeometryFactory factory;
@@ -51,12 +51,12 @@ public class RelationBuilder
 	private boolean log = false;
 	private LogLevel logLevel = LogLevel.WARN;
 
-	public RelationBuilder()
+	public LineworkBuilder()
 	{
 		this(new GeometryFactory());
 	}
 
-	public RelationBuilder(GeometryFactory factory)
+	public LineworkBuilder(GeometryFactory factory)
 	{
 		this.factory = factory;
 		nodeBuilder = new NodeBuilder(factory);
@@ -109,8 +109,8 @@ public class RelationBuilder
 		wayBuilder.setMissingWayNodeStrategy(missingWayNodeStrategy);
 	}
 
-	public Geometry buildPointsAndLines(OsmRelation relation,
-			OsmEntityProvider provider) throws EntityNotFoundException
+	public Geometry build(OsmRelation relation, OsmEntityProvider provider)
+			throws EntityNotFoundException
 	{
 		EntityNotFoundStrategy enfs = Util.strategy(missingEntitiesStrategy,
 				log, logLevel);
@@ -134,10 +134,10 @@ public class RelationBuilder
 			}
 		}
 
-		return buildPointsAndLines(nodes, ways, provider);
+		return build(nodes, ways, provider);
 	}
 
-	public Geometry buildPointsAndLines(Collection<OsmRelation> relations,
+	public Geometry build(Collection<OsmRelation> relations,
 			OsmEntityProvider provider) throws EntityNotFoundException
 	{
 		EntityNotFoundStrategy enfs = Util.strategy(missingEntitiesStrategy,
@@ -162,12 +162,11 @@ public class RelationBuilder
 			}
 		}
 
-		return buildPointsAndLines(nodes, ways, provider);
+		return build(nodes, ways, provider);
 	}
 
-	public Geometry buildPointsAndLines(Collection<OsmNode> nodes,
-			Collection<OsmWay> ways, OsmEntityProvider provider)
-			throws EntityNotFoundException
+	public Geometry build(Collection<OsmNode> nodes, Collection<OsmWay> ways,
+			OsmEntityProvider provider) throws EntityNotFoundException
 	{
 		List<Coordinate> coords = GeometryUtil.buildNodes(nodeBuilder, nodes);
 
