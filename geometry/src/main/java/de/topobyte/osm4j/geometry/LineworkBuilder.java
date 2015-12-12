@@ -17,17 +17,11 @@
 
 package de.topobyte.osm4j.geometry;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.LineString;
-import com.vividsolutions.jts.geom.Point;
 
 import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.osm4j.core.model.iface.OsmRelation;
@@ -109,8 +103,8 @@ public class LineworkBuilder
 		wayBuilder.setMissingWayNodeStrategy(missingWayNodeStrategy);
 	}
 
-	public Geometry build(OsmRelation relation, OsmEntityProvider provider)
-			throws EntityNotFoundException
+	public LineworkBuilderResult build(OsmRelation relation,
+			OsmEntityProvider provider) throws EntityNotFoundException
 	{
 		EntityNotFoundStrategy enfs = Util.strategy(missingEntitiesStrategy,
 				log, logLevel);
@@ -126,7 +120,7 @@ public class LineworkBuilder
 			case THROW_EXCEPTION:
 				throw (e);
 			case BUILD_EMPTY:
-				return newEmptyPoint();
+				return new LineworkBuilderResult();
 			case BUILD_PARTIAL:
 				// Can't happen, because we're using the IGNORE strategy in this
 				// case
@@ -137,7 +131,7 @@ public class LineworkBuilder
 		return build(nodes, ways, provider);
 	}
 
-	public Geometry build(Collection<OsmRelation> relations,
+	public LineworkBuilderResult build(Collection<OsmRelation> relations,
 			OsmEntityProvider provider) throws EntityNotFoundException
 	{
 		EntityNotFoundStrategy enfs = Util.strategy(missingEntitiesStrategy,
@@ -154,7 +148,7 @@ public class LineworkBuilder
 			case THROW_EXCEPTION:
 				throw (e);
 			case BUILD_EMPTY:
-				return newEmptyPoint();
+				return new LineworkBuilderResult();
 			case BUILD_PARTIAL:
 				// Can't happen, because we're using the IGNORE strategy in this
 				// case
@@ -165,27 +159,24 @@ public class LineworkBuilder
 		return build(nodes, ways, provider);
 	}
 
-	public Geometry build(Collection<OsmNode> nodes, Collection<OsmWay> ways,
-			OsmEntityProvider provider) throws EntityNotFoundException
+	public LineworkBuilderResult build(Collection<OsmNode> nodes,
+			Collection<OsmWay> ways, OsmEntityProvider provider)
+			throws EntityNotFoundException
 	{
-		List<Coordinate> coords = GeometryUtil.buildNodes(nodeBuilder, nodes);
+		LineworkBuilderResult result = new LineworkBuilderResult();
 
-		List<Geometry> lines = new ArrayList<>();
+		GeometryUtil.buildNodes(nodeBuilder, nodes, result.getCoordinates());
+
 		for (OsmWay way : ways) {
-			Geometry line = wayBuilder.build(way, provider);
-			if (!line.isEmpty()) {
-				lines.add(line);
+			WayBuilderResult wayr = wayBuilder.buildResult(way, provider);
+			result.getCoordinates().addAll(wayr.getCoordinates());
+			result.getLineStrings().addAll(wayr.getLineStrings());
+			if (wayr.getLinearRing() != null) {
+				result.getLineStrings().add(wayr.getLinearRing());
 			}
 		}
 
-		Coordinate[] cs = coords.toArray(new Coordinate[0]);
-		LineString[] ls = lines.toArray(new LineString[0]);
-		return GeometryUtil.createGeometry(cs, ls, factory);
-	}
-
-	private Point newEmptyPoint()
-	{
-		return new Point(null, factory);
+		return result;
 	}
 
 }
