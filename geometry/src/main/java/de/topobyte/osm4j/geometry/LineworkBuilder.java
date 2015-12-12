@@ -32,10 +32,8 @@ import de.topobyte.osm4j.core.resolve.EntityNotFoundException;
 import de.topobyte.osm4j.core.resolve.EntityNotFoundStrategy;
 import de.topobyte.osm4j.core.resolve.OsmEntityProvider;
 
-public class LineworkBuilder
+public class LineworkBuilder extends AbstractGeometryBuilder
 {
-
-	private GeometryFactory factory;
 
 	private NodeBuilder nodeBuilder;
 	private WayBuilder wayBuilder;
@@ -52,7 +50,7 @@ public class LineworkBuilder
 
 	public LineworkBuilder(GeometryFactory factory)
 	{
-		this.factory = factory;
+		super(factory);
 		nodeBuilder = new NodeBuilder(factory);
 		wayBuilder = new WayBuilder(factory);
 		wayBuilder.setMissingEntitiesStrategy(missingEntitiesStrategy);

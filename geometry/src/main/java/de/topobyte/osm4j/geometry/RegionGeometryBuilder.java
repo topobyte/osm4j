@@ -54,13 +54,12 @@ import de.topobyte.osm4j.geometry.relation.RelationUtil;
 /**
  * @author Sebastian Kuerten (sebastian@topobyte.de)
  */
-public class RegionGeometryBuilder
+public class RegionGeometryBuilder extends AbstractGeometryBuilder
 {
 
 	final static Logger logger = LoggerFactory
 			.getLogger(RegionGeometryBuilder.class);
 
-	protected GeometryFactory factory;
 	private NodeBuilder nodeBuilder;
 	private WayBuilder wayBuilder;
 
@@ -78,7 +77,7 @@ public class RegionGeometryBuilder
 
 	public RegionGeometryBuilder(GeometryFactory factory)
 	{
-		this.factory = factory;
+		super(factory);
 		nodeBuilder = new NodeBuilder(factory);
 		wayBuilder = new WayBuilder(factory);
 		wayBuilder.setMissingEntitiesStrategy(missingEntitiesStrategy);

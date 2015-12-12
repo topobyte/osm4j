@@ -36,13 +36,12 @@ import de.topobyte.osm4j.core.resolve.OsmEntityProvider;
 /**
  * @author Sebastian Kuerten (sebastian@topobyte.de)
  */
-public class WayGeometryBuilder
+public class WayGeometryBuilder extends AbstractGeometryBuilder
 {
 
 	final static Logger logger = LoggerFactory
 			.getLogger(WayGeometryBuilder.class);
 
-	protected GeometryFactory factory;
 	private NodeBuilder nodeBuilder;
 
 	private MissingEntitiesStrategy missingEntitiesStrategy = MissingEntitiesStrategy.THROW_EXCEPTION;
@@ -58,7 +57,7 @@ public class WayGeometryBuilder
 
 	public WayGeometryBuilder(GeometryFactory factory)
 	{
-		this.factory = factory;
+		super(factory);
 		nodeBuilder = new NodeBuilder(factory);
 	}
 

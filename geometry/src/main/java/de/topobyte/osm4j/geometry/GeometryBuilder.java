@@ -31,7 +31,7 @@ import de.topobyte.osm4j.core.resolve.OsmEntityProvider;
 /**
  * @author Sebastian Kuerten (sebastian@topobyte.de)
  */
-public class GeometryBuilder
+public class GeometryBuilder extends AbstractGeometryBuilder
 {
 
 	private NodeBuilder nodeBuilder;
@@ -48,6 +48,7 @@ public class GeometryBuilder
 
 	public GeometryBuilder(GeometryFactory factory)
 	{
+		super(factory);
 		nodeBuilder = new NodeBuilder(factory);
 		wayBuilder = new WayBuilder(factory);
 		regionBuilder = new RegionBuilder(factory);
