@@ -33,6 +33,25 @@ import de.topobyte.osm4j.core.model.iface.OsmNode;
 public class GeometryUtil
 {
 
+	public static Geometry createGeometry(List<Coordinate> coordinates,
+			List<LineString> lineStrings, GeometryFactory factory)
+	{
+		int numPoints = coordinates.size();
+		int numLines = lineStrings.size();
+
+		if (numPoints == 0 && numLines == 0) {
+			return new Point(null, factory);
+		} else if (numPoints == 0) {
+			return lines(lineStrings, factory);
+		} else if (numLines == 0) {
+			return points(coordinates, factory);
+		} else {
+			Geometry points = points(coordinates, factory);
+			Geometry lines = lines(lineStrings, factory);
+			return createGeometryCollection(factory, points, lines);
+		}
+	}
+
 	public static Geometry createGeometry(Coordinate[] coordinates,
 			LineString[] lineStrings, GeometryFactory factory)
 	{

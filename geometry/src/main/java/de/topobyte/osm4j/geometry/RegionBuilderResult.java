@@ -21,6 +21,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.MultiPolygon;
 
@@ -66,6 +68,12 @@ public class RegionBuilderResult
 		coordinates.clear();
 		lineStrings.clear();
 		multiPolygon = null;
+	}
+
+	public Geometry toGeometry(GeometryFactory factory)
+	{
+		return GeometryUtil.createGeometry(coordinates, lineStrings,
+				multiPolygon, factory);
 	}
 
 }

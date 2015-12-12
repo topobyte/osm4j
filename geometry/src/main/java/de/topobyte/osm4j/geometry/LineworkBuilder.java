@@ -166,11 +166,11 @@ public class LineworkBuilder extends AbstractGeometryBuilder
 		GeometryUtil.buildNodes(nodeBuilder, nodes, result.getCoordinates());
 
 		for (OsmWay way : ways) {
-			WayBuilderResult wayr = wayBuilder.buildResult(way, provider);
-			result.getCoordinates().addAll(wayr.getCoordinates());
-			result.getLineStrings().addAll(wayr.getLineStrings());
-			if (wayr.getLinearRing() != null) {
-				result.getLineStrings().add(wayr.getLinearRing());
+			WayBuilderResult wbr = wayBuilder.build(way, provider);
+			result.getCoordinates().addAll(wbr.getCoordinates());
+			result.getLineStrings().addAll(wbr.getLineStrings());
+			if (wbr.getLinearRing() != null) {
+				result.getLineStrings().add(wbr.getLinearRing());
 			}
 		}
 

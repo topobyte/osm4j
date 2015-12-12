@@ -21,6 +21,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.LinearRing;
 
@@ -66,6 +68,19 @@ public class WayBuilderResult
 		coordinates.clear();
 		lineStrings.clear();
 		linearRing = null;
+	}
+
+	public Geometry toGeometry(GeometryFactory factory)
+	{
+		Coordinate[] coordinates = this.coordinates.toArray(new Coordinate[0]);
+		LineString[] lineStrings = this.lineStrings.toArray(new LineString[0]);
+		if (linearRing == null) {
+			return GeometryUtil.createGeometry(coordinates, lineStrings,
+					factory);
+		} else {
+			return GeometryUtil.createGeometry(coordinates, lineStrings,
+					linearRing, factory);
+		}
 	}
 
 }

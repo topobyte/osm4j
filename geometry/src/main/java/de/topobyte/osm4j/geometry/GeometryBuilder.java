@@ -120,7 +120,8 @@ public class GeometryBuilder extends AbstractGeometryBuilder
 	public Geometry build(OsmWay way, OsmEntityProvider resolver)
 			throws EntityNotFoundException
 	{
-		return wayBuilder.buildThrowExceptionIfNodeMissing(way, resolver);
+		return wayBuilder.buildThrowExceptionIfNodeMissing(way, resolver)
+				.toGeometry(factory);
 	}
 
 	/**
@@ -135,7 +136,7 @@ public class GeometryBuilder extends AbstractGeometryBuilder
 	public Geometry build(OsmRelation relation, OsmEntityProvider resolver)
 			throws EntityNotFoundException
 	{
-		return regionBuilder.build(relation, resolver);
+		return regionBuilder.build(relation, resolver).toGeometry(factory);
 	}
 
 }
