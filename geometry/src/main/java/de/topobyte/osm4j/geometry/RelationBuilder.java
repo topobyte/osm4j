@@ -165,8 +165,9 @@ public class RelationBuilder
 		return buildPointsAndLines(nodes, ways, provider);
 	}
 
-	private Geometry buildPointsAndLines(Set<OsmNode> nodes, Set<OsmWay> ways,
-			OsmEntityProvider provider) throws EntityNotFoundException
+	public Geometry buildPointsAndLines(Collection<OsmNode> nodes,
+			Collection<OsmWay> ways, OsmEntityProvider provider)
+			throws EntityNotFoundException
 	{
 		List<Coordinate> coords = GeometryUtil.buildNodes(nodeBuilder, nodes);
 
