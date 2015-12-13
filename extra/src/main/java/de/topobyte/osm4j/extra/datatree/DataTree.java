@@ -20,6 +20,7 @@ package de.topobyte.osm4j.extra.datatree;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
@@ -121,10 +122,22 @@ public class DataTree
 		return results;
 	}
 
+	public List<Node> query(Coordinate coordinate)
+	{
+		return query(coordinate.x, coordinate.y);
+	}
+
 	public List<Node> query(Node start, double lon, double lat)
 	{
 		results.clear();
 		start.query(results, lon, lat);
+		return results;
+	}
+
+	public List<Node> query(Node start, Coordinate coordinate)
+	{
+		results.clear();
+		start.query(results, coordinate.x, coordinate.y);
 		return results;
 	}
 
