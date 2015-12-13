@@ -62,4 +62,10 @@ public class LineworkBuilderResult
 		return GeometryUtil.createGeometry(coordinates, lineStrings, factory);
 	}
 
+	public GeometryGroup toGeometryGroup(GeometryFactory factory)
+	{
+		return GeometryUtil.createGeometryGroup(coordinates, lineStrings,
+				factory);
+	}
+
 }

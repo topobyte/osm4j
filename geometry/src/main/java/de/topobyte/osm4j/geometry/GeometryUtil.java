@@ -26,12 +26,30 @@ import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryCollection;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LineString;
+import com.vividsolutions.jts.geom.MultiLineString;
+import com.vividsolutions.jts.geom.MultiPoint;
 import com.vividsolutions.jts.geom.Point;
 
 import de.topobyte.osm4j.core.model.iface.OsmNode;
 
 public class GeometryUtil
 {
+
+	public static MultiPoint createMultiPoint(List<Coordinate> coordinates,
+			GeometryFactory factory)
+	{
+		Coordinate[] coords = coordinates.toArray(new Coordinate[coordinates
+				.size()]);
+		return factory.createMultiPoint(coords);
+	}
+
+	public static MultiLineString createMultiLineString(
+			List<LineString> lineStrings, GeometryFactory factory)
+	{
+		LineString[] strings = lineStrings.toArray(new LineString[lineStrings
+				.size()]);
+		return factory.createMultiLineString(strings);
+	}
 
 	public static Geometry createGeometry(List<Coordinate> coordinates,
 			List<LineString> lineStrings, GeometryFactory factory)
@@ -112,6 +130,48 @@ public class GeometryUtil
 			Geometry points = points(coordinates, factory);
 			Geometry lines = lines(lineStrings, factory);
 			return createGeometryCollection(factory, geometry, lines, points);
+		}
+	}
+
+	public static GeometryGroup createGeometryGroup(
+			List<Coordinate> coordinates, List<LineString> lineStrings,
+			GeometryFactory factory)
+	{
+		int numPoints = coordinates.size();
+		int numLines = lineStrings.size();
+
+		if (numPoints == 0 && numLines == 0) {
+			return new GeometryGroup(factory);
+		} else if (numPoints == 0) {
+			return new GeometryGroup(factory, lines(lineStrings, factory));
+		} else if (numLines == 0) {
+			return new GeometryGroup(factory, points(coordinates, factory));
+		} else {
+			Geometry points = points(coordinates, factory);
+			Geometry lines = lines(lineStrings, factory);
+			return new GeometryGroup(factory, points, lines);
+		}
+	}
+
+	public static <T extends Geometry> GeometryGroup createGeometryGroup(
+			List<Coordinate> coordinates, List<LineString> lineStrings,
+			T geometry, GeometryFactory factory)
+	{
+		int numPoints = coordinates.size();
+		int numLines = lineStrings.size();
+
+		if (numPoints == 0 && numLines == 0) {
+			return new GeometryGroup(factory, geometry);
+		} else if (numPoints == 0) {
+			return new GeometryGroup(factory, geometry, lines(lineStrings,
+					factory));
+		} else if (numLines == 0) {
+			return new GeometryGroup(factory, geometry, points(coordinates,
+					factory));
+		} else {
+			Geometry points = points(coordinates, factory);
+			Geometry lines = lines(lineStrings, factory);
+			return new GeometryGroup(factory, geometry, points, lines);
 		}
 	}
 

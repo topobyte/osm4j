@@ -72,13 +72,22 @@ public class WayBuilderResult
 
 	public Geometry toGeometry(GeometryFactory factory)
 	{
-		Coordinate[] coordinates = this.coordinates.toArray(new Coordinate[0]);
-		LineString[] lineStrings = this.lineStrings.toArray(new LineString[0]);
 		if (linearRing == null) {
 			return GeometryUtil.createGeometry(coordinates, lineStrings,
 					factory);
 		} else {
 			return GeometryUtil.createGeometry(coordinates, lineStrings,
+					linearRing, factory);
+		}
+	}
+
+	public GeometryGroup toGeometryGroup(GeometryFactory factory)
+	{
+		if (linearRing == null) {
+			return GeometryUtil.createGeometryGroup(coordinates, lineStrings,
+					factory);
+		} else {
+			return GeometryUtil.createGeometryGroup(coordinates, lineStrings,
 					linearRing, factory);
 		}
 	}

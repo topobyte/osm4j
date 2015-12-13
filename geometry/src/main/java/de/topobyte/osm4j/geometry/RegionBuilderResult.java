@@ -72,8 +72,24 @@ public class RegionBuilderResult
 
 	public Geometry toGeometry(GeometryFactory factory)
 	{
-		return GeometryUtil.createGeometry(coordinates, lineStrings,
-				multiPolygon, factory);
+		if (multiPolygon == null) {
+			return GeometryUtil.createGeometry(coordinates, lineStrings,
+					factory);
+		} else {
+			return GeometryUtil.createGeometry(coordinates, lineStrings,
+					multiPolygon, factory);
+		}
+	}
+
+	public GeometryGroup toGeometryGroup(GeometryFactory factory)
+	{
+		if (multiPolygon == null) {
+			return GeometryUtil.createGeometryGroup(coordinates, lineStrings,
+					factory);
+		} else {
+			return GeometryUtil.createGeometryGroup(coordinates, lineStrings,
+					multiPolygon, factory);
+		}
 	}
 
 }
