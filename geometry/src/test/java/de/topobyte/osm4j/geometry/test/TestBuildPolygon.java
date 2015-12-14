@@ -40,6 +40,8 @@ import de.topobyte.osm4j.core.dataset.MapDataSetLoader;
 import de.topobyte.osm4j.core.model.iface.OsmRelation;
 import de.topobyte.osm4j.core.resolve.EntityNotFoundException;
 import de.topobyte.osm4j.geometry.GeometryBuilder;
+import de.topobyte.osm4j.geometry.MissingEntitiesStrategy;
+import de.topobyte.osm4j.geometry.MissingWayNodeStrategy;
 import de.topobyte.osm4j.xml.dynsax.OsmXmlIterator;
 
 public class TestBuildPolygon
@@ -74,6 +76,10 @@ public class TestBuildPolygon
 		File file = new File(outputDir, filename);
 
 		GeometryBuilder geometryBuilder = new GeometryBuilder();
+		geometryBuilder
+				.setMissingEntitiesStrategy(MissingEntitiesStrategy.BUILD_PARTIAL);
+		geometryBuilder
+				.setMissingWayNodeStrategy(MissingWayNodeStrategy.OMIT_VERTEX_FROM_POLYLINE);
 		Geometry polygon = geometryBuilder.build(relation, data);
 		WKTWriter writer = new WKTWriter();
 		FileWriter fileWriter = new FileWriter(file);
