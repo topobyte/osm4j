@@ -37,7 +37,6 @@ import java.util.Map;
 import java.util.Set;
 
 import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.LinearRing;
 import com.vividsolutions.jts.geom.Polygon;
 
@@ -58,7 +57,9 @@ import de.topobyte.osm4j.extra.datatree.DataTree;
 import de.topobyte.osm4j.extra.datatree.DataTreeFiles;
 import de.topobyte.osm4j.extra.datatree.DataTreeOpener;
 import de.topobyte.osm4j.extra.datatree.Node;
-import de.topobyte.osm4j.geometry.GeometryBuilder;
+import de.topobyte.osm4j.geometry.GeometryGroup;
+import de.topobyte.osm4j.geometry.WayBuilder;
+import de.topobyte.osm4j.geometry.WayBuilderResult;
 import de.topobyte.osm4j.utils.FileFormat;
 import de.topobyte.osm4j.utils.OsmIoUtils;
 import de.topobyte.osm4j.utils.OsmOutputConfig;
@@ -273,27 +274,31 @@ public abstract class AbstractWaysDistributor implements WaysDistributor
 		return tree.query(node.getLongitude(), node.getLatitude());
 	}
 
+	private GeometryFactory f = new GeometryFactory();
+	private WayBuilder wb = new WayBuilder(f);
+
 	private List<Node> buildNonClosedWay(OsmWay way,
 			TLongObjectMap<OsmNode> nodes, OsmEntityProvider entityProvider)
 			throws EntityNotFoundException
 	{
-		LineString line = GeometryBuilder.build(way, entityProvider);
-		QueryUtil.putNodes(way, nodes, entityProvider);
-		return tree.query(line);
-	}
+		WayBuilderResult build = wb.build(way, entityProvider);
+		GeometryGroup group = build.toGeometryGroup(f);
 
-	private GeometryFactory f = new GeometryFactory();
+		QueryUtil.putNodes(way, nodes, entityProvider);
+		return tree.query(group);
+	}
 
 	private List<Node> buildClosedWay(OsmWay way,
 			TLongObjectMap<OsmNode> nodes, OsmEntityProvider entityProvider)
 			throws EntityNotFoundException
 	{
-		LineString line = GeometryBuilder.build(way, entityProvider);
-		LinearRing ring = f.createLinearRing(line.getCoordinateSequence());
+		WayBuilderResult build = wb.build(way, entityProvider);
+		GeometryGroup group = build.toGeometryGroup(f);
+		LinearRing ring = build.getLinearRing();
 		Polygon polygon = f.createPolygon(ring);
 		QueryUtil.putNodes(way, nodes, entityProvider);
 
-		List<Node> leafs1 = new ArrayList<>(tree.query(line));
+		List<Node> leafs1 = new ArrayList<>(tree.query(group));
 		List<Node> leafs2 = new ArrayList<>(tree.query(polygon));
 		if (leafs1.size() == 1 && leafs2.size() == 1
 				&& leafs1.get(0) == leafs2.get(0)) {

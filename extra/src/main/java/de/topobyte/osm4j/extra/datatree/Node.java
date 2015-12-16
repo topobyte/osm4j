@@ -207,7 +207,7 @@ public class Node
 
 	public void query(List<Node> nodes, Geometry geometry)
 	{
-		if (!box.intersects(geometry)) {
+		if (!geometry.intersects(box)) {
 			return;
 		}
 

@@ -31,9 +31,7 @@ import java.util.Set;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Envelope;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.LineString;
-import com.vividsolutions.jts.geom.MultiPolygon;
+import com.vividsolutions.jts.geom.GeometryFactory;
 
 import de.topobyte.jts.utils.predicate.ContainmentTest;
 import de.topobyte.osm4j.core.access.OsmIteratorInput;
@@ -57,8 +55,13 @@ import de.topobyte.osm4j.extra.datatree.Node;
 import de.topobyte.osm4j.extra.relations.Group;
 import de.topobyte.osm4j.extra.relations.RelationGraph;
 import de.topobyte.osm4j.geometry.BboxBuilder;
-import de.topobyte.osm4j.geometry.GeometryBuilder;
-import de.topobyte.osm4j.geometry.RelationBuilder;
+import de.topobyte.osm4j.geometry.GeometryGroup;
+import de.topobyte.osm4j.geometry.LineworkBuilder;
+import de.topobyte.osm4j.geometry.LineworkBuilderResult;
+import de.topobyte.osm4j.geometry.RegionBuilder;
+import de.topobyte.osm4j.geometry.RegionBuilderResult;
+import de.topobyte.osm4j.geometry.WayBuilder;
+import de.topobyte.osm4j.geometry.WayBuilderResult;
 import de.topobyte.osm4j.utils.FileFormat;
 import de.topobyte.osm4j.utils.OsmFileInput;
 import de.topobyte.osm4j.utils.OsmIoUtils;
@@ -130,6 +133,11 @@ public class LeafQuery
 
 	private CompositeOsmEntityProvider providerSimple;
 	private CompositeOsmEntityProvider providerComplex;
+
+	private GeometryFactory factory = new GeometryFactory();
+	private WayBuilder wayBuilder = new WayBuilder(factory);
+	private LineworkBuilder lineworkBuilder = new LineworkBuilder(factory);
+	private RegionBuilder regionBuilder = new RegionBuilder(factory);
 
 	public QueryResult execute(Node leaf, Path pathOutNodes, Path pathOutWays,
 			Path pathOutSimpleRelations, Path pathOutComplexRelations,
@@ -243,8 +251,10 @@ public class LeafQuery
 			boolean in = QueryUtil.anyNodeContainedIn(way, nodeIds);
 			if (!in && way.getNumberOfNodes() > 1) {
 				try {
-					LineString string = GeometryBuilder.build(way, dataNodes);
-					if (test.intersects(string)) {
+					WayBuilderResult result = wayBuilder.build(way, dataNodes);
+					GeometryGroup group = result.toGeometryGroup(factory);
+					// TODO: this won't work as expected
+					if (test.intersects(group)) {
 						in = true;
 					}
 				} catch (EntityNotFoundException e) {
@@ -289,18 +299,27 @@ public class LeafQuery
 			}
 
 			if (!in && !fastRelationTests) {
-				Geometry pointsAndLines = RelationBuilder.buildPointsAndLines(
-						relation, providerSimple);
-				if (test.intersects(pointsAndLines)) {
-					in = true;
+				try {
+					LineworkBuilderResult result = lineworkBuilder.build(
+							relation, providerSimple);
+					GeometryGroup group = result.toGeometryGroup(factory);
+					// TODO: this won't work as expected
+					if (test.intersects(group)) {
+						in = true;
+					}
+				} catch (EntityNotFoundException e) {
+					System.out.println("Unable to build relation: "
+							+ relation.getId());
 				}
 			}
 
 			if (!in && !fastRelationTests) {
 				try {
-					MultiPolygon polygon = GeometryBuilder.build(relation,
+					RegionBuilderResult result = regionBuilder.build(relation,
 							providerSimple);
-					if (test.intersects(polygon)) {
+					GeometryGroup group = result.toGeometryGroup(factory);
+					// TODO: this won't work as expected
+					if (test.intersects(group)) {
 						in = true;
 					}
 				} catch (EntityNotFoundException e) {
@@ -353,15 +372,17 @@ public class LeafQuery
 			System.out.println("subgroups: " + groupGroups.size());
 
 			for (Group subGroup : groupGroups) {
+				OsmRelation start;
 				List<OsmRelation> subRelations;
 				try {
+					start = dataComplexRelations.getRelation(group.getStart());
 					subRelations = finder.findRelations(subGroup
 							.getRelationIds());
 				} catch (EntityNotFoundException e) {
 					// Can't happen, using the IGNORE strategy
 					continue;
 				}
-				if (intersects(subRelations)) {
+				if (intersects(start, subRelations)) {
 					found.addAll(subRelations);
 				}
 			}
@@ -385,7 +406,8 @@ public class LeafQuery
 		}
 	}
 
-	private boolean intersects(List<OsmRelation> relations) throws IOException
+	private boolean intersects(OsmRelation start, List<OsmRelation> relations)
+			throws IOException
 	{
 		EntityFinder finder = EntityFinders.create(dataComplexRelations,
 				EntityNotFoundStrategy.IGNORE);
@@ -407,15 +429,31 @@ public class LeafQuery
 		}
 
 		if (!in && !fastRelationTests) {
-			Geometry pointsAndLines = RelationBuilder.buildPointsAndLines(
-					relations, providerComplex);
-			if (test.intersects(pointsAndLines)) {
-				in = true;
+			try {
+				LineworkBuilderResult result = lineworkBuilder.build(relations,
+						providerComplex);
+				GeometryGroup group = result.toGeometryGroup(factory);
+				// TODO: this won't work as expected
+				if (test.intersects(group)) {
+					in = true;
+				}
+			} catch (EntityNotFoundException e) {
+				System.out.println("Unable to build relation group");
 			}
 		}
 
 		if (!in && !fastRelationTests) {
-			// TODO: perform exact test
+			try {
+				RegionBuilderResult result = regionBuilder.build(start,
+						providerComplex);
+				GeometryGroup group = result.toGeometryGroup(factory);
+				// TODO: this won't work as expected
+				if (test.intersects(group)) {
+					in = true;
+				}
+			} catch (EntityNotFoundException e) {
+				System.out.println("Unable to build relation group");
+			}
 		}
 
 		return in;
