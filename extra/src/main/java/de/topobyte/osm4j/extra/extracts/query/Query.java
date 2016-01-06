@@ -168,6 +168,10 @@ public class Query
 		System.out.println(String.format(
 				"Total number of complex relations: %d", nComplexRelations));
 
+		// Query relations
+
+		// TODO: implement this
+
 		// Merge intermediate files
 
 		OutputStream output = StreamUtil.bufferedOutputStream(pathOutput);
