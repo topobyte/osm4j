@@ -24,7 +24,7 @@ import java.io.Reader;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.io.WKTReader;
 
-import de.topobyte.jts.utils.predicate.ContainmentTestJtsPrepared;
+import de.topobyte.jts.utils.predicate.PredicateEvaluatorPrepared;
 import de.topobyte.osm4j.utils.AbstractAreaFilter;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
@@ -83,7 +83,7 @@ public class OsmRegionFilter extends AbstractAreaFilter
 	{
 		super.init();
 
-		test = new ContainmentTestJtsPrepared(region);
+		test = new PredicateEvaluatorPrepared(region);
 	}
 
 }

@@ -23,7 +23,7 @@ import java.io.IOException;
 
 import com.vividsolutions.jts.geom.Coordinate;
 
-import de.topobyte.jts.utils.predicate.ContainmentTest;
+import de.topobyte.jts.utils.predicate.PredicateEvaluator;
 import de.topobyte.osm4j.core.access.OsmIterator;
 import de.topobyte.osm4j.core.access.ProgressMonitor;
 import de.topobyte.osm4j.core.model.iface.EntityContainer;
@@ -44,7 +44,7 @@ public abstract class AbstractAreaFilter extends
 
 	private ProgressMonitor monitor = new ProgressMonitor("bboxfilter");
 
-	protected ContainmentTest test;
+	protected PredicateEvaluator test;
 	private TLongHashSet nodeIds = new TLongHashSet();
 	private TLongHashSet wayIds = new TLongHashSet();
 
