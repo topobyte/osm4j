@@ -40,6 +40,9 @@ public class SplitNonTreeRelations extends AbstractExecutableInputOutput
 	private static final String OPTION_OUTPUT_SIMPLE = "output_simple";
 	private static final String OPTION_OUTPUT_COMPLEX = "output_complex";
 
+	private static final String OPTION_OUTPUT_SIMPLE_BBOXES = "output_simple_bboxes";
+	private static final String OPTION_OUTPUT_COMPLEX_BBOXES = "output_complex_bboxes";
+
 	@Override
 	protected String getHelpMessage()
 	{
@@ -63,6 +66,8 @@ public class SplitNonTreeRelations extends AbstractExecutableInputOutput
 	private String pathInputComplexOld;
 	private String pathOutputSimple;
 	private String pathOutputComplex;
+	private String pathOutputSimpleBboxes;
+	private String pathOutputComplexBboxes;
 
 	public SplitNonTreeRelations()
 	{
@@ -77,6 +82,8 @@ public class SplitNonTreeRelations extends AbstractExecutableInputOutput
 		OptionHelper.add(options, OPTION_INPUT_COMPLEX, true, true, "input: complex relations");
 		OptionHelper.add(options, OPTION_OUTPUT_SIMPLE, true, true, "output: simple relations");
 		OptionHelper.add(options, OPTION_OUTPUT_COMPLEX, true, true, "output: complex relations");
+		OptionHelper.add(options, OPTION_OUTPUT_SIMPLE_BBOXES, true, true, "output: simple relations bboxes");
+		OptionHelper.add(options, OPTION_OUTPUT_COMPLEX_BBOXES, true, true, "output: complex relations bboxes");
 		// @formatter:on
 	}
 
@@ -94,6 +101,10 @@ public class SplitNonTreeRelations extends AbstractExecutableInputOutput
 		pathInputComplexOld = line.getOptionValue(OPTION_INPUT_COMPLEX_OLD);
 		pathOutputSimple = line.getOptionValue(OPTION_OUTPUT_SIMPLE);
 		pathOutputComplex = line.getOptionValue(OPTION_OUTPUT_COMPLEX);
+		pathOutputSimpleBboxes = line
+				.getOptionValue(OPTION_OUTPUT_SIMPLE_BBOXES);
+		pathOutputComplexBboxes = line
+				.getOptionValue(OPTION_OUTPUT_COMPLEX_BBOXES);
 	}
 
 	private void execute() throws IOException
@@ -107,7 +118,8 @@ public class SplitNonTreeRelations extends AbstractExecutableInputOutput
 				Paths.get(pathInputComplexBboxes),
 				Paths.get(pathInputSimpleOld), Paths.get(pathInputComplexOld),
 				Paths.get(pathOutputSimple), Paths.get(pathOutputComplex),
-				inputFormat, outputConfig);
+				inputFormat, outputConfig, Paths.get(pathOutputSimpleBboxes),
+				Paths.get(pathOutputComplexBboxes));
 		splitter.execute();
 	}
 

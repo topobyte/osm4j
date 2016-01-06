@@ -109,6 +109,8 @@ public class ExtractionFilesBuilder
 	private Path pathComplexRelationsEmpty;
 	private Path pathSimpleRelationsSorted;
 	private Path pathComplexRelationsSorted;
+	private Path pathSimpleRelationsSortedBboxes;
+	private Path pathComplexRelationsSortedBboxes;
 
 	private TimeTable t = new TimeTable();
 
@@ -169,6 +171,10 @@ public class ExtractionFilesBuilder
 				.resolve("relations.simple.sorted");
 		pathComplexRelationsSorted = pathOutput
 				.resolve("relations.complex.sorted");
+		pathSimpleRelationsSortedBboxes = pathOutput
+				.resolve("relations.simple.sorted.bboxlist");
+		pathComplexRelationsSortedBboxes = pathOutput
+				.resolve("relations.complex.sorted.bboxlist");
 
 		OsmFileInput fileInput = new OsmFileInput(pathInput, inputFormat);
 
@@ -435,7 +441,9 @@ public class ExtractionFilesBuilder
 				pathSimpleRelationsNonTreeBboxes,
 				pathComplexRelationsNonTreeBboxes, pathSimpleRelationsDir,
 				pathComplexRelationsDir, pathSimpleRelationsSorted,
-				pathComplexRelationsSorted, outputFormat, outputConfigRelations);
+				pathComplexRelationsSorted, outputFormat,
+				outputConfigRelations, pathSimpleRelationsSortedBboxes,
+				pathComplexRelationsSortedBboxes);
 		nonTreeSplitter.execute();
 
 		t.stop(KEY_SORT_RELATIONS);

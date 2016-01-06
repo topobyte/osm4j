@@ -33,6 +33,7 @@ public class SortSimpleRelations extends
 	private static final String OPTION_INPUT_BBOXES = "bboxes";
 	private static final String OPTION_OUTPUT = "output";
 	private static final String OPTION_FILE_NAMES_RELATIONS = "relations";
+	private static final String OPTION_OUTPUT_BBOXES = "output_bboxes";
 
 	@Override
 	protected String getHelpMessage()
@@ -55,6 +56,7 @@ public class SortSimpleRelations extends
 
 	private String pathInputBboxes;
 	private String pathOutput;
+	private String pathOutputBboxes;
 
 	private String fileNamesRelations;
 
@@ -64,6 +66,7 @@ public class SortSimpleRelations extends
 		OptionHelper.add(options, OPTION_INPUT_BBOXES, true, true, "bbox information file");
 		OptionHelper.add(options, OPTION_OUTPUT, true, true, "directory to store output in");
 		OptionHelper.add(options, OPTION_FILE_NAMES_RELATIONS, true, true, "names of the relation files in each directory");
+		OptionHelper.add(options, OPTION_OUTPUT_BBOXES, true, true, "bbox information file");
 		// @formatter:on
 	}
 
@@ -74,6 +77,7 @@ public class SortSimpleRelations extends
 
 		pathInputBboxes = line.getOptionValue(OPTION_INPUT_BBOXES);
 		pathOutput = line.getOptionValue(OPTION_OUTPUT);
+		pathOutputBboxes = line.getOptionValue(OPTION_OUTPUT_BBOXES);
 
 		fileNamesRelations = line.getOptionValue(OPTION_FILE_NAMES_RELATIONS);
 	}
@@ -87,7 +91,8 @@ public class SortSimpleRelations extends
 
 		SimpleRelationSorter sorter = new SimpleRelationSorter(
 				Paths.get(pathInputBboxes), Paths.get(pathOutput),
-				fileNamesRelations, streamInput, outputConfig);
+				fileNamesRelations, streamInput, outputConfig,
+				Paths.get(pathOutputBboxes));
 
 		sorter.execute();
 	}

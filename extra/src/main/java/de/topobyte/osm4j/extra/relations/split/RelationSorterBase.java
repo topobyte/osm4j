@@ -41,6 +41,7 @@ import de.topobyte.osm4j.core.access.OsmOutputStreamStreamOutput;
 import de.topobyte.osm4j.core.access.OsmStreamOutput;
 import de.topobyte.osm4j.core.model.impl.Bounds;
 import de.topobyte.osm4j.extra.idbboxlist.IdBboxEntry;
+import de.topobyte.osm4j.extra.idbboxlist.IdBboxListOutputStream;
 import de.topobyte.osm4j.extra.idbboxlist.IdBboxUtil;
 import de.topobyte.osm4j.utils.OsmIoUtils;
 import de.topobyte.osm4j.utils.OsmOutputConfig;
@@ -56,22 +57,25 @@ public class RelationSorterBase
 	private String fileNamesRelations;
 	protected OsmIteratorInputFactory iteratorFactory;
 	protected OsmOutputConfig outputConfig;
+	private Path pathOutputBboxList;
 
 	protected NumberFormat format = NumberFormat.getNumberInstance(Locale.US);
 
 	protected TLongIntMap idToBatch;
 	protected List<List<IdBboxEntry>> batches;
 	protected List<OsmStreamOutput> outputs;
+	private IdBboxListOutputStream bboxOutput;
 
 	public RelationSorterBase(Path pathInputBboxes, Path pathOutput,
 			String fileNamesRelations, OsmIteratorInputFactory iteratorFactory,
-			OsmOutputConfig outputConfig)
+			OsmOutputConfig outputConfig, Path pathOutputBboxList)
 	{
 		this.pathInputBboxes = pathInputBboxes;
 		this.pathOutput = pathOutput;
 		this.fileNamesRelations = fileNamesRelations;
 		this.iteratorFactory = iteratorFactory;
 		this.outputConfig = outputConfig;
+		this.pathOutputBboxList = pathOutputBboxList;
 	}
 
 	protected void ensureOutputDirectory() throws IOException
@@ -88,6 +92,13 @@ public class RelationSorterBase
 			System.out.println("Output directory is not empty");
 			System.exit(1);
 		}
+	}
+
+	protected void createBboxOutput() throws IOException
+	{
+		OutputStream output = StreamUtil
+				.bufferedOutputStream(pathOutputBboxList);
+		bboxOutput = new IdBboxListOutputStream(output);
 	}
 
 	protected void createBatchOutputs() throws IOException
@@ -113,7 +124,12 @@ public class RelationSorterBase
 
 		outputs = new ArrayList<>();
 		for (int i = 0; i < batches.size(); i++) {
-			String subdirName = String.format("%d", i + 1);
+			int id = i + 1;
+			List<IdBboxEntry> batch = batches.get(i);
+
+			IdBboxEntry batchEntry = sum(id, batch);
+
+			String subdirName = String.format("%d", id);
 			Path subdir = pathOutput.resolve(subdirName);
 			Path path = subdir.resolve(fileNamesRelations);
 			Files.createDirectory(subdir);
@@ -124,22 +140,33 @@ public class RelationSorterBase
 					outputConfig);
 			outputs.add(new OsmOutputStreamStreamOutput(output, osmOutput));
 
-			Envelope e = new Envelope();
-			for (IdBboxEntry entry : batches.get(i)) {
-				e.expandToInclude(entry.getEnvelope());
-			}
+			Envelope e = batchEntry.getEnvelope();
 			Bounds bounds = new Bounds(e.getMinX(), e.getMaxX(), e.getMaxY(),
 					e.getMinY());
 			osmOutput.write(bounds);
+
+			bboxOutput.write(batchEntry);
 		}
 	}
 
 	protected void closeOutputs() throws IOException
 	{
+		bboxOutput.close();
 		for (OsmStreamOutput output : outputs) {
 			output.getOsmOutput().complete();
 			output.close();
 		}
+	}
+
+	private IdBboxEntry sum(int id, List<IdBboxEntry> batch)
+	{
+		Envelope envelope = new Envelope();
+		int size = 0;
+		for (IdBboxEntry entry : batch) {
+			envelope.expandToInclude(entry.getEnvelope());
+			size += entry.getSize();
+		}
+		return new IdBboxEntry(id, envelope, size);
 	}
 
 }

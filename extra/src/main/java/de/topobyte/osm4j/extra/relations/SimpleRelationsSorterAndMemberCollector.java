@@ -42,12 +42,15 @@ public class SimpleRelationsSorterAndMemberCollector
 
 	private OsmOutputConfig outputConfig;
 
+	private Path pathOutputBboxList;
+
 	public SimpleRelationsSorterAndMemberCollector(
 			OsmIteratorInputFactory inputSimpleRelations,
 			Path pathInputSimpleRelationsBboxes,
 			Path pathOutputSimpleRelations, String fileNamesRelations,
 			OsmIteratorInputFactory inputWays,
-			OsmIteratorInputFactory inputNodes, OsmOutputConfig outputConfig)
+			OsmIteratorInputFactory inputNodes, OsmOutputConfig outputConfig,
+			Path pathOutputBboxList)
 	{
 		this.inputSimpleRelations = inputSimpleRelations;
 		this.pathInputSimpleRelationsBboxes = pathInputSimpleRelationsBboxes;
@@ -56,6 +59,7 @@ public class SimpleRelationsSorterAndMemberCollector
 		this.inputWays = inputWays;
 		this.inputNodes = inputNodes;
 		this.outputConfig = outputConfig;
+		this.pathOutputBboxList = pathOutputBboxList;
 	}
 
 	public void execute() throws IOException
@@ -68,7 +72,8 @@ public class SimpleRelationsSorterAndMemberCollector
 
 		SimpleRelationSorter simpleRelationSorter = new SimpleRelationSorter(
 				pathInputSimpleRelationsBboxes, pathOutputSimpleRelations,
-				fileNamesRelations, inputSimpleRelations, outputConfig);
+				fileNamesRelations, inputSimpleRelations, outputConfig,
+				pathOutputBboxList);
 
 		simpleRelationSorter.execute();
 

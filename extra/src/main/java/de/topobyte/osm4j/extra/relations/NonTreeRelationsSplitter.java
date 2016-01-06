@@ -46,12 +46,16 @@ public class NonTreeRelationsSplitter
 	private FileFormat inputFormat;
 	private OsmOutputConfig outputConfig;
 
+	private Path pathOutputSimpleBboxList;
+	private Path pathOutputComplexBboxList;
+
 	public NonTreeRelationsSplitter(Path pathInputSimple,
 			Path pathInputComplex, Path pathInputSimpleBboxes,
 			Path pathInputComplexBboxes, Path pathInputSimpleOld,
 			Path pathInputComplexOld, Path pathOutputSimple,
 			Path pathOutputComplex, FileFormat inputFormat,
-			OsmOutputConfig outputConfig)
+			OsmOutputConfig outputConfig, Path pathOutputSimpleBboxList,
+			Path pathOutputComplexBboxList)
 	{
 		this.pathInputSimple = pathInputSimple;
 		this.pathInputComplex = pathInputComplex;
@@ -63,6 +67,8 @@ public class NonTreeRelationsSplitter
 		this.pathOutputComplex = pathOutputComplex;
 		this.inputFormat = inputFormat;
 		this.outputConfig = outputConfig;
+		this.pathOutputSimpleBboxList = pathOutputSimpleBboxList;
+		this.pathOutputComplexBboxList = pathOutputComplexBboxList;
 	}
 
 	public void execute() throws IOException
@@ -107,14 +113,15 @@ public class NonTreeRelationsSplitter
 		SimpleRelationsSorterAndMemberCollector task1 = new SimpleRelationsSorterAndMemberCollector(
 				inputSimpleRelations, pathInputSimpleBboxes,
 				pathOutputSimpleRelations, fileNamesRelations, inputWaysSimple,
-				inputNodesSimple, outputConfig);
+				inputNodesSimple, outputConfig, pathOutputSimpleBboxList);
 
 		task1.execute();
 
 		ComplexRelationsSorterAndMemberCollector task2 = new ComplexRelationsSorterAndMemberCollector(
 				inputComplexRelations, pathInputComplexBboxes,
 				pathOutputComplexRelations, fileNamesRelations,
-				inputWaysComplex, inputNodesComplex, outputConfig);
+				inputWaysComplex, inputNodesComplex, outputConfig,
+				pathOutputComplexBboxList);
 
 		task2.execute();
 	}

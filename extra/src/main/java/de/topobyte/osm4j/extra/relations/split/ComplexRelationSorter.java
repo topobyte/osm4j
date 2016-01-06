@@ -36,16 +36,17 @@ public class ComplexRelationSorter extends RelationSorterBase
 
 	public ComplexRelationSorter(Path pathInputBboxes, Path pathOutput,
 			String fileNamesRelations, OsmIteratorInputFactory iteratorFactory,
-			OsmOutputConfig outputConfig)
+			OsmOutputConfig outputConfig, Path pathOutputBboxList)
 	{
 		super(pathInputBboxes, pathOutput, fileNamesRelations, iteratorFactory,
-				outputConfig);
+				outputConfig, pathOutputBboxList);
 	}
 
 	public void execute() throws IOException
 	{
 		ensureOutputDirectory();
 
+		createBboxOutput();
 		createBatchOutputs();
 
 		ComplexRelationGrouper grouper = new ComplexRelationGrouper(
