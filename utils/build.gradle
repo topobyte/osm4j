@@ -23,7 +23,7 @@ repositories {
 
 dependencies {
     compile 'de.topobyte:osm4j-core:0.0.8'
-    compile 'de.topobyte:osm4j-xml:0.0.2'
+    compile 'de.topobyte:osm4j-xml:0.0.3'
     compile 'de.topobyte:osm4j-pbf:0.0.5'
     compile 'de.topobyte:osm4j-tbo:0.0.9'
     compile 'de.topobyte:osm4j-geometry:0.0.1'
