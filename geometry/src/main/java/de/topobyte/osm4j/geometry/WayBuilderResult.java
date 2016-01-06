@@ -26,6 +26,8 @@ import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.LinearRing;
 
+import de.topobyte.jts.utils.GeometryGroup;
+
 public class WayBuilderResult
 {
 

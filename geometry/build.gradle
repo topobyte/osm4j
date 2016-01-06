@@ -23,7 +23,7 @@ repositories {
 
 dependencies {
     compile 'de.topobyte:osm4j-core:0.0.15'
-    compile 'de.topobyte:jts-utils:0.0.3'
+    compile 'de.topobyte:jts-utils:0.0.4'
 
     compile 'org.slf4j:slf4j-api:1.6.1'
     runtime 'org.slf4j:slf4j-log4j12:1.6.1'

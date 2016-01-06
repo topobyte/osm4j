@@ -30,6 +30,7 @@ import com.vividsolutions.jts.geom.MultiLineString;
 import com.vividsolutions.jts.geom.MultiPoint;
 import com.vividsolutions.jts.geom.Point;
 
+import de.topobyte.jts.utils.GeometryGroup;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
 
 public class GeometryUtil
