@@ -23,7 +23,7 @@ import java.nio.file.Paths;
 
 import com.vividsolutions.jts.geom.Envelope;
 
-import de.topobyte.jts.utils.predicate.ContainmentTest;
+import de.topobyte.jts.utils.predicate.PredicateEvaluator;
 import de.topobyte.osm4j.extra.datatree.DataTree;
 import de.topobyte.osm4j.extra.extracts.query.Query;
 import de.topobyte.osm4j.utils.AbstractExecutableInputOutput;
@@ -81,7 +81,7 @@ public abstract class BaseQuery extends AbstractExecutableInputOutput
 	protected String fileNamesRelationRelations;
 
 	protected Envelope queryEnvelope;
-	protected ContainmentTest test;
+	protected PredicateEvaluator test;
 
 	protected boolean keepTmp;
 

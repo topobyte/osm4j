@@ -21,7 +21,7 @@ import java.io.IOException;
 
 import de.topobyte.adt.geo.BBox;
 import de.topobyte.adt.geo.BBoxString;
-import de.topobyte.jts.utils.predicate.ContainmentTestRectangle;
+import de.topobyte.jts.utils.predicate.PredicateEvaluatorRectangle;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
 public class BboxQuery extends BaseQuery
@@ -74,7 +74,7 @@ public class BboxQuery extends BaseQuery
 	{
 		queryEnvelope = bbox.toEnvelope();
 
-		test = new ContainmentTestRectangle(bbox.getLon1(), bbox.getLat2(),
+		test = new PredicateEvaluatorRectangle(bbox.getLon1(), bbox.getLat2(),
 				bbox.getLon2(), bbox.getLat1());
 
 		super.execute();

@@ -33,7 +33,8 @@ import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.GeometryFactory;
 
-import de.topobyte.jts.utils.predicate.ContainmentTest;
+import de.topobyte.jts.utils.GeometryGroup;
+import de.topobyte.jts.utils.predicate.PredicateEvaluator;
 import de.topobyte.osm4j.core.access.OsmIteratorInput;
 import de.topobyte.osm4j.core.access.OsmOutputStream;
 import de.topobyte.osm4j.core.access.OsmOutputStreamStreamOutput;
@@ -55,7 +56,6 @@ import de.topobyte.osm4j.extra.datatree.Node;
 import de.topobyte.osm4j.extra.relations.Group;
 import de.topobyte.osm4j.extra.relations.RelationGraph;
 import de.topobyte.osm4j.geometry.BboxBuilder;
-import de.topobyte.osm4j.geometry.GeometryGroup;
 import de.topobyte.osm4j.geometry.LineworkBuilder;
 import de.topobyte.osm4j.geometry.LineworkBuilderResult;
 import de.topobyte.osm4j.geometry.RegionBuilder;
@@ -72,7 +72,7 @@ import de.topobyte.osm4j.utils.config.TboConfig;
 public class LeafQuery
 {
 
-	private ContainmentTest test;
+	private PredicateEvaluator test;
 
 	private DataTreeFiles filesTreeNodes;
 	private DataTreeFiles filesTreeWays;
@@ -87,7 +87,7 @@ public class LeafQuery
 
 	private boolean fastRelationTests = true;
 
-	public LeafQuery(ContainmentTest test, DataTreeFiles filesTreeNodes,
+	public LeafQuery(PredicateEvaluator test, DataTreeFiles filesTreeNodes,
 			DataTreeFiles filesTreeWays,
 			DataTreeFiles filesTreeSimpleRelations,
 			DataTreeFiles filesTreeComplexRelations, FileFormat inputFormat,

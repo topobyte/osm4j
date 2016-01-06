@@ -30,7 +30,7 @@ import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
 
-import de.topobyte.jts.utils.predicate.ContainmentTest;
+import de.topobyte.jts.utils.predicate.PredicateEvaluator;
 import de.topobyte.osm4j.core.access.OsmIterator;
 import de.topobyte.osm4j.core.access.OsmIteratorInput;
 import de.topobyte.osm4j.core.access.OsmOutputStream;
@@ -64,7 +64,7 @@ public class Query
 	private String fileNamesRelationRelations;
 
 	private Envelope queryEnvelope;
-	private ContainmentTest test;
+	private PredicateEvaluator test;
 
 	private FileFormat inputFormat;
 	private FileFormat outputFormat;
@@ -81,7 +81,7 @@ public class Query
 			String fileNamesTreeComplexRelations,
 			String fileNamesRelationNodes, String fileNamesRelationWays,
 			String fileNamesRelationRelations, Envelope queryEnvelope,
-			ContainmentTest test, FileFormat inputFormat,
+			PredicateEvaluator test, FileFormat inputFormat,
 			FileFormat outputFormat, boolean writeMetadata,
 			PbfConfig pbfConfig, TboConfig tboConfig, boolean keepTmp)
 	{
