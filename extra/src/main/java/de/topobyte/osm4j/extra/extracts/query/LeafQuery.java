@@ -253,7 +253,6 @@ public class LeafQuery
 				try {
 					WayBuilderResult result = wayBuilder.build(way, dataNodes);
 					GeometryGroup group = result.toGeometryGroup(factory);
-					// TODO: this won't work as expected
 					if (test.intersects(group)) {
 						in = true;
 					}
@@ -303,7 +302,6 @@ public class LeafQuery
 					LineworkBuilderResult result = lineworkBuilder.build(
 							relation, providerSimple);
 					GeometryGroup group = result.toGeometryGroup(factory);
-					// TODO: this won't work as expected
 					if (test.intersects(group)) {
 						in = true;
 					}
@@ -318,7 +316,6 @@ public class LeafQuery
 					RegionBuilderResult result = regionBuilder.build(relation,
 							providerSimple);
 					GeometryGroup group = result.toGeometryGroup(factory);
-					// TODO: this won't work as expected
 					if (test.intersects(group)) {
 						in = true;
 					}
@@ -433,7 +430,6 @@ public class LeafQuery
 				LineworkBuilderResult result = lineworkBuilder.build(relations,
 						providerComplex);
 				GeometryGroup group = result.toGeometryGroup(factory);
-				// TODO: this won't work as expected
 				if (test.intersects(group)) {
 					in = true;
 				}
@@ -447,7 +443,6 @@ public class LeafQuery
 				RegionBuilderResult result = regionBuilder.build(start,
 						providerComplex);
 				GeometryGroup group = result.toGeometryGroup(factory);
-				// TODO: this won't work as expected
 				if (test.intersects(group)) {
 					in = true;
 				}
