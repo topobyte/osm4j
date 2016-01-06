@@ -123,10 +123,10 @@ public class Query
 	private DataTreeFiles filesTreeComplexRelations;
 
 	// Lists of files that need to be merged in the end
-	private List<Path> pathsNodes = new ArrayList<>();
-	private List<Path> pathsWays = new ArrayList<>();
-	private List<Path> pathsSimpleRelations = new ArrayList<>();
-	private List<Path> pathsComplexRelations = new ArrayList<>();
+	private List<OsmFileInput> pathsNodes = new ArrayList<>();
+	private List<OsmFileInput> pathsWays = new ArrayList<>();
+	private List<OsmFileInput> pathsSimpleRelations = new ArrayList<>();
+	private List<OsmFileInput> pathsComplexRelations = new ArrayList<>();
 
 	private int nNodes = 0;
 	private int nWays = 0;
@@ -170,25 +170,19 @@ public class Query
 
 		// Merge intermediate files
 
-		List<Path> pathsMerge = new ArrayList<>();
-		pathsMerge.addAll(pathsNodes);
-		pathsMerge.addAll(pathsWays);
-		pathsMerge.addAll(pathsSimpleRelations);
-		pathsMerge.addAll(pathsComplexRelations);
-
-		System.out
-				.println(String.format("Merging %d files", pathsMerge.size()));
-
 		OutputStream output = StreamUtil.bufferedOutputStream(pathOutput);
 		OsmOutputStream osmOutput = OsmIoUtils.setupOsmOutput(output,
 				outputFormat, writeMetadata, pbfConfig, tboConfig);
 
-		// TODO: we need to distinguish input and intermediate files, file
-		// format may differ
 		List<OsmFileInput> mergeFiles = new ArrayList<>();
-		for (Path path : pathsMerge) {
-			mergeFiles.add(new OsmFileInput(path, outputFormat));
-		}
+
+		mergeFiles.addAll(pathsNodes);
+		mergeFiles.addAll(pathsWays);
+		mergeFiles.addAll(pathsSimpleRelations);
+		mergeFiles.addAll(pathsComplexRelations);
+
+		System.out
+				.println(String.format("Merging %d files", mergeFiles.size()));
 
 		List<OsmIteratorInput> mergeIteratorInputs = new ArrayList<>();
 		List<OsmIterator> mergeIterators = new ArrayList<>();
@@ -267,10 +261,22 @@ public class Query
 
 	private void addCompletelyContainedLeaf(Node leaf)
 	{
-		pathsNodes.add(filesTreeNodes.getPath(leaf));
-		pathsWays.add(filesTreeWays.getPath(leaf));
-		pathsSimpleRelations.add(filesTreeSimpleRelations.getPath(leaf));
-		pathsComplexRelations.add(filesTreeComplexRelations.getPath(leaf));
+		input(filesTreeNodes.getPath(leaf));
+		pathsNodes.add(input(filesTreeNodes.getPath(leaf)));
+		pathsWays.add(input(filesTreeWays.getPath(leaf)));
+		pathsSimpleRelations.add(input(filesTreeSimpleRelations.getPath(leaf)));
+		pathsComplexRelations
+				.add(input(filesTreeComplexRelations.getPath(leaf)));
+	}
+
+	private OsmFileInput input(Path path)
+	{
+		return new OsmFileInput(path, inputFormat);
+	}
+
+	private OsmFileInput intermediate(Path path)
+	{
+		return new OsmFileInput(path, outputFormat);
 	}
 
 	private void addIntersectingLeaf(Node leaf) throws IOException
@@ -304,12 +310,12 @@ public class Query
 		nSimpleRelations += results.getNumSimpleRelations();
 		nComplexRelations += results.getNumComplexRelations();
 
-		pathsNodes.add(pathOutNodes);
-		pathsNodes.add(pathOutAdditionalNodes);
-		pathsWays.add(pathOutWays);
-		pathsWays.add(pathOutAdditionalWays);
-		pathsSimpleRelations.add(pathOutSimpleRelations);
-		pathsComplexRelations.add(pathOutComplexRelations);
+		pathsNodes.add(intermediate(pathOutNodes));
+		pathsNodes.add(intermediate(pathOutAdditionalNodes));
+		pathsWays.add(intermediate(pathOutWays));
+		pathsWays.add(intermediate(pathOutAdditionalWays));
+		pathsSimpleRelations.add(intermediate(pathOutSimpleRelations));
+		pathsComplexRelations.add(intermediate(pathOutComplexRelations));
 
 		System.out.println(String.format("Found %d nodes",
 				results.getNumNodes()));
