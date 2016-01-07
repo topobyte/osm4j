@@ -38,6 +38,8 @@ import de.topobyte.osm4j.extra.datatree.DataTree;
 import de.topobyte.osm4j.extra.datatree.DataTreeFiles;
 import de.topobyte.osm4j.extra.datatree.DataTreeOpener;
 import de.topobyte.osm4j.extra.datatree.Node;
+import de.topobyte.osm4j.extra.idbboxlist.IdBboxEntry;
+import de.topobyte.osm4j.extra.idbboxlist.IdBboxUtil;
 import de.topobyte.osm4j.utils.FileFormat;
 import de.topobyte.osm4j.utils.OsmFileInput;
 import de.topobyte.osm4j.utils.OsmIoUtils;
@@ -54,6 +56,8 @@ public class Query
 	private Path pathTree;
 	private Path pathSimpleRelations;
 	private Path pathComplexRelations;
+	private Path pathSimpleRelationsBboxes;
+	private Path pathComplexRelationsBboxes;
 
 	private String fileNamesTreeNodes;
 	private String fileNamesTreeWays;
@@ -91,6 +95,8 @@ public class Query
 		this.pathTree = pathTree;
 		this.pathSimpleRelations = pathSimpleRelations;
 		this.pathComplexRelations = pathComplexRelations;
+		this.pathSimpleRelationsBboxes = pathSimpleRelationsBboxes;
+		this.pathComplexRelationsBboxes = pathComplexRelationsBboxes;
 		this.fileNamesTreeNodes = fileNamesTreeNodes;
 		this.fileNamesTreeWays = fileNamesTreeWays;
 		this.fileNamesTreeSimpleRelations = fileNamesTreeSimpleRelations;
@@ -171,7 +177,12 @@ public class Query
 
 		// Query relations
 
-		// TODO: implement this
+		List<IdBboxEntry> entriesSimple = IdBboxUtil
+				.read(pathSimpleRelationsBboxes);
+		List<IdBboxEntry> entriesComplex = IdBboxUtil
+				.read(pathComplexRelationsBboxes);
+
+		// TODO: continue implementing relation queries
 
 		// Merge intermediate files
 

@@ -18,10 +18,14 @@
 package de.topobyte.osm4j.extra.idbboxlist;
 
 import java.io.EOFException;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+
+import de.topobyte.osm4j.utils.StreamUtil;
 
 public class IdBboxUtil
 {
@@ -37,6 +41,22 @@ public class IdBboxUtil
 				break;
 			}
 		}
+		return entries;
+	}
+
+	public static List<IdBboxEntry> read(Path path) throws IOException
+	{
+		InputStream input = StreamUtil.bufferedInputStream(path);
+		List<IdBboxEntry> entries = read(input);
+		input.close();
+		return entries;
+	}
+
+	public static List<IdBboxEntry> read(File file) throws IOException
+	{
+		InputStream input = StreamUtil.bufferedInputStream(file);
+		List<IdBboxEntry> entries = read(input);
+		input.close();
 		return entries;
 	}
 
