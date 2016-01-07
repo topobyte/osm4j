@@ -17,6 +17,8 @@
 
 package de.topobyte.osm4j.extra.extracts.query;
 
+import gnu.trove.map.TLongObjectMap;
+import gnu.trove.map.hash.TLongObjectHashMap;
 import gnu.trove.set.TLongSet;
 
 import java.io.IOException;
@@ -98,9 +100,13 @@ public class ComplexRelationsQuery extends AbstractRelationsQuery
 
 		queryBag.nComplex += found.size();
 
+		TLongObjectMap<OsmRelation> relations = new TLongObjectHashMap<>();
 		for (OsmRelation relation : found) {
-			queryBag.outRelations.getOsmOutput().write(relation);
+			relations.put(relation.getId(), relation);
 		}
+		QueryUtil.writeRelations(relations,
+				queryBag.outRelations.getOsmOutput());
+
 		for (OsmRelation relation : found) {
 			try {
 				QueryUtil.putNodes(relation, queryBag.additionalNodes,
