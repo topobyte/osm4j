@@ -25,12 +25,8 @@ import gnu.trove.set.hash.TLongHashSet;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Path;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.GeometryFactory;
 
 import de.topobyte.jts.utils.GeometryGroup;
@@ -42,24 +38,11 @@ import de.topobyte.osm4j.core.access.OsmStreamOutput;
 import de.topobyte.osm4j.core.dataset.InMemoryListDataSet;
 import de.topobyte.osm4j.core.dataset.ListDataSetLoader;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
-import de.topobyte.osm4j.core.model.iface.OsmRelation;
 import de.topobyte.osm4j.core.model.iface.OsmWay;
-import de.topobyte.osm4j.core.resolve.CompositeOsmEntityProvider;
-import de.topobyte.osm4j.core.resolve.EntityFinder;
-import de.topobyte.osm4j.core.resolve.EntityFinders;
 import de.topobyte.osm4j.core.resolve.EntityNotFoundException;
-import de.topobyte.osm4j.core.resolve.EntityNotFoundStrategy;
-import de.topobyte.osm4j.core.resolve.NullOsmEntityProvider;
 import de.topobyte.osm4j.extra.QueryUtil;
 import de.topobyte.osm4j.extra.datatree.DataTreeFiles;
 import de.topobyte.osm4j.extra.datatree.Node;
-import de.topobyte.osm4j.extra.relations.Group;
-import de.topobyte.osm4j.extra.relations.RelationGraph;
-import de.topobyte.osm4j.geometry.BboxBuilder;
-import de.topobyte.osm4j.geometry.LineworkBuilder;
-import de.topobyte.osm4j.geometry.LineworkBuilderResult;
-import de.topobyte.osm4j.geometry.RegionBuilder;
-import de.topobyte.osm4j.geometry.RegionBuilderResult;
 import de.topobyte.osm4j.geometry.WayBuilder;
 import de.topobyte.osm4j.geometry.WayBuilderResult;
 import de.topobyte.osm4j.utils.FileFormat;
@@ -85,14 +68,14 @@ public class LeafQuery
 	private PbfConfig pbfConfig;
 	private TboConfig tboConfig;
 
-	private boolean fastRelationTests = true;
+	private boolean fastRelationTests;
 
 	public LeafQuery(PredicateEvaluator test, DataTreeFiles filesTreeNodes,
 			DataTreeFiles filesTreeWays,
 			DataTreeFiles filesTreeSimpleRelations,
 			DataTreeFiles filesTreeComplexRelations, FileFormat inputFormat,
 			FileFormat outputFormat, boolean writeMetadata,
-			PbfConfig pbfConfig, TboConfig tboConfig)
+			PbfConfig pbfConfig, TboConfig tboConfig, boolean fastRelationsTests)
 	{
 		this.test = test;
 		this.filesTreeNodes = filesTreeNodes;
@@ -104,6 +87,7 @@ public class LeafQuery
 		this.writeMetadata = writeMetadata;
 		this.pbfConfig = pbfConfig;
 		this.tboConfig = tboConfig;
+		this.fastRelationTests = fastRelationsTests;
 	}
 
 	private Path pathOutNodes;
@@ -125,19 +109,12 @@ public class LeafQuery
 
 	private TLongSet nodeIds = new TLongHashSet();
 	private TLongSet wayIds = new TLongHashSet();
-	private int nSimple = 0;
-	private int nComplex = 0;
 
 	private TLongObjectMap<OsmNode> additionalNodes = new TLongObjectHashMap<>();
 	private TLongObjectMap<OsmWay> additionalWays = new TLongObjectHashMap<>();
 
-	private CompositeOsmEntityProvider providerSimple;
-	private CompositeOsmEntityProvider providerComplex;
-
 	private GeometryFactory factory = new GeometryFactory();
 	private WayBuilder wayBuilder = new WayBuilder(factory);
-	private LineworkBuilder lineworkBuilder = new LineworkBuilder(factory);
-	private RegionBuilder regionBuilder = new RegionBuilder(factory);
 
 	public QueryResult execute(Node leaf, Path pathOutNodes, Path pathOutWays,
 			Path pathOutSimpleRelations, Path pathOutComplexRelations,
@@ -154,11 +131,6 @@ public class LeafQuery
 		System.out.println("loading data");
 		readData(leaf);
 
-		providerSimple = new CompositeOsmEntityProvider(dataNodes, dataWays,
-				new NullOsmEntityProvider());
-		providerComplex = new CompositeOsmEntityProvider(dataNodes, dataWays,
-				dataComplexRelations);
-
 		createOutputs();
 
 		System.out.println("querying nodes");
@@ -168,10 +140,24 @@ public class LeafQuery
 		queryWays();
 
 		System.out.println("querying simple relations");
-		querySimpleRelations();
+		RelationQueryBag queryBagSimple = new RelationQueryBag(
+				outSimpleRelations, additionalNodes, additionalWays, nodeIds,
+				wayIds);
+
+		SimpleRelationsQuery simpleRelationsQuery = new SimpleRelationsQuery(
+				dataNodes, dataWays, dataSimpleRelations, test,
+				fastRelationTests);
+		simpleRelationsQuery.execute(queryBagSimple);
 
 		System.out.println("querying complex relations");
-		queryComplexRelations();
+		RelationQueryBag queryBagComplex = new RelationQueryBag(
+				outComplexRelations, additionalNodes, additionalWays, nodeIds,
+				wayIds);
+
+		ComplexRelationsQuery complexRelationsQuery = new ComplexRelationsQuery(
+				dataNodes, dataWays, dataComplexRelations, test,
+				fastRelationTests);
+		complexRelationsQuery.execute(queryBagComplex);
 
 		System.out.println("writing additional nodes");
 		writeAdditionalNodes();
@@ -182,7 +168,8 @@ public class LeafQuery
 		System.out.println("closing output");
 		finishOutputs();
 
-		return new QueryResult(nodeIds.size(), wayIds.size(), nSimple, nComplex);
+		return new QueryResult(nodeIds.size(), wayIds.size(),
+				queryBagSimple.nSimple, queryBagComplex.nComplex);
 	}
 
 	private void createOutputs() throws IOException
@@ -272,186 +259,6 @@ public class LeafQuery
 						+ way.getId());
 			}
 		}
-	}
-
-	private void querySimpleRelations() throws IOException
-	{
-		EntityFinder finder = EntityFinders.create(providerSimple,
-				EntityNotFoundStrategy.IGNORE);
-
-		for (OsmRelation relation : dataSimpleRelations.getRelations()) {
-			boolean in = QueryUtil.anyMemberContainedIn(relation, nodeIds,
-					wayIds);
-
-			if (!in && fastRelationTests) {
-				Set<OsmNode> nodes = new HashSet<>();
-				try {
-					finder.findMemberNodesAndWayNodes(relation, nodes);
-				} catch (EntityNotFoundException e) {
-					// Can't happen, because we're using the IGNORE strategy
-				}
-
-				Envelope envelope = BboxBuilder.box(nodes);
-				if (test.intersects(envelope)) {
-					in = true;
-				}
-			}
-
-			if (!in && !fastRelationTests) {
-				try {
-					LineworkBuilderResult result = lineworkBuilder.build(
-							relation, providerSimple);
-					GeometryGroup group = result.toGeometryGroup(factory);
-					if (test.intersects(group)) {
-						in = true;
-					}
-				} catch (EntityNotFoundException e) {
-					System.out.println("Unable to build relation: "
-							+ relation.getId());
-				}
-			}
-
-			if (!in && !fastRelationTests) {
-				try {
-					RegionBuilderResult result = regionBuilder.build(relation,
-							providerSimple);
-					GeometryGroup group = result.toGeometryGroup(factory);
-					if (test.intersects(group)) {
-						in = true;
-					}
-				} catch (EntityNotFoundException e) {
-					System.out.println("Unable to build relation: "
-							+ relation.getId());
-				}
-			}
-			if (!in) {
-				continue;
-			}
-			outSimpleRelations.getOsmOutput().write(relation);
-			nSimple++;
-			try {
-				QueryUtil.putNodes(relation, additionalNodes, dataNodes,
-						nodeIds);
-				QueryUtil.putWaysAndWayNodes(relation, additionalNodes,
-						additionalWays, providerSimple, nodeIds, wayIds);
-			} catch (EntityNotFoundException e) {
-				System.out.println("Unable to find all members for relation: "
-						+ relation.getId());
-			}
-		}
-	}
-
-	private void queryComplexRelations() throws IOException
-	{
-		EntityFinder finder = EntityFinders.create(dataComplexRelations,
-				EntityNotFoundStrategy.IGNORE);
-
-		Set<OsmRelation> found = new HashSet<>();
-
-		RelationGraph relationGraph = new RelationGraph(false, true);
-		relationGraph.build(dataComplexRelations.getRelations());
-		List<Group> groups = relationGraph.buildGroups();
-		for (Group group : groups) {
-			TLongSet ids = group.getRelationIds();
-			System.out.println(String.format("group with %d relations",
-					ids.size()));
-
-			List<OsmRelation> groupRelations;
-			try {
-				groupRelations = finder.findRelations(ids);
-			} catch (EntityNotFoundException e) {
-				// Can't happen, using the IGNORE strategy
-				continue;
-			}
-			RelationGraph groupGraph = new RelationGraph(true, false);
-			groupGraph.build(groupRelations);
-			List<Group> groupGroups = groupGraph.buildGroups();
-			System.out.println("subgroups: " + groupGroups.size());
-
-			for (Group subGroup : groupGroups) {
-				OsmRelation start;
-				List<OsmRelation> subRelations;
-				try {
-					start = dataComplexRelations.getRelation(group.getStart());
-					subRelations = finder.findRelations(subGroup
-							.getRelationIds());
-				} catch (EntityNotFoundException e) {
-					// Can't happen, using the IGNORE strategy
-					continue;
-				}
-				if (intersects(start, subRelations)) {
-					found.addAll(subRelations);
-				}
-			}
-		}
-
-		nComplex += found.size();
-
-		for (OsmRelation relation : found) {
-			outComplexRelations.getOsmOutput().write(relation);
-		}
-		for (OsmRelation relation : found) {
-			try {
-				QueryUtil.putNodes(relation, additionalNodes, dataNodes,
-						nodeIds);
-				QueryUtil.putWaysAndWayNodes(relation, additionalNodes,
-						additionalWays, providerSimple, nodeIds, wayIds);
-			} catch (EntityNotFoundException e) {
-				System.out.println("Unable to find all members for relation: "
-						+ relation.getId());
-			}
-		}
-	}
-
-	private boolean intersects(OsmRelation start, List<OsmRelation> relations)
-			throws IOException
-	{
-		EntityFinder finder = EntityFinders.create(dataComplexRelations,
-				EntityNotFoundStrategy.IGNORE);
-
-		boolean in = QueryUtil.anyMemberContainedIn(relations, nodeIds, wayIds);
-
-		if (!in && fastRelationTests) {
-			Set<OsmNode> nodes = new HashSet<>();
-			try {
-				finder.findMemberNodesAndWayNodes(relations, nodes);
-			} catch (EntityNotFoundException e) {
-				// Can't happen, because we're using the IGNORE strategy
-			}
-
-			Envelope envelope = BboxBuilder.box(nodes);
-			if (test.intersects(envelope)) {
-				in = true;
-			}
-		}
-
-		if (!in && !fastRelationTests) {
-			try {
-				LineworkBuilderResult result = lineworkBuilder.build(relations,
-						providerComplex);
-				GeometryGroup group = result.toGeometryGroup(factory);
-				if (test.intersects(group)) {
-					in = true;
-				}
-			} catch (EntityNotFoundException e) {
-				System.out.println("Unable to build relation group");
-			}
-		}
-
-		if (!in && !fastRelationTests) {
-			try {
-				RegionBuilderResult result = regionBuilder.build(start,
-						providerComplex);
-				GeometryGroup group = result.toGeometryGroup(factory);
-				if (test.intersects(group)) {
-					in = true;
-				}
-			} catch (EntityNotFoundException e) {
-				System.out.println("Unable to build relation group");
-			}
-		}
-
-		return in;
 	}
 
 	private void writeAdditionalNodes() throws IOException

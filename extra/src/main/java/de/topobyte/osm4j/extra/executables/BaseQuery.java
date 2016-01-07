@@ -91,6 +91,9 @@ public abstract class BaseQuery extends AbstractExecutableInputOutput
 
 	protected boolean keepTmp;
 
+	// TODO: introduce CLI option for this
+	protected boolean simpleRelationTests = true;
+
 	@Override
 	protected void setup(String[] args)
 	{
@@ -138,7 +141,8 @@ public abstract class BaseQuery extends AbstractExecutableInputOutput
 				fileNamesTreeSimpleRelations, fileNamesTreeComplexRelations,
 				fileNamesRelationNodes, fileNamesRelationWays,
 				fileNamesRelationRelations, queryEnvelope, test, inputFormat,
-				outputFormat, writeMetadata, pbfConfig, tboConfig, keepTmp);
+				outputFormat, writeMetadata, pbfConfig, tboConfig, keepTmp,
+				simpleRelationTests);
 		query.execute();
 	}
 

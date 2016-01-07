@@ -78,6 +78,8 @@ public class Query
 
 	private boolean keepTmp;
 
+	private boolean fastRelationTests;
+
 	public Query(Path pathOutput, Path pathTmp, Path pathTree,
 			Path pathSimpleRelations, Path pathComplexRelations,
 			Path pathSimpleRelationsBboxes, Path pathComplexRelationsBboxes,
@@ -88,7 +90,8 @@ public class Query
 			String fileNamesRelationRelations, Envelope queryEnvelope,
 			PredicateEvaluator test, FileFormat inputFormat,
 			FileFormat outputFormat, boolean writeMetadata,
-			PbfConfig pbfConfig, TboConfig tboConfig, boolean keepTmp)
+			PbfConfig pbfConfig, TboConfig tboConfig, boolean keepTmp,
+			boolean fastRelationTests)
 	{
 		this.pathOutput = pathOutput;
 		this.pathTmp = pathTmp;
@@ -112,6 +115,7 @@ public class Query
 		this.pbfConfig = pbfConfig;
 		this.tboConfig = tboConfig;
 		this.keepTmp = keepTmp;
+		this.fastRelationTests = fastRelationTests;
 	}
 
 	private Path pathTmpNodes;
@@ -317,7 +321,7 @@ public class Query
 		LeafQuery leafQuery = new LeafQuery(test, filesTreeNodes,
 				filesTreeWays, filesTreeSimpleRelations,
 				filesTreeComplexRelations, inputFormat, outputFormat,
-				writeMetadata, pbfConfig, tboConfig);
+				writeMetadata, pbfConfig, tboConfig, fastRelationTests);
 
 		tmpIndex++;
 
