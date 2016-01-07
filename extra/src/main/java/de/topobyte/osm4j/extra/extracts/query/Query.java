@@ -130,10 +130,10 @@ public class Query
 	private DataTreeFiles filesTreeComplexRelations;
 
 	// Lists of files that need to be merged in the end
-	private List<OsmFileInput> pathsNodes = new ArrayList<>();
-	private List<OsmFileInput> pathsWays = new ArrayList<>();
-	private List<OsmFileInput> pathsSimpleRelations = new ArrayList<>();
-	private List<OsmFileInput> pathsComplexRelations = new ArrayList<>();
+	private List<OsmFileInput> filesNodes = new ArrayList<>();
+	private List<OsmFileInput> filesWays = new ArrayList<>();
+	private List<OsmFileInput> filesSimpleRelations = new ArrayList<>();
+	private List<OsmFileInput> filesComplexRelations = new ArrayList<>();
 
 	private int nNodes = 0;
 	private int nWays = 0;
@@ -186,7 +186,7 @@ public class Query
 			long id = entry.getId();
 			if (test.contains(entry.getEnvelope())) {
 				addCompletelyContainedBatch(pathSimpleRelations, id,
-						pathsSimpleRelations);
+						filesSimpleRelations);
 			} else if (test.intersects(entry.getEnvelope())) {
 				// TODO: test relations
 			}
@@ -196,7 +196,7 @@ public class Query
 			long id = entry.getId();
 			if (test.contains(entry.getEnvelope())) {
 				addCompletelyContainedBatch(pathComplexRelations, id,
-						pathsComplexRelations);
+						filesComplexRelations);
 			} else if (test.intersects(entry.getEnvelope())) {
 				// TODO: test relations
 			}
@@ -210,10 +210,10 @@ public class Query
 
 		List<OsmFileInput> mergeFiles = new ArrayList<>();
 
-		mergeFiles.addAll(pathsNodes);
-		mergeFiles.addAll(pathsWays);
-		mergeFiles.addAll(pathsSimpleRelations);
-		mergeFiles.addAll(pathsComplexRelations);
+		mergeFiles.addAll(filesNodes);
+		mergeFiles.addAll(filesWays);
+		mergeFiles.addAll(filesSimpleRelations);
+		mergeFiles.addAll(filesComplexRelations);
 
 		System.out
 				.println(String.format("Merging %d files", mergeFiles.size()));
@@ -305,10 +305,10 @@ public class Query
 
 	private void addCompletelyContainedLeaf(Node leaf)
 	{
-		pathsNodes.add(input(filesTreeNodes.getPath(leaf)));
-		pathsWays.add(input(filesTreeWays.getPath(leaf)));
-		pathsSimpleRelations.add(input(filesTreeSimpleRelations.getPath(leaf)));
-		pathsComplexRelations
+		filesNodes.add(input(filesTreeNodes.getPath(leaf)));
+		filesWays.add(input(filesTreeWays.getPath(leaf)));
+		filesSimpleRelations.add(input(filesTreeSimpleRelations.getPath(leaf)));
+		filesComplexRelations
 				.add(input(filesTreeComplexRelations.getPath(leaf)));
 	}
 
@@ -343,12 +343,12 @@ public class Query
 		nSimpleRelations += results.getNumSimpleRelations();
 		nComplexRelations += results.getNumComplexRelations();
 
-		pathsNodes.add(intermediate(pathOutNodes));
-		pathsNodes.add(intermediate(pathOutAdditionalNodes));
-		pathsWays.add(intermediate(pathOutWays));
-		pathsWays.add(intermediate(pathOutAdditionalWays));
-		pathsSimpleRelations.add(intermediate(pathOutSimpleRelations));
-		pathsComplexRelations.add(intermediate(pathOutComplexRelations));
+		filesNodes.add(intermediate(pathOutNodes));
+		filesNodes.add(intermediate(pathOutAdditionalNodes));
+		filesWays.add(intermediate(pathOutWays));
+		filesWays.add(intermediate(pathOutAdditionalWays));
+		filesSimpleRelations.add(intermediate(pathOutSimpleRelations));
+		filesComplexRelations.add(intermediate(pathOutComplexRelations));
 
 		System.out.println(String.format("Found %d nodes",
 				results.getNumNodes()));
@@ -363,8 +363,8 @@ public class Query
 	private void addCompletelyContainedBatch(Path path, long id,
 			List<OsmFileInput> filesRelations)
 	{
-		pathsNodes.add(input(path.resolve(fileNamesRelationNodes)));
-		pathsWays.add(input(path.resolve(fileNamesRelationWays)));
+		filesNodes.add(input(path.resolve(fileNamesRelationNodes)));
+		filesWays.add(input(path.resolve(fileNamesRelationWays)));
 		filesRelations.add(input(path.resolve(fileNamesRelationRelations)));
 	}
 
