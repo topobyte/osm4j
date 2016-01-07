@@ -76,6 +76,7 @@ public class Query
 
 	public Query(Path pathOutput, Path pathTmp, Path pathTree,
 			Path pathSimpleRelations, Path pathComplexRelations,
+			Path pathSimpleRelationsBboxes, Path pathComplexRelationsBboxes,
 			String fileNamesTreeNodes, String fileNamesTreeWays,
 			String fileNamesTreeSimpleRelations,
 			String fileNamesTreeComplexRelations,

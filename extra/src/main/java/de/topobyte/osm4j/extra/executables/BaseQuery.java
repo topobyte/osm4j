@@ -38,6 +38,8 @@ public abstract class BaseQuery extends AbstractExecutableInputOutput
 	private static final String OPTION_TREE = "tree";
 	private static final String OPTION_SIMPLE_RELATIONS = "simple_relations";
 	private static final String OPTION_COMPLEX_RELATIONS = "complex_relations";
+	private static final String OPTION_SIMPLE_RELATIONS_BBOXES = "simple_relations_bboxes";
+	private static final String OPTION_COMPLEX_RELATIONS_BBOXES = "complex_relations_bboxes";
 	private static final String OPTION_FILE_NAMES_TREE_NODES = "tree_nodes";
 	private static final String OPTION_FILE_NAMES_TREE_WAYS = "tree_ways";
 	private static final String OPTION_FILE_NAMES_TREE_RELATIONS_SIMPLE = "tree_simple_relations";
@@ -55,6 +57,8 @@ public abstract class BaseQuery extends AbstractExecutableInputOutput
 		OptionHelper.add(options, OPTION_TREE, true, true, "path to the data tree");
 		OptionHelper.add(options, OPTION_SIMPLE_RELATIONS, true, true, "path to simple relation batches");
 		OptionHelper.add(options, OPTION_COMPLEX_RELATIONS, true, true, "path to complex relation batches");
+		OptionHelper.add(options, OPTION_SIMPLE_RELATIONS_BBOXES, true, true, "path to simple relation batches bboxes");
+		OptionHelper.add(options, OPTION_COMPLEX_RELATIONS_BBOXES, true, true, "path to complex relation batches bboxes");
 		OptionHelper.add(options, OPTION_FILE_NAMES_TREE_NODES, true, true, "name of node files in tree");
 		OptionHelper.add(options, OPTION_FILE_NAMES_TREE_WAYS, true, true, "name of way files in tree");
 		OptionHelper.add(options, OPTION_FILE_NAMES_TREE_RELATIONS_SIMPLE, true, true, "name of simple relations in tree");
@@ -70,6 +74,8 @@ public abstract class BaseQuery extends AbstractExecutableInputOutput
 	protected Path pathTree;
 	protected Path pathSimpleRelations;
 	protected Path pathComplexRelations;
+	protected Path pathSimpleRelationsBboxes;
+	protected Path pathComplexRelationsBboxes;
 	protected DataTree tree;
 
 	protected String fileNamesTreeNodes;
@@ -101,6 +107,10 @@ public abstract class BaseQuery extends AbstractExecutableInputOutput
 				.getOptionValue(OPTION_SIMPLE_RELATIONS));
 		pathComplexRelations = Paths.get(line
 				.getOptionValue(OPTION_COMPLEX_RELATIONS));
+		pathSimpleRelationsBboxes = Paths.get(line
+				.getOptionValue(OPTION_SIMPLE_RELATIONS_BBOXES));
+		pathComplexRelationsBboxes = Paths.get(line
+				.getOptionValue(OPTION_COMPLEX_RELATIONS_BBOXES));
 
 		fileNamesTreeNodes = line.getOptionValue(OPTION_FILE_NAMES_TREE_NODES);
 		fileNamesTreeWays = line.getOptionValue(OPTION_FILE_NAMES_TREE_WAYS);
@@ -122,12 +132,13 @@ public abstract class BaseQuery extends AbstractExecutableInputOutput
 	protected void execute() throws IOException
 	{
 		Query query = new Query(pathOutput, pathTmp, pathTree,
-				pathSimpleRelations, pathComplexRelations, fileNamesTreeNodes,
-				fileNamesTreeWays, fileNamesTreeSimpleRelations,
-				fileNamesTreeComplexRelations, fileNamesRelationNodes,
-				fileNamesRelationWays, fileNamesRelationRelations,
-				queryEnvelope, test, inputFormat, outputFormat, writeMetadata,
-				pbfConfig, tboConfig, keepTmp);
+				pathSimpleRelations, pathComplexRelations,
+				pathSimpleRelationsBboxes, pathComplexRelationsBboxes,
+				fileNamesTreeNodes, fileNamesTreeWays,
+				fileNamesTreeSimpleRelations, fileNamesTreeComplexRelations,
+				fileNamesRelationNodes, fileNamesRelationWays,
+				fileNamesRelationRelations, queryEnvelope, test, inputFormat,
+				outputFormat, writeMetadata, pbfConfig, tboConfig, keepTmp);
 		query.execute();
 	}
 
