@@ -263,16 +263,6 @@ public class Query
 				fileNamesTreeComplexRelations);
 	}
 
-	private void addCompletelyContainedLeaf(Node leaf)
-	{
-		input(filesTreeNodes.getPath(leaf));
-		pathsNodes.add(input(filesTreeNodes.getPath(leaf)));
-		pathsWays.add(input(filesTreeWays.getPath(leaf)));
-		pathsSimpleRelations.add(input(filesTreeSimpleRelations.getPath(leaf)));
-		pathsComplexRelations
-				.add(input(filesTreeComplexRelations.getPath(leaf)));
-	}
-
 	private OsmFileInput input(Path path)
 	{
 		return new OsmFileInput(path, inputFormat);
@@ -281,6 +271,16 @@ public class Query
 	private OsmFileInput intermediate(Path path)
 	{
 		return new OsmFileInput(path, outputFormat);
+	}
+
+	private void addCompletelyContainedLeaf(Node leaf)
+	{
+		input(filesTreeNodes.getPath(leaf));
+		pathsNodes.add(input(filesTreeNodes.getPath(leaf)));
+		pathsWays.add(input(filesTreeWays.getPath(leaf)));
+		pathsSimpleRelations.add(input(filesTreeSimpleRelations.getPath(leaf)));
+		pathsComplexRelations
+				.add(input(filesTreeComplexRelations.getPath(leaf)));
 	}
 
 	private void addIntersectingLeaf(Node leaf) throws IOException
