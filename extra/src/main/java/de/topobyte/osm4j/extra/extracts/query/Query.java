@@ -360,9 +360,10 @@ public class Query
 				results.getNumComplexRelations()));
 	}
 
-	private void addCompletelyContainedBatch(Path path, long id,
+	private void addCompletelyContainedBatch(Path pathRelations, long id,
 			List<OsmFileInput> filesRelations)
 	{
+		Path path = pathRelations.resolve(Long.toString(id));
 		filesNodes.add(input(path.resolve(fileNamesRelationNodes)));
 		filesWays.add(input(path.resolve(fileNamesRelationWays)));
 		filesRelations.add(input(path.resolve(fileNamesRelationRelations)));
