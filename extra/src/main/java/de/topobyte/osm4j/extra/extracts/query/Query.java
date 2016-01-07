@@ -287,7 +287,6 @@ public class Query
 
 	private void addCompletelyContainedLeaf(Node leaf)
 	{
-		input(filesTreeNodes.getPath(leaf));
 		pathsNodes.add(input(filesTreeNodes.getPath(leaf)));
 		pathsWays.add(input(filesTreeWays.getPath(leaf)));
 		pathsSimpleRelations.add(input(filesTreeSimpleRelations.getPath(leaf)));
