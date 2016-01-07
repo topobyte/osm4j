@@ -182,7 +182,25 @@ public class Query
 		List<IdBboxEntry> entriesComplex = IdBboxUtil
 				.read(pathComplexRelationsBboxes);
 
-		// TODO: continue implementing relation queries
+		for (IdBboxEntry entry : entriesSimple) {
+			long id = entry.getId();
+			if (test.contains(entry.getEnvelope())) {
+				addCompletelyContainedBatch(pathSimpleRelations, id,
+						pathsSimpleRelations);
+			} else if (test.intersects(entry.getEnvelope())) {
+				// TODO: test relations
+			}
+		}
+
+		for (IdBboxEntry entry : entriesComplex) {
+			long id = entry.getId();
+			if (test.contains(entry.getEnvelope())) {
+				addCompletelyContainedBatch(pathComplexRelations, id,
+						pathsComplexRelations);
+			} else if (test.intersects(entry.getEnvelope())) {
+				// TODO: test relations
+			}
+		}
 
 		// Merge intermediate files
 
@@ -340,6 +358,14 @@ public class Query
 				results.getNumSimpleRelations()));
 		System.out.println(String.format("Found %d complex relations",
 				results.getNumComplexRelations()));
+	}
+
+	private void addCompletelyContainedBatch(Path path, long id,
+			List<OsmFileInput> filesRelations)
+	{
+		pathsNodes.add(input(path.resolve(fileNamesRelationNodes)));
+		pathsWays.add(input(path.resolve(fileNamesRelationWays)));
+		filesRelations.add(input(path.resolve(fileNamesRelationRelations)));
 	}
 
 }
