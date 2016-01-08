@@ -23,7 +23,6 @@ import gnu.trove.set.TLongSet;
 import gnu.trove.set.hash.TLongHashSet;
 
 import java.io.IOException;
-import java.io.OutputStream;
 import java.nio.file.Path;
 
 import com.vividsolutions.jts.geom.Coordinate;
@@ -31,12 +30,8 @@ import com.vividsolutions.jts.geom.GeometryFactory;
 
 import de.topobyte.jts.utils.GeometryGroup;
 import de.topobyte.jts.utils.predicate.PredicateEvaluator;
-import de.topobyte.osm4j.core.access.OsmIteratorInput;
-import de.topobyte.osm4j.core.access.OsmOutputStream;
-import de.topobyte.osm4j.core.access.OsmOutputStreamStreamOutput;
 import de.topobyte.osm4j.core.access.OsmStreamOutput;
 import de.topobyte.osm4j.core.dataset.InMemoryListDataSet;
-import de.topobyte.osm4j.core.dataset.ListDataSetLoader;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.osm4j.core.model.iface.OsmWay;
 import de.topobyte.osm4j.core.resolve.EntityNotFoundException;
@@ -46,13 +41,10 @@ import de.topobyte.osm4j.extra.datatree.Node;
 import de.topobyte.osm4j.geometry.WayBuilder;
 import de.topobyte.osm4j.geometry.WayBuilderResult;
 import de.topobyte.osm4j.utils.FileFormat;
-import de.topobyte.osm4j.utils.OsmFileInput;
-import de.topobyte.osm4j.utils.OsmIoUtils;
-import de.topobyte.osm4j.utils.StreamUtil;
 import de.topobyte.osm4j.utils.config.PbfConfig;
 import de.topobyte.osm4j.utils.config.TboConfig;
 
-public class LeafQuery
+public class LeafQuery extends AbstractQuery
 {
 
 	private PredicateEvaluator test;
@@ -61,12 +53,6 @@ public class LeafQuery
 	private DataTreeFiles filesTreeWays;
 	private DataTreeFiles filesTreeSimpleRelations;
 	private DataTreeFiles filesTreeComplexRelations;
-
-	private FileFormat inputFormat;
-	private FileFormat outputFormat;
-	private boolean writeMetadata;
-	private PbfConfig pbfConfig;
-	private TboConfig tboConfig;
 
 	private boolean fastRelationTests;
 
@@ -77,16 +63,13 @@ public class LeafQuery
 			FileFormat outputFormat, boolean writeMetadata,
 			PbfConfig pbfConfig, TboConfig tboConfig, boolean fastRelationsTests)
 	{
+		super(inputFormat, outputFormat, writeMetadata, pbfConfig, tboConfig);
+
 		this.test = test;
 		this.filesTreeNodes = filesTreeNodes;
 		this.filesTreeWays = filesTreeWays;
 		this.filesTreeSimpleRelations = filesTreeSimpleRelations;
 		this.filesTreeComplexRelations = filesTreeComplexRelations;
-		this.inputFormat = inputFormat;
-		this.outputFormat = outputFormat;
-		this.writeMetadata = writeMetadata;
-		this.pbfConfig = pbfConfig;
-		this.tboConfig = tboConfig;
 		this.fastRelationTests = fastRelationsTests;
 	}
 
@@ -194,31 +177,6 @@ public class LeafQuery
 		dataWays = read(filesTreeWays.getPath(leaf));
 		dataSimpleRelations = read(filesTreeSimpleRelations.getPath(leaf));
 		dataComplexRelations = read(filesTreeComplexRelations.getPath(leaf));
-	}
-
-	private InMemoryListDataSet read(Path path) throws IOException
-	{
-		OsmFileInput fileInput = new OsmFileInput(path, inputFormat);
-		OsmIteratorInput input = fileInput.createIterator(true, writeMetadata);
-		InMemoryListDataSet data = ListDataSetLoader.read(input.getIterator(),
-				true, true, true);
-		input.close();
-		return data;
-	}
-
-	private OsmStreamOutput createOutput(Path path) throws IOException
-	{
-		OutputStream outputStream = StreamUtil.bufferedOutputStream(path);
-		OsmOutputStream osmOutputStream = OsmIoUtils
-				.setupOsmOutput(outputStream, outputFormat, writeMetadata,
-						pbfConfig, tboConfig);
-		return new OsmOutputStreamStreamOutput(outputStream, osmOutputStream);
-	}
-
-	private void finish(OsmStreamOutput osmOutput) throws IOException
-	{
-		osmOutput.getOsmOutput().complete();
-		osmOutput.close();
 	}
 
 	private void queryNodes() throws IOException

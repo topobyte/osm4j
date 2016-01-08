@@ -20,6 +20,7 @@ package de.topobyte.osm4j.extra.extracts.query;
 import gnu.trove.map.TLongObjectMap;
 import gnu.trove.map.hash.TLongObjectHashMap;
 import gnu.trove.set.TLongSet;
+import gnu.trove.set.hash.TLongHashSet;
 import de.topobyte.osm4j.core.access.OsmStreamOutput;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.osm4j.core.model.iface.OsmWay;
@@ -36,6 +37,15 @@ class RelationQueryBag
 
 	TLongObjectMap<OsmNode> additionalNodes = new TLongObjectHashMap<>();
 	TLongObjectMap<OsmWay> additionalWays = new TLongObjectHashMap<>();
+
+	public RelationQueryBag(OsmStreamOutput outRelations)
+	{
+		this.outRelations = outRelations;
+		additionalNodes = new TLongObjectHashMap<>();
+		additionalWays = new TLongObjectHashMap<>();
+		nodeIds = new TLongHashSet();
+		wayIds = new TLongHashSet();
+	}
 
 	public RelationQueryBag(OsmStreamOutput outRelations,
 			TLongObjectMap<OsmNode> additionalNodes,
