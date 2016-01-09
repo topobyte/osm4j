@@ -26,6 +26,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.vividsolutions.jts.geom.Envelope;
 
 import de.topobyte.jts.utils.GeometryGroup;
@@ -47,6 +50,9 @@ import de.topobyte.osm4j.geometry.RegionBuilderResult;
 public class ComplexRelationsQuery extends AbstractRelationsQuery
 {
 
+	final static Logger logger = LoggerFactory
+			.getLogger(ComplexRelationsQuery.class);
+
 	public ComplexRelationsQuery(InMemoryListDataSet dataNodes,
 			InMemoryListDataSet dataWays, InMemoryListDataSet dataRelations,
 			PredicateEvaluator test, boolean fastRelationTests)
@@ -66,8 +72,7 @@ public class ComplexRelationsQuery extends AbstractRelationsQuery
 		List<Group> groups = relationGraph.buildGroups();
 		for (Group group : groups) {
 			TLongSet ids = group.getRelationIds();
-			System.out.println(String.format("group with %d relations",
-					ids.size()));
+			logger.debug(String.format("group with %d relations", ids.size()));
 
 			List<OsmRelation> groupRelations;
 			try {
@@ -79,7 +84,7 @@ public class ComplexRelationsQuery extends AbstractRelationsQuery
 			RelationGraph groupGraph = new RelationGraph(true, false);
 			groupGraph.build(groupRelations);
 			List<Group> groupGroups = groupGraph.buildGroups();
-			System.out.println("subgroups: " + groupGroups.size());
+			logger.debug("subgroups: " + groupGroups.size());
 
 			for (Group subGroup : groupGroups) {
 				OsmRelation start;

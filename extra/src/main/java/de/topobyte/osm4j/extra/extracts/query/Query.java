@@ -434,6 +434,7 @@ public class Query extends AbstractQuery
 			Path pathOutNodes, Path pathOutWays, Path pathOutRelations)
 			throws IOException
 	{
+		System.out.println("loading data");
 		InMemoryListDataSet dataNodes = read(pathNodes);
 		InMemoryListDataSet dataWays = read(pathWays);
 		InMemoryListDataSet dataRelations = read(pathRelations);
@@ -441,6 +442,7 @@ public class Query extends AbstractQuery
 		OsmStreamOutput outRelations = createOutput(pathOutRelations);
 		RelationQueryBag queryBag = new RelationQueryBag(outRelations);
 
+		System.out.println("running query");
 		if (simple) {
 			SimpleRelationsQuery simpleRelationsQuery = new SimpleRelationsQuery(
 					dataNodes, dataWays, dataRelations, test, fastRelationTests);
@@ -453,6 +455,7 @@ public class Query extends AbstractQuery
 
 		finish(outRelations);
 
+		System.out.println("writing nodes and ways");
 		OsmStreamOutput outputNodes = createOutput(pathOutNodes);
 		QueryUtil.writeNodes(queryBag.additionalNodes,
 				outputNodes.getOsmOutput());

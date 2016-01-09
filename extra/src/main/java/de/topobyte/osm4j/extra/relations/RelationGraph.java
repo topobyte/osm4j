@@ -29,6 +29,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import de.topobyte.adt.graph.Graph;
 import de.topobyte.adt.graph.UndirectedGraph;
 import de.topobyte.osm4j.core.access.OsmIterator;
@@ -41,6 +44,8 @@ import de.topobyte.osm4j.core.util.IdUtil;
 
 public class RelationGraph
 {
+
+	final static Logger logger = LoggerFactory.getLogger(RelationGraph.class);
 
 	private Graph<Long> graph;
 
@@ -214,7 +219,7 @@ public class RelationGraph
 			}
 		}
 		// Build sub-graphs reachable from 'start' relations
-		System.out.println("Number of start relations: " + starts.size());
+		logger.debug("Number of start relations: " + starts.size());
 		for (long start : starts.toArray()) {
 			groups.add(build(start));
 		}
@@ -228,7 +233,7 @@ public class RelationGraph
 			remaining.removeAll(group.getRelationIds());
 		}
 		if (remaining.size() > 0) {
-			System.out.println("remaining: " + remaining.size());
+			logger.debug("remaining: " + remaining.size());
 			while (!remaining.isEmpty()) {
 				long id = any(remaining);
 
