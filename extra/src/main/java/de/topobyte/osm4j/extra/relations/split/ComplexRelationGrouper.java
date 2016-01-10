@@ -37,13 +37,15 @@ public class ComplexRelationGrouper
 
 	private OsmIteratorInputFactory iteratorFactory;
 
-	private RelationGraph relationGraph = new RelationGraph(false, true);
+	private RelationGraph relationGraph;
 	private List<Group> groups;
 	private TLongObjectMap<OsmRelation> groupRelations;
 
-	public ComplexRelationGrouper(OsmIteratorInputFactory iteratorFactory)
+	public ComplexRelationGrouper(OsmIteratorInputFactory iteratorFactory,
+			boolean storeSimpleRelations, boolean undirected)
 	{
 		this.iteratorFactory = iteratorFactory;
+		relationGraph = new RelationGraph(storeSimpleRelations, undirected);
 	}
 
 	public List<Group> getGroups()

@@ -116,7 +116,17 @@ public class ComplexRelationsDistributor extends RelationsDistributorBase
 			try {
 				List<OsmRelation> groupRelations = relationFinder
 						.findRelations(group.getRelationIds());
-				relationGroups.add(new RelationGroupMultiple(groupRelations));
+
+				RelationGraph groupGraph = new RelationGraph(true, false);
+				groupGraph.build(groupRelations);
+				List<Group> groupGroups = groupGraph.buildGroups();
+
+				for (Group subGroup : groupGroups) {
+					List<OsmRelation> subGroupRelations = relationFinder
+							.findRelations(subGroup.getRelationIds());
+					relationGroups.add(new RelationGroupMultiple(
+							subGroupRelations));
+				}
 			} catch (EntityNotFoundException e) {
 				System.out.println("unable to build relation group");
 			}

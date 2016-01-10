@@ -50,7 +50,7 @@ public class ComplexRelationSorter extends RelationSorterBase
 		createBatchOutputs();
 
 		ComplexRelationGrouper grouper = new ComplexRelationGrouper(
-				iteratorFactory);
+				iteratorFactory, true, false);
 		grouper.buildGroups();
 		grouper.readGroupRelations(outputConfig.isWriteMetadata());
 

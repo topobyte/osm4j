@@ -81,7 +81,7 @@ public class ComplexRelationSplitter
 		}
 
 		ComplexRelationGrouper grouper = new ComplexRelationGrouper(
-				iteratorFactory);
+				iteratorFactory, false, true);
 		grouper.buildGroups();
 		grouper.readGroupRelations(outputConfig.isWriteMetadata());
 
