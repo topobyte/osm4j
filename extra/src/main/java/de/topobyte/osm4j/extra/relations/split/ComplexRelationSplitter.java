@@ -35,8 +35,10 @@ import java.util.Locale;
 
 import de.topobyte.osm4j.core.access.OsmIteratorInputFactory;
 import de.topobyte.osm4j.core.access.OsmOutputStream;
+import de.topobyte.osm4j.core.dataset.InMemoryMapDataSet;
 import de.topobyte.osm4j.core.model.iface.OsmRelation;
 import de.topobyte.osm4j.extra.relations.Group;
+import de.topobyte.osm4j.extra.relations.RelationGroupUtil;
 import de.topobyte.osm4j.utils.OsmIoUtils;
 import de.topobyte.osm4j.utils.OsmOutputConfig;
 import de.topobyte.osm4j.utils.StreamUtil;
@@ -97,19 +99,11 @@ public class ComplexRelationSplitter
 
 	private void determineGroupSizes()
 	{
+		InMemoryMapDataSet data = new InMemoryMapDataSet();
+		data.setRelations(groupRelations);
 		for (Group group : groups) {
-			group.setNumMembers(groupsize(group));
+			group.setNumMembers(RelationGroupUtil.groupSize(group, data));
 		}
-	}
-
-	private int groupsize(Group group)
-	{
-		int n = 0;
-		for (long member : group.getRelationIds().toArray()) {
-			OsmRelation relation = groupRelations.get(member);
-			n += relation.getNumberOfMembers();
-		}
-		return n;
 	}
 
 	private void sortGroupsBySize()

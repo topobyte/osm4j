@@ -21,8 +21,11 @@ import java.io.IOException;
 import java.util.List;
 
 import de.topobyte.osm4j.core.access.OsmIterator;
+import de.topobyte.osm4j.core.dataset.InMemoryMapDataSet;
+import de.topobyte.osm4j.core.dataset.MapDataSetLoader;
 import de.topobyte.osm4j.extra.relations.Group;
 import de.topobyte.osm4j.extra.relations.RelationGraph;
+import de.topobyte.osm4j.extra.relations.RelationGroupUtil;
 import de.topobyte.osm4j.utils.AbstractExecutableSingleInputStream;
 import de.topobyte.utilities.apache.commons.cli.ArgumentHelper;
 import de.topobyte.utilities.apache.commons.cli.ArgumentParseException;
@@ -82,13 +85,22 @@ public class RelationGraphInfo extends AbstractExecutableSingleInputStream
 	private void run() throws IOException
 	{
 		OsmIterator iterator = createIterator();
+		// TODO: for a file with nodes and ways included this is bad because it
+		// loads them into memory, too
+		InMemoryMapDataSet data = MapDataSetLoader.read(iterator, false, false,
+				true);
 
 		RelationGraph graph = new RelationGraph(true, undirected);
-		graph.build(iterator);
+		graph.build(data.getRelations().valueCollection());
 		List<Group> groups = graph.buildGroups();
 
 		System.out
 				.println(String.format("Number of groups: %d", groups.size()));
+
+		for (Group group : groups) {
+			group.setNumMembers(RelationGroupUtil.groupSize(group, data));
+		}
+
 		for (Group group : groups) {
 			System.out.println(String.format(
 					"Start: %d, relations: %d, members: %d", group.getStart(),
