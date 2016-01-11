@@ -20,6 +20,10 @@ package de.topobyte.osm4j.core.util;
 import gnu.trove.TLongCollection;
 import gnu.trove.iterator.TLongIterator;
 
+import java.util.Collection;
+
+import de.topobyte.osm4j.core.model.iface.OsmEntity;
+
 public class IdUtil
 {
 
@@ -29,6 +33,15 @@ public class IdUtil
 		TLongIterator iterator = ids.iterator();
 		while (iterator.hasNext()) {
 			lowest = Math.min(lowest, iterator.next());
+		}
+		return lowest;
+	}
+
+	public static long lowestId(Collection<? extends OsmEntity> elements)
+	{
+		long lowest = Long.MAX_VALUE;
+		for (OsmEntity element : elements) {
+			lowest = Math.min(lowest, element.getId());
 		}
 		return lowest;
 	}
