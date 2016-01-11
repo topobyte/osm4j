@@ -84,7 +84,7 @@ public class InMemoryMapDataSet implements OsmEntityProvider
 	 * @param nodes
 	 *            set the nodes of this dataset to be these.
 	 */
-	public void setNodes(TLongObjectHashMap<OsmNode> nodes)
+	public void setNodes(TLongObjectMap<OsmNode> nodes)
 	{
 		this.nodes = nodes;
 	}
@@ -93,7 +93,7 @@ public class InMemoryMapDataSet implements OsmEntityProvider
 	 * @param ways
 	 *            set the ways of this dataset to be these.
 	 */
-	public void setWays(TLongObjectHashMap<OsmWay> ways)
+	public void setWays(TLongObjectMap<OsmWay> ways)
 	{
 		this.ways = ways;
 	}
@@ -102,7 +102,7 @@ public class InMemoryMapDataSet implements OsmEntityProvider
 	 * @param relations
 	 *            set the relations of this dataset to be these.
 	 */
-	public void setRelations(TLongObjectHashMap<OsmRelation> relations)
+	public void setRelations(TLongObjectMap<OsmRelation> relations)
 	{
 		this.relations = relations;
 	}
