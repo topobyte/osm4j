@@ -34,6 +34,12 @@ public class RelationGroupSingle implements RelationGroup
 	}
 
 	@Override
+	public long getId()
+	{
+		return relation.getId();
+	}
+
+	@Override
 	public Collection<OsmRelation> getRelations()
 	{
 		List<OsmRelation> list = new ArrayList<>(1);

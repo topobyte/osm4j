@@ -24,6 +24,8 @@ import de.topobyte.osm4j.core.model.iface.OsmRelation;
 public interface RelationGroup
 {
 
+	public long getId();
+
 	public Collection<OsmRelation> getRelations();
 
 }

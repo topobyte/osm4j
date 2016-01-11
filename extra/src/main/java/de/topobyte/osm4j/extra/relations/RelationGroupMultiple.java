@@ -24,11 +24,19 @@ import de.topobyte.osm4j.core.model.iface.OsmRelation;
 public class RelationGroupMultiple implements RelationGroup
 {
 
+	private long id;
 	private Collection<OsmRelation> relations;
 
-	public RelationGroupMultiple(Collection<OsmRelation> relations)
+	public RelationGroupMultiple(long id, Collection<OsmRelation> relations)
 	{
+		this.id = id;
 		this.relations = relations;
+	}
+
+	@Override
+	public long getId()
+	{
+		return id;
 	}
 
 	@Override

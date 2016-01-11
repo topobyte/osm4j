@@ -124,8 +124,8 @@ public class ComplexRelationsDistributor extends RelationsDistributorBase
 				for (Group subGroup : groupGroups) {
 					List<OsmRelation> subGroupRelations = relationFinder
 							.findRelations(subGroup.getRelationIds());
-					relationGroups.add(new RelationGroupMultiple(
-							subGroupRelations));
+					relationGroups.add(new RelationGroupMultiple(subGroup
+							.getStart(), subGroupRelations));
 				}
 			} catch (EntityNotFoundException e) {
 				System.out.println("unable to build relation group");
@@ -174,18 +174,9 @@ public class ComplexRelationsDistributor extends RelationsDistributorBase
 		} else {
 			nRemaining++;
 			write(relation, outputNonTree);
-			long id = lowestId(relation.getRelations());
+			long id = relation.getId();
 			outputBboxes.write(new IdBboxEntry(id, envelope, size));
 		}
-	}
-
-	private long lowestId(Collection<OsmRelation> relations)
-	{
-		long lowest = Long.MAX_VALUE;
-		for (OsmRelation relation : relations) {
-			lowest = Math.min(lowest, relation.getId());
-		}
-		return lowest;
 	}
 
 	private void write(RelationGroup group, OsmStreamOutput output)
