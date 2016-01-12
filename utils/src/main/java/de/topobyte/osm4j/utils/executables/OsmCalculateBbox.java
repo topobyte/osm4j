@@ -19,14 +19,11 @@ package de.topobyte.osm4j.utils.executables;
 
 import java.io.IOException;
 
-import com.vividsolutions.jts.geom.Envelope;
-
 import de.topobyte.adt.geo.BBox;
 import de.topobyte.adt.geo.BBoxString;
 import de.topobyte.osm4j.core.access.OsmIterator;
-import de.topobyte.osm4j.core.model.iface.EntityContainer;
-import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.osm4j.utils.AbstractExecutableSingleInputStream;
+import de.topobyte.osm4j.utils.bbox.BBoxCalculator;
 
 public class OsmCalculateBbox extends AbstractExecutableSingleInputStream
 {
@@ -51,30 +48,13 @@ public class OsmCalculateBbox extends AbstractExecutableSingleInputStream
 		task.finish();
 	}
 
-	private Envelope envelope = new Envelope();
-
 	private void run() throws IOException
 	{
 		OsmIterator iterator = createIterator();
-		loop: while (iterator.hasNext()) {
-			EntityContainer entityContainer = iterator.next();
-			switch (entityContainer.getType()) {
-			case Node:
-				OsmNode node = (OsmNode) entityContainer.getEntity();
-				envelope.expandToInclude(node.getLongitude(),
-						node.getLatitude());
-				break;
-			case Way:
-				break loop;
-			case Relation:
-				break loop;
-			}
-		}
+		BBoxCalculator calculator = new BBoxCalculator(iterator);
+		BBox bbox = calculator.execute();
 
-		BBox bbox = new BBox(envelope);
 		System.out.println(BBoxString.create(bbox));
-
-		finish();
 	}
 
 }
