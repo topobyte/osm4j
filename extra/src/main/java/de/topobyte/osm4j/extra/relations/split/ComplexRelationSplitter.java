@@ -178,7 +178,12 @@ public class ComplexRelationSplitter
 
 		List<OsmRelation> relations = new ArrayList<>();
 		for (long relationId : batchRelationIds.toArray()) {
-			relations.add(groupRelations.get(relationId));
+			OsmRelation relation = groupRelations.get(relationId);
+			if (relation == null) {
+				System.out.println("relation not found: " + relationId);
+				continue;
+			}
+			relations.add(relation);
 		}
 
 		batchCount++;

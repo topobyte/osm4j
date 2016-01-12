@@ -70,6 +70,10 @@ public class ComplexRelationSorter extends RelationSorterBase
 			TLongSet ids = group.getRelationIds();
 			for (long id : ids.toArray()) {
 				OsmRelation relation = groupRelations.get(id);
+				if (relation == null) {
+					System.out.println("relation not found: " + id);
+					continue;
+				}
 				osmOutput.getOsmOutput().write(relation);
 				relationCount++;
 			}
