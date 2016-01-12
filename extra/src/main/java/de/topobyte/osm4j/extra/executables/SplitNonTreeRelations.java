@@ -23,6 +23,8 @@ import java.nio.file.Paths;
 import de.topobyte.osm4j.extra.relations.NonTreeRelationsSplitter;
 import de.topobyte.osm4j.utils.AbstractExecutableInputOutput;
 import de.topobyte.osm4j.utils.OsmOutputConfig;
+import de.topobyte.utilities.apache.commons.cli.ArgumentHelper;
+import de.topobyte.utilities.apache.commons.cli.ArgumentParseException;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
 public class SplitNonTreeRelations extends AbstractExecutableInputOutput
@@ -42,6 +44,9 @@ public class SplitNonTreeRelations extends AbstractExecutableInputOutput
 
 	private static final String OPTION_OUTPUT_SIMPLE_BBOXES = "output_simple_bboxes";
 	private static final String OPTION_OUTPUT_COMPLEX_BBOXES = "output_complex_bboxes";
+
+	private static final String OPTION_MAX_MEMBERS_SIMPLE = "max_members_simple";
+	private static final String OPTION_MAX_MEMBERS_COMPLEX = "max_members_complex";
 
 	@Override
 	protected String getHelpMessage()
@@ -68,6 +73,8 @@ public class SplitNonTreeRelations extends AbstractExecutableInputOutput
 	private String pathOutputComplex;
 	private String pathOutputSimpleBboxes;
 	private String pathOutputComplexBboxes;
+	private int maxMembersSimple;
+	private int maxMembersComplex;
 
 	public SplitNonTreeRelations()
 	{
@@ -84,6 +91,8 @@ public class SplitNonTreeRelations extends AbstractExecutableInputOutput
 		OptionHelper.add(options, OPTION_OUTPUT_COMPLEX, true, true, "output: complex relations");
 		OptionHelper.add(options, OPTION_OUTPUT_SIMPLE_BBOXES, true, true, "output: simple relations bboxes");
 		OptionHelper.add(options, OPTION_OUTPUT_COMPLEX_BBOXES, true, true, "output: complex relations bboxes");
+		OptionHelper.add(options, OPTION_MAX_MEMBERS_SIMPLE, true, true, "maximum number of nodes per batch");
+		OptionHelper.add(options, OPTION_MAX_MEMBERS_COMPLEX, true, true, "maximum number of nodes per batch");
 		// @formatter:on
 	}
 
@@ -105,6 +114,26 @@ public class SplitNonTreeRelations extends AbstractExecutableInputOutput
 				.getOptionValue(OPTION_OUTPUT_SIMPLE_BBOXES);
 		pathOutputComplexBboxes = line
 				.getOptionValue(OPTION_OUTPUT_COMPLEX_BBOXES);
+
+		try {
+			maxMembersSimple = ArgumentHelper.getInteger(line,
+					OPTION_MAX_MEMBERS_SIMPLE).getValue();
+		} catch (ArgumentParseException e) {
+			System.out.println(String.format(
+					"Error while parsing option '%s': %s",
+					OPTION_MAX_MEMBERS_SIMPLE, e.getMessage()));
+			System.exit(1);
+		}
+
+		try {
+			maxMembersComplex = ArgumentHelper.getInteger(line,
+					OPTION_MAX_MEMBERS_COMPLEX).getValue();
+		} catch (ArgumentParseException e) {
+			System.out.println(String.format(
+					"Error while parsing option '%s': %s",
+					OPTION_MAX_MEMBERS_COMPLEX, e.getMessage()));
+			System.exit(1);
+		}
 	}
 
 	private void execute() throws IOException
@@ -119,7 +148,8 @@ public class SplitNonTreeRelations extends AbstractExecutableInputOutput
 				Paths.get(pathInputSimpleOld), Paths.get(pathInputComplexOld),
 				Paths.get(pathOutputSimple), Paths.get(pathOutputComplex),
 				inputFormat, outputConfig, Paths.get(pathOutputSimpleBboxes),
-				Paths.get(pathOutputComplexBboxes));
+				Paths.get(pathOutputComplexBboxes), maxMembersSimple,
+				maxMembersComplex);
 		splitter.execute();
 	}
 

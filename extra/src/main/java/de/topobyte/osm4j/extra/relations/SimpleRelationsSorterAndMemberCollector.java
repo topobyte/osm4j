@@ -30,6 +30,8 @@ import de.topobyte.osm4j.utils.OsmOutputConfig;
 public class SimpleRelationsSorterAndMemberCollector
 {
 
+	private int maxMembers;
+
 	private OsmIteratorInputFactory inputSimpleRelations;
 
 	private Path pathInputSimpleRelationsBboxes;
@@ -50,7 +52,7 @@ public class SimpleRelationsSorterAndMemberCollector
 			Path pathOutputSimpleRelations, String fileNamesRelations,
 			OsmIteratorInputFactory inputWays,
 			OsmIteratorInputFactory inputNodes, OsmOutputConfig outputConfig,
-			Path pathOutputBboxList)
+			Path pathOutputBboxList, int maxMembers)
 	{
 		this.inputSimpleRelations = inputSimpleRelations;
 		this.pathInputSimpleRelationsBboxes = pathInputSimpleRelationsBboxes;
@@ -60,6 +62,7 @@ public class SimpleRelationsSorterAndMemberCollector
 		this.inputNodes = inputNodes;
 		this.outputConfig = outputConfig;
 		this.pathOutputBboxList = pathOutputBboxList;
+		this.maxMembers = maxMembers;
 	}
 
 	public void execute() throws IOException
@@ -73,7 +76,7 @@ public class SimpleRelationsSorterAndMemberCollector
 		SimpleRelationSorter simpleRelationSorter = new SimpleRelationSorter(
 				pathInputSimpleRelationsBboxes, pathOutputSimpleRelations,
 				fileNamesRelations, inputSimpleRelations, outputConfig,
-				pathOutputBboxList);
+				pathOutputBboxList, maxMembers);
 
 		simpleRelationSorter.execute();
 

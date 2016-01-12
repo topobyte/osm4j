@@ -24,6 +24,8 @@ import de.topobyte.osm4j.extra.relations.split.ComplexRelationSorter;
 import de.topobyte.osm4j.utils.AbstractExecutableSingleInputFileOutput;
 import de.topobyte.osm4j.utils.OsmFileInput;
 import de.topobyte.osm4j.utils.OsmOutputConfig;
+import de.topobyte.utilities.apache.commons.cli.ArgumentHelper;
+import de.topobyte.utilities.apache.commons.cli.ArgumentParseException;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
 public class SortComplexRelations extends
@@ -34,6 +36,7 @@ public class SortComplexRelations extends
 	private static final String OPTION_OUTPUT = "output";
 	private static final String OPTION_FILE_NAMES_RELATIONS = "relations";
 	private static final String OPTION_OUTPUT_BBOXES = "output_bboxes";
+	private static final String OPTION_MAX_MEMBERS = "max_members";
 
 	@Override
 	protected String getHelpMessage()
@@ -56,6 +59,8 @@ public class SortComplexRelations extends
 
 	private String fileNamesRelations;
 
+	private int maxMembers;
+
 	public SortComplexRelations()
 	{
 		// @formatter:off
@@ -63,6 +68,7 @@ public class SortComplexRelations extends
 		OptionHelper.add(options, OPTION_OUTPUT, true, true, "directory to store output in");
 		OptionHelper.add(options, OPTION_FILE_NAMES_RELATIONS, true, true, "names of the relation files in each directory");
 		OptionHelper.add(options, OPTION_OUTPUT_BBOXES, true, true, "bbox information file");
+		OptionHelper.add(options, OPTION_MAX_MEMBERS, true, true, "maximum number of nodes per batch");
 		// @formatter:on
 	}
 
@@ -76,6 +82,16 @@ public class SortComplexRelations extends
 		pathOutputBboxes = line.getOptionValue(OPTION_OUTPUT_BBOXES);
 
 		fileNamesRelations = line.getOptionValue(OPTION_FILE_NAMES_RELATIONS);
+
+		try {
+			maxMembers = ArgumentHelper.getInteger(line, OPTION_MAX_MEMBERS)
+					.getValue();
+		} catch (ArgumentParseException e) {
+			System.out.println(String.format(
+					"Error while parsing option '%s': %s", OPTION_MAX_MEMBERS,
+					e.getMessage()));
+			System.exit(1);
+		}
 	}
 
 	private void execute() throws IOException
@@ -88,7 +104,7 @@ public class SortComplexRelations extends
 		ComplexRelationSorter sorter = new ComplexRelationSorter(
 				Paths.get(pathInputBboxes), Paths.get(pathOutput),
 				fileNamesRelations, fileInput, outputConfig,
-				Paths.get(pathOutputBboxes));
+				Paths.get(pathOutputBboxes), maxMembers);
 
 		sorter.execute();
 	}

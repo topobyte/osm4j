@@ -32,6 +32,8 @@ import de.topobyte.osm4j.utils.OsmFileInput;
 import de.topobyte.osm4j.utils.OsmFileSetInput;
 import de.topobyte.osm4j.utils.OsmIoUtils;
 import de.topobyte.osm4j.utils.OsmOutputConfig;
+import de.topobyte.utilities.apache.commons.cli.ArgumentHelper;
+import de.topobyte.utilities.apache.commons.cli.ArgumentParseException;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
 public class SortComplexRelationsAndCollectMembers extends
@@ -43,6 +45,7 @@ public class SortComplexRelationsAndCollectMembers extends
 	private static final String OPTION_FILE_NAMES_RELATIONS = "relations";
 	private static final String OPTION_OUTPUT_BBOXES = "output_bboxes";
 	private static final String OPTION_INPUT_OLD = "input_old";
+	private static final String OPTION_MAX_MEMBERS = "max_members";
 
 	@Override
 	protected String getHelpMessage()
@@ -67,6 +70,8 @@ public class SortComplexRelationsAndCollectMembers extends
 
 	private String fileNamesRelations;
 
+	private int maxMembers;
+
 	public SortComplexRelationsAndCollectMembers()
 	{
 		// @formatter:off
@@ -75,6 +80,7 @@ public class SortComplexRelationsAndCollectMembers extends
 		OptionHelper.add(options, OPTION_FILE_NAMES_RELATIONS, true, true, "names of the relation files in each directory");
 		OptionHelper.add(options, OPTION_OUTPUT_BBOXES, true, true, "bbox information file");
 		OptionHelper.add(options, OPTION_INPUT_OLD, true, true, "input: relations (splitted)");
+		OptionHelper.add(options, OPTION_MAX_MEMBERS, true, true, "maximum number of nodes per batch");
 		// @formatter:on
 	}
 
@@ -89,6 +95,16 @@ public class SortComplexRelationsAndCollectMembers extends
 		pathInputOld = Paths.get(line.getOptionValue(OPTION_INPUT_OLD));
 
 		fileNamesRelations = line.getOptionValue(OPTION_FILE_NAMES_RELATIONS);
+
+		try {
+			maxMembers = ArgumentHelper.getInteger(line, OPTION_MAX_MEMBERS)
+					.getValue();
+		} catch (ArgumentParseException e) {
+			System.out.println(String.format(
+					"Error while parsing option '%s': %s", OPTION_MAX_MEMBERS,
+					e.getMessage()));
+			System.exit(1);
+		}
 	}
 
 	private void execute() throws IOException
@@ -111,7 +127,8 @@ public class SortComplexRelationsAndCollectMembers extends
 
 		ComplexRelationsSorterAndMemberCollector sorter = new ComplexRelationsSorterAndMemberCollector(
 				fileInput, pathInputBboxes, pathOutput, fileNamesRelations,
-				inputWays, inputNodes, outputConfig, pathOutputBboxes);
+				inputWays, inputNodes, outputConfig, pathOutputBboxes,
+				maxMembers);
 
 		sorter.execute();
 	}

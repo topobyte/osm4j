@@ -30,6 +30,8 @@ import de.topobyte.osm4j.utils.OsmOutputConfig;
 public class ComplexRelationsSorterAndMemberCollector
 {
 
+	private int maxMembers;
+
 	private OsmIteratorInputFactory inputComplexRelations;
 
 	private Path pathInputComplexRelationsBboxes;
@@ -50,7 +52,7 @@ public class ComplexRelationsSorterAndMemberCollector
 			Path pathOutputComplexRelations, String fileNamesRelations,
 			OsmIteratorInputFactory inputWays,
 			OsmIteratorInputFactory inputNodes, OsmOutputConfig outputConfig,
-			Path pathOutputBboxList)
+			Path pathOutputBboxList, int maxMembers)
 	{
 		this.inputComplexRelations = inputComplexRelations;
 		this.pathInputComplexRelationsBboxes = pathInputComplexRelationsBboxes;
@@ -60,6 +62,7 @@ public class ComplexRelationsSorterAndMemberCollector
 		this.inputNodes = inputNodes;
 		this.outputConfig = outputConfig;
 		this.pathOutputBboxList = pathOutputBboxList;
+		this.maxMembers = maxMembers;
 	}
 
 	public void execute() throws IOException
@@ -73,7 +76,7 @@ public class ComplexRelationsSorterAndMemberCollector
 		ComplexRelationSorter complexRelationSorter = new ComplexRelationSorter(
 				pathInputComplexRelationsBboxes, pathOutputComplexRelations,
 				fileNamesRelations, inputComplexRelations, outputConfig,
-				pathOutputBboxList);
+				pathOutputBboxList, maxMembers);
 
 		complexRelationSorter.execute();
 

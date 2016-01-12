@@ -89,6 +89,8 @@ public class ExtractionFilesBuilder
 	private Path pathOutput;
 	private int maxNodes;
 	private boolean includeMetadata;
+	private int maxMembersSimple;
+	private int maxMembersComplex;
 
 	private Path pathTree;
 	private Path pathWaysByNodes;
@@ -115,13 +117,16 @@ public class ExtractionFilesBuilder
 	private TimeTable t = new TimeTable();
 
 	public ExtractionFilesBuilder(Path pathInput, FileFormat inputFormat,
-			Path pathOutput, int maxNodes, boolean includeMetadata)
+			Path pathOutput, int maxNodes, boolean includeMetadata,
+			int maxMembersSimple, int maxMembersComplex)
 	{
 		this.pathInput = pathInput;
 		this.inputFormat = inputFormat;
 		this.pathOutput = pathOutput;
 		this.maxNodes = maxNodes;
 		this.includeMetadata = includeMetadata;
+		this.maxMembersSimple = maxMembersSimple;
+		this.maxMembersComplex = maxMembersComplex;
 	}
 
 	public void execute() throws IOException, OsmInputException
@@ -443,7 +448,8 @@ public class ExtractionFilesBuilder
 				pathComplexRelationsDir, pathSimpleRelationsSorted,
 				pathComplexRelationsSorted, outputFormat,
 				outputConfigRelations, pathSimpleRelationsSortedBboxes,
-				pathComplexRelationsSortedBboxes);
+				pathComplexRelationsSortedBboxes, maxMembersSimple,
+				maxMembersComplex);
 		nonTreeSplitter.execute();
 
 		t.stop(KEY_SORT_RELATIONS);

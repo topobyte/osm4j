@@ -32,10 +32,11 @@ public class SimpleRelationSorter extends RelationSorterBase
 
 	public SimpleRelationSorter(Path pathInputBboxes, Path pathOutput,
 			String fileNamesRelations, OsmIteratorInputFactory iteratorFactory,
-			OsmOutputConfig outputConfig, Path pathOutputBboxList)
+			OsmOutputConfig outputConfig, Path pathOutputBboxList,
+			int maxMembers)
 	{
 		super(pathInputBboxes, pathOutput, fileNamesRelations, iteratorFactory,
-				outputConfig, pathOutputBboxList);
+				outputConfig, pathOutputBboxList, maxMembers);
 	}
 
 	public void execute() throws IOException

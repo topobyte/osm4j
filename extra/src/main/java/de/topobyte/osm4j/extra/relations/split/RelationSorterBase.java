@@ -50,7 +50,7 @@ import de.topobyte.osm4j.utils.StreamUtil;
 public class RelationSorterBase
 {
 
-	private int maxMembers = 500 * 1000;
+	private int maxMembers;
 
 	private Path pathInputBboxes;
 	private Path pathOutput;
@@ -68,7 +68,8 @@ public class RelationSorterBase
 
 	public RelationSorterBase(Path pathInputBboxes, Path pathOutput,
 			String fileNamesRelations, OsmIteratorInputFactory iteratorFactory,
-			OsmOutputConfig outputConfig, Path pathOutputBboxList)
+			OsmOutputConfig outputConfig, Path pathOutputBboxList,
+			int maxMembers)
 	{
 		this.pathInputBboxes = pathInputBboxes;
 		this.pathOutput = pathOutput;
@@ -76,6 +77,7 @@ public class RelationSorterBase
 		this.iteratorFactory = iteratorFactory;
 		this.outputConfig = outputConfig;
 		this.pathOutputBboxList = pathOutputBboxList;
+		this.maxMembers = maxMembers;
 	}
 
 	protected void ensureOutputDirectory() throws IOException

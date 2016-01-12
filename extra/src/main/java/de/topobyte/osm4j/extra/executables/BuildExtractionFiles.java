@@ -23,6 +23,8 @@ import java.nio.file.Paths;
 import de.topobyte.osm4j.core.access.OsmInputException;
 import de.topobyte.osm4j.extra.extracts.ExtractionFilesBuilder;
 import de.topobyte.osm4j.utils.AbstractExecutableInput;
+import de.topobyte.utilities.apache.commons.cli.ArgumentHelper;
+import de.topobyte.utilities.apache.commons.cli.ArgumentParseException;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
 public class BuildExtractionFiles extends AbstractExecutableInput
@@ -31,6 +33,8 @@ public class BuildExtractionFiles extends AbstractExecutableInput
 	private static final String OPTION_INPUT = "input";
 	private static final String OPTION_OUTPUT = "output";
 	private static final String OPTION_MAX_NODES = "max_nodes";
+	private static final String OPTION_MAX_MEMBERS_SIMPLE = "max_members_simple";
+	private static final String OPTION_MAX_MEMBERS_COMPLEX = "max_members_complex";
 
 	@Override
 	protected String getHelpMessage()
@@ -52,6 +56,8 @@ public class BuildExtractionFiles extends AbstractExecutableInput
 	private String pathOutput;
 	private int maxNodes;
 	private boolean includeMetadata = true;
+	private int maxMembersSimple;
+	private int maxMembersComplex;
 
 	public BuildExtractionFiles()
 	{
@@ -59,6 +65,8 @@ public class BuildExtractionFiles extends AbstractExecutableInput
 		OptionHelper.add(options, OPTION_INPUT, true, true, "input file");
 		OptionHelper.add(options, OPTION_OUTPUT, true, true, "directory to store output in");
 		OptionHelper.add(options, OPTION_MAX_NODES, true, true, "the maximum number of nodes per file");
+		OptionHelper.add(options, OPTION_MAX_MEMBERS_SIMPLE, true, true, "maximum number of nodes per batch");
+		OptionHelper.add(options, OPTION_MAX_MEMBERS_COMPLEX, true, true, "maximum number of nodes per batch");
 		// @formatter:on
 	}
 
@@ -77,13 +85,33 @@ public class BuildExtractionFiles extends AbstractExecutableInput
 			System.out.println("Please specify a max nodes >= 1");
 			System.exit(1);
 		}
+
+		try {
+			maxMembersSimple = ArgumentHelper.getInteger(line,
+					OPTION_MAX_MEMBERS_SIMPLE).getValue();
+		} catch (ArgumentParseException e) {
+			System.out.println(String.format(
+					"Error while parsing option '%s': %s",
+					OPTION_MAX_MEMBERS_SIMPLE, e.getMessage()));
+			System.exit(1);
+		}
+
+		try {
+			maxMembersComplex = ArgumentHelper.getInteger(line,
+					OPTION_MAX_MEMBERS_COMPLEX).getValue();
+		} catch (ArgumentParseException e) {
+			System.out.println(String.format(
+					"Error while parsing option '%s': %s",
+					OPTION_MAX_MEMBERS_COMPLEX, e.getMessage()));
+			System.exit(1);
+		}
 	}
 
 	private void execute() throws IOException, OsmInputException
 	{
 		ExtractionFilesBuilder builder = new ExtractionFilesBuilder(
 				Paths.get(pathInput), inputFormat, Paths.get(pathOutput),
-				maxNodes, includeMetadata);
+				maxNodes, includeMetadata, maxMembersSimple, maxMembersComplex);
 
 		builder.execute();
 	}
