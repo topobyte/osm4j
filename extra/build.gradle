@@ -27,7 +27,7 @@ dependencies {
     compile 'de.topobyte:osm4j-tbo:0.0.9'
     compile 'de.topobyte:adt-geo:0.0.2'
     compile 'de.topobyte:adt-graph:0.0.1'
-    compile 'de.topobyte:osm4j-utils:0.0.20'
+    compile 'de.topobyte:osm4j-utils:0.0.21'
     compile 'de.topobyte:jts-utils:0.0.3'
     compile 'de.topobyte:large-scale-file-io:0.0.1'
     compile 'de.topobyte:commons-cli-helper:0.0.1'

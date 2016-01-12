@@ -35,6 +35,7 @@ public class BuildExtractionFiles extends AbstractExecutableInput
 	private static final String OPTION_MAX_NODES = "max_nodes";
 	private static final String OPTION_MAX_MEMBERS_SIMPLE = "max_members_simple";
 	private static final String OPTION_MAX_MEMBERS_COMPLEX = "max_members_complex";
+	private static final String OPTION_COMPUTE_BBOX = "compute_bbox";
 
 	@Override
 	protected String getHelpMessage()
@@ -58,6 +59,7 @@ public class BuildExtractionFiles extends AbstractExecutableInput
 	private boolean includeMetadata = true;
 	private int maxMembersSimple;
 	private int maxMembersComplex;
+	private boolean computeBbox = false;
 
 	public BuildExtractionFiles()
 	{
@@ -67,6 +69,7 @@ public class BuildExtractionFiles extends AbstractExecutableInput
 		OptionHelper.add(options, OPTION_MAX_NODES, true, true, "the maximum number of nodes per file");
 		OptionHelper.add(options, OPTION_MAX_MEMBERS_SIMPLE, true, true, "maximum number of nodes per batch");
 		OptionHelper.add(options, OPTION_MAX_MEMBERS_COMPLEX, true, true, "maximum number of nodes per batch");
+		OptionHelper.add(options, OPTION_COMPUTE_BBOX, false, false, "compute bbox instead of using bbox declared in input file");
 		// @formatter:on
 	}
 
@@ -105,13 +108,16 @@ public class BuildExtractionFiles extends AbstractExecutableInput
 					OPTION_MAX_MEMBERS_COMPLEX, e.getMessage()));
 			System.exit(1);
 		}
+
+		computeBbox = line.hasOption(OPTION_COMPUTE_BBOX);
 	}
 
 	private void execute() throws IOException, OsmInputException
 	{
 		ExtractionFilesBuilder builder = new ExtractionFilesBuilder(
 				Paths.get(pathInput), inputFormat, Paths.get(pathOutput),
-				maxNodes, includeMetadata, maxMembersSimple, maxMembersComplex);
+				maxNodes, includeMetadata, maxMembersSimple, maxMembersComplex,
+				computeBbox);
 
 		builder.execute();
 	}

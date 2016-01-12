@@ -23,6 +23,8 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.topobyte.adt.geo.BBox;
+import de.topobyte.adt.geo.BBoxString;
 import de.topobyte.osm4j.core.access.OsmInputException;
 import de.topobyte.osm4j.core.access.OsmIteratorInput;
 import de.topobyte.osm4j.core.model.iface.OsmBounds;
@@ -58,6 +60,7 @@ import de.topobyte.osm4j.utils.FileFormat;
 import de.topobyte.osm4j.utils.OsmFileInput;
 import de.topobyte.osm4j.utils.OsmIoUtils;
 import de.topobyte.osm4j.utils.OsmOutputConfig;
+import de.topobyte.osm4j.utils.OsmUtils;
 import de.topobyte.osm4j.utils.config.limit.ElementCountLimit;
 import de.topobyte.osm4j.utils.config.limit.RelationMemberLimit;
 import de.topobyte.osm4j.utils.config.limit.WayNodeLimit;
@@ -68,6 +71,7 @@ public class ExtractionFilesBuilder
 
 	private static final String KEY_TOTAL = "total";
 	private static final String KEY_SPLIT = "split";
+	private static final String KEY_COMPUTE_BBOX = "compute bbox";
 	private static final String KEY_NODE_TREE = "build nodetree";
 	private static final String KEY_SORT_WAYS = "sort ways by first node id";
 	private static final String KEY_MAP_WAYS = "map ways to tree";
@@ -91,6 +95,7 @@ public class ExtractionFilesBuilder
 	private boolean includeMetadata;
 	private int maxMembersSimple;
 	private int maxMembersComplex;
+	private boolean computeBbox;
 
 	private Path pathTree;
 	private Path pathWaysByNodes;
@@ -118,7 +123,7 @@ public class ExtractionFilesBuilder
 
 	public ExtractionFilesBuilder(Path pathInput, FileFormat inputFormat,
 			Path pathOutput, int maxNodes, boolean includeMetadata,
-			int maxMembersSimple, int maxMembersComplex)
+			int maxMembersSimple, int maxMembersComplex, boolean computeBbox)
 	{
 		this.pathInput = pathInput;
 		this.inputFormat = inputFormat;
@@ -127,6 +132,7 @@ public class ExtractionFilesBuilder
 		this.includeMetadata = includeMetadata;
 		this.maxMembersSimple = maxMembersSimple;
 		this.maxMembersComplex = maxMembersComplex;
+		this.computeBbox = computeBbox;
 	}
 
 	public void execute() throws IOException, OsmInputException
@@ -224,16 +230,23 @@ public class ExtractionFilesBuilder
 				outputFormat, includeMetadata);
 
 		// Determine bounds
+		BBox bbox = null;
 
 		OsmIteratorInput inputBounds = fileInput.createIterator(false, false);
 
-		if (!inputBounds.getIterator().hasBounds()) {
-			System.out.println("Input does not provide bounds");
+		if (!inputBounds.getIterator().hasBounds() && !computeBbox) {
+			System.out.println("Input does not provide bounds"
+					+ " and no flag has been set to compute the bounding box");
 			System.exit(1);
 		}
 
-		OsmBounds bounds = inputBounds.getIterator().getBounds();
-		System.out.println("bounds: " + bounds);
+		if (inputBounds.getIterator().hasBounds()) {
+			OsmBounds bounds = inputBounds.getIterator().getBounds();
+			bbox = new BBox(bounds.getLeft(), bounds.getBottom(),
+					bounds.getRight(), bounds.getTop());
+
+			System.out.println("bounds from file: " + BBoxString.create(bbox));
+		}
 
 		inputBounds.close();
 
@@ -254,10 +267,19 @@ public class ExtractionFilesBuilder
 		t.stop(KEY_SPLIT);
 		printInfo();
 
+		// Calculate bounding box
+		t.start(KEY_COMPUTE_BBOX);
+		if (computeBbox) {
+			bbox = OsmUtils.computeBBox(fileInputNodes);
+
+			System.out.println("computed bounds: " + BBoxString.create(bbox));
+		}
+		t.stop(KEY_COMPUTE_BBOX);
+
 		// Create node tree
 		t.start(KEY_NODE_TREE);
 
-		DataTree tree = DataTreeUtil.initNewTree(pathTree, bounds);
+		DataTree tree = DataTreeUtil.initNewTree(pathTree, bbox);
 
 		DataTreeFiles treeFiles = new DataTreeFiles(pathTree,
 				fileNamesInitialNodes);
@@ -459,12 +481,12 @@ public class ExtractionFilesBuilder
 
 	public void printInfo()
 	{
-		String[] keys = new String[] { KEY_TOTAL, KEY_SPLIT, KEY_NODE_TREE,
-				KEY_SORT_WAYS, KEY_MAP_WAYS, KEY_FIND_MISSING_WAY_NODES,
-				KEY_EXTRACT_MISSING_WAY_NODES, KEY_DISTRIBUTE_WAYS,
-				KEY_MERGE_NODES, KEY_MERGE_WAYS, KEY_SEPARATE_RELATIONS,
-				KEY_SPLIT_RELATIONS, KEY_DISTRIBUTE_RELATIONS,
-				KEY_SORT_RELATIONS };
+		String[] keys = new String[] { KEY_TOTAL, KEY_SPLIT, KEY_COMPUTE_BBOX,
+				KEY_NODE_TREE, KEY_SORT_WAYS, KEY_MAP_WAYS,
+				KEY_FIND_MISSING_WAY_NODES, KEY_EXTRACT_MISSING_WAY_NODES,
+				KEY_DISTRIBUTE_WAYS, KEY_MERGE_NODES, KEY_MERGE_WAYS,
+				KEY_SEPARATE_RELATIONS, KEY_SPLIT_RELATIONS,
+				KEY_DISTRIBUTE_RELATIONS, KEY_SORT_RELATIONS };
 
 		for (String key : keys) {
 			System.out.println(String.format("%s: %s", key, t.htime(key)));

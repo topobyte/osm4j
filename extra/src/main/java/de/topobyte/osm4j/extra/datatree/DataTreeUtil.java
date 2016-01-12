@@ -66,6 +66,17 @@ public class DataTreeUtil
 	public static DataTree initNewTree(Path dirOutput, OsmBounds bounds)
 			throws IOException
 	{
+		Envelope envelope = new Envelope(bounds.getLeft(), bounds.getRight(),
+				bounds.getBottom(), bounds.getTop());
+
+		BBox bbox = new BBox(envelope);
+
+		return initNewTree(dirOutput, bbox);
+	}
+
+	public static DataTree initNewTree(Path dirOutput, BBox bbox)
+			throws IOException
+	{
 		if (!Files.exists(dirOutput)) {
 			System.out.println("Creating output directory");
 			Files.createDirectories(dirOutput);
@@ -77,13 +88,9 @@ public class DataTreeUtil
 			throw new IOException("Output directory is not empty");
 		}
 
-		Envelope envelope = new Envelope(bounds.getLeft(), bounds.getRight(),
-				bounds.getBottom(), bounds.getTop());
-
-		BBox bbox = new BBox(envelope);
 		DataTreeUtil.writeTreeInfo(dirOutput.toFile(), bbox);
 
-		return new DataTree(envelope);
+		return new DataTree(bbox.toEnvelope());
 	}
 
 	public static void mergeUnderfilledSiblings(DataTree tree, Node head,
