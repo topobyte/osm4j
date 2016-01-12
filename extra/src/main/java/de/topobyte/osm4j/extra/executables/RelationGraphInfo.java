@@ -18,11 +18,17 @@
 package de.topobyte.osm4j.extra.executables;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import de.topobyte.osm4j.core.access.OsmIterator;
 import de.topobyte.osm4j.core.dataset.InMemoryMapDataSet;
 import de.topobyte.osm4j.core.dataset.MapDataSetLoader;
+import de.topobyte.osm4j.core.model.iface.OsmRelation;
+import de.topobyte.osm4j.core.model.util.OsmModelUtil;
+import de.topobyte.osm4j.core.resolve.EntityNotFoundException;
 import de.topobyte.osm4j.extra.relations.Group;
 import de.topobyte.osm4j.extra.relations.RelationGraph;
 import de.topobyte.osm4j.extra.relations.RelationGroupUtil;
@@ -31,11 +37,13 @@ import de.topobyte.utilities.apache.commons.cli.ArgumentHelper;
 import de.topobyte.utilities.apache.commons.cli.ArgumentParseException;
 import de.topobyte.utilities.apache.commons.cli.BooleanOption;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
+import de.topobyte.utilities.apache.commons.cli.StringOption;
 
 public class RelationGraphInfo extends AbstractExecutableSingleInputStream
 {
 
 	private static final String OPTION_UNDIRECTED = "undirected";
+	private static final String OPTION_KEYS = "keys";
 
 	@Override
 	protected String getHelpMessage()
@@ -57,11 +65,13 @@ public class RelationGraphInfo extends AbstractExecutableSingleInputStream
 	}
 
 	private boolean undirected = false;
+	private List<String> keys = new ArrayList<>();
 
 	public RelationGraphInfo()
 	{
 		// @formatter:off
 		OptionHelper.add(options, OPTION_UNDIRECTED, false, false, "build an undirected graph");
+		OptionHelper.add(options, OPTION_KEYS, true, false, "comma separated list of tag-keys to display for each start relation");
 		// @formatter:on
 	}
 
@@ -69,16 +79,22 @@ public class RelationGraphInfo extends AbstractExecutableSingleInputStream
 	protected void setup(String[] args)
 	{
 		super.setup(args);
-		BooleanOption option;
 		try {
-			option = ArgumentHelper.getBoolean(line, OPTION_UNDIRECTED);
-			if (option.hasValue()) {
+			BooleanOption oUndirected = ArgumentHelper.getBoolean(line,
+					OPTION_UNDIRECTED);
+			if (oUndirected.hasValue()) {
 				undirected = true;
 			}
 		} catch (ArgumentParseException e) {
 			System.out.println("Error while parsing option '"
 					+ OPTION_UNDIRECTED + "'");
 			System.exit(1);
+		}
+
+		StringOption oTags = ArgumentHelper.getString(line, OPTION_KEYS);
+		if (oTags.hasValue()) {
+			String[] values = oTags.getValue().split(",");
+			keys.addAll(Arrays.asList(values));
 		}
 	}
 
@@ -105,6 +121,19 @@ public class RelationGraphInfo extends AbstractExecutableSingleInputStream
 			System.out.println(String.format(
 					"Start: %d, relations: %d, members: %d", group.getStart(),
 					group.getNumRelations(), group.getNumMembers()));
+			try {
+				OsmRelation relation = data.getRelation(group.getStart());
+				Map<String, String> tags = OsmModelUtil.getTagsAsMap(relation);
+				for (String key : keys) {
+					String value = tags.get(key);
+					if (value == null) {
+						continue;
+					}
+					System.out.println(String.format("%s=%s", key, value));
+				}
+			} catch (EntityNotFoundException e) {
+				// continue
+			}
 		}
 	}
 
