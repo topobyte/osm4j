@@ -56,7 +56,7 @@ public class SimpleRelationsQuery extends AbstractRelationsQuery
 			boolean in = QueryUtil.anyMemberContainedIn(relation,
 					queryBag.nodeIds, queryBag.wayIds);
 
-			if (!in && fastRelationTests) {
+			if (!in) {
 				Set<OsmNode> nodes = new HashSet<>();
 				try {
 					finder.findMemberNodesAndWayNodes(relation, nodes);
@@ -66,7 +66,11 @@ public class SimpleRelationsQuery extends AbstractRelationsQuery
 
 				Envelope envelope = BboxBuilder.box(nodes);
 				if (test.intersects(envelope)) {
-					in = true;
+					if (fastRelationTests) {
+						in = true;
+					}
+				} else {
+					continue;
 				}
 			}
 
