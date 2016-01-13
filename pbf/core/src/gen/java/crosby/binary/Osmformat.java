@@ -8,10 +8,10 @@ public final class Osmformat {
   public static void registerAllExtensions(
       com.google.protobuf.ExtensionRegistryLite registry) {
   }
-  public interface HeaderBlockOrBuilder
-      extends com.google.protobuf.MessageLiteOrBuilder {
+  public interface HeaderBlockOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:OSMPBF.HeaderBlock)
+      com.google.protobuf.MessageLiteOrBuilder {
 
-    // optional .OSMPBF.HeaderBBox bbox = 1;
     /**
      * <code>optional .OSMPBF.HeaderBBox bbox = 1;</code>
      */
@@ -21,7 +21,6 @@ public final class Osmformat {
      */
     crosby.binary.Osmformat.HeaderBBox getBbox();
 
-    // repeated string required_features = 4;
     /**
      * <code>repeated string required_features = 4;</code>
      *
@@ -29,8 +28,8 @@ public final class Osmformat {
      * Additional tags to aid in parsing this dataset 
      * </pre>
      */
-    java.util.List<java.lang.String>
-    getRequiredFeaturesList();
+    com.google.protobuf.ProtocolStringList
+        getRequiredFeaturesList();
     /**
      * <code>repeated string required_features = 4;</code>
      *
@@ -57,12 +56,11 @@ public final class Osmformat {
     com.google.protobuf.ByteString
         getRequiredFeaturesBytes(int index);
 
-    // repeated string optional_features = 5;
     /**
      * <code>repeated string optional_features = 5;</code>
      */
-    java.util.List<java.lang.String>
-    getOptionalFeaturesList();
+    com.google.protobuf.ProtocolStringList
+        getOptionalFeaturesList();
     /**
      * <code>repeated string optional_features = 5;</code>
      */
@@ -77,7 +75,6 @@ public final class Osmformat {
     com.google.protobuf.ByteString
         getOptionalFeaturesBytes(int index);
 
-    // optional string writingprogram = 16;
     /**
      * <code>optional string writingprogram = 16;</code>
      */
@@ -92,7 +89,6 @@ public final class Osmformat {
     com.google.protobuf.ByteString
         getWritingprogramBytes();
 
-    // optional string source = 17;
     /**
      * <code>optional string source = 17;</code>
      *
@@ -123,14 +119,15 @@ public final class Osmformat {
    * Protobuf type {@code OSMPBF.HeaderBlock}
    */
   public static final class HeaderBlock extends
-      com.google.protobuf.GeneratedMessageLite
-      implements HeaderBlockOrBuilder {
+      com.google.protobuf.GeneratedMessageLite implements
+      // @@protoc_insertion_point(message_implements:OSMPBF.HeaderBlock)
+      HeaderBlockOrBuilder {
     // Use HeaderBlock.newBuilder() to construct.
     private HeaderBlock(com.google.protobuf.GeneratedMessageLite.Builder builder) {
       super(builder);
-
+      this.unknownFields = builder.getUnknownFields();
     }
-    private HeaderBlock(boolean noInit) {}
+    private HeaderBlock(boolean noInit) { this.unknownFields = com.google.protobuf.ByteString.EMPTY;}
 
     private static final HeaderBlock defaultInstance;
     public static HeaderBlock getDefaultInstance() {
@@ -141,12 +138,18 @@ public final class Osmformat {
       return defaultInstance;
     }
 
+    private final com.google.protobuf.ByteString unknownFields;
     private HeaderBlock(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       initFields();
       int mutable_bitField0_ = 0;
+      com.google.protobuf.ByteString.Output unknownFieldsOutput =
+          com.google.protobuf.ByteString.newOutput();
+      com.google.protobuf.CodedOutputStream unknownFieldsCodedOutput =
+          com.google.protobuf.CodedOutputStream.newInstance(
+              unknownFieldsOutput);
       try {
         boolean done = false;
         while (!done) {
@@ -156,7 +159,7 @@ public final class Osmformat {
               done = true;
               break;
             default: {
-              if (!parseUnknownField(input,
+              if (!parseUnknownField(input, unknownFieldsCodedOutput,
                                      extensionRegistry, tag)) {
                 done = true;
               }
@@ -176,29 +179,33 @@ public final class Osmformat {
               break;
             }
             case 34: {
+              com.google.protobuf.ByteString bs = input.readBytes();
               if (!((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
                 requiredFeatures_ = new com.google.protobuf.LazyStringArrayList();
                 mutable_bitField0_ |= 0x00000002;
               }
-              requiredFeatures_.add(input.readBytes());
+              requiredFeatures_.add(bs);
               break;
             }
             case 42: {
+              com.google.protobuf.ByteString bs = input.readBytes();
               if (!((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
                 optionalFeatures_ = new com.google.protobuf.LazyStringArrayList();
                 mutable_bitField0_ |= 0x00000004;
               }
-              optionalFeatures_.add(input.readBytes());
+              optionalFeatures_.add(bs);
               break;
             }
             case 130: {
+              com.google.protobuf.ByteString bs = input.readBytes();
               bitField0_ |= 0x00000002;
-              writingprogram_ = input.readBytes();
+              writingprogram_ = bs;
               break;
             }
             case 138: {
+              com.google.protobuf.ByteString bs = input.readBytes();
               bitField0_ |= 0x00000004;
-              source_ = input.readBytes();
+              source_ = bs;
               break;
             }
           }
@@ -210,10 +217,17 @@ public final class Osmformat {
             e.getMessage()).setUnfinishedMessage(this);
       } finally {
         if (((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
-          requiredFeatures_ = new com.google.protobuf.UnmodifiableLazyStringList(requiredFeatures_);
+          requiredFeatures_ = requiredFeatures_.getUnmodifiableView();
         }
         if (((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
-          optionalFeatures_ = new com.google.protobuf.UnmodifiableLazyStringList(optionalFeatures_);
+          optionalFeatures_ = optionalFeatures_.getUnmodifiableView();
+        }
+        try {
+          unknownFieldsCodedOutput.flush();
+        } catch (java.io.IOException e) {
+        // Should not happen
+        } finally {
+          unknownFields = unknownFieldsOutput.toByteString();
         }
         makeExtensionsImmutable();
       }
@@ -234,7 +248,6 @@ public final class Osmformat {
     }
 
     private int bitField0_;
-    // optional .OSMPBF.HeaderBBox bbox = 1;
     public static final int BBOX_FIELD_NUMBER = 1;
     private crosby.binary.Osmformat.HeaderBBox bbox_;
     /**
@@ -250,7 +263,6 @@ public final class Osmformat {
       return bbox_;
     }
 
-    // repeated string required_features = 4;
     public static final int REQUIRED_FEATURES_FIELD_NUMBER = 4;
     private com.google.protobuf.LazyStringList requiredFeatures_;
     /**
@@ -260,7 +272,7 @@ public final class Osmformat {
      * Additional tags to aid in parsing this dataset 
      * </pre>
      */
-    public java.util.List<java.lang.String>
+    public com.google.protobuf.ProtocolStringList
         getRequiredFeaturesList() {
       return requiredFeatures_;
     }
@@ -296,13 +308,12 @@ public final class Osmformat {
       return requiredFeatures_.getByteString(index);
     }
 
-    // repeated string optional_features = 5;
     public static final int OPTIONAL_FEATURES_FIELD_NUMBER = 5;
     private com.google.protobuf.LazyStringList optionalFeatures_;
     /**
      * <code>repeated string optional_features = 5;</code>
      */
-    public java.util.List<java.lang.String>
+    public com.google.protobuf.ProtocolStringList
         getOptionalFeaturesList() {
       return optionalFeatures_;
     }
@@ -326,7 +337,6 @@ public final class Osmformat {
       return optionalFeatures_.getByteString(index);
     }
 
-    // optional string writingprogram = 16;
     public static final int WRITINGPROGRAM_FIELD_NUMBER = 16;
     private java.lang.Object writingprogram_;
     /**
@@ -369,7 +379,6 @@ public final class Osmformat {
       }
     }
 
-    // optional string source = 17;
     public static final int SOURCE_FIELD_NUMBER = 17;
     private java.lang.Object source_;
     /**
@@ -434,7 +443,8 @@ public final class Osmformat {
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
-      if (isInitialized != -1) return isInitialized == 1;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
 
       if (hasBbox()) {
         if (!getBbox().isInitialized()) {
@@ -464,6 +474,7 @@ public final class Osmformat {
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
         output.writeBytes(17, getSourceBytes());
       }
+      output.writeRawBytes(unknownFields);
     }
 
     private int memoizedSerializedSize = -1;
@@ -502,6 +513,7 @@ public final class Osmformat {
         size += com.google.protobuf.CodedOutputStream
           .computeBytesSize(17, getSourceBytes());
       }
+      size += unknownFields.size();
       memoizedSerializedSize = size;
       return size;
     }
@@ -579,7 +591,9 @@ public final class Osmformat {
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageLite.Builder<
           crosby.binary.Osmformat.HeaderBlock, Builder>
-        implements crosby.binary.Osmformat.HeaderBlockOrBuilder {
+        implements
+        // @@protoc_insertion_point(builder_implements:OSMPBF.HeaderBlock)
+        crosby.binary.Osmformat.HeaderBlockOrBuilder {
       // Construct using crosby.binary.Osmformat.HeaderBlock.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
@@ -631,14 +645,12 @@ public final class Osmformat {
         }
         result.bbox_ = bbox_;
         if (((bitField0_ & 0x00000002) == 0x00000002)) {
-          requiredFeatures_ = new com.google.protobuf.UnmodifiableLazyStringList(
-              requiredFeatures_);
+          requiredFeatures_ = requiredFeatures_.getUnmodifiableView();
           bitField0_ = (bitField0_ & ~0x00000002);
         }
         result.requiredFeatures_ = requiredFeatures_;
         if (((bitField0_ & 0x00000004) == 0x00000004)) {
-          optionalFeatures_ = new com.google.protobuf.UnmodifiableLazyStringList(
-              optionalFeatures_);
+          optionalFeatures_ = optionalFeatures_.getUnmodifiableView();
           bitField0_ = (bitField0_ & ~0x00000004);
         }
         result.optionalFeatures_ = optionalFeatures_;
@@ -689,6 +701,8 @@ public final class Osmformat {
           source_ = other.source_;
           
         }
+        setUnknownFields(
+            getUnknownFields().concat(other.unknownFields));
         return this;
       }
 
@@ -721,7 +735,6 @@ public final class Osmformat {
       }
       private int bitField0_;
 
-      // optional .OSMPBF.HeaderBBox bbox = 1;
       private crosby.binary.Osmformat.HeaderBBox bbox_ = crosby.binary.Osmformat.HeaderBBox.getDefaultInstance();
       /**
        * <code>optional .OSMPBF.HeaderBBox bbox = 1;</code>
@@ -782,7 +795,6 @@ public final class Osmformat {
         return this;
       }
 
-      // repeated string required_features = 4;
       private com.google.protobuf.LazyStringList requiredFeatures_ = com.google.protobuf.LazyStringArrayList.EMPTY;
       private void ensureRequiredFeaturesIsMutable() {
         if (!((bitField0_ & 0x00000002) == 0x00000002)) {
@@ -797,9 +809,9 @@ public final class Osmformat {
        * Additional tags to aid in parsing this dataset 
        * </pre>
        */
-      public java.util.List<java.lang.String>
+      public com.google.protobuf.ProtocolStringList
           getRequiredFeaturesList() {
-        return java.util.Collections.unmodifiableList(requiredFeatures_);
+        return requiredFeatures_.getUnmodifiableView();
       }
       /**
        * <code>repeated string required_features = 4;</code>
@@ -876,7 +888,8 @@ public final class Osmformat {
       public Builder addAllRequiredFeatures(
           java.lang.Iterable<java.lang.String> values) {
         ensureRequiredFeaturesIsMutable();
-        super.addAll(values, requiredFeatures_);
+        com.google.protobuf.AbstractMessageLite.Builder.addAll(
+            values, requiredFeatures_);
         
         return this;
       }
@@ -911,7 +924,6 @@ public final class Osmformat {
         return this;
       }
 
-      // repeated string optional_features = 5;
       private com.google.protobuf.LazyStringList optionalFeatures_ = com.google.protobuf.LazyStringArrayList.EMPTY;
       private void ensureOptionalFeaturesIsMutable() {
         if (!((bitField0_ & 0x00000004) == 0x00000004)) {
@@ -922,9 +934,9 @@ public final class Osmformat {
       /**
        * <code>repeated string optional_features = 5;</code>
        */
-      public java.util.List<java.lang.String>
+      public com.google.protobuf.ProtocolStringList
           getOptionalFeaturesList() {
-        return java.util.Collections.unmodifiableList(optionalFeatures_);
+        return optionalFeatures_.getUnmodifiableView();
       }
       /**
        * <code>repeated string optional_features = 5;</code>
@@ -977,7 +989,8 @@ public final class Osmformat {
       public Builder addAllOptionalFeatures(
           java.lang.Iterable<java.lang.String> values) {
         ensureOptionalFeaturesIsMutable();
-        super.addAll(values, optionalFeatures_);
+        com.google.protobuf.AbstractMessageLite.Builder.addAll(
+            values, optionalFeatures_);
         
         return this;
       }
@@ -1004,7 +1017,6 @@ public final class Osmformat {
         return this;
       }
 
-      // optional string writingprogram = 16;
       private java.lang.Object writingprogram_ = "";
       /**
        * <code>optional string writingprogram = 16;</code>
@@ -1018,9 +1030,12 @@ public final class Osmformat {
       public java.lang.String getWritingprogram() {
         java.lang.Object ref = writingprogram_;
         if (!(ref instanceof java.lang.String)) {
-          java.lang.String s = ((com.google.protobuf.ByteString) ref)
-              .toStringUtf8();
-          writingprogram_ = s;
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          if (bs.isValidUtf8()) {
+            writingprogram_ = s;
+          }
           return s;
         } else {
           return (java.lang.String) ref;
@@ -1078,7 +1093,6 @@ public final class Osmformat {
         return this;
       }
 
-      // optional string source = 17;
       private java.lang.Object source_ = "";
       /**
        * <code>optional string source = 17;</code>
@@ -1100,9 +1114,12 @@ public final class Osmformat {
       public java.lang.String getSource() {
         java.lang.Object ref = source_;
         if (!(ref instanceof java.lang.String)) {
-          java.lang.String s = ((com.google.protobuf.ByteString) ref)
-              .toStringUtf8();
-          source_ = s;
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          if (bs.isValidUtf8()) {
+            source_ = s;
+          }
           return s;
         } else {
           return (java.lang.String) ref;
@@ -1187,10 +1204,10 @@ public final class Osmformat {
     // @@protoc_insertion_point(class_scope:OSMPBF.HeaderBlock)
   }
 
-  public interface HeaderBBoxOrBuilder
-      extends com.google.protobuf.MessageLiteOrBuilder {
+  public interface HeaderBBoxOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:OSMPBF.HeaderBBox)
+      com.google.protobuf.MessageLiteOrBuilder {
 
-    // required sint64 left = 1;
     /**
      * <code>required sint64 left = 1;</code>
      */
@@ -1200,7 +1217,6 @@ public final class Osmformat {
      */
     long getLeft();
 
-    // required sint64 right = 2;
     /**
      * <code>required sint64 right = 2;</code>
      */
@@ -1210,7 +1226,6 @@ public final class Osmformat {
      */
     long getRight();
 
-    // required sint64 top = 3;
     /**
      * <code>required sint64 top = 3;</code>
      */
@@ -1220,7 +1235,6 @@ public final class Osmformat {
      */
     long getTop();
 
-    // required sint64 bottom = 4;
     /**
      * <code>required sint64 bottom = 4;</code>
      */
@@ -1234,14 +1248,15 @@ public final class Osmformat {
    * Protobuf type {@code OSMPBF.HeaderBBox}
    */
   public static final class HeaderBBox extends
-      com.google.protobuf.GeneratedMessageLite
-      implements HeaderBBoxOrBuilder {
+      com.google.protobuf.GeneratedMessageLite implements
+      // @@protoc_insertion_point(message_implements:OSMPBF.HeaderBBox)
+      HeaderBBoxOrBuilder {
     // Use HeaderBBox.newBuilder() to construct.
     private HeaderBBox(com.google.protobuf.GeneratedMessageLite.Builder builder) {
       super(builder);
-
+      this.unknownFields = builder.getUnknownFields();
     }
-    private HeaderBBox(boolean noInit) {}
+    private HeaderBBox(boolean noInit) { this.unknownFields = com.google.protobuf.ByteString.EMPTY;}
 
     private static final HeaderBBox defaultInstance;
     public static HeaderBBox getDefaultInstance() {
@@ -1252,12 +1267,18 @@ public final class Osmformat {
       return defaultInstance;
     }
 
+    private final com.google.protobuf.ByteString unknownFields;
     private HeaderBBox(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       initFields();
       int mutable_bitField0_ = 0;
+      com.google.protobuf.ByteString.Output unknownFieldsOutput =
+          com.google.protobuf.ByteString.newOutput();
+      com.google.protobuf.CodedOutputStream unknownFieldsCodedOutput =
+          com.google.protobuf.CodedOutputStream.newInstance(
+              unknownFieldsOutput);
       try {
         boolean done = false;
         while (!done) {
@@ -1267,7 +1288,7 @@ public final class Osmformat {
               done = true;
               break;
             default: {
-              if (!parseUnknownField(input,
+              if (!parseUnknownField(input, unknownFieldsCodedOutput,
                                      extensionRegistry, tag)) {
                 done = true;
               }
@@ -1301,6 +1322,13 @@ public final class Osmformat {
         throw new com.google.protobuf.InvalidProtocolBufferException(
             e.getMessage()).setUnfinishedMessage(this);
       } finally {
+        try {
+          unknownFieldsCodedOutput.flush();
+        } catch (java.io.IOException e) {
+        // Should not happen
+        } finally {
+          unknownFields = unknownFieldsOutput.toByteString();
+        }
         makeExtensionsImmutable();
       }
     }
@@ -1320,7 +1348,6 @@ public final class Osmformat {
     }
 
     private int bitField0_;
-    // required sint64 left = 1;
     public static final int LEFT_FIELD_NUMBER = 1;
     private long left_;
     /**
@@ -1336,7 +1363,6 @@ public final class Osmformat {
       return left_;
     }
 
-    // required sint64 right = 2;
     public static final int RIGHT_FIELD_NUMBER = 2;
     private long right_;
     /**
@@ -1352,7 +1378,6 @@ public final class Osmformat {
       return right_;
     }
 
-    // required sint64 top = 3;
     public static final int TOP_FIELD_NUMBER = 3;
     private long top_;
     /**
@@ -1368,7 +1393,6 @@ public final class Osmformat {
       return top_;
     }
 
-    // required sint64 bottom = 4;
     public static final int BOTTOM_FIELD_NUMBER = 4;
     private long bottom_;
     /**
@@ -1393,7 +1417,8 @@ public final class Osmformat {
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
-      if (isInitialized != -1) return isInitialized == 1;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
 
       if (!hasLeft()) {
         memoizedIsInitialized = 0;
@@ -1430,6 +1455,7 @@ public final class Osmformat {
       if (((bitField0_ & 0x00000008) == 0x00000008)) {
         output.writeSInt64(4, bottom_);
       }
+      output.writeRawBytes(unknownFields);
     }
 
     private int memoizedSerializedSize = -1;
@@ -1454,6 +1480,7 @@ public final class Osmformat {
         size += com.google.protobuf.CodedOutputStream
           .computeSInt64Size(4, bottom_);
       }
+      size += unknownFields.size();
       memoizedSerializedSize = size;
       return size;
     }
@@ -1531,7 +1558,9 @@ public final class Osmformat {
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageLite.Builder<
           crosby.binary.Osmformat.HeaderBBox, Builder>
-        implements crosby.binary.Osmformat.HeaderBBoxOrBuilder {
+        implements
+        // @@protoc_insertion_point(builder_implements:OSMPBF.HeaderBBox)
+        crosby.binary.Osmformat.HeaderBBoxOrBuilder {
       // Construct using crosby.binary.Osmformat.HeaderBBox.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
@@ -1610,6 +1639,8 @@ public final class Osmformat {
         if (other.hasBottom()) {
           setBottom(other.getBottom());
         }
+        setUnknownFields(
+            getUnknownFields().concat(other.unknownFields));
         return this;
       }
 
@@ -1652,7 +1683,6 @@ public final class Osmformat {
       }
       private int bitField0_;
 
-      // required sint64 left = 1;
       private long left_ ;
       /**
        * <code>required sint64 left = 1;</code>
@@ -1685,7 +1715,6 @@ public final class Osmformat {
         return this;
       }
 
-      // required sint64 right = 2;
       private long right_ ;
       /**
        * <code>required sint64 right = 2;</code>
@@ -1718,7 +1747,6 @@ public final class Osmformat {
         return this;
       }
 
-      // required sint64 top = 3;
       private long top_ ;
       /**
        * <code>required sint64 top = 3;</code>
@@ -1751,7 +1779,6 @@ public final class Osmformat {
         return this;
       }
 
-      // required sint64 bottom = 4;
       private long bottom_ ;
       /**
        * <code>required sint64 bottom = 4;</code>
@@ -1795,10 +1822,10 @@ public final class Osmformat {
     // @@protoc_insertion_point(class_scope:OSMPBF.HeaderBBox)
   }
 
-  public interface PrimitiveBlockOrBuilder
-      extends com.google.protobuf.MessageLiteOrBuilder {
+  public interface PrimitiveBlockOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:OSMPBF.PrimitiveBlock)
+      com.google.protobuf.MessageLiteOrBuilder {
 
-    // required .OSMPBF.StringTable stringtable = 1;
     /**
      * <code>required .OSMPBF.StringTable stringtable = 1;</code>
      */
@@ -1808,7 +1835,6 @@ public final class Osmformat {
      */
     crosby.binary.Osmformat.StringTable getStringtable();
 
-    // repeated .OSMPBF.PrimitiveGroup primitivegroup = 2;
     /**
      * <code>repeated .OSMPBF.PrimitiveGroup primitivegroup = 2;</code>
      */
@@ -1823,7 +1849,6 @@ public final class Osmformat {
      */
     int getPrimitivegroupCount();
 
-    // optional int32 granularity = 17 [default = 100];
     /**
      * <code>optional int32 granularity = 17 [default = 100];</code>
      *
@@ -1841,7 +1866,6 @@ public final class Osmformat {
      */
     int getGranularity();
 
-    // optional int64 lat_offset = 19 [default = 0];
     /**
      * <code>optional int64 lat_offset = 19 [default = 0];</code>
      *
@@ -1859,7 +1883,6 @@ public final class Osmformat {
      */
     long getLatOffset();
 
-    // optional int64 lon_offset = 20 [default = 0];
     /**
      * <code>optional int64 lon_offset = 20 [default = 0];</code>
      */
@@ -1869,7 +1892,6 @@ public final class Osmformat {
      */
     long getLonOffset();
 
-    // optional int32 date_granularity = 18 [default = 1000];
     /**
      * <code>optional int32 date_granularity = 18 [default = 1000];</code>
      *
@@ -1891,14 +1913,15 @@ public final class Osmformat {
    * Protobuf type {@code OSMPBF.PrimitiveBlock}
    */
   public static final class PrimitiveBlock extends
-      com.google.protobuf.GeneratedMessageLite
-      implements PrimitiveBlockOrBuilder {
+      com.google.protobuf.GeneratedMessageLite implements
+      // @@protoc_insertion_point(message_implements:OSMPBF.PrimitiveBlock)
+      PrimitiveBlockOrBuilder {
     // Use PrimitiveBlock.newBuilder() to construct.
     private PrimitiveBlock(com.google.protobuf.GeneratedMessageLite.Builder builder) {
       super(builder);
-
+      this.unknownFields = builder.getUnknownFields();
     }
-    private PrimitiveBlock(boolean noInit) {}
+    private PrimitiveBlock(boolean noInit) { this.unknownFields = com.google.protobuf.ByteString.EMPTY;}
 
     private static final PrimitiveBlock defaultInstance;
     public static PrimitiveBlock getDefaultInstance() {
@@ -1909,12 +1932,18 @@ public final class Osmformat {
       return defaultInstance;
     }
 
+    private final com.google.protobuf.ByteString unknownFields;
     private PrimitiveBlock(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       initFields();
       int mutable_bitField0_ = 0;
+      com.google.protobuf.ByteString.Output unknownFieldsOutput =
+          com.google.protobuf.ByteString.newOutput();
+      com.google.protobuf.CodedOutputStream unknownFieldsCodedOutput =
+          com.google.protobuf.CodedOutputStream.newInstance(
+              unknownFieldsOutput);
       try {
         boolean done = false;
         while (!done) {
@@ -1924,7 +1953,7 @@ public final class Osmformat {
               done = true;
               break;
             default: {
-              if (!parseUnknownField(input,
+              if (!parseUnknownField(input, unknownFieldsCodedOutput,
                                      extensionRegistry, tag)) {
                 done = true;
               }
@@ -1982,6 +2011,13 @@ public final class Osmformat {
         if (((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
           primitivegroup_ = java.util.Collections.unmodifiableList(primitivegroup_);
         }
+        try {
+          unknownFieldsCodedOutput.flush();
+        } catch (java.io.IOException e) {
+        // Should not happen
+        } finally {
+          unknownFields = unknownFieldsOutput.toByteString();
+        }
         makeExtensionsImmutable();
       }
     }
@@ -2001,7 +2037,6 @@ public final class Osmformat {
     }
 
     private int bitField0_;
-    // required .OSMPBF.StringTable stringtable = 1;
     public static final int STRINGTABLE_FIELD_NUMBER = 1;
     private crosby.binary.Osmformat.StringTable stringtable_;
     /**
@@ -2017,7 +2052,6 @@ public final class Osmformat {
       return stringtable_;
     }
 
-    // repeated .OSMPBF.PrimitiveGroup primitivegroup = 2;
     public static final int PRIMITIVEGROUP_FIELD_NUMBER = 2;
     private java.util.List<crosby.binary.Osmformat.PrimitiveGroup> primitivegroup_;
     /**
@@ -2053,7 +2087,6 @@ public final class Osmformat {
       return primitivegroup_.get(index);
     }
 
-    // optional int32 granularity = 17 [default = 100];
     public static final int GRANULARITY_FIELD_NUMBER = 17;
     private int granularity_;
     /**
@@ -2077,7 +2110,6 @@ public final class Osmformat {
       return granularity_;
     }
 
-    // optional int64 lat_offset = 19 [default = 0];
     public static final int LAT_OFFSET_FIELD_NUMBER = 19;
     private long latOffset_;
     /**
@@ -2101,7 +2133,6 @@ public final class Osmformat {
       return latOffset_;
     }
 
-    // optional int64 lon_offset = 20 [default = 0];
     public static final int LON_OFFSET_FIELD_NUMBER = 20;
     private long lonOffset_;
     /**
@@ -2117,7 +2148,6 @@ public final class Osmformat {
       return lonOffset_;
     }
 
-    // optional int32 date_granularity = 18 [default = 1000];
     public static final int DATE_GRANULARITY_FIELD_NUMBER = 18;
     private int dateGranularity_;
     /**
@@ -2152,7 +2182,8 @@ public final class Osmformat {
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
-      if (isInitialized != -1) return isInitialized == 1;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
 
       if (!hasStringtable()) {
         memoizedIsInitialized = 0;
@@ -2189,6 +2220,7 @@ public final class Osmformat {
       if (((bitField0_ & 0x00000008) == 0x00000008)) {
         output.writeInt64(20, lonOffset_);
       }
+      output.writeRawBytes(unknownFields);
     }
 
     private int memoizedSerializedSize = -1;
@@ -2221,6 +2253,7 @@ public final class Osmformat {
         size += com.google.protobuf.CodedOutputStream
           .computeInt64Size(20, lonOffset_);
       }
+      size += unknownFields.size();
       memoizedSerializedSize = size;
       return size;
     }
@@ -2298,7 +2331,9 @@ public final class Osmformat {
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageLite.Builder<
           crosby.binary.Osmformat.PrimitiveBlock, Builder>
-        implements crosby.binary.Osmformat.PrimitiveBlockOrBuilder {
+        implements
+        // @@protoc_insertion_point(builder_implements:OSMPBF.PrimitiveBlock)
+        crosby.binary.Osmformat.PrimitiveBlockOrBuilder {
       // Construct using crosby.binary.Osmformat.PrimitiveBlock.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
@@ -2403,6 +2438,8 @@ public final class Osmformat {
         if (other.hasDateGranularity()) {
           setDateGranularity(other.getDateGranularity());
         }
+        setUnknownFields(
+            getUnknownFields().concat(other.unknownFields));
         return this;
       }
 
@@ -2439,7 +2476,6 @@ public final class Osmformat {
       }
       private int bitField0_;
 
-      // required .OSMPBF.StringTable stringtable = 1;
       private crosby.binary.Osmformat.StringTable stringtable_ = crosby.binary.Osmformat.StringTable.getDefaultInstance();
       /**
        * <code>required .OSMPBF.StringTable stringtable = 1;</code>
@@ -2500,7 +2536,6 @@ public final class Osmformat {
         return this;
       }
 
-      // repeated .OSMPBF.PrimitiveGroup primitivegroup = 2;
       private java.util.List<crosby.binary.Osmformat.PrimitiveGroup> primitivegroup_ =
         java.util.Collections.emptyList();
       private void ensurePrimitivegroupIsMutable() {
@@ -2602,7 +2637,8 @@ public final class Osmformat {
       public Builder addAllPrimitivegroup(
           java.lang.Iterable<? extends crosby.binary.Osmformat.PrimitiveGroup> values) {
         ensurePrimitivegroupIsMutable();
-        super.addAll(values, primitivegroup_);
+        com.google.protobuf.AbstractMessageLite.Builder.addAll(
+            values, primitivegroup_);
 
         return this;
       }
@@ -2625,7 +2661,6 @@ public final class Osmformat {
         return this;
       }
 
-      // optional int32 granularity = 17 [default = 100];
       private int granularity_ = 100;
       /**
        * <code>optional int32 granularity = 17 [default = 100];</code>
@@ -2674,7 +2709,6 @@ public final class Osmformat {
         return this;
       }
 
-      // optional int64 lat_offset = 19 [default = 0];
       private long latOffset_ ;
       /**
        * <code>optional int64 lat_offset = 19 [default = 0];</code>
@@ -2723,7 +2757,6 @@ public final class Osmformat {
         return this;
       }
 
-      // optional int64 lon_offset = 20 [default = 0];
       private long lonOffset_ ;
       /**
        * <code>optional int64 lon_offset = 20 [default = 0];</code>
@@ -2756,7 +2789,6 @@ public final class Osmformat {
         return this;
       }
 
-      // optional int32 date_granularity = 18 [default = 1000];
       private int dateGranularity_ = 1000;
       /**
        * <code>optional int32 date_granularity = 18 [default = 1000];</code>
@@ -2816,10 +2848,10 @@ public final class Osmformat {
     // @@protoc_insertion_point(class_scope:OSMPBF.PrimitiveBlock)
   }
 
-  public interface PrimitiveGroupOrBuilder
-      extends com.google.protobuf.MessageLiteOrBuilder {
+  public interface PrimitiveGroupOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:OSMPBF.PrimitiveGroup)
+      com.google.protobuf.MessageLiteOrBuilder {
 
-    // repeated .OSMPBF.Node nodes = 1;
     /**
      * <code>repeated .OSMPBF.Node nodes = 1;</code>
      */
@@ -2834,7 +2866,6 @@ public final class Osmformat {
      */
     int getNodesCount();
 
-    // optional .OSMPBF.DenseNodes dense = 2;
     /**
      * <code>optional .OSMPBF.DenseNodes dense = 2;</code>
      */
@@ -2844,7 +2875,6 @@ public final class Osmformat {
      */
     crosby.binary.Osmformat.DenseNodes getDense();
 
-    // repeated .OSMPBF.Way ways = 3;
     /**
      * <code>repeated .OSMPBF.Way ways = 3;</code>
      */
@@ -2859,7 +2889,6 @@ public final class Osmformat {
      */
     int getWaysCount();
 
-    // repeated .OSMPBF.Relation relations = 4;
     /**
      * <code>repeated .OSMPBF.Relation relations = 4;</code>
      */
@@ -2874,7 +2903,6 @@ public final class Osmformat {
      */
     int getRelationsCount();
 
-    // repeated .OSMPBF.ChangeSet changesets = 5;
     /**
      * <code>repeated .OSMPBF.ChangeSet changesets = 5;</code>
      */
@@ -2897,14 +2925,15 @@ public final class Osmformat {
    * </pre>
    */
   public static final class PrimitiveGroup extends
-      com.google.protobuf.GeneratedMessageLite
-      implements PrimitiveGroupOrBuilder {
+      com.google.protobuf.GeneratedMessageLite implements
+      // @@protoc_insertion_point(message_implements:OSMPBF.PrimitiveGroup)
+      PrimitiveGroupOrBuilder {
     // Use PrimitiveGroup.newBuilder() to construct.
     private PrimitiveGroup(com.google.protobuf.GeneratedMessageLite.Builder builder) {
       super(builder);
-
+      this.unknownFields = builder.getUnknownFields();
     }
-    private PrimitiveGroup(boolean noInit) {}
+    private PrimitiveGroup(boolean noInit) { this.unknownFields = com.google.protobuf.ByteString.EMPTY;}
 
     private static final PrimitiveGroup defaultInstance;
     public static PrimitiveGroup getDefaultInstance() {
@@ -2915,12 +2944,18 @@ public final class Osmformat {
       return defaultInstance;
     }
 
+    private final com.google.protobuf.ByteString unknownFields;
     private PrimitiveGroup(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       initFields();
       int mutable_bitField0_ = 0;
+      com.google.protobuf.ByteString.Output unknownFieldsOutput =
+          com.google.protobuf.ByteString.newOutput();
+      com.google.protobuf.CodedOutputStream unknownFieldsCodedOutput =
+          com.google.protobuf.CodedOutputStream.newInstance(
+              unknownFieldsOutput);
       try {
         boolean done = false;
         while (!done) {
@@ -2930,7 +2965,7 @@ public final class Osmformat {
               done = true;
               break;
             default: {
-              if (!parseUnknownField(input,
+              if (!parseUnknownField(input, unknownFieldsCodedOutput,
                                      extensionRegistry, tag)) {
                 done = true;
               }
@@ -3001,6 +3036,13 @@ public final class Osmformat {
         if (((mutable_bitField0_ & 0x00000010) == 0x00000010)) {
           changesets_ = java.util.Collections.unmodifiableList(changesets_);
         }
+        try {
+          unknownFieldsCodedOutput.flush();
+        } catch (java.io.IOException e) {
+        // Should not happen
+        } finally {
+          unknownFields = unknownFieldsOutput.toByteString();
+        }
         makeExtensionsImmutable();
       }
     }
@@ -3020,7 +3062,6 @@ public final class Osmformat {
     }
 
     private int bitField0_;
-    // repeated .OSMPBF.Node nodes = 1;
     public static final int NODES_FIELD_NUMBER = 1;
     private java.util.List<crosby.binary.Osmformat.Node> nodes_;
     /**
@@ -3056,7 +3097,6 @@ public final class Osmformat {
       return nodes_.get(index);
     }
 
-    // optional .OSMPBF.DenseNodes dense = 2;
     public static final int DENSE_FIELD_NUMBER = 2;
     private crosby.binary.Osmformat.DenseNodes dense_;
     /**
@@ -3072,7 +3112,6 @@ public final class Osmformat {
       return dense_;
     }
 
-    // repeated .OSMPBF.Way ways = 3;
     public static final int WAYS_FIELD_NUMBER = 3;
     private java.util.List<crosby.binary.Osmformat.Way> ways_;
     /**
@@ -3108,7 +3147,6 @@ public final class Osmformat {
       return ways_.get(index);
     }
 
-    // repeated .OSMPBF.Relation relations = 4;
     public static final int RELATIONS_FIELD_NUMBER = 4;
     private java.util.List<crosby.binary.Osmformat.Relation> relations_;
     /**
@@ -3144,7 +3182,6 @@ public final class Osmformat {
       return relations_.get(index);
     }
 
-    // repeated .OSMPBF.ChangeSet changesets = 5;
     public static final int CHANGESETS_FIELD_NUMBER = 5;
     private java.util.List<crosby.binary.Osmformat.ChangeSet> changesets_;
     /**
@@ -3190,7 +3227,8 @@ public final class Osmformat {
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
-      if (isInitialized != -1) return isInitialized == 1;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
 
       for (int i = 0; i < getNodesCount(); i++) {
         if (!getNodes(i).isInitialized()) {
@@ -3238,6 +3276,7 @@ public final class Osmformat {
       for (int i = 0; i < changesets_.size(); i++) {
         output.writeMessage(5, changesets_.get(i));
       }
+      output.writeRawBytes(unknownFields);
     }
 
     private int memoizedSerializedSize = -1;
@@ -3266,6 +3305,7 @@ public final class Osmformat {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(5, changesets_.get(i));
       }
+      size += unknownFields.size();
       memoizedSerializedSize = size;
       return size;
     }
@@ -3347,7 +3387,9 @@ public final class Osmformat {
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageLite.Builder<
           crosby.binary.Osmformat.PrimitiveGroup, Builder>
-        implements crosby.binary.Osmformat.PrimitiveGroupOrBuilder {
+        implements
+        // @@protoc_insertion_point(builder_implements:OSMPBF.PrimitiveGroup)
+        crosby.binary.Osmformat.PrimitiveGroupOrBuilder {
       // Construct using crosby.binary.Osmformat.PrimitiveGroup.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
@@ -3467,6 +3509,8 @@ public final class Osmformat {
           }
           
         }
+        setUnknownFields(
+            getUnknownFields().concat(other.unknownFields));
         return this;
       }
 
@@ -3517,7 +3561,6 @@ public final class Osmformat {
       }
       private int bitField0_;
 
-      // repeated .OSMPBF.Node nodes = 1;
       private java.util.List<crosby.binary.Osmformat.Node> nodes_ =
         java.util.Collections.emptyList();
       private void ensureNodesIsMutable() {
@@ -3619,7 +3662,8 @@ public final class Osmformat {
       public Builder addAllNodes(
           java.lang.Iterable<? extends crosby.binary.Osmformat.Node> values) {
         ensureNodesIsMutable();
-        super.addAll(values, nodes_);
+        com.google.protobuf.AbstractMessageLite.Builder.addAll(
+            values, nodes_);
 
         return this;
       }
@@ -3642,7 +3686,6 @@ public final class Osmformat {
         return this;
       }
 
-      // optional .OSMPBF.DenseNodes dense = 2;
       private crosby.binary.Osmformat.DenseNodes dense_ = crosby.binary.Osmformat.DenseNodes.getDefaultInstance();
       /**
        * <code>optional .OSMPBF.DenseNodes dense = 2;</code>
@@ -3703,7 +3746,6 @@ public final class Osmformat {
         return this;
       }
 
-      // repeated .OSMPBF.Way ways = 3;
       private java.util.List<crosby.binary.Osmformat.Way> ways_ =
         java.util.Collections.emptyList();
       private void ensureWaysIsMutable() {
@@ -3805,7 +3847,8 @@ public final class Osmformat {
       public Builder addAllWays(
           java.lang.Iterable<? extends crosby.binary.Osmformat.Way> values) {
         ensureWaysIsMutable();
-        super.addAll(values, ways_);
+        com.google.protobuf.AbstractMessageLite.Builder.addAll(
+            values, ways_);
 
         return this;
       }
@@ -3828,7 +3871,6 @@ public final class Osmformat {
         return this;
       }
 
-      // repeated .OSMPBF.Relation relations = 4;
       private java.util.List<crosby.binary.Osmformat.Relation> relations_ =
         java.util.Collections.emptyList();
       private void ensureRelationsIsMutable() {
@@ -3930,7 +3972,8 @@ public final class Osmformat {
       public Builder addAllRelations(
           java.lang.Iterable<? extends crosby.binary.Osmformat.Relation> values) {
         ensureRelationsIsMutable();
-        super.addAll(values, relations_);
+        com.google.protobuf.AbstractMessageLite.Builder.addAll(
+            values, relations_);
 
         return this;
       }
@@ -3953,7 +3996,6 @@ public final class Osmformat {
         return this;
       }
 
-      // repeated .OSMPBF.ChangeSet changesets = 5;
       private java.util.List<crosby.binary.Osmformat.ChangeSet> changesets_ =
         java.util.Collections.emptyList();
       private void ensureChangesetsIsMutable() {
@@ -4055,7 +4097,8 @@ public final class Osmformat {
       public Builder addAllChangesets(
           java.lang.Iterable<? extends crosby.binary.Osmformat.ChangeSet> values) {
         ensureChangesetsIsMutable();
-        super.addAll(values, changesets_);
+        com.google.protobuf.AbstractMessageLite.Builder.addAll(
+            values, changesets_);
 
         return this;
       }
@@ -4089,10 +4132,10 @@ public final class Osmformat {
     // @@protoc_insertion_point(class_scope:OSMPBF.PrimitiveGroup)
   }
 
-  public interface StringTableOrBuilder
-      extends com.google.protobuf.MessageLiteOrBuilder {
+  public interface StringTableOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:OSMPBF.StringTable)
+      com.google.protobuf.MessageLiteOrBuilder {
 
-    // repeated bytes s = 1;
     /**
      * <code>repeated bytes s = 1;</code>
      */
@@ -4111,20 +4154,20 @@ public final class Osmformat {
    *
    * <pre>
    ** String table, contains the common strings in each block.
-   *
    *Note that we reserve index '0' as a delimiter, so the entry at that
    *index in the table is ALWAYS blank and unused.
    * </pre>
    */
   public static final class StringTable extends
-      com.google.protobuf.GeneratedMessageLite
-      implements StringTableOrBuilder {
+      com.google.protobuf.GeneratedMessageLite implements
+      // @@protoc_insertion_point(message_implements:OSMPBF.StringTable)
+      StringTableOrBuilder {
     // Use StringTable.newBuilder() to construct.
     private StringTable(com.google.protobuf.GeneratedMessageLite.Builder builder) {
       super(builder);
-
+      this.unknownFields = builder.getUnknownFields();
     }
-    private StringTable(boolean noInit) {}
+    private StringTable(boolean noInit) { this.unknownFields = com.google.protobuf.ByteString.EMPTY;}
 
     private static final StringTable defaultInstance;
     public static StringTable getDefaultInstance() {
@@ -4135,12 +4178,18 @@ public final class Osmformat {
       return defaultInstance;
     }
 
+    private final com.google.protobuf.ByteString unknownFields;
     private StringTable(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       initFields();
       int mutable_bitField0_ = 0;
+      com.google.protobuf.ByteString.Output unknownFieldsOutput =
+          com.google.protobuf.ByteString.newOutput();
+      com.google.protobuf.CodedOutputStream unknownFieldsCodedOutput =
+          com.google.protobuf.CodedOutputStream.newInstance(
+              unknownFieldsOutput);
       try {
         boolean done = false;
         while (!done) {
@@ -4150,7 +4199,7 @@ public final class Osmformat {
               done = true;
               break;
             default: {
-              if (!parseUnknownField(input,
+              if (!parseUnknownField(input, unknownFieldsCodedOutput,
                                      extensionRegistry, tag)) {
                 done = true;
               }
@@ -4175,6 +4224,13 @@ public final class Osmformat {
         if (((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
           s_ = java.util.Collections.unmodifiableList(s_);
         }
+        try {
+          unknownFieldsCodedOutput.flush();
+        } catch (java.io.IOException e) {
+        // Should not happen
+        } finally {
+          unknownFields = unknownFieldsOutput.toByteString();
+        }
         makeExtensionsImmutable();
       }
     }
@@ -4193,7 +4249,6 @@ public final class Osmformat {
       return PARSER;
     }
 
-    // repeated bytes s = 1;
     public static final int S_FIELD_NUMBER = 1;
     private java.util.List<com.google.protobuf.ByteString> s_;
     /**
@@ -4222,7 +4277,8 @@ public final class Osmformat {
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
-      if (isInitialized != -1) return isInitialized == 1;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
 
       memoizedIsInitialized = 1;
       return true;
@@ -4234,6 +4290,7 @@ public final class Osmformat {
       for (int i = 0; i < s_.size(); i++) {
         output.writeBytes(1, s_.get(i));
       }
+      output.writeRawBytes(unknownFields);
     }
 
     private int memoizedSerializedSize = -1;
@@ -4251,6 +4308,7 @@ public final class Osmformat {
         size += dataSize;
         size += 1 * getSList().size();
       }
+      size += unknownFields.size();
       memoizedSerializedSize = size;
       return size;
     }
@@ -4327,7 +4385,6 @@ public final class Osmformat {
      *
      * <pre>
      ** String table, contains the common strings in each block.
-     *
      *Note that we reserve index '0' as a delimiter, so the entry at that
      *index in the table is ALWAYS blank and unused.
      * </pre>
@@ -4335,7 +4392,9 @@ public final class Osmformat {
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageLite.Builder<
           crosby.binary.Osmformat.StringTable, Builder>
-        implements crosby.binary.Osmformat.StringTableOrBuilder {
+        implements
+        // @@protoc_insertion_point(builder_implements:OSMPBF.StringTable)
+        crosby.binary.Osmformat.StringTableOrBuilder {
       // Construct using crosby.binary.Osmformat.StringTable.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
@@ -4393,6 +4452,8 @@ public final class Osmformat {
           }
           
         }
+        setUnknownFields(
+            getUnknownFields().concat(other.unknownFields));
         return this;
       }
 
@@ -4419,7 +4480,6 @@ public final class Osmformat {
       }
       private int bitField0_;
 
-      // repeated bytes s = 1;
       private java.util.List<com.google.protobuf.ByteString> s_ = java.util.Collections.emptyList();
       private void ensureSIsMutable() {
         if (!((bitField0_ & 0x00000001) == 0x00000001)) {
@@ -4477,7 +4537,8 @@ public final class Osmformat {
       public Builder addAllS(
           java.lang.Iterable<? extends com.google.protobuf.ByteString> values) {
         ensureSIsMutable();
-        super.addAll(values, s_);
+        com.google.protobuf.AbstractMessageLite.Builder.addAll(
+            values, s_);
         
         return this;
       }
@@ -4502,10 +4563,10 @@ public final class Osmformat {
     // @@protoc_insertion_point(class_scope:OSMPBF.StringTable)
   }
 
-  public interface InfoOrBuilder
-      extends com.google.protobuf.MessageLiteOrBuilder {
+  public interface InfoOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:OSMPBF.Info)
+      com.google.protobuf.MessageLiteOrBuilder {
 
-    // optional int32 version = 1 [default = -1];
     /**
      * <code>optional int32 version = 1 [default = -1];</code>
      */
@@ -4515,7 +4576,6 @@ public final class Osmformat {
      */
     int getVersion();
 
-    // optional int64 timestamp = 2;
     /**
      * <code>optional int64 timestamp = 2;</code>
      */
@@ -4525,7 +4585,6 @@ public final class Osmformat {
      */
     long getTimestamp();
 
-    // optional int64 changeset = 3;
     /**
      * <code>optional int64 changeset = 3;</code>
      */
@@ -4535,7 +4594,6 @@ public final class Osmformat {
      */
     long getChangeset();
 
-    // optional int32 uid = 4;
     /**
      * <code>optional int32 uid = 4;</code>
      */
@@ -4545,7 +4603,6 @@ public final class Osmformat {
      */
     int getUid();
 
-    // optional uint32 user_sid = 5;
     /**
      * <code>optional uint32 user_sid = 5;</code>
      *
@@ -4563,7 +4620,6 @@ public final class Osmformat {
      */
     int getUserSid();
 
-    // optional bool visible = 6;
     /**
      * <code>optional bool visible = 6;</code>
      *
@@ -4603,14 +4659,15 @@ public final class Osmformat {
    * </pre>
    */
   public static final class Info extends
-      com.google.protobuf.GeneratedMessageLite
-      implements InfoOrBuilder {
+      com.google.protobuf.GeneratedMessageLite implements
+      // @@protoc_insertion_point(message_implements:OSMPBF.Info)
+      InfoOrBuilder {
     // Use Info.newBuilder() to construct.
     private Info(com.google.protobuf.GeneratedMessageLite.Builder builder) {
       super(builder);
-
+      this.unknownFields = builder.getUnknownFields();
     }
-    private Info(boolean noInit) {}
+    private Info(boolean noInit) { this.unknownFields = com.google.protobuf.ByteString.EMPTY;}
 
     private static final Info defaultInstance;
     public static Info getDefaultInstance() {
@@ -4621,12 +4678,18 @@ public final class Osmformat {
       return defaultInstance;
     }
 
+    private final com.google.protobuf.ByteString unknownFields;
     private Info(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       initFields();
       int mutable_bitField0_ = 0;
+      com.google.protobuf.ByteString.Output unknownFieldsOutput =
+          com.google.protobuf.ByteString.newOutput();
+      com.google.protobuf.CodedOutputStream unknownFieldsCodedOutput =
+          com.google.protobuf.CodedOutputStream.newInstance(
+              unknownFieldsOutput);
       try {
         boolean done = false;
         while (!done) {
@@ -4636,7 +4699,7 @@ public final class Osmformat {
               done = true;
               break;
             default: {
-              if (!parseUnknownField(input,
+              if (!parseUnknownField(input, unknownFieldsCodedOutput,
                                      extensionRegistry, tag)) {
                 done = true;
               }
@@ -4680,6 +4743,13 @@ public final class Osmformat {
         throw new com.google.protobuf.InvalidProtocolBufferException(
             e.getMessage()).setUnfinishedMessage(this);
       } finally {
+        try {
+          unknownFieldsCodedOutput.flush();
+        } catch (java.io.IOException e) {
+        // Should not happen
+        } finally {
+          unknownFields = unknownFieldsOutput.toByteString();
+        }
         makeExtensionsImmutable();
       }
     }
@@ -4699,7 +4769,6 @@ public final class Osmformat {
     }
 
     private int bitField0_;
-    // optional int32 version = 1 [default = -1];
     public static final int VERSION_FIELD_NUMBER = 1;
     private int version_;
     /**
@@ -4715,7 +4784,6 @@ public final class Osmformat {
       return version_;
     }
 
-    // optional int64 timestamp = 2;
     public static final int TIMESTAMP_FIELD_NUMBER = 2;
     private long timestamp_;
     /**
@@ -4731,7 +4799,6 @@ public final class Osmformat {
       return timestamp_;
     }
 
-    // optional int64 changeset = 3;
     public static final int CHANGESET_FIELD_NUMBER = 3;
     private long changeset_;
     /**
@@ -4747,7 +4814,6 @@ public final class Osmformat {
       return changeset_;
     }
 
-    // optional int32 uid = 4;
     public static final int UID_FIELD_NUMBER = 4;
     private int uid_;
     /**
@@ -4763,7 +4829,6 @@ public final class Osmformat {
       return uid_;
     }
 
-    // optional uint32 user_sid = 5;
     public static final int USER_SID_FIELD_NUMBER = 5;
     private int userSid_;
     /**
@@ -4787,7 +4852,6 @@ public final class Osmformat {
       return userSid_;
     }
 
-    // optional bool visible = 6;
     public static final int VISIBLE_FIELD_NUMBER = 6;
     private boolean visible_;
     /**
@@ -4836,7 +4900,8 @@ public final class Osmformat {
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
-      if (isInitialized != -1) return isInitialized == 1;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
 
       memoizedIsInitialized = 1;
       return true;
@@ -4863,6 +4928,7 @@ public final class Osmformat {
       if (((bitField0_ & 0x00000020) == 0x00000020)) {
         output.writeBool(6, visible_);
       }
+      output.writeRawBytes(unknownFields);
     }
 
     private int memoizedSerializedSize = -1;
@@ -4895,6 +4961,7 @@ public final class Osmformat {
         size += com.google.protobuf.CodedOutputStream
           .computeBoolSize(6, visible_);
       }
+      size += unknownFields.size();
       memoizedSerializedSize = size;
       return size;
     }
@@ -4976,7 +5043,9 @@ public final class Osmformat {
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageLite.Builder<
           crosby.binary.Osmformat.Info, Builder>
-        implements crosby.binary.Osmformat.InfoOrBuilder {
+        implements
+        // @@protoc_insertion_point(builder_implements:OSMPBF.Info)
+        crosby.binary.Osmformat.InfoOrBuilder {
       // Construct using crosby.binary.Osmformat.Info.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
@@ -5073,6 +5142,8 @@ public final class Osmformat {
         if (other.hasVisible()) {
           setVisible(other.getVisible());
         }
+        setUnknownFields(
+            getUnknownFields().concat(other.unknownFields));
         return this;
       }
 
@@ -5099,7 +5170,6 @@ public final class Osmformat {
       }
       private int bitField0_;
 
-      // optional int32 version = 1 [default = -1];
       private int version_ = -1;
       /**
        * <code>optional int32 version = 1 [default = -1];</code>
@@ -5132,7 +5202,6 @@ public final class Osmformat {
         return this;
       }
 
-      // optional int64 timestamp = 2;
       private long timestamp_ ;
       /**
        * <code>optional int64 timestamp = 2;</code>
@@ -5165,7 +5234,6 @@ public final class Osmformat {
         return this;
       }
 
-      // optional int64 changeset = 3;
       private long changeset_ ;
       /**
        * <code>optional int64 changeset = 3;</code>
@@ -5198,7 +5266,6 @@ public final class Osmformat {
         return this;
       }
 
-      // optional int32 uid = 4;
       private int uid_ ;
       /**
        * <code>optional int32 uid = 4;</code>
@@ -5231,7 +5298,6 @@ public final class Osmformat {
         return this;
       }
 
-      // optional uint32 user_sid = 5;
       private int userSid_ ;
       /**
        * <code>optional uint32 user_sid = 5;</code>
@@ -5280,7 +5346,6 @@ public final class Osmformat {
         return this;
       }
 
-      // optional bool visible = 6;
       private boolean visible_ ;
       /**
        * <code>optional bool visible = 6;</code>
@@ -5368,10 +5433,10 @@ public final class Osmformat {
     // @@protoc_insertion_point(class_scope:OSMPBF.Info)
   }
 
-  public interface DenseInfoOrBuilder
-      extends com.google.protobuf.MessageLiteOrBuilder {
+  public interface DenseInfoOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:OSMPBF.DenseInfo)
+      com.google.protobuf.MessageLiteOrBuilder {
 
-    // repeated int32 version = 1 [packed = true];
     /**
      * <code>repeated int32 version = 1 [packed = true];</code>
      */
@@ -5385,7 +5450,6 @@ public final class Osmformat {
      */
     int getVersion(int index);
 
-    // repeated sint64 timestamp = 2 [packed = true];
     /**
      * <code>repeated sint64 timestamp = 2 [packed = true];</code>
      *
@@ -5411,7 +5475,6 @@ public final class Osmformat {
      */
     long getTimestamp(int index);
 
-    // repeated sint64 changeset = 3 [packed = true];
     /**
      * <code>repeated sint64 changeset = 3 [packed = true];</code>
      *
@@ -5437,7 +5500,6 @@ public final class Osmformat {
      */
     long getChangeset(int index);
 
-    // repeated sint32 uid = 4 [packed = true];
     /**
      * <code>repeated sint32 uid = 4 [packed = true];</code>
      *
@@ -5463,7 +5525,6 @@ public final class Osmformat {
      */
     int getUid(int index);
 
-    // repeated sint32 user_sid = 5 [packed = true];
     /**
      * <code>repeated sint32 user_sid = 5 [packed = true];</code>
      *
@@ -5489,7 +5550,6 @@ public final class Osmformat {
      */
     int getUserSid(int index);
 
-    // repeated bool visible = 6 [packed = true];
     /**
      * <code>repeated bool visible = 6 [packed = true];</code>
      *
@@ -5544,14 +5604,15 @@ public final class Osmformat {
    * </pre>
    */
   public static final class DenseInfo extends
-      com.google.protobuf.GeneratedMessageLite
-      implements DenseInfoOrBuilder {
+      com.google.protobuf.GeneratedMessageLite implements
+      // @@protoc_insertion_point(message_implements:OSMPBF.DenseInfo)
+      DenseInfoOrBuilder {
     // Use DenseInfo.newBuilder() to construct.
     private DenseInfo(com.google.protobuf.GeneratedMessageLite.Builder builder) {
       super(builder);
-
+      this.unknownFields = builder.getUnknownFields();
     }
-    private DenseInfo(boolean noInit) {}
+    private DenseInfo(boolean noInit) { this.unknownFields = com.google.protobuf.ByteString.EMPTY;}
 
     private static final DenseInfo defaultInstance;
     public static DenseInfo getDefaultInstance() {
@@ -5562,12 +5623,18 @@ public final class Osmformat {
       return defaultInstance;
     }
 
+    private final com.google.protobuf.ByteString unknownFields;
     private DenseInfo(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       initFields();
       int mutable_bitField0_ = 0;
+      com.google.protobuf.ByteString.Output unknownFieldsOutput =
+          com.google.protobuf.ByteString.newOutput();
+      com.google.protobuf.CodedOutputStream unknownFieldsCodedOutput =
+          com.google.protobuf.CodedOutputStream.newInstance(
+              unknownFieldsOutput);
       try {
         boolean done = false;
         while (!done) {
@@ -5577,7 +5644,7 @@ public final class Osmformat {
               done = true;
               break;
             default: {
-              if (!parseUnknownField(input,
+              if (!parseUnknownField(input, unknownFieldsCodedOutput,
                                      extensionRegistry, tag)) {
                 done = true;
               }
@@ -5735,6 +5802,13 @@ public final class Osmformat {
         if (((mutable_bitField0_ & 0x00000020) == 0x00000020)) {
           visible_ = java.util.Collections.unmodifiableList(visible_);
         }
+        try {
+          unknownFieldsCodedOutput.flush();
+        } catch (java.io.IOException e) {
+        // Should not happen
+        } finally {
+          unknownFields = unknownFieldsOutput.toByteString();
+        }
         makeExtensionsImmutable();
       }
     }
@@ -5753,7 +5827,6 @@ public final class Osmformat {
       return PARSER;
     }
 
-    // repeated int32 version = 1 [packed = true];
     public static final int VERSION_FIELD_NUMBER = 1;
     private java.util.List<java.lang.Integer> version_;
     /**
@@ -5777,7 +5850,6 @@ public final class Osmformat {
     }
     private int versionMemoizedSerializedSize = -1;
 
-    // repeated sint64 timestamp = 2 [packed = true];
     public static final int TIMESTAMP_FIELD_NUMBER = 2;
     private java.util.List<java.lang.Long> timestamp_;
     /**
@@ -5813,7 +5885,6 @@ public final class Osmformat {
     }
     private int timestampMemoizedSerializedSize = -1;
 
-    // repeated sint64 changeset = 3 [packed = true];
     public static final int CHANGESET_FIELD_NUMBER = 3;
     private java.util.List<java.lang.Long> changeset_;
     /**
@@ -5849,7 +5920,6 @@ public final class Osmformat {
     }
     private int changesetMemoizedSerializedSize = -1;
 
-    // repeated sint32 uid = 4 [packed = true];
     public static final int UID_FIELD_NUMBER = 4;
     private java.util.List<java.lang.Integer> uid_;
     /**
@@ -5885,7 +5955,6 @@ public final class Osmformat {
     }
     private int uidMemoizedSerializedSize = -1;
 
-    // repeated sint32 user_sid = 5 [packed = true];
     public static final int USER_SID_FIELD_NUMBER = 5;
     private java.util.List<java.lang.Integer> userSid_;
     /**
@@ -5921,7 +5990,6 @@ public final class Osmformat {
     }
     private int userSidMemoizedSerializedSize = -1;
 
-    // repeated bool visible = 6 [packed = true];
     public static final int VISIBLE_FIELD_NUMBER = 6;
     private java.util.List<java.lang.Boolean> visible_;
     /**
@@ -5989,7 +6057,8 @@ public final class Osmformat {
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
-      if (isInitialized != -1) return isInitialized == 1;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
 
       memoizedIsInitialized = 1;
       return true;
@@ -6040,6 +6109,7 @@ public final class Osmformat {
       for (int i = 0; i < visible_.size(); i++) {
         output.writeBoolNoTag(visible_.get(i));
       }
+      output.writeRawBytes(unknownFields);
     }
 
     private int memoizedSerializedSize = -1;
@@ -6129,6 +6199,7 @@ public final class Osmformat {
         }
         visibleMemoizedSerializedSize = dataSize;
       }
+      size += unknownFields.size();
       memoizedSerializedSize = size;
       return size;
     }
@@ -6210,7 +6281,9 @@ public final class Osmformat {
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageLite.Builder<
           crosby.binary.Osmformat.DenseInfo, Builder>
-        implements crosby.binary.Osmformat.DenseInfoOrBuilder {
+        implements
+        // @@protoc_insertion_point(builder_implements:OSMPBF.DenseInfo)
+        crosby.binary.Osmformat.DenseInfoOrBuilder {
       // Construct using crosby.binary.Osmformat.DenseInfo.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
@@ -6353,6 +6426,8 @@ public final class Osmformat {
           }
           
         }
+        setUnknownFields(
+            getUnknownFields().concat(other.unknownFields));
         return this;
       }
 
@@ -6379,7 +6454,6 @@ public final class Osmformat {
       }
       private int bitField0_;
 
-      // repeated int32 version = 1 [packed = true];
       private java.util.List<java.lang.Integer> version_ = java.util.Collections.emptyList();
       private void ensureVersionIsMutable() {
         if (!((bitField0_ & 0x00000001) == 0x00000001)) {
@@ -6431,7 +6505,8 @@ public final class Osmformat {
       public Builder addAllVersion(
           java.lang.Iterable<? extends java.lang.Integer> values) {
         ensureVersionIsMutable();
-        super.addAll(values, version_);
+        com.google.protobuf.AbstractMessageLite.Builder.addAll(
+            values, version_);
         
         return this;
       }
@@ -6445,7 +6520,6 @@ public final class Osmformat {
         return this;
       }
 
-      // repeated sint64 timestamp = 2 [packed = true];
       private java.util.List<java.lang.Long> timestamp_ = java.util.Collections.emptyList();
       private void ensureTimestampIsMutable() {
         if (!((bitField0_ & 0x00000002) == 0x00000002)) {
@@ -6521,7 +6595,8 @@ public final class Osmformat {
       public Builder addAllTimestamp(
           java.lang.Iterable<? extends java.lang.Long> values) {
         ensureTimestampIsMutable();
-        super.addAll(values, timestamp_);
+        com.google.protobuf.AbstractMessageLite.Builder.addAll(
+            values, timestamp_);
         
         return this;
       }
@@ -6539,7 +6614,6 @@ public final class Osmformat {
         return this;
       }
 
-      // repeated sint64 changeset = 3 [packed = true];
       private java.util.List<java.lang.Long> changeset_ = java.util.Collections.emptyList();
       private void ensureChangesetIsMutable() {
         if (!((bitField0_ & 0x00000004) == 0x00000004)) {
@@ -6615,7 +6689,8 @@ public final class Osmformat {
       public Builder addAllChangeset(
           java.lang.Iterable<? extends java.lang.Long> values) {
         ensureChangesetIsMutable();
-        super.addAll(values, changeset_);
+        com.google.protobuf.AbstractMessageLite.Builder.addAll(
+            values, changeset_);
         
         return this;
       }
@@ -6633,7 +6708,6 @@ public final class Osmformat {
         return this;
       }
 
-      // repeated sint32 uid = 4 [packed = true];
       private java.util.List<java.lang.Integer> uid_ = java.util.Collections.emptyList();
       private void ensureUidIsMutable() {
         if (!((bitField0_ & 0x00000008) == 0x00000008)) {
@@ -6709,7 +6783,8 @@ public final class Osmformat {
       public Builder addAllUid(
           java.lang.Iterable<? extends java.lang.Integer> values) {
         ensureUidIsMutable();
-        super.addAll(values, uid_);
+        com.google.protobuf.AbstractMessageLite.Builder.addAll(
+            values, uid_);
         
         return this;
       }
@@ -6727,7 +6802,6 @@ public final class Osmformat {
         return this;
       }
 
-      // repeated sint32 user_sid = 5 [packed = true];
       private java.util.List<java.lang.Integer> userSid_ = java.util.Collections.emptyList();
       private void ensureUserSidIsMutable() {
         if (!((bitField0_ & 0x00000010) == 0x00000010)) {
@@ -6803,7 +6877,8 @@ public final class Osmformat {
       public Builder addAllUserSid(
           java.lang.Iterable<? extends java.lang.Integer> values) {
         ensureUserSidIsMutable();
-        super.addAll(values, userSid_);
+        com.google.protobuf.AbstractMessageLite.Builder.addAll(
+            values, userSid_);
         
         return this;
       }
@@ -6821,7 +6896,6 @@ public final class Osmformat {
         return this;
       }
 
-      // repeated bool visible = 6 [packed = true];
       private java.util.List<java.lang.Boolean> visible_ = java.util.Collections.emptyList();
       private void ensureVisibleIsMutable() {
         if (!((bitField0_ & 0x00000020) == 0x00000020)) {
@@ -6939,7 +7013,8 @@ public final class Osmformat {
       public Builder addAllVisible(
           java.lang.Iterable<? extends java.lang.Boolean> values) {
         ensureVisibleIsMutable();
-        super.addAll(values, visible_);
+        com.google.protobuf.AbstractMessageLite.Builder.addAll(
+            values, visible_);
         
         return this;
       }
@@ -6975,10 +7050,10 @@ public final class Osmformat {
     // @@protoc_insertion_point(class_scope:OSMPBF.DenseInfo)
   }
 
-  public interface ChangeSetOrBuilder
-      extends com.google.protobuf.MessageLiteOrBuilder {
+  public interface ChangeSetOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:OSMPBF.ChangeSet)
+      com.google.protobuf.MessageLiteOrBuilder {
 
-    // required int64 id = 1;
     /**
      * <code>required int64 id = 1;</code>
      *
@@ -6987,7 +7062,6 @@ public final class Osmformat {
      *   // Parallel arrays.
      *   repeated uint32 keys = 2 [packed = true]; // String IDs.
      *   repeated uint32 vals = 3 [packed = true]; // String IDs.
-     *
      *   optional Info info = 4;
      * </pre>
      */
@@ -7000,7 +7074,6 @@ public final class Osmformat {
      *   // Parallel arrays.
      *   repeated uint32 keys = 2 [packed = true]; // String IDs.
      *   repeated uint32 vals = 3 [packed = true]; // String IDs.
-     *
      *   optional Info info = 4;
      * </pre>
      */
@@ -7015,14 +7088,15 @@ public final class Osmformat {
    * </pre>
    */
   public static final class ChangeSet extends
-      com.google.protobuf.GeneratedMessageLite
-      implements ChangeSetOrBuilder {
+      com.google.protobuf.GeneratedMessageLite implements
+      // @@protoc_insertion_point(message_implements:OSMPBF.ChangeSet)
+      ChangeSetOrBuilder {
     // Use ChangeSet.newBuilder() to construct.
     private ChangeSet(com.google.protobuf.GeneratedMessageLite.Builder builder) {
       super(builder);
-
+      this.unknownFields = builder.getUnknownFields();
     }
-    private ChangeSet(boolean noInit) {}
+    private ChangeSet(boolean noInit) { this.unknownFields = com.google.protobuf.ByteString.EMPTY;}
 
     private static final ChangeSet defaultInstance;
     public static ChangeSet getDefaultInstance() {
@@ -7033,12 +7107,18 @@ public final class Osmformat {
       return defaultInstance;
     }
 
+    private final com.google.protobuf.ByteString unknownFields;
     private ChangeSet(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       initFields();
       int mutable_bitField0_ = 0;
+      com.google.protobuf.ByteString.Output unknownFieldsOutput =
+          com.google.protobuf.ByteString.newOutput();
+      com.google.protobuf.CodedOutputStream unknownFieldsCodedOutput =
+          com.google.protobuf.CodedOutputStream.newInstance(
+              unknownFieldsOutput);
       try {
         boolean done = false;
         while (!done) {
@@ -7048,7 +7128,7 @@ public final class Osmformat {
               done = true;
               break;
             default: {
-              if (!parseUnknownField(input,
+              if (!parseUnknownField(input, unknownFieldsCodedOutput,
                                      extensionRegistry, tag)) {
                 done = true;
               }
@@ -7067,6 +7147,13 @@ public final class Osmformat {
         throw new com.google.protobuf.InvalidProtocolBufferException(
             e.getMessage()).setUnfinishedMessage(this);
       } finally {
+        try {
+          unknownFieldsCodedOutput.flush();
+        } catch (java.io.IOException e) {
+        // Should not happen
+        } finally {
+          unknownFields = unknownFieldsOutput.toByteString();
+        }
         makeExtensionsImmutable();
       }
     }
@@ -7086,7 +7173,6 @@ public final class Osmformat {
     }
 
     private int bitField0_;
-    // required int64 id = 1;
     public static final int ID_FIELD_NUMBER = 1;
     private long id_;
     /**
@@ -7097,7 +7183,6 @@ public final class Osmformat {
      *   // Parallel arrays.
      *   repeated uint32 keys = 2 [packed = true]; // String IDs.
      *   repeated uint32 vals = 3 [packed = true]; // String IDs.
-     *
      *   optional Info info = 4;
      * </pre>
      */
@@ -7112,7 +7197,6 @@ public final class Osmformat {
      *   // Parallel arrays.
      *   repeated uint32 keys = 2 [packed = true]; // String IDs.
      *   repeated uint32 vals = 3 [packed = true]; // String IDs.
-     *
      *   optional Info info = 4;
      * </pre>
      */
@@ -7126,7 +7210,8 @@ public final class Osmformat {
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
-      if (isInitialized != -1) return isInitialized == 1;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
 
       if (!hasId()) {
         memoizedIsInitialized = 0;
@@ -7142,6 +7227,7 @@ public final class Osmformat {
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         output.writeInt64(1, id_);
       }
+      output.writeRawBytes(unknownFields);
     }
 
     private int memoizedSerializedSize = -1;
@@ -7154,6 +7240,7 @@ public final class Osmformat {
         size += com.google.protobuf.CodedOutputStream
           .computeInt64Size(1, id_);
       }
+      size += unknownFields.size();
       memoizedSerializedSize = size;
       return size;
     }
@@ -7236,7 +7323,9 @@ public final class Osmformat {
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageLite.Builder<
           crosby.binary.Osmformat.ChangeSet, Builder>
-        implements crosby.binary.Osmformat.ChangeSetOrBuilder {
+        implements
+        // @@protoc_insertion_point(builder_implements:OSMPBF.ChangeSet)
+        crosby.binary.Osmformat.ChangeSetOrBuilder {
       // Construct using crosby.binary.Osmformat.ChangeSet.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
@@ -7288,6 +7377,8 @@ public final class Osmformat {
         if (other.hasId()) {
           setId(other.getId());
         }
+        setUnknownFields(
+            getUnknownFields().concat(other.unknownFields));
         return this;
       }
 
@@ -7318,7 +7409,6 @@ public final class Osmformat {
       }
       private int bitField0_;
 
-      // required int64 id = 1;
       private long id_ ;
       /**
        * <code>required int64 id = 1;</code>
@@ -7328,7 +7418,6 @@ public final class Osmformat {
        *   // Parallel arrays.
        *   repeated uint32 keys = 2 [packed = true]; // String IDs.
        *   repeated uint32 vals = 3 [packed = true]; // String IDs.
-       *
        *   optional Info info = 4;
        * </pre>
        */
@@ -7343,7 +7432,6 @@ public final class Osmformat {
        *   // Parallel arrays.
        *   repeated uint32 keys = 2 [packed = true]; // String IDs.
        *   repeated uint32 vals = 3 [packed = true]; // String IDs.
-       *
        *   optional Info info = 4;
        * </pre>
        */
@@ -7358,7 +7446,6 @@ public final class Osmformat {
        *   // Parallel arrays.
        *   repeated uint32 keys = 2 [packed = true]; // String IDs.
        *   repeated uint32 vals = 3 [packed = true]; // String IDs.
-       *
        *   optional Info info = 4;
        * </pre>
        */
@@ -7376,7 +7463,6 @@ public final class Osmformat {
        *   // Parallel arrays.
        *   repeated uint32 keys = 2 [packed = true]; // String IDs.
        *   repeated uint32 vals = 3 [packed = true]; // String IDs.
-       *
        *   optional Info info = 4;
        * </pre>
        */
@@ -7398,10 +7484,10 @@ public final class Osmformat {
     // @@protoc_insertion_point(class_scope:OSMPBF.ChangeSet)
   }
 
-  public interface NodeOrBuilder
-      extends com.google.protobuf.MessageLiteOrBuilder {
+  public interface NodeOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:OSMPBF.Node)
+      com.google.protobuf.MessageLiteOrBuilder {
 
-    // required sint64 id = 1;
     /**
      * <code>required sint64 id = 1;</code>
      */
@@ -7411,7 +7497,6 @@ public final class Osmformat {
      */
     long getId();
 
-    // repeated uint32 keys = 2 [packed = true];
     /**
      * <code>repeated uint32 keys = 2 [packed = true];</code>
      *
@@ -7437,7 +7522,6 @@ public final class Osmformat {
      */
     int getKeys(int index);
 
-    // repeated uint32 vals = 3 [packed = true];
     /**
      * <code>repeated uint32 vals = 3 [packed = true];</code>
      *
@@ -7463,7 +7547,6 @@ public final class Osmformat {
      */
     int getVals(int index);
 
-    // optional .OSMPBF.Info info = 4;
     /**
      * <code>optional .OSMPBF.Info info = 4;</code>
      *
@@ -7481,7 +7564,6 @@ public final class Osmformat {
      */
     crosby.binary.Osmformat.Info getInfo();
 
-    // required sint64 lat = 8;
     /**
      * <code>required sint64 lat = 8;</code>
      */
@@ -7491,7 +7573,6 @@ public final class Osmformat {
      */
     long getLat();
 
-    // required sint64 lon = 9;
     /**
      * <code>required sint64 lon = 9;</code>
      */
@@ -7505,14 +7586,15 @@ public final class Osmformat {
    * Protobuf type {@code OSMPBF.Node}
    */
   public static final class Node extends
-      com.google.protobuf.GeneratedMessageLite
-      implements NodeOrBuilder {
+      com.google.protobuf.GeneratedMessageLite implements
+      // @@protoc_insertion_point(message_implements:OSMPBF.Node)
+      NodeOrBuilder {
     // Use Node.newBuilder() to construct.
     private Node(com.google.protobuf.GeneratedMessageLite.Builder builder) {
       super(builder);
-
+      this.unknownFields = builder.getUnknownFields();
     }
-    private Node(boolean noInit) {}
+    private Node(boolean noInit) { this.unknownFields = com.google.protobuf.ByteString.EMPTY;}
 
     private static final Node defaultInstance;
     public static Node getDefaultInstance() {
@@ -7523,12 +7605,18 @@ public final class Osmformat {
       return defaultInstance;
     }
 
+    private final com.google.protobuf.ByteString unknownFields;
     private Node(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       initFields();
       int mutable_bitField0_ = 0;
+      com.google.protobuf.ByteString.Output unknownFieldsOutput =
+          com.google.protobuf.ByteString.newOutput();
+      com.google.protobuf.CodedOutputStream unknownFieldsCodedOutput =
+          com.google.protobuf.CodedOutputStream.newInstance(
+              unknownFieldsOutput);
       try {
         boolean done = false;
         while (!done) {
@@ -7538,7 +7626,7 @@ public final class Osmformat {
               done = true;
               break;
             default: {
-              if (!parseUnknownField(input,
+              if (!parseUnknownField(input, unknownFieldsCodedOutput,
                                      extensionRegistry, tag)) {
                 done = true;
               }
@@ -7628,6 +7716,13 @@ public final class Osmformat {
         if (((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
           vals_ = java.util.Collections.unmodifiableList(vals_);
         }
+        try {
+          unknownFieldsCodedOutput.flush();
+        } catch (java.io.IOException e) {
+        // Should not happen
+        } finally {
+          unknownFields = unknownFieldsOutput.toByteString();
+        }
         makeExtensionsImmutable();
       }
     }
@@ -7647,7 +7742,6 @@ public final class Osmformat {
     }
 
     private int bitField0_;
-    // required sint64 id = 1;
     public static final int ID_FIELD_NUMBER = 1;
     private long id_;
     /**
@@ -7663,7 +7757,6 @@ public final class Osmformat {
       return id_;
     }
 
-    // repeated uint32 keys = 2 [packed = true];
     public static final int KEYS_FIELD_NUMBER = 2;
     private java.util.List<java.lang.Integer> keys_;
     /**
@@ -7699,7 +7792,6 @@ public final class Osmformat {
     }
     private int keysMemoizedSerializedSize = -1;
 
-    // repeated uint32 vals = 3 [packed = true];
     public static final int VALS_FIELD_NUMBER = 3;
     private java.util.List<java.lang.Integer> vals_;
     /**
@@ -7735,7 +7827,6 @@ public final class Osmformat {
     }
     private int valsMemoizedSerializedSize = -1;
 
-    // optional .OSMPBF.Info info = 4;
     public static final int INFO_FIELD_NUMBER = 4;
     private crosby.binary.Osmformat.Info info_;
     /**
@@ -7759,7 +7850,6 @@ public final class Osmformat {
       return info_;
     }
 
-    // required sint64 lat = 8;
     public static final int LAT_FIELD_NUMBER = 8;
     private long lat_;
     /**
@@ -7775,7 +7865,6 @@ public final class Osmformat {
       return lat_;
     }
 
-    // required sint64 lon = 9;
     public static final int LON_FIELD_NUMBER = 9;
     private long lon_;
     /**
@@ -7802,7 +7891,8 @@ public final class Osmformat {
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
-      if (isInitialized != -1) return isInitialized == 1;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
 
       if (!hasId()) {
         memoizedIsInitialized = 0;
@@ -7849,6 +7939,7 @@ public final class Osmformat {
       if (((bitField0_ & 0x00000008) == 0x00000008)) {
         output.writeSInt64(9, lon_);
       }
+      output.writeRawBytes(unknownFields);
     }
 
     private int memoizedSerializedSize = -1;
@@ -7901,6 +7992,7 @@ public final class Osmformat {
         size += com.google.protobuf.CodedOutputStream
           .computeSInt64Size(9, lon_);
       }
+      size += unknownFields.size();
       memoizedSerializedSize = size;
       return size;
     }
@@ -7978,7 +8070,9 @@ public final class Osmformat {
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageLite.Builder<
           crosby.binary.Osmformat.Node, Builder>
-        implements crosby.binary.Osmformat.NodeOrBuilder {
+        implements
+        // @@protoc_insertion_point(builder_implements:OSMPBF.Node)
+        crosby.binary.Osmformat.NodeOrBuilder {
       // Construct using crosby.binary.Osmformat.Node.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
@@ -8091,6 +8185,8 @@ public final class Osmformat {
         if (other.hasLon()) {
           setLon(other.getLon());
         }
+        setUnknownFields(
+            getUnknownFields().concat(other.unknownFields));
         return this;
       }
 
@@ -8129,7 +8225,6 @@ public final class Osmformat {
       }
       private int bitField0_;
 
-      // required sint64 id = 1;
       private long id_ ;
       /**
        * <code>required sint64 id = 1;</code>
@@ -8162,7 +8257,6 @@ public final class Osmformat {
         return this;
       }
 
-      // repeated uint32 keys = 2 [packed = true];
       private java.util.List<java.lang.Integer> keys_ = java.util.Collections.emptyList();
       private void ensureKeysIsMutable() {
         if (!((bitField0_ & 0x00000002) == 0x00000002)) {
@@ -8238,7 +8332,8 @@ public final class Osmformat {
       public Builder addAllKeys(
           java.lang.Iterable<? extends java.lang.Integer> values) {
         ensureKeysIsMutable();
-        super.addAll(values, keys_);
+        com.google.protobuf.AbstractMessageLite.Builder.addAll(
+            values, keys_);
         
         return this;
       }
@@ -8256,7 +8351,6 @@ public final class Osmformat {
         return this;
       }
 
-      // repeated uint32 vals = 3 [packed = true];
       private java.util.List<java.lang.Integer> vals_ = java.util.Collections.emptyList();
       private void ensureValsIsMutable() {
         if (!((bitField0_ & 0x00000004) == 0x00000004)) {
@@ -8332,7 +8426,8 @@ public final class Osmformat {
       public Builder addAllVals(
           java.lang.Iterable<? extends java.lang.Integer> values) {
         ensureValsIsMutable();
-        super.addAll(values, vals_);
+        com.google.protobuf.AbstractMessageLite.Builder.addAll(
+            values, vals_);
         
         return this;
       }
@@ -8350,7 +8445,6 @@ public final class Osmformat {
         return this;
       }
 
-      // optional .OSMPBF.Info info = 4;
       private crosby.binary.Osmformat.Info info_ = crosby.binary.Osmformat.Info.getDefaultInstance();
       /**
        * <code>optional .OSMPBF.Info info = 4;</code>
@@ -8435,7 +8529,6 @@ public final class Osmformat {
         return this;
       }
 
-      // required sint64 lat = 8;
       private long lat_ ;
       /**
        * <code>required sint64 lat = 8;</code>
@@ -8468,7 +8561,6 @@ public final class Osmformat {
         return this;
       }
 
-      // required sint64 lon = 9;
       private long lon_ ;
       /**
        * <code>required sint64 lon = 9;</code>
@@ -8512,10 +8604,10 @@ public final class Osmformat {
     // @@protoc_insertion_point(class_scope:OSMPBF.Node)
   }
 
-  public interface DenseNodesOrBuilder
-      extends com.google.protobuf.MessageLiteOrBuilder {
+  public interface DenseNodesOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:OSMPBF.DenseNodes)
+      com.google.protobuf.MessageLiteOrBuilder {
 
-    // repeated sint64 id = 1 [packed = true];
     /**
      * <code>repeated sint64 id = 1 [packed = true];</code>
      *
@@ -8541,7 +8633,6 @@ public final class Osmformat {
      */
     long getId(int index);
 
-    // optional .OSMPBF.DenseInfo denseinfo = 5;
     /**
      * <code>optional .OSMPBF.DenseInfo denseinfo = 5;</code>
      *
@@ -8559,7 +8650,6 @@ public final class Osmformat {
      */
     crosby.binary.Osmformat.DenseInfo getDenseinfo();
 
-    // repeated sint64 lat = 8 [packed = true];
     /**
      * <code>repeated sint64 lat = 8 [packed = true];</code>
      *
@@ -8585,7 +8675,6 @@ public final class Osmformat {
      */
     long getLat(int index);
 
-    // repeated sint64 lon = 9 [packed = true];
     /**
      * <code>repeated sint64 lon = 9 [packed = true];</code>
      *
@@ -8611,7 +8700,6 @@ public final class Osmformat {
      */
     long getLon(int index);
 
-    // repeated int32 keys_vals = 10 [packed = true];
     /**
      * <code>repeated int32 keys_vals = 10 [packed = true];</code>
      *
@@ -8641,14 +8729,15 @@ public final class Osmformat {
    * Protobuf type {@code OSMPBF.DenseNodes}
    */
   public static final class DenseNodes extends
-      com.google.protobuf.GeneratedMessageLite
-      implements DenseNodesOrBuilder {
+      com.google.protobuf.GeneratedMessageLite implements
+      // @@protoc_insertion_point(message_implements:OSMPBF.DenseNodes)
+      DenseNodesOrBuilder {
     // Use DenseNodes.newBuilder() to construct.
     private DenseNodes(com.google.protobuf.GeneratedMessageLite.Builder builder) {
       super(builder);
-
+      this.unknownFields = builder.getUnknownFields();
     }
-    private DenseNodes(boolean noInit) {}
+    private DenseNodes(boolean noInit) { this.unknownFields = com.google.protobuf.ByteString.EMPTY;}
 
     private static final DenseNodes defaultInstance;
     public static DenseNodes getDefaultInstance() {
@@ -8659,12 +8748,18 @@ public final class Osmformat {
       return defaultInstance;
     }
 
+    private final com.google.protobuf.ByteString unknownFields;
     private DenseNodes(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       initFields();
       int mutable_bitField0_ = 0;
+      com.google.protobuf.ByteString.Output unknownFieldsOutput =
+          com.google.protobuf.ByteString.newOutput();
+      com.google.protobuf.CodedOutputStream unknownFieldsCodedOutput =
+          com.google.protobuf.CodedOutputStream.newInstance(
+              unknownFieldsOutput);
       try {
         boolean done = false;
         while (!done) {
@@ -8674,7 +8769,7 @@ public final class Osmformat {
               done = true;
               break;
             default: {
-              if (!parseUnknownField(input,
+              if (!parseUnknownField(input, unknownFieldsCodedOutput,
                                      extensionRegistry, tag)) {
                 done = true;
               }
@@ -8797,6 +8892,13 @@ public final class Osmformat {
         if (((mutable_bitField0_ & 0x00000010) == 0x00000010)) {
           keysVals_ = java.util.Collections.unmodifiableList(keysVals_);
         }
+        try {
+          unknownFieldsCodedOutput.flush();
+        } catch (java.io.IOException e) {
+        // Should not happen
+        } finally {
+          unknownFields = unknownFieldsOutput.toByteString();
+        }
         makeExtensionsImmutable();
       }
     }
@@ -8816,7 +8918,6 @@ public final class Osmformat {
     }
 
     private int bitField0_;
-    // repeated sint64 id = 1 [packed = true];
     public static final int ID_FIELD_NUMBER = 1;
     private java.util.List<java.lang.Long> id_;
     /**
@@ -8852,7 +8953,6 @@ public final class Osmformat {
     }
     private int idMemoizedSerializedSize = -1;
 
-    // optional .OSMPBF.DenseInfo denseinfo = 5;
     public static final int DENSEINFO_FIELD_NUMBER = 5;
     private crosby.binary.Osmformat.DenseInfo denseinfo_;
     /**
@@ -8876,7 +8976,6 @@ public final class Osmformat {
       return denseinfo_;
     }
 
-    // repeated sint64 lat = 8 [packed = true];
     public static final int LAT_FIELD_NUMBER = 8;
     private java.util.List<java.lang.Long> lat_;
     /**
@@ -8912,7 +9011,6 @@ public final class Osmformat {
     }
     private int latMemoizedSerializedSize = -1;
 
-    // repeated sint64 lon = 9 [packed = true];
     public static final int LON_FIELD_NUMBER = 9;
     private java.util.List<java.lang.Long> lon_;
     /**
@@ -8948,7 +9046,6 @@ public final class Osmformat {
     }
     private int lonMemoizedSerializedSize = -1;
 
-    // repeated int32 keys_vals = 10 [packed = true];
     public static final int KEYS_VALS_FIELD_NUMBER = 10;
     private java.util.List<java.lang.Integer> keysVals_;
     /**
@@ -8994,7 +9091,8 @@ public final class Osmformat {
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
-      if (isInitialized != -1) return isInitialized == 1;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
 
       memoizedIsInitialized = 1;
       return true;
@@ -9034,6 +9132,7 @@ public final class Osmformat {
       for (int i = 0; i < keysVals_.size(); i++) {
         output.writeInt32NoTag(keysVals_.get(i));
       }
+      output.writeRawBytes(unknownFields);
     }
 
     private int memoizedSerializedSize = -1;
@@ -9102,6 +9201,7 @@ public final class Osmformat {
         }
         keysValsMemoizedSerializedSize = dataSize;
       }
+      size += unknownFields.size();
       memoizedSerializedSize = size;
       return size;
     }
@@ -9179,7 +9279,9 @@ public final class Osmformat {
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageLite.Builder<
           crosby.binary.Osmformat.DenseNodes, Builder>
-        implements crosby.binary.Osmformat.DenseNodesOrBuilder {
+        implements
+        // @@protoc_insertion_point(builder_implements:OSMPBF.DenseNodes)
+        crosby.binary.Osmformat.DenseNodesOrBuilder {
       // Construct using crosby.binary.Osmformat.DenseNodes.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
@@ -9299,6 +9401,8 @@ public final class Osmformat {
           }
           
         }
+        setUnknownFields(
+            getUnknownFields().concat(other.unknownFields));
         return this;
       }
 
@@ -9325,7 +9429,6 @@ public final class Osmformat {
       }
       private int bitField0_;
 
-      // repeated sint64 id = 1 [packed = true];
       private java.util.List<java.lang.Long> id_ = java.util.Collections.emptyList();
       private void ensureIdIsMutable() {
         if (!((bitField0_ & 0x00000001) == 0x00000001)) {
@@ -9401,7 +9504,8 @@ public final class Osmformat {
       public Builder addAllId(
           java.lang.Iterable<? extends java.lang.Long> values) {
         ensureIdIsMutable();
-        super.addAll(values, id_);
+        com.google.protobuf.AbstractMessageLite.Builder.addAll(
+            values, id_);
         
         return this;
       }
@@ -9419,7 +9523,6 @@ public final class Osmformat {
         return this;
       }
 
-      // optional .OSMPBF.DenseInfo denseinfo = 5;
       private crosby.binary.Osmformat.DenseInfo denseinfo_ = crosby.binary.Osmformat.DenseInfo.getDefaultInstance();
       /**
        * <code>optional .OSMPBF.DenseInfo denseinfo = 5;</code>
@@ -9504,7 +9607,6 @@ public final class Osmformat {
         return this;
       }
 
-      // repeated sint64 lat = 8 [packed = true];
       private java.util.List<java.lang.Long> lat_ = java.util.Collections.emptyList();
       private void ensureLatIsMutable() {
         if (!((bitField0_ & 0x00000004) == 0x00000004)) {
@@ -9580,7 +9682,8 @@ public final class Osmformat {
       public Builder addAllLat(
           java.lang.Iterable<? extends java.lang.Long> values) {
         ensureLatIsMutable();
-        super.addAll(values, lat_);
+        com.google.protobuf.AbstractMessageLite.Builder.addAll(
+            values, lat_);
         
         return this;
       }
@@ -9598,7 +9701,6 @@ public final class Osmformat {
         return this;
       }
 
-      // repeated sint64 lon = 9 [packed = true];
       private java.util.List<java.lang.Long> lon_ = java.util.Collections.emptyList();
       private void ensureLonIsMutable() {
         if (!((bitField0_ & 0x00000008) == 0x00000008)) {
@@ -9674,7 +9776,8 @@ public final class Osmformat {
       public Builder addAllLon(
           java.lang.Iterable<? extends java.lang.Long> values) {
         ensureLonIsMutable();
-        super.addAll(values, lon_);
+        com.google.protobuf.AbstractMessageLite.Builder.addAll(
+            values, lon_);
         
         return this;
       }
@@ -9692,7 +9795,6 @@ public final class Osmformat {
         return this;
       }
 
-      // repeated int32 keys_vals = 10 [packed = true];
       private java.util.List<java.lang.Integer> keysVals_ = java.util.Collections.emptyList();
       private void ensureKeysValsIsMutable() {
         if (!((bitField0_ & 0x00000010) == 0x00000010)) {
@@ -9768,7 +9870,8 @@ public final class Osmformat {
       public Builder addAllKeysVals(
           java.lang.Iterable<? extends java.lang.Integer> values) {
         ensureKeysValsIsMutable();
-        super.addAll(values, keysVals_);
+        com.google.protobuf.AbstractMessageLite.Builder.addAll(
+            values, keysVals_);
         
         return this;
       }
@@ -9797,10 +9900,10 @@ public final class Osmformat {
     // @@protoc_insertion_point(class_scope:OSMPBF.DenseNodes)
   }
 
-  public interface WayOrBuilder
-      extends com.google.protobuf.MessageLiteOrBuilder {
+  public interface WayOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:OSMPBF.Way)
+      com.google.protobuf.MessageLiteOrBuilder {
 
-    // required int64 id = 1;
     /**
      * <code>required int64 id = 1;</code>
      */
@@ -9810,7 +9913,6 @@ public final class Osmformat {
      */
     long getId();
 
-    // repeated uint32 keys = 2 [packed = true];
     /**
      * <code>repeated uint32 keys = 2 [packed = true];</code>
      *
@@ -9836,7 +9938,6 @@ public final class Osmformat {
      */
     int getKeys(int index);
 
-    // repeated uint32 vals = 3 [packed = true];
     /**
      * <code>repeated uint32 vals = 3 [packed = true];</code>
      */
@@ -9850,7 +9951,6 @@ public final class Osmformat {
      */
     int getVals(int index);
 
-    // optional .OSMPBF.Info info = 4;
     /**
      * <code>optional .OSMPBF.Info info = 4;</code>
      */
@@ -9860,7 +9960,6 @@ public final class Osmformat {
      */
     crosby.binary.Osmformat.Info getInfo();
 
-    // repeated sint64 refs = 8 [packed = true];
     /**
      * <code>repeated sint64 refs = 8 [packed = true];</code>
      *
@@ -9890,14 +9989,15 @@ public final class Osmformat {
    * Protobuf type {@code OSMPBF.Way}
    */
   public static final class Way extends
-      com.google.protobuf.GeneratedMessageLite
-      implements WayOrBuilder {
+      com.google.protobuf.GeneratedMessageLite implements
+      // @@protoc_insertion_point(message_implements:OSMPBF.Way)
+      WayOrBuilder {
     // Use Way.newBuilder() to construct.
     private Way(com.google.protobuf.GeneratedMessageLite.Builder builder) {
       super(builder);
-
+      this.unknownFields = builder.getUnknownFields();
     }
-    private Way(boolean noInit) {}
+    private Way(boolean noInit) { this.unknownFields = com.google.protobuf.ByteString.EMPTY;}
 
     private static final Way defaultInstance;
     public static Way getDefaultInstance() {
@@ -9908,12 +10008,18 @@ public final class Osmformat {
       return defaultInstance;
     }
 
+    private final com.google.protobuf.ByteString unknownFields;
     private Way(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       initFields();
       int mutable_bitField0_ = 0;
+      com.google.protobuf.ByteString.Output unknownFieldsOutput =
+          com.google.protobuf.ByteString.newOutput();
+      com.google.protobuf.CodedOutputStream unknownFieldsCodedOutput =
+          com.google.protobuf.CodedOutputStream.newInstance(
+              unknownFieldsOutput);
       try {
         boolean done = false;
         while (!done) {
@@ -9923,7 +10029,7 @@ public final class Osmformat {
               done = true;
               break;
             default: {
-              if (!parseUnknownField(input,
+              if (!parseUnknownField(input, unknownFieldsCodedOutput,
                                      extensionRegistry, tag)) {
                 done = true;
               }
@@ -10027,6 +10133,13 @@ public final class Osmformat {
         if (((mutable_bitField0_ & 0x00000010) == 0x00000010)) {
           refs_ = java.util.Collections.unmodifiableList(refs_);
         }
+        try {
+          unknownFieldsCodedOutput.flush();
+        } catch (java.io.IOException e) {
+        // Should not happen
+        } finally {
+          unknownFields = unknownFieldsOutput.toByteString();
+        }
         makeExtensionsImmutable();
       }
     }
@@ -10046,7 +10159,6 @@ public final class Osmformat {
     }
 
     private int bitField0_;
-    // required int64 id = 1;
     public static final int ID_FIELD_NUMBER = 1;
     private long id_;
     /**
@@ -10062,7 +10174,6 @@ public final class Osmformat {
       return id_;
     }
 
-    // repeated uint32 keys = 2 [packed = true];
     public static final int KEYS_FIELD_NUMBER = 2;
     private java.util.List<java.lang.Integer> keys_;
     /**
@@ -10098,7 +10209,6 @@ public final class Osmformat {
     }
     private int keysMemoizedSerializedSize = -1;
 
-    // repeated uint32 vals = 3 [packed = true];
     public static final int VALS_FIELD_NUMBER = 3;
     private java.util.List<java.lang.Integer> vals_;
     /**
@@ -10122,7 +10232,6 @@ public final class Osmformat {
     }
     private int valsMemoizedSerializedSize = -1;
 
-    // optional .OSMPBF.Info info = 4;
     public static final int INFO_FIELD_NUMBER = 4;
     private crosby.binary.Osmformat.Info info_;
     /**
@@ -10138,7 +10247,6 @@ public final class Osmformat {
       return info_;
     }
 
-    // repeated sint64 refs = 8 [packed = true];
     public static final int REFS_FIELD_NUMBER = 8;
     private java.util.List<java.lang.Long> refs_;
     /**
@@ -10184,7 +10292,8 @@ public final class Osmformat {
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
-      if (isInitialized != -1) return isInitialized == 1;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
 
       if (!hasId()) {
         memoizedIsInitialized = 0;
@@ -10224,6 +10333,7 @@ public final class Osmformat {
       for (int i = 0; i < refs_.size(); i++) {
         output.writeSInt64NoTag(refs_.get(i));
       }
+      output.writeRawBytes(unknownFields);
     }
 
     private int memoizedSerializedSize = -1;
@@ -10282,6 +10392,7 @@ public final class Osmformat {
         }
         refsMemoizedSerializedSize = dataSize;
       }
+      size += unknownFields.size();
       memoizedSerializedSize = size;
       return size;
     }
@@ -10359,7 +10470,9 @@ public final class Osmformat {
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageLite.Builder<
           crosby.binary.Osmformat.Way, Builder>
-        implements crosby.binary.Osmformat.WayOrBuilder {
+        implements
+        // @@protoc_insertion_point(builder_implements:OSMPBF.Way)
+        crosby.binary.Osmformat.WayOrBuilder {
       // Construct using crosby.binary.Osmformat.Way.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
@@ -10471,6 +10584,8 @@ public final class Osmformat {
           }
           
         }
+        setUnknownFields(
+            getUnknownFields().concat(other.unknownFields));
         return this;
       }
 
@@ -10501,7 +10616,6 @@ public final class Osmformat {
       }
       private int bitField0_;
 
-      // required int64 id = 1;
       private long id_ ;
       /**
        * <code>required int64 id = 1;</code>
@@ -10534,7 +10648,6 @@ public final class Osmformat {
         return this;
       }
 
-      // repeated uint32 keys = 2 [packed = true];
       private java.util.List<java.lang.Integer> keys_ = java.util.Collections.emptyList();
       private void ensureKeysIsMutable() {
         if (!((bitField0_ & 0x00000002) == 0x00000002)) {
@@ -10610,7 +10723,8 @@ public final class Osmformat {
       public Builder addAllKeys(
           java.lang.Iterable<? extends java.lang.Integer> values) {
         ensureKeysIsMutable();
-        super.addAll(values, keys_);
+        com.google.protobuf.AbstractMessageLite.Builder.addAll(
+            values, keys_);
         
         return this;
       }
@@ -10628,7 +10742,6 @@ public final class Osmformat {
         return this;
       }
 
-      // repeated uint32 vals = 3 [packed = true];
       private java.util.List<java.lang.Integer> vals_ = java.util.Collections.emptyList();
       private void ensureValsIsMutable() {
         if (!((bitField0_ & 0x00000004) == 0x00000004)) {
@@ -10680,7 +10793,8 @@ public final class Osmformat {
       public Builder addAllVals(
           java.lang.Iterable<? extends java.lang.Integer> values) {
         ensureValsIsMutable();
-        super.addAll(values, vals_);
+        com.google.protobuf.AbstractMessageLite.Builder.addAll(
+            values, vals_);
         
         return this;
       }
@@ -10694,7 +10808,6 @@ public final class Osmformat {
         return this;
       }
 
-      // optional .OSMPBF.Info info = 4;
       private crosby.binary.Osmformat.Info info_ = crosby.binary.Osmformat.Info.getDefaultInstance();
       /**
        * <code>optional .OSMPBF.Info info = 4;</code>
@@ -10755,7 +10868,6 @@ public final class Osmformat {
         return this;
       }
 
-      // repeated sint64 refs = 8 [packed = true];
       private java.util.List<java.lang.Long> refs_ = java.util.Collections.emptyList();
       private void ensureRefsIsMutable() {
         if (!((bitField0_ & 0x00000010) == 0x00000010)) {
@@ -10831,7 +10943,8 @@ public final class Osmformat {
       public Builder addAllRefs(
           java.lang.Iterable<? extends java.lang.Long> values) {
         ensureRefsIsMutable();
-        super.addAll(values, refs_);
+        com.google.protobuf.AbstractMessageLite.Builder.addAll(
+            values, refs_);
         
         return this;
       }
@@ -10860,10 +10973,10 @@ public final class Osmformat {
     // @@protoc_insertion_point(class_scope:OSMPBF.Way)
   }
 
-  public interface RelationOrBuilder
-      extends com.google.protobuf.MessageLiteOrBuilder {
+  public interface RelationOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:OSMPBF.Relation)
+      com.google.protobuf.MessageLiteOrBuilder {
 
-    // required int64 id = 1;
     /**
      * <code>required int64 id = 1;</code>
      */
@@ -10873,7 +10986,6 @@ public final class Osmformat {
      */
     long getId();
 
-    // repeated uint32 keys = 2 [packed = true];
     /**
      * <code>repeated uint32 keys = 2 [packed = true];</code>
      *
@@ -10899,7 +11011,6 @@ public final class Osmformat {
      */
     int getKeys(int index);
 
-    // repeated uint32 vals = 3 [packed = true];
     /**
      * <code>repeated uint32 vals = 3 [packed = true];</code>
      */
@@ -10913,7 +11024,6 @@ public final class Osmformat {
      */
     int getVals(int index);
 
-    // optional .OSMPBF.Info info = 4;
     /**
      * <code>optional .OSMPBF.Info info = 4;</code>
      */
@@ -10923,7 +11033,6 @@ public final class Osmformat {
      */
     crosby.binary.Osmformat.Info getInfo();
 
-    // repeated int32 roles_sid = 8 [packed = true];
     /**
      * <code>repeated int32 roles_sid = 8 [packed = true];</code>
      *
@@ -10949,7 +11058,6 @@ public final class Osmformat {
      */
     int getRolesSid(int index);
 
-    // repeated sint64 memids = 9 [packed = true];
     /**
      * <code>repeated sint64 memids = 9 [packed = true];</code>
      *
@@ -10975,7 +11083,6 @@ public final class Osmformat {
      */
     long getMemids(int index);
 
-    // repeated .OSMPBF.Relation.MemberType types = 10 [packed = true];
     /**
      * <code>repeated .OSMPBF.Relation.MemberType types = 10 [packed = true];</code>
      */
@@ -10993,14 +11100,15 @@ public final class Osmformat {
    * Protobuf type {@code OSMPBF.Relation}
    */
   public static final class Relation extends
-      com.google.protobuf.GeneratedMessageLite
-      implements RelationOrBuilder {
+      com.google.protobuf.GeneratedMessageLite implements
+      // @@protoc_insertion_point(message_implements:OSMPBF.Relation)
+      RelationOrBuilder {
     // Use Relation.newBuilder() to construct.
     private Relation(com.google.protobuf.GeneratedMessageLite.Builder builder) {
       super(builder);
-
+      this.unknownFields = builder.getUnknownFields();
     }
-    private Relation(boolean noInit) {}
+    private Relation(boolean noInit) { this.unknownFields = com.google.protobuf.ByteString.EMPTY;}
 
     private static final Relation defaultInstance;
     public static Relation getDefaultInstance() {
@@ -11011,12 +11119,18 @@ public final class Osmformat {
       return defaultInstance;
     }
 
+    private final com.google.protobuf.ByteString unknownFields;
     private Relation(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       initFields();
       int mutable_bitField0_ = 0;
+      com.google.protobuf.ByteString.Output unknownFieldsOutput =
+          com.google.protobuf.ByteString.newOutput();
+      com.google.protobuf.CodedOutputStream unknownFieldsCodedOutput =
+          com.google.protobuf.CodedOutputStream.newInstance(
+              unknownFieldsOutput);
       try {
         boolean done = false;
         while (!done) {
@@ -11026,7 +11140,7 @@ public final class Osmformat {
               done = true;
               break;
             default: {
-              if (!parseUnknownField(input,
+              if (!parseUnknownField(input, unknownFieldsCodedOutput,
                                      extensionRegistry, tag)) {
                 done = true;
               }
@@ -11137,7 +11251,10 @@ public final class Osmformat {
             case 80: {
               int rawValue = input.readEnum();
               crosby.binary.Osmformat.Relation.MemberType value = crosby.binary.Osmformat.Relation.MemberType.valueOf(rawValue);
-              if (value != null) {
+              if (value == null) {
+                unknownFieldsCodedOutput.writeRawVarint32(tag);
+                unknownFieldsCodedOutput.writeRawVarint32(rawValue);
+                } else {
                 if (!((mutable_bitField0_ & 0x00000040) == 0x00000040)) {
                   types_ = new java.util.ArrayList<crosby.binary.Osmformat.Relation.MemberType>();
                   mutable_bitField0_ |= 0x00000040;
@@ -11152,7 +11269,10 @@ public final class Osmformat {
               while(input.getBytesUntilLimit() > 0) {
                 int rawValue = input.readEnum();
                 crosby.binary.Osmformat.Relation.MemberType value = crosby.binary.Osmformat.Relation.MemberType.valueOf(rawValue);
-                if (value != null) {
+                if (value == null) {
+                  unknownFieldsCodedOutput.writeRawVarint32(tag);
+                  unknownFieldsCodedOutput.writeRawVarint32(rawValue);
+                  } else {
                   if (!((mutable_bitField0_ & 0x00000040) == 0x00000040)) {
                     types_ = new java.util.ArrayList<crosby.binary.Osmformat.Relation.MemberType>();
                     mutable_bitField0_ |= 0x00000040;
@@ -11185,6 +11305,13 @@ public final class Osmformat {
         }
         if (((mutable_bitField0_ & 0x00000040) == 0x00000040)) {
           types_ = java.util.Collections.unmodifiableList(types_);
+        }
+        try {
+          unknownFieldsCodedOutput.flush();
+        } catch (java.io.IOException e) {
+        // Should not happen
+        } finally {
+          unknownFields = unknownFieldsOutput.toByteString();
         }
         makeExtensionsImmutable();
       }
@@ -11270,7 +11397,6 @@ public final class Osmformat {
     }
 
     private int bitField0_;
-    // required int64 id = 1;
     public static final int ID_FIELD_NUMBER = 1;
     private long id_;
     /**
@@ -11286,7 +11412,6 @@ public final class Osmformat {
       return id_;
     }
 
-    // repeated uint32 keys = 2 [packed = true];
     public static final int KEYS_FIELD_NUMBER = 2;
     private java.util.List<java.lang.Integer> keys_;
     /**
@@ -11322,7 +11447,6 @@ public final class Osmformat {
     }
     private int keysMemoizedSerializedSize = -1;
 
-    // repeated uint32 vals = 3 [packed = true];
     public static final int VALS_FIELD_NUMBER = 3;
     private java.util.List<java.lang.Integer> vals_;
     /**
@@ -11346,7 +11470,6 @@ public final class Osmformat {
     }
     private int valsMemoizedSerializedSize = -1;
 
-    // optional .OSMPBF.Info info = 4;
     public static final int INFO_FIELD_NUMBER = 4;
     private crosby.binary.Osmformat.Info info_;
     /**
@@ -11362,7 +11485,6 @@ public final class Osmformat {
       return info_;
     }
 
-    // repeated int32 roles_sid = 8 [packed = true];
     public static final int ROLES_SID_FIELD_NUMBER = 8;
     private java.util.List<java.lang.Integer> rolesSid_;
     /**
@@ -11398,7 +11520,6 @@ public final class Osmformat {
     }
     private int rolesSidMemoizedSerializedSize = -1;
 
-    // repeated sint64 memids = 9 [packed = true];
     public static final int MEMIDS_FIELD_NUMBER = 9;
     private java.util.List<java.lang.Long> memids_;
     /**
@@ -11434,7 +11555,6 @@ public final class Osmformat {
     }
     private int memidsMemoizedSerializedSize = -1;
 
-    // repeated .OSMPBF.Relation.MemberType types = 10 [packed = true];
     public static final int TYPES_FIELD_NUMBER = 10;
     private java.util.List<crosby.binary.Osmformat.Relation.MemberType> types_;
     /**
@@ -11469,7 +11589,8 @@ public final class Osmformat {
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
-      if (isInitialized != -1) return isInitialized == 1;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
 
       if (!hasId()) {
         memoizedIsInitialized = 0;
@@ -11523,6 +11644,7 @@ public final class Osmformat {
       for (int i = 0; i < types_.size(); i++) {
         output.writeEnumNoTag(types_.get(i).getNumber());
       }
+      output.writeRawBytes(unknownFields);
     }
 
     private int memoizedSerializedSize = -1;
@@ -11607,6 +11729,7 @@ public final class Osmformat {
             .computeRawVarint32Size(dataSize);
         }typesMemoizedSerializedSize = dataSize;
       }
+      size += unknownFields.size();
       memoizedSerializedSize = size;
       return size;
     }
@@ -11684,7 +11807,9 @@ public final class Osmformat {
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageLite.Builder<
           crosby.binary.Osmformat.Relation, Builder>
-        implements crosby.binary.Osmformat.RelationOrBuilder {
+        implements
+        // @@protoc_insertion_point(builder_implements:OSMPBF.Relation)
+        crosby.binary.Osmformat.RelationOrBuilder {
       // Construct using crosby.binary.Osmformat.Relation.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
@@ -11830,6 +11955,8 @@ public final class Osmformat {
           }
           
         }
+        setUnknownFields(
+            getUnknownFields().concat(other.unknownFields));
         return this;
       }
 
@@ -11860,7 +11987,6 @@ public final class Osmformat {
       }
       private int bitField0_;
 
-      // required int64 id = 1;
       private long id_ ;
       /**
        * <code>required int64 id = 1;</code>
@@ -11893,7 +12019,6 @@ public final class Osmformat {
         return this;
       }
 
-      // repeated uint32 keys = 2 [packed = true];
       private java.util.List<java.lang.Integer> keys_ = java.util.Collections.emptyList();
       private void ensureKeysIsMutable() {
         if (!((bitField0_ & 0x00000002) == 0x00000002)) {
@@ -11969,7 +12094,8 @@ public final class Osmformat {
       public Builder addAllKeys(
           java.lang.Iterable<? extends java.lang.Integer> values) {
         ensureKeysIsMutable();
-        super.addAll(values, keys_);
+        com.google.protobuf.AbstractMessageLite.Builder.addAll(
+            values, keys_);
         
         return this;
       }
@@ -11987,7 +12113,6 @@ public final class Osmformat {
         return this;
       }
 
-      // repeated uint32 vals = 3 [packed = true];
       private java.util.List<java.lang.Integer> vals_ = java.util.Collections.emptyList();
       private void ensureValsIsMutable() {
         if (!((bitField0_ & 0x00000004) == 0x00000004)) {
@@ -12039,7 +12164,8 @@ public final class Osmformat {
       public Builder addAllVals(
           java.lang.Iterable<? extends java.lang.Integer> values) {
         ensureValsIsMutable();
-        super.addAll(values, vals_);
+        com.google.protobuf.AbstractMessageLite.Builder.addAll(
+            values, vals_);
         
         return this;
       }
@@ -12053,7 +12179,6 @@ public final class Osmformat {
         return this;
       }
 
-      // optional .OSMPBF.Info info = 4;
       private crosby.binary.Osmformat.Info info_ = crosby.binary.Osmformat.Info.getDefaultInstance();
       /**
        * <code>optional .OSMPBF.Info info = 4;</code>
@@ -12114,7 +12239,6 @@ public final class Osmformat {
         return this;
       }
 
-      // repeated int32 roles_sid = 8 [packed = true];
       private java.util.List<java.lang.Integer> rolesSid_ = java.util.Collections.emptyList();
       private void ensureRolesSidIsMutable() {
         if (!((bitField0_ & 0x00000010) == 0x00000010)) {
@@ -12190,7 +12314,8 @@ public final class Osmformat {
       public Builder addAllRolesSid(
           java.lang.Iterable<? extends java.lang.Integer> values) {
         ensureRolesSidIsMutable();
-        super.addAll(values, rolesSid_);
+        com.google.protobuf.AbstractMessageLite.Builder.addAll(
+            values, rolesSid_);
         
         return this;
       }
@@ -12208,7 +12333,6 @@ public final class Osmformat {
         return this;
       }
 
-      // repeated sint64 memids = 9 [packed = true];
       private java.util.List<java.lang.Long> memids_ = java.util.Collections.emptyList();
       private void ensureMemidsIsMutable() {
         if (!((bitField0_ & 0x00000020) == 0x00000020)) {
@@ -12284,7 +12408,8 @@ public final class Osmformat {
       public Builder addAllMemids(
           java.lang.Iterable<? extends java.lang.Long> values) {
         ensureMemidsIsMutable();
-        super.addAll(values, memids_);
+        com.google.protobuf.AbstractMessageLite.Builder.addAll(
+            values, memids_);
         
         return this;
       }
@@ -12302,7 +12427,6 @@ public final class Osmformat {
         return this;
       }
 
-      // repeated .OSMPBF.Relation.MemberType types = 10 [packed = true];
       private java.util.List<crosby.binary.Osmformat.Relation.MemberType> types_ =
         java.util.Collections.emptyList();
       private void ensureTypesIsMutable() {
@@ -12360,7 +12484,8 @@ public final class Osmformat {
       public Builder addAllTypes(
           java.lang.Iterable<? extends crosby.binary.Osmformat.Relation.MemberType> values) {
         ensureTypesIsMutable();
-        super.addAll(values, types_);
+        com.google.protobuf.AbstractMessageLite.Builder.addAll(
+            values, types_);
         
         return this;
       }
