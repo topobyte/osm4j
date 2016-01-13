@@ -132,54 +132,49 @@ public class ComplexRelationsQuery extends AbstractRelationsQuery
 		EntityFinder finder = EntityFinders.create(dataRelations,
 				EntityNotFoundStrategy.IGNORE);
 
-		boolean in = QueryUtil.anyMemberContainedIn(relations,
-				queryBag.nodeIds, queryBag.wayIds);
-
-		if (!in) {
-			Set<OsmNode> nodes = new HashSet<>();
-			try {
-				finder.findMemberNodesAndWayNodes(relations, nodes);
-			} catch (EntityNotFoundException e) {
-				// Can't happen, because we're using the IGNORE strategy
-			}
-
-			Envelope envelope = BboxBuilder.box(nodes);
-			if (test.intersects(envelope)) {
-				if (fastRelationTests) {
-					in = true;
-				}
-			} else {
-				return false;
-			}
+		if (QueryUtil.anyMemberContainedIn(relations, queryBag.nodeIds,
+				queryBag.wayIds)) {
+			return true;
 		}
 
-		if (!in && !fastRelationTests) {
-			try {
-				LineworkBuilderResult result = lineworkBuilder.build(relations,
-						provider);
-				GeometryGroup group = result.toGeometryGroup(factory);
-				if (test.intersects(group)) {
-					in = true;
-				}
-			} catch (EntityNotFoundException e) {
-				System.out.println("Unable to build relation group");
-			}
+		Set<OsmNode> nodes = new HashSet<>();
+		try {
+			finder.findMemberNodesAndWayNodes(relations, nodes);
+		} catch (EntityNotFoundException e) {
+			// Can't happen, because we're using the IGNORE strategy
 		}
 
-		if (!in && !fastRelationTests) {
-			try {
-				RegionBuilderResult result = regionBuilder.build(start,
-						provider);
-				GeometryGroup group = result.toGeometryGroup(factory);
-				if (test.intersects(group)) {
-					in = true;
-				}
-			} catch (EntityNotFoundException e) {
-				System.out.println("Unable to build relation group");
+		Envelope envelope = BboxBuilder.box(nodes);
+		if (test.intersects(envelope)) {
+			if (fastRelationTests) {
+				return true;
 			}
+		} else {
+			return false;
 		}
 
-		return in;
+		try {
+			LineworkBuilderResult result = lineworkBuilder.build(relations,
+					provider);
+			GeometryGroup group = result.toGeometryGroup(factory);
+			if (test.intersects(group)) {
+				return true;
+			}
+		} catch (EntityNotFoundException e) {
+			System.out.println("Unable to build relation group");
+		}
+
+		try {
+			RegionBuilderResult result = regionBuilder.build(start, provider);
+			GeometryGroup group = result.toGeometryGroup(factory);
+			if (test.intersects(group)) {
+				return true;
+			}
+		} catch (EntityNotFoundException e) {
+			System.out.println("Unable to build relation group");
+		}
+
+		return false;
 	}
 
 }
