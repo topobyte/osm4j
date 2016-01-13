@@ -1,0 +1,7 @@
+#!/bin/bash
+
+DIR=$(dirname $0)
+CMD="$DIR/osm4j-extra"
+CLASS="de.topobyte.osm4j.extra.executables.RegionQuery"
+
+exec "$CMD" "$CLASS" "$@"
