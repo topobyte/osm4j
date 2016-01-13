@@ -35,6 +35,7 @@ public abstract class BaseQuery extends AbstractExecutableInputOutput
 	private static final String OPTION_OUTPUT = "output";
 	private static final String OPTION_TMP = "tmp";
 	private static final String OPTION_KEEP_TMP = "keep_tmp";
+	private static final String OPTION_FAST_RELATION_QUERIES = "fast_relation_queries";
 	private static final String OPTION_TREE = "tree";
 	private static final String OPTION_SIMPLE_RELATIONS = "simple_relations";
 	private static final String OPTION_COMPLEX_RELATIONS = "complex_relations";
@@ -54,6 +55,7 @@ public abstract class BaseQuery extends AbstractExecutableInputOutput
 		OptionHelper.add(options, OPTION_OUTPUT, true, true, "directory to store output in");
 		OptionHelper.add(options, OPTION_TMP, true, false, "directory to store intermediate files");
 		OptionHelper.add(options, OPTION_KEEP_TMP, false, false, "directory to store intermediate files");
+		OptionHelper.add(options, OPTION_FAST_RELATION_QUERIES, false, false, "include relations based on their bounding box");
 		OptionHelper.add(options, OPTION_TREE, true, true, "path to the data tree");
 		OptionHelper.add(options, OPTION_SIMPLE_RELATIONS, true, true, "path to simple relation batches");
 		OptionHelper.add(options, OPTION_COMPLEX_RELATIONS, true, true, "path to complex relation batches");
@@ -91,8 +93,7 @@ public abstract class BaseQuery extends AbstractExecutableInputOutput
 
 	protected boolean keepTmp;
 
-	// TODO: introduce CLI option for this
-	protected boolean simpleRelationTests = true;
+	protected boolean simpleRelationTests;
 
 	@Override
 	protected void setup(String[] args)
@@ -130,6 +131,7 @@ public abstract class BaseQuery extends AbstractExecutableInputOutput
 				.getOptionValue(OPTION_FILE_NAMES_RELATION_RELATIONS);
 
 		keepTmp = line.hasOption(OPTION_KEEP_TMP);
+		simpleRelationTests = line.hasOption(OPTION_FAST_RELATION_QUERIES);
 	}
 
 	protected void execute() throws IOException
