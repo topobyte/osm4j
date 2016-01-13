@@ -53,57 +53,10 @@ public class SimpleRelationsQuery extends AbstractRelationsQuery
 				EntityNotFoundStrategy.IGNORE);
 
 		for (OsmRelation relation : dataRelations.getRelations()) {
-			boolean in = QueryUtil.anyMemberContainedIn(relation,
-					queryBag.nodeIds, queryBag.wayIds);
-
-			if (!in) {
-				Set<OsmNode> nodes = new HashSet<>();
-				try {
-					finder.findMemberNodesAndWayNodes(relation, nodes);
-				} catch (EntityNotFoundException e) {
-					// Can't happen, because we're using the IGNORE strategy
-				}
-
-				Envelope envelope = BboxBuilder.box(nodes);
-				if (test.intersects(envelope)) {
-					if (fastRelationTests) {
-						in = true;
-					}
-				} else {
-					continue;
-				}
-			}
-
-			if (!in && !fastRelationTests) {
-				try {
-					LineworkBuilderResult result = lineworkBuilder.build(
-							relation, provider);
-					GeometryGroup group = result.toGeometryGroup(factory);
-					if (test.intersects(group)) {
-						in = true;
-					}
-				} catch (EntityNotFoundException e) {
-					System.out.println("Unable to build relation: "
-							+ relation.getId());
-				}
-			}
-
-			if (!in && !fastRelationTests) {
-				try {
-					RegionBuilderResult result = regionBuilder.build(relation,
-							provider);
-					GeometryGroup group = result.toGeometryGroup(factory);
-					if (test.intersects(group)) {
-						in = true;
-					}
-				} catch (EntityNotFoundException e) {
-					System.out.println("Unable to build relation: "
-							+ relation.getId());
-				}
-			}
-			if (!in) {
+			if (!intersects(relation, queryBag, finder)) {
 				continue;
 			}
+
 			queryBag.outRelations.getOsmOutput().write(relation);
 			queryBag.nSimple++;
 			try {
@@ -117,6 +70,61 @@ public class SimpleRelationsQuery extends AbstractRelationsQuery
 						+ relation.getId());
 			}
 		}
+	}
+
+	private boolean intersects(OsmRelation relation, RelationQueryBag queryBag,
+			EntityFinder finder)
+	{
+		boolean in = QueryUtil.anyMemberContainedIn(relation, queryBag.nodeIds,
+				queryBag.wayIds);
+
+		if (!in) {
+			Set<OsmNode> nodes = new HashSet<>();
+			try {
+				finder.findMemberNodesAndWayNodes(relation, nodes);
+			} catch (EntityNotFoundException e) {
+				// Can't happen, because we're using the IGNORE strategy
+			}
+
+			Envelope envelope = BboxBuilder.box(nodes);
+			if (test.intersects(envelope)) {
+				if (fastRelationTests) {
+					in = true;
+				}
+			} else {
+				return false;
+			}
+		}
+
+		if (!in && !fastRelationTests) {
+			try {
+				LineworkBuilderResult result = lineworkBuilder.build(relation,
+						provider);
+				GeometryGroup group = result.toGeometryGroup(factory);
+				if (test.intersects(group)) {
+					in = true;
+				}
+			} catch (EntityNotFoundException e) {
+				System.out.println("Unable to build relation: "
+						+ relation.getId());
+			}
+		}
+
+		if (!in && !fastRelationTests) {
+			try {
+				RegionBuilderResult result = regionBuilder.build(relation,
+						provider);
+				GeometryGroup group = result.toGeometryGroup(factory);
+				if (test.intersects(group)) {
+					in = true;
+				}
+			} catch (EntityNotFoundException e) {
+				System.out.println("Unable to build relation: "
+						+ relation.getId());
+			}
+		}
+
+		return in;
 	}
 
 }
