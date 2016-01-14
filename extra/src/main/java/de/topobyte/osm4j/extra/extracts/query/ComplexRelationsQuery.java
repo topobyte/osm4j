@@ -40,6 +40,7 @@ import de.topobyte.osm4j.core.resolve.EntityFinder;
 import de.topobyte.osm4j.core.resolve.EntityFinders;
 import de.topobyte.osm4j.core.resolve.EntityNotFoundException;
 import de.topobyte.osm4j.core.resolve.EntityNotFoundStrategy;
+import de.topobyte.osm4j.extra.MissingEntityCounter;
 import de.topobyte.osm4j.extra.QueryUtil;
 import de.topobyte.osm4j.extra.relations.Group;
 import de.topobyte.osm4j.extra.relations.RelationGraph;
@@ -113,15 +114,18 @@ public class ComplexRelationsQuery extends AbstractRelationsQuery
 				queryBag.outRelations.getOsmOutput());
 
 		for (OsmRelation relation : found) {
-			try {
-				QueryUtil.putNodes(relation, queryBag.additionalNodes,
-						dataNodes, queryBag.nodeIds);
-				QueryUtil.putWaysAndWayNodes(relation,
-						queryBag.additionalNodes, queryBag.additionalWays,
-						provider, queryBag.wayIds);
-			} catch (EntityNotFoundException e) {
-				System.out.println("Unable to find all members for relation: "
-						+ relation.getId());
+			MissingEntityCounter counter = new MissingEntityCounter();
+			QueryUtil.putNodes(relation, queryBag.additionalNodes, dataNodes,
+					queryBag.nodeIds, counter);
+			QueryUtil
+					.putWaysAndWayNodes(relation, queryBag.additionalNodes,
+							queryBag.additionalWays, provider, queryBag.wayIds,
+							counter);
+
+			if (counter.nonZero()) {
+				System.out.println(String.format(
+						"relation %d: unable to find %s", relation.getId(),
+						counter.toMessage()));
 			}
 		}
 	}
