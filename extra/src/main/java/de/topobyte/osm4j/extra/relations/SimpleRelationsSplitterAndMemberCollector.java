@@ -25,10 +25,7 @@ import java.util.List;
 
 import de.topobyte.osm4j.core.access.OsmIteratorInputFactory;
 import de.topobyte.osm4j.extra.relations.split.SimpleRelationSplitter;
-import de.topobyte.osm4j.utils.FileFormat;
 import de.topobyte.osm4j.utils.OsmOutputConfig;
-import de.topobyte.osm4j.utils.config.PbfConfig;
-import de.topobyte.osm4j.utils.config.TboConfig;
 
 public class SimpleRelationsSplitterAndMemberCollector
 {
@@ -41,34 +38,24 @@ public class SimpleRelationsSplitterAndMemberCollector
 	private Path pathOutputSimpleRelations;
 	private String fileNamesRelations;
 
-	private FileFormat outputFormat;
-	private boolean writeMetadata;
-	private PbfConfig pbfConfig;
-	private TboConfig tboConfig;
+	private OsmOutputConfig outputConfig;
 
 	public SimpleRelationsSplitterAndMemberCollector(
 			OsmIteratorInputFactory inputSimpleRelations,
 			Path pathOutputSimpleRelations, String fileNamesRelations,
 			OsmIteratorInputFactory inputWays,
-			OsmIteratorInputFactory inputNodes, FileFormat outputFormat,
-			boolean writeMetadata, PbfConfig pbfConfig, TboConfig tboConfig)
+			OsmIteratorInputFactory inputNodes, OsmOutputConfig outputConfig)
 	{
 		this.inputSimpleRelations = inputSimpleRelations;
 		this.pathOutputSimpleRelations = pathOutputSimpleRelations;
 		this.fileNamesRelations = fileNamesRelations;
 		this.inputWays = inputWays;
 		this.inputNodes = inputNodes;
-		this.outputFormat = outputFormat;
-		this.writeMetadata = writeMetadata;
-		this.pbfConfig = pbfConfig;
-		this.tboConfig = tboConfig;
+		this.outputConfig = outputConfig;
 	}
 
 	public void execute() throws IOException
 	{
-		OsmOutputConfig outputConfig = new OsmOutputConfig(outputFormat,
-				pbfConfig, tboConfig, writeMetadata);
-
 		// Create output directories
 
 		Files.createDirectories(pathOutputSimpleRelations);
