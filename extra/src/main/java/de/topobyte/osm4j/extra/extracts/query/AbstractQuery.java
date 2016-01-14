@@ -30,40 +30,44 @@ import de.topobyte.osm4j.core.dataset.ListDataSetLoader;
 import de.topobyte.osm4j.utils.FileFormat;
 import de.topobyte.osm4j.utils.OsmFileInput;
 import de.topobyte.osm4j.utils.OsmIoUtils;
+import de.topobyte.osm4j.utils.OsmOutputConfig;
 import de.topobyte.osm4j.utils.StreamUtil;
-import de.topobyte.osm4j.utils.config.PbfConfig;
-import de.topobyte.osm4j.utils.config.TboConfig;
 
 public abstract class AbstractQuery
 {
 
 	protected FileFormat inputFormat;
-	protected FileFormat outputFormat;
-	protected boolean writeMetadata;
-	protected PbfConfig pbfConfig;
-	protected TboConfig tboConfig;
+	protected OsmOutputConfig outputConfigIntermediate;
+	protected OsmOutputConfig outputConfig;
 
-	public AbstractQuery(FileFormat inputFormat, FileFormat outputFormat,
-			boolean writeMetadata, PbfConfig pbfConfig, TboConfig tboConfig)
+	public AbstractQuery(FileFormat inputFormat,
+			OsmOutputConfig outputConfigIntermediate,
+			OsmOutputConfig outputConfig)
 	{
 		this.inputFormat = inputFormat;
-		this.outputFormat = outputFormat;
-		this.writeMetadata = writeMetadata;
-		this.pbfConfig = pbfConfig;
-		this.tboConfig = tboConfig;
+		this.outputConfigIntermediate = outputConfigIntermediate;
+		this.outputConfig = outputConfig;
 	}
 
 	protected String filename(int index)
 	{
-		return String.format("%d%s", index, OsmIoUtils.extension(outputFormat));
+		return String.format("%d%s", index,
+				OsmIoUtils.extension(outputConfigIntermediate.getFileFormat()));
 	}
 
 	protected OsmStreamOutput createOutput(Path path) throws IOException
 	{
 		OutputStream outputStream = StreamUtil.bufferedOutputStream(path);
-		OsmOutputStream osmOutputStream = OsmIoUtils
-				.setupOsmOutput(outputStream, outputFormat, writeMetadata,
-						pbfConfig, tboConfig);
+		OsmOutputStream osmOutputStream = OsmIoUtils.setupOsmOutput(
+				outputStream, outputConfigIntermediate);
+		return new OsmOutputStreamStreamOutput(outputStream, osmOutputStream);
+	}
+
+	protected OsmStreamOutput createFinalOutput(Path path) throws IOException
+	{
+		OutputStream outputStream = StreamUtil.bufferedOutputStream(path);
+		OsmOutputStream osmOutputStream = OsmIoUtils.setupOsmOutput(
+				outputStream, outputConfig);
 		return new OsmOutputStreamStreamOutput(outputStream, osmOutputStream);
 	}
 
@@ -76,7 +80,8 @@ public abstract class AbstractQuery
 	protected InMemoryListDataSet read(Path path) throws IOException
 	{
 		OsmFileInput fileInput = new OsmFileInput(path, inputFormat);
-		OsmIteratorInput input = fileInput.createIterator(true, writeMetadata);
+		OsmIteratorInput input = fileInput.createIterator(true,
+				outputConfig.isWriteMetadata());
 		InMemoryListDataSet data = ListDataSetLoader.read(input.getIterator(),
 				true, true, true);
 		input.close();

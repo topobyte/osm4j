@@ -41,8 +41,7 @@ import de.topobyte.osm4j.extra.datatree.Node;
 import de.topobyte.osm4j.geometry.WayBuilder;
 import de.topobyte.osm4j.geometry.WayBuilderResult;
 import de.topobyte.osm4j.utils.FileFormat;
-import de.topobyte.osm4j.utils.config.PbfConfig;
-import de.topobyte.osm4j.utils.config.TboConfig;
+import de.topobyte.osm4j.utils.OsmOutputConfig;
 
 public class LeafQuery extends AbstractQuery
 {
@@ -60,10 +59,10 @@ public class LeafQuery extends AbstractQuery
 			DataTreeFiles filesTreeWays,
 			DataTreeFiles filesTreeSimpleRelations,
 			DataTreeFiles filesTreeComplexRelations, FileFormat inputFormat,
-			FileFormat outputFormat, boolean writeMetadata,
-			PbfConfig pbfConfig, TboConfig tboConfig, boolean fastRelationsTests)
+			OsmOutputConfig outputConfigIntermediate,
+			OsmOutputConfig outputConfig, boolean fastRelationsTests)
 	{
-		super(inputFormat, outputFormat, writeMetadata, pbfConfig, tboConfig);
+		super(inputFormat, outputConfigIntermediate, outputConfig);
 
 		this.test = test;
 		this.filesTreeNodes = filesTreeNodes;

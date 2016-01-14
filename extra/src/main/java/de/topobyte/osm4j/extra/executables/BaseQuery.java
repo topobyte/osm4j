@@ -27,6 +27,9 @@ import de.topobyte.jts.utils.predicate.PredicateEvaluator;
 import de.topobyte.osm4j.extra.datatree.DataTree;
 import de.topobyte.osm4j.extra.extracts.query.Query;
 import de.topobyte.osm4j.utils.AbstractExecutableInputOutput;
+import de.topobyte.osm4j.utils.FileFormat;
+import de.topobyte.osm4j.utils.OsmOutputConfig;
+import de.topobyte.osm4j.utils.config.TboConfig;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
 public abstract class BaseQuery extends AbstractExecutableInputOutput
@@ -136,6 +139,11 @@ public abstract class BaseQuery extends AbstractExecutableInputOutput
 
 	protected void execute() throws IOException
 	{
+		OsmOutputConfig outputConfigIntermediate = new OsmOutputConfig(
+				FileFormat.TBO, null, new TboConfig(), writeMetadata);
+		OsmOutputConfig outputConfig = new OsmOutputConfig(outputFormat,
+				pbfConfig, tboConfig, writeMetadata);
+
 		Query query = new Query(pathOutput, pathTmp, pathTree,
 				pathSimpleRelations, pathComplexRelations,
 				pathSimpleRelationsBboxes, pathComplexRelationsBboxes,
@@ -143,7 +151,7 @@ public abstract class BaseQuery extends AbstractExecutableInputOutput
 				fileNamesTreeSimpleRelations, fileNamesTreeComplexRelations,
 				fileNamesRelationNodes, fileNamesRelationWays,
 				fileNamesRelationRelations, queryEnvelope, test, inputFormat,
-				outputFormat, writeMetadata, pbfConfig, tboConfig, keepTmp,
+				outputConfigIntermediate, outputConfig, keepTmp,
 				simpleRelationTests);
 		query.execute();
 	}

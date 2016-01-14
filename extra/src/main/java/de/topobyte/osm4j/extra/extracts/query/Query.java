@@ -43,8 +43,7 @@ import de.topobyte.osm4j.extra.idbboxlist.IdBboxEntry;
 import de.topobyte.osm4j.extra.idbboxlist.IdBboxUtil;
 import de.topobyte.osm4j.utils.FileFormat;
 import de.topobyte.osm4j.utils.OsmFileInput;
-import de.topobyte.osm4j.utils.config.PbfConfig;
-import de.topobyte.osm4j.utils.config.TboConfig;
+import de.topobyte.osm4j.utils.OsmOutputConfig;
 import de.topobyte.osm4j.utils.merge.sorted.SortedMerge;
 
 public class Query extends AbstractQuery
@@ -82,11 +81,11 @@ public class Query extends AbstractQuery
 			String fileNamesRelationNodes, String fileNamesRelationWays,
 			String fileNamesRelationRelations, Envelope queryEnvelope,
 			PredicateEvaluator test, FileFormat inputFormat,
-			FileFormat outputFormat, boolean writeMetadata,
-			PbfConfig pbfConfig, TboConfig tboConfig, boolean keepTmp,
+			OsmOutputConfig outputConfigIntermediate,
+			OsmOutputConfig outputConfig, boolean keepTmp,
 			boolean fastRelationTests)
 	{
-		super(inputFormat, outputFormat, writeMetadata, pbfConfig, tboConfig);
+		super(inputFormat, outputConfigIntermediate, outputConfig);
 
 		this.pathOutput = pathOutput;
 		this.pathTmp = pathTmp;
@@ -244,7 +243,7 @@ public class Query extends AbstractQuery
 
 		// Merge intermediate files
 
-		OsmStreamOutput output = createOutput(pathOutput);
+		OsmStreamOutput output = createFinalOutput(pathOutput);
 
 		List<OsmFileInput> mergeFiles = new ArrayList<>();
 
@@ -260,7 +259,7 @@ public class Query extends AbstractQuery
 		List<OsmIterator> mergeIterators = new ArrayList<>();
 		for (OsmFileInput input : mergeFiles) {
 			OsmIteratorInput iteratorInput = input.createIterator(true,
-					writeMetadata);
+					outputConfig.isWriteMetadata());
 			mergeIteratorInputs.add(iteratorInput);
 			mergeIterators.add(iteratorInput.getIterator());
 		}
@@ -361,7 +360,7 @@ public class Query extends AbstractQuery
 
 	private OsmFileInput intermediate(Path path)
 	{
-		return new OsmFileInput(path, outputFormat);
+		return new OsmFileInput(path, outputConfigIntermediate.getFileFormat());
 	}
 
 	private void addCompletelyContainedLeaf(Node leaf)
@@ -377,8 +376,8 @@ public class Query extends AbstractQuery
 	{
 		LeafQuery leafQuery = new LeafQuery(test, filesTreeNodes,
 				filesTreeWays, filesTreeSimpleRelations,
-				filesTreeComplexRelations, inputFormat, outputFormat,
-				writeMetadata, pbfConfig, tboConfig, fastRelationTests);
+				filesTreeComplexRelations, inputFormat,
+				outputConfigIntermediate, outputConfig, fastRelationTests);
 
 		tmpIndexTree++;
 
