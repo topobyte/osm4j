@@ -23,6 +23,8 @@ import de.topobyte.jts.utils.predicate.PredicateEvaluator;
 import de.topobyte.osm4j.core.dataset.InMemoryListDataSet;
 import de.topobyte.osm4j.core.resolve.CompositeOsmEntityProvider;
 import de.topobyte.osm4j.geometry.LineworkBuilder;
+import de.topobyte.osm4j.geometry.MissingEntitiesStrategy;
+import de.topobyte.osm4j.geometry.MissingWayNodeStrategy;
 import de.topobyte.osm4j.geometry.RegionBuilder;
 
 public abstract class AbstractRelationsQuery
@@ -54,6 +56,15 @@ public abstract class AbstractRelationsQuery
 
 		provider = new CompositeOsmEntityProvider(dataNodes, dataWays,
 				dataRelations);
+
+		lineworkBuilder
+				.setMissingEntitiesStrategy(MissingEntitiesStrategy.BUILD_PARTIAL);
+		lineworkBuilder
+				.setMissingWayNodeStrategy(MissingWayNodeStrategy.SPLIT_POLYLINE);
+		regionBuilder
+				.setMissingEntitiesStrategy(MissingEntitiesStrategy.BUILD_PARTIAL);
+		regionBuilder
+				.setMissingWayNodeStrategy(MissingWayNodeStrategy.OMIT_VERTEX_FROM_POLYLINE);
 	}
 
 }
