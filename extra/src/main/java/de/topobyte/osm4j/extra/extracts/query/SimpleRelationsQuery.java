@@ -61,10 +61,10 @@ public class SimpleRelationsQuery extends AbstractRelationsQuery
 			queryBag.nSimple++;
 			try {
 				QueryUtil.putNodes(relation, queryBag.additionalNodes,
-						dataNodes, queryBag.nodeIds);
+						dataNodes);
 				QueryUtil.putWaysAndWayNodes(relation,
 						queryBag.additionalNodes, queryBag.additionalWays,
-						provider, queryBag.nodeIds, queryBag.wayIds);
+						provider);
 			} catch (EntityNotFoundException e) {
 				System.out.println("Unable to find all members for relation: "
 						+ relation.getId());

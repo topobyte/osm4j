@@ -180,6 +180,39 @@ public class QueryUtil
 	/**
 	 * Retrieve all ways directly referenced by the specified relation and the
 	 * nodes referenced by those ways from the entityProvider and insert them
+	 * into the maps.
+	 * 
+	 * @param relation
+	 *            the relation to retrieve ways and way-nodes for.
+	 * @param nodes
+	 *            the map to put found way-nodes into.
+	 * @param ways
+	 *            the map to put found ways into.
+	 * @param entityProvider
+	 *            the store to query for ways and nodes.
+	 * @throws EntityNotFoundException
+	 */
+	public static void putWaysAndWayNodes(OsmRelation relation,
+			TLongObjectMap<OsmNode> nodes, TLongObjectMap<OsmWay> ways,
+			OsmEntityProvider entityProvider) throws EntityNotFoundException
+	{
+		for (int i = 0; i < relation.getNumberOfMembers(); i++) {
+			OsmRelationMember member = relation.getMember(i);
+			if (member.getType() == EntityType.Way) {
+				long wayId = member.getId();
+				if (ways.containsKey(wayId)) {
+					continue;
+				}
+				OsmWay way = entityProvider.getWay(wayId);
+				ways.put(wayId, way);
+				putNodes(way, nodes, entityProvider);
+			}
+		}
+	}
+
+	/**
+	 * Retrieve all ways directly referenced by the specified relation and the
+	 * nodes referenced by those ways from the entityProvider and insert them
 	 * into the maps if they are not already present in the specified sets of
 	 * identifiers. The identifiers of added nodes and ways will also be added
 	 * to these sets.
