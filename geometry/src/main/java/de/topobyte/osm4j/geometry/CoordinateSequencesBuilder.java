@@ -99,8 +99,9 @@ class CoordinateSequencesBuilder
 			coords.addAll(c2);
 			coords.addAll(c1.subList(1, c1.size()));
 
-			result.setLinearRing(factory.createLinearRing(coords
-					.toArray(new Coordinate[0])));
+			result.getLineStrings()
+					.add(factory.createLineString(coords
+							.toArray(new Coordinate[0])));
 
 			first++;
 			last--;
