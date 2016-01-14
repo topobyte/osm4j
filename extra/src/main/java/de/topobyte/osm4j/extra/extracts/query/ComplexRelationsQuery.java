@@ -115,10 +115,10 @@ public class ComplexRelationsQuery extends AbstractRelationsQuery
 		for (OsmRelation relation : found) {
 			try {
 				QueryUtil.putNodes(relation, queryBag.additionalNodes,
-						dataNodes);
+						dataNodes, queryBag.nodeIds);
 				QueryUtil.putWaysAndWayNodes(relation,
 						queryBag.additionalNodes, queryBag.additionalWays,
-						provider);
+						provider, queryBag.wayIds);
 			} catch (EntityNotFoundException e) {
 				System.out.println("Unable to find all members for relation: "
 						+ relation.getId());

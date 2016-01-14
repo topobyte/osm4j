@@ -115,8 +115,7 @@ public class QueryUtil
 	/**
 	 * Retrieve all nodes directly referenced by the specified relation from the
 	 * entityProvider and insert them into the map if they are not already
-	 * present in the specified set of identifiers. The identifiers of added
-	 * nodes will also be added to the set.
+	 * present in the specified set of identifiers.
 	 * 
 	 * @param relation
 	 *            the relation to retrieve nodes for.
@@ -140,7 +139,6 @@ public class QueryUtil
 					continue;
 				}
 				nodes.put(nodeId, entityProvider.getNode(nodeId));
-				nodeIds.add(nodeId);
 			}
 		}
 	}
@@ -214,8 +212,7 @@ public class QueryUtil
 	 * Retrieve all ways directly referenced by the specified relation and the
 	 * nodes referenced by those ways from the entityProvider and insert them
 	 * into the maps if they are not already present in the specified sets of
-	 * identifiers. The identifiers of added nodes and ways will also be added
-	 * to these sets.
+	 * identifiers.
 	 * 
 	 * @param relation
 	 *            the relation to retrieve ways and way-nodes for.
@@ -225,15 +222,13 @@ public class QueryUtil
 	 *            the map to put found ways into.
 	 * @param entityProvider
 	 *            the store to query for ways and nodes.
-	 * @param nodeIds
-	 *            the set of identifiers to check for existing nodes.
 	 * @param wayIds
 	 *            the set of identifiers to check for existing ways.
 	 * @throws EntityNotFoundException
 	 */
 	public static void putWaysAndWayNodes(OsmRelation relation,
 			TLongObjectMap<OsmNode> nodes, TLongObjectMap<OsmWay> ways,
-			OsmEntityProvider entityProvider, TLongSet nodeIds, TLongSet wayIds)
+			OsmEntityProvider entityProvider, TLongSet wayIds)
 			throws EntityNotFoundException
 	{
 		for (int i = 0; i < relation.getNumberOfMembers(); i++) {
@@ -245,7 +240,7 @@ public class QueryUtil
 				}
 				OsmWay way = entityProvider.getWay(wayId);
 				ways.put(wayId, way);
-				putNodes(way, nodes, entityProvider, nodeIds);
+				putNodes(way, nodes, entityProvider);
 			}
 		}
 	}
