@@ -17,6 +17,8 @@
 
 package de.topobyte.osm4j.extra.extracts.query;
 
+import gnu.trove.set.TLongSet;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -25,6 +27,7 @@ import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 
+import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
@@ -34,6 +37,8 @@ import de.topobyte.osm4j.core.access.OsmIterator;
 import de.topobyte.osm4j.core.access.OsmIteratorInput;
 import de.topobyte.osm4j.core.access.OsmStreamOutput;
 import de.topobyte.osm4j.core.dataset.InMemoryListDataSet;
+import de.topobyte.osm4j.core.model.iface.OsmNode;
+import de.topobyte.osm4j.core.model.iface.OsmWay;
 import de.topobyte.osm4j.extra.QueryUtil;
 import de.topobyte.osm4j.extra.datatree.DataTree;
 import de.topobyte.osm4j.extra.datatree.DataTreeFiles;
@@ -442,6 +447,9 @@ public class Query extends AbstractQuery
 		RelationQueryBag queryBag = new RelationQueryBag(outRelations);
 
 		System.out.println("running query");
+		queryNodes(dataNodes, queryBag.nodeIds);
+		queryWays(dataWays, queryBag.nodeIds, queryBag.wayIds);
+
 		if (simple) {
 			SimpleRelationsQuery simpleRelationsQuery = new SimpleRelationsQuery(
 					dataNodes, dataWays, dataRelations, test, fastRelationTests);
@@ -468,6 +476,29 @@ public class Query extends AbstractQuery
 		filesNodes.add(intermediate(pathOutNodes));
 		filesWays.add(intermediate(pathOutWays));
 		filesSimpleRelations.add(intermediate(pathOutRelations));
+	}
+
+	private void queryNodes(InMemoryListDataSet dataNodes, TLongSet nodeIds)
+			throws IOException
+	{
+		for (OsmNode node : dataNodes.getNodes()) {
+			if (test.contains(new Coordinate(node.getLongitude(), node
+					.getLatitude()))) {
+				nodeIds.add(node.getId());
+			}
+		}
+	}
+
+	private void queryWays(InMemoryListDataSet dataWays, TLongSet nodeIds,
+			TLongSet wayIds) throws IOException
+	{
+		for (OsmWay way : dataWays.getWays()) {
+			boolean in = QueryUtil.anyNodeContainedIn(way, nodeIds);
+			if (!in) {
+				continue;
+			}
+			wayIds.add(way.getId());
+		}
 	}
 
 }
