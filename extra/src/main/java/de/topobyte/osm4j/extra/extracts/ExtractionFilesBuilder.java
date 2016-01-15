@@ -94,6 +94,8 @@ public class ExtractionFilesBuilder
 	private Path pathInput;
 	private FileFormat inputFormat;
 	private Path pathOutput;
+	private FileFormat outputFormat;
+	private ExtractionFileNames fileNames;
 	private int maxNodes;
 	private boolean includeMetadata;
 	private int maxMembersSimple;
@@ -133,12 +135,16 @@ public class ExtractionFilesBuilder
 	private TimeTable t = new TimeTable();
 
 	public ExtractionFilesBuilder(Path pathInput, FileFormat inputFormat,
-			Path pathOutput, int maxNodes, boolean includeMetadata,
-			int maxMembersSimple, int maxMembersComplex, boolean computeBbox)
+			Path pathOutput, FileFormat outputFormat,
+			ExtractionFileNames fileNames, int maxNodes,
+			boolean includeMetadata, int maxMembersSimple,
+			int maxMembersComplex, boolean computeBbox)
 	{
 		this.pathInput = pathInput;
 		this.inputFormat = inputFormat;
 		this.pathOutput = pathOutput;
+		this.outputFormat = outputFormat;
+		this.fileNames = fileNames;
 		this.maxNodes = maxNodes;
 		this.includeMetadata = includeMetadata;
 		this.maxMembersSimple = maxMembersSimple;
@@ -159,9 +165,6 @@ public class ExtractionFilesBuilder
 			System.exit(1);
 		}
 
-		FileFormat outputFormat = FileFormat.TBO;
-		ExtractionFileNames fileNames = FileNameDefaults
-				.forFormat(outputFormat);
 		String extension = OsmIoUtils.extension(outputFormat);
 
 		pathNodes = pathOutput.resolve(fileNames.getSplitNodes());

@@ -21,8 +21,12 @@ import java.io.IOException;
 import java.nio.file.Paths;
 
 import de.topobyte.osm4j.core.access.OsmInputException;
+import de.topobyte.osm4j.extra.extracts.ExtractionFileNames;
 import de.topobyte.osm4j.extra.extracts.ExtractionFilesBuilder;
+import de.topobyte.osm4j.extra.extracts.ExtractionFilesHelper;
+import de.topobyte.osm4j.extra.extracts.FileNameDefaults;
 import de.topobyte.osm4j.utils.AbstractExecutableInput;
+import de.topobyte.osm4j.utils.FileFormat;
 import de.topobyte.utilities.apache.commons.cli.ArgumentHelper;
 import de.topobyte.utilities.apache.commons.cli.ArgumentParseException;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
@@ -61,6 +65,9 @@ public class BuildExtractionFiles extends AbstractExecutableInput
 	private int maxMembersComplex;
 	private boolean computeBbox = false;
 
+	private FileFormat outputFormat = FileFormat.TBO;
+	private ExtractionFileNames fileNames;
+
 	public BuildExtractionFiles()
 	{
 		// @formatter:off
@@ -70,6 +77,7 @@ public class BuildExtractionFiles extends AbstractExecutableInput
 		OptionHelper.add(options, OPTION_MAX_MEMBERS_SIMPLE, true, true, "maximum number of nodes per batch");
 		OptionHelper.add(options, OPTION_MAX_MEMBERS_COMPLEX, true, true, "maximum number of nodes per batch");
 		OptionHelper.add(options, OPTION_COMPUTE_BBOX, false, false, "compute bbox instead of using bbox declared in input file");
+		ExtractionFilesHelper.addOptions(options);
 		// @formatter:on
 	}
 
@@ -110,14 +118,18 @@ public class BuildExtractionFiles extends AbstractExecutableInput
 		}
 
 		computeBbox = line.hasOption(OPTION_COMPUTE_BBOX);
+
+		fileNames = FileNameDefaults.forFormat(outputFormat);
+
+		ExtractionFilesHelper.parse(line, fileNames);
 	}
 
 	private void execute() throws IOException, OsmInputException
 	{
 		ExtractionFilesBuilder builder = new ExtractionFilesBuilder(
 				Paths.get(pathInput), inputFormat, Paths.get(pathOutput),
-				maxNodes, includeMetadata, maxMembersSimple, maxMembersComplex,
-				computeBbox);
+				outputFormat, fileNames, maxNodes, includeMetadata,
+				maxMembersSimple, maxMembersComplex, computeBbox);
 
 		builder.execute();
 	}
