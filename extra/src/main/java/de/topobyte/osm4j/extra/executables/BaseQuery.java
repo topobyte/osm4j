@@ -25,6 +25,8 @@ import com.vividsolutions.jts.geom.Envelope;
 
 import de.topobyte.jts.utils.predicate.PredicateEvaluator;
 import de.topobyte.osm4j.extra.datatree.DataTree;
+import de.topobyte.osm4j.extra.extracts.ExtractionFileNames;
+import de.topobyte.osm4j.extra.extracts.FileNameDefaults;
 import de.topobyte.osm4j.extra.extracts.query.Query;
 import de.topobyte.osm4j.utils.AbstractExecutableInputOutput;
 import de.topobyte.osm4j.utils.FileFormat;
@@ -35,6 +37,7 @@ import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 public abstract class BaseQuery extends AbstractExecutableInputOutput
 {
 
+	private static final String OPTION_INPUT = "input";
 	private static final String OPTION_OUTPUT = "output";
 	private static final String OPTION_TMP = "tmp";
 	private static final String OPTION_KEEP_TMP = "keep_tmp";
@@ -55,41 +58,39 @@ public abstract class BaseQuery extends AbstractExecutableInputOutput
 	public BaseQuery()
 	{
 		// @formatter:off
+		OptionHelper.add(options, OPTION_INPUT, true, true, "directory with extraction files");
 		OptionHelper.add(options, OPTION_OUTPUT, true, true, "directory to store output in");
 		OptionHelper.add(options, OPTION_TMP, true, false, "directory to store intermediate files");
 		OptionHelper.add(options, OPTION_KEEP_TMP, false, false, "directory to store intermediate files");
 		OptionHelper.add(options, OPTION_FAST_RELATION_QUERIES, false, false, "include relations based on their bounding box");
-		OptionHelper.add(options, OPTION_TREE, true, true, "path to the data tree");
-		OptionHelper.add(options, OPTION_SIMPLE_RELATIONS, true, true, "path to simple relation batches");
-		OptionHelper.add(options, OPTION_COMPLEX_RELATIONS, true, true, "path to complex relation batches");
-		OptionHelper.add(options, OPTION_SIMPLE_RELATIONS_BBOXES, true, true, "path to simple relation batches bboxes");
-		OptionHelper.add(options, OPTION_COMPLEX_RELATIONS_BBOXES, true, true, "path to complex relation batches bboxes");
-		OptionHelper.add(options, OPTION_FILE_NAMES_TREE_NODES, true, true, "name of node files in tree");
-		OptionHelper.add(options, OPTION_FILE_NAMES_TREE_WAYS, true, true, "name of way files in tree");
-		OptionHelper.add(options, OPTION_FILE_NAMES_TREE_RELATIONS_SIMPLE, true, true, "name of simple relations in tree");
-		OptionHelper.add(options, OPTION_FILE_NAMES_TREE_RELATIONS_COMPLEX, true, true, "name of complex relations in tree");
-		OptionHelper.add(options, OPTION_FILE_NAMES_RELATION_NODES, true, true, "name of node files in relation batches");
-		OptionHelper.add(options, OPTION_FILE_NAMES_RELATION_WAYS, true, true, "name of way files in relation batches");
-		OptionHelper.add(options, OPTION_FILE_NAMES_RELATION_RELATIONS, true, true, "name of relation files in relation batches");
+		OptionHelper.add(options, OPTION_TREE, true, false, "path to the data tree");
+		OptionHelper.add(options, OPTION_SIMPLE_RELATIONS, true, false, "path to simple relation batches");
+		OptionHelper.add(options, OPTION_COMPLEX_RELATIONS, true, false, "path to complex relation batches");
+		OptionHelper.add(options, OPTION_SIMPLE_RELATIONS_BBOXES, true, false, "path to simple relation batches bboxes");
+		OptionHelper.add(options, OPTION_COMPLEX_RELATIONS_BBOXES, true, false, "path to complex relation batches bboxes");
+		OptionHelper.add(options, OPTION_FILE_NAMES_TREE_NODES, true, false, "name of node files in tree");
+		OptionHelper.add(options, OPTION_FILE_NAMES_TREE_WAYS, true, false, "name of way files in tree");
+		OptionHelper.add(options, OPTION_FILE_NAMES_TREE_RELATIONS_SIMPLE, true, false, "name of simple relations in tree");
+		OptionHelper.add(options, OPTION_FILE_NAMES_TREE_RELATIONS_COMPLEX, true, false, "name of complex relations in tree");
+		OptionHelper.add(options, OPTION_FILE_NAMES_RELATION_NODES, true, false, "name of node files in relation batches");
+		OptionHelper.add(options, OPTION_FILE_NAMES_RELATION_WAYS, true, false, "name of way files in relation batches");
+		OptionHelper.add(options, OPTION_FILE_NAMES_RELATION_RELATIONS, true, false, "name of relation files in relation batches");
 		// @formatter:on
 	}
 
+	private ExtractionFileNames fileNames;
+
+	protected Path pathInput;
 	protected Path pathOutput;
 	protected Path pathTmp;
+
 	protected Path pathTree;
 	protected Path pathSimpleRelations;
 	protected Path pathComplexRelations;
 	protected Path pathSimpleRelationsBboxes;
 	protected Path pathComplexRelationsBboxes;
-	protected DataTree tree;
 
-	protected String fileNamesTreeNodes;
-	protected String fileNamesTreeWays;
-	protected String fileNamesTreeSimpleRelations;
-	protected String fileNamesTreeComplexRelations;
-	protected String fileNamesRelationNodes;
-	protected String fileNamesRelationWays;
-	protected String fileNamesRelationRelations;
+	protected DataTree tree;
 
 	protected Envelope queryEnvelope;
 	protected PredicateEvaluator test;
@@ -103,35 +104,73 @@ public abstract class BaseQuery extends AbstractExecutableInputOutput
 	{
 		super.setup(args);
 
+		pathInput = Paths.get(line.getOptionValue(OPTION_INPUT));
+
 		pathOutput = Paths.get(line.getOptionValue(OPTION_OUTPUT));
 		if (line.hasOption(OPTION_TMP)) {
 			pathTmp = Paths.get(line.getOptionValue(OPTION_TMP));
 		} else {
 			pathTmp = null;
 		}
-		pathTree = Paths.get(line.getOptionValue(OPTION_TREE));
-		pathSimpleRelations = Paths.get(line
-				.getOptionValue(OPTION_SIMPLE_RELATIONS));
-		pathComplexRelations = Paths.get(line
-				.getOptionValue(OPTION_COMPLEX_RELATIONS));
-		pathSimpleRelationsBboxes = Paths.get(line
-				.getOptionValue(OPTION_SIMPLE_RELATIONS_BBOXES));
-		pathComplexRelationsBboxes = Paths.get(line
-				.getOptionValue(OPTION_COMPLEX_RELATIONS_BBOXES));
 
-		fileNamesTreeNodes = line.getOptionValue(OPTION_FILE_NAMES_TREE_NODES);
-		fileNamesTreeWays = line.getOptionValue(OPTION_FILE_NAMES_TREE_WAYS);
-		fileNamesTreeSimpleRelations = line
-				.getOptionValue(OPTION_FILE_NAMES_TREE_RELATIONS_SIMPLE);
-		fileNamesTreeComplexRelations = line
-				.getOptionValue(OPTION_FILE_NAMES_TREE_RELATIONS_COMPLEX);
+		fileNames = FileNameDefaults.forFormat(inputFormat);
 
-		fileNamesRelationNodes = line
-				.getOptionValue(OPTION_FILE_NAMES_RELATION_NODES);
-		fileNamesRelationWays = line
-				.getOptionValue(OPTION_FILE_NAMES_RELATION_WAYS);
-		fileNamesRelationRelations = line
-				.getOptionValue(OPTION_FILE_NAMES_RELATION_RELATIONS);
+		if (line.hasOption(OPTION_TREE)) {
+			fileNames.setTree(line.getOptionValue(OPTION_TREE));
+		}
+		if (line.hasOption(OPTION_SIMPLE_RELATIONS)) {
+			fileNames.setSimpleRelations(line
+					.getOptionValue(OPTION_SIMPLE_RELATIONS));
+		}
+		if (line.hasOption(OPTION_COMPLEX_RELATIONS)) {
+			fileNames.setComplexRelations(line
+					.getOptionValue(OPTION_COMPLEX_RELATIONS));
+		}
+		if (line.hasOption(OPTION_SIMPLE_RELATIONS_BBOXES)) {
+			fileNames.setSimpleRelationsBboxes(line
+					.getOptionValue(OPTION_SIMPLE_RELATIONS_BBOXES));
+		}
+		if (line.hasOption(OPTION_COMPLEX_RELATIONS_BBOXES)) {
+			fileNames.setComplexRelationsBboxes(line
+					.getOptionValue(OPTION_COMPLEX_RELATIONS_BBOXES));
+		}
+		if (line.hasOption(OPTION_FILE_NAMES_TREE_NODES)) {
+			fileNames.setTreeNodes(line
+					.getOptionValue(OPTION_FILE_NAMES_TREE_NODES));
+		}
+		if (line.hasOption(OPTION_FILE_NAMES_TREE_WAYS)) {
+			fileNames.setTreeWays(line
+					.getOptionValue(OPTION_FILE_NAMES_TREE_WAYS));
+		}
+		if (line.hasOption(OPTION_FILE_NAMES_TREE_RELATIONS_SIMPLE)) {
+			fileNames.setTreeSimpleRelations(line
+					.getOptionValue(OPTION_FILE_NAMES_TREE_RELATIONS_SIMPLE));
+		}
+		if (line.hasOption(OPTION_FILE_NAMES_TREE_RELATIONS_COMPLEX)) {
+			fileNames.setTreeComplexRelations(line
+					.getOptionValue(OPTION_FILE_NAMES_TREE_RELATIONS_COMPLEX));
+		}
+		if (line.hasOption(OPTION_FILE_NAMES_RELATION_NODES)) {
+			fileNames.setRelationNodes(line
+					.getOptionValue(OPTION_FILE_NAMES_RELATION_NODES));
+		}
+		if (line.hasOption(OPTION_FILE_NAMES_RELATION_WAYS)) {
+			fileNames.setRelationWays(line
+					.getOptionValue(OPTION_FILE_NAMES_RELATION_WAYS));
+		}
+		if (line.hasOption(OPTION_FILE_NAMES_RELATION_RELATIONS)) {
+			fileNames.setRelationRelations(line
+					.getOptionValue(OPTION_FILE_NAMES_RELATION_RELATIONS));
+		}
+
+		pathTree = pathInput.resolve(fileNames.getTree());
+		pathSimpleRelations = pathInput.resolve(fileNames.getSimpleRelations());
+		pathComplexRelations = pathInput.resolve(fileNames
+				.getComplexRelations());
+		pathSimpleRelationsBboxes = pathInput.resolve(fileNames
+				.getSimpleRelationsBboxes());
+		pathComplexRelationsBboxes = pathInput.resolve(fileNames
+				.getComplexRelationsBboxes());
 
 		keepTmp = line.hasOption(OPTION_KEEP_TMP);
 		simpleRelationTests = line.hasOption(OPTION_FAST_RELATION_QUERIES);
@@ -147,11 +186,12 @@ public abstract class BaseQuery extends AbstractExecutableInputOutput
 		Query query = new Query(pathOutput, pathTmp, pathTree,
 				pathSimpleRelations, pathComplexRelations,
 				pathSimpleRelationsBboxes, pathComplexRelationsBboxes,
-				fileNamesTreeNodes, fileNamesTreeWays,
-				fileNamesTreeSimpleRelations, fileNamesTreeComplexRelations,
-				fileNamesRelationNodes, fileNamesRelationWays,
-				fileNamesRelationRelations, queryEnvelope, test, inputFormat,
-				outputConfigIntermediate, outputConfig, keepTmp,
+				fileNames.getTreeNodes(), fileNames.getTreeWays(),
+				fileNames.getTreeSimpleRelations(),
+				fileNames.getTreeComplexRelations(),
+				fileNames.getRelationNodes(), fileNames.getRelationWays(),
+				fileNames.getRelationRelations(), queryEnvelope, test,
+				inputFormat, outputConfigIntermediate, outputConfig, keepTmp,
 				simpleRelationTests);
 		query.execute();
 	}
