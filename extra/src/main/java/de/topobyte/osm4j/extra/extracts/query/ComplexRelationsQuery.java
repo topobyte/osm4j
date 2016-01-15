@@ -63,7 +63,7 @@ public class ComplexRelationsQuery extends AbstractRelationsQuery
 
 	public void execute(RelationQueryBag queryBag) throws IOException
 	{
-		EntityFinder finder = EntityFinders.create(dataRelations,
+		EntityFinder finder = EntityFinders.create(provider,
 				EntityNotFoundStrategy.IGNORE);
 
 		Set<OsmRelation> found = new HashSet<>();
@@ -98,7 +98,7 @@ public class ComplexRelationsQuery extends AbstractRelationsQuery
 					// Can't happen, using the IGNORE strategy
 					continue;
 				}
-				if (intersects(start, subRelations, queryBag)) {
+				if (intersects(start, subRelations, queryBag, finder)) {
 					found.addAll(subRelations);
 				}
 			}
@@ -131,11 +131,8 @@ public class ComplexRelationsQuery extends AbstractRelationsQuery
 	}
 
 	private boolean intersects(OsmRelation start, List<OsmRelation> relations,
-			RelationQueryBag queryBag) throws IOException
+			RelationQueryBag queryBag, EntityFinder finder) throws IOException
 	{
-		EntityFinder finder = EntityFinders.create(dataRelations,
-				EntityNotFoundStrategy.IGNORE);
-
 		if (QueryUtil.anyMemberContainedIn(relations, queryBag.nodeIds,
 				queryBag.wayIds)) {
 			return true;
