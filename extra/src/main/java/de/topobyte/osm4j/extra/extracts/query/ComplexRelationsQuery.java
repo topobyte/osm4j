@@ -91,7 +91,7 @@ public class ComplexRelationsQuery extends AbstractRelationsQuery
 				OsmRelation start;
 				List<OsmRelation> subRelations;
 				try {
-					start = dataRelations.getRelation(group.getStart());
+					start = dataRelations.getRelation(subGroup.getStart());
 					subRelations = finder.findRelations(subGroup
 							.getRelationIds());
 				} catch (EntityNotFoundException e) {
