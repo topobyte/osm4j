@@ -164,12 +164,12 @@ public class ExtractionFilesBuilder
 				.forFormat(outputFormat);
 		String extension = OsmIoUtils.extension(outputFormat);
 
-		pathNodes = pathOutput.resolve(fileNames.SPLIT_NODES);
-		pathWays = pathOutput.resolve(fileNames.SPLIT_WAYS);
-		pathRelations = pathOutput.resolve(fileNames.SPLIT_RELATIONS);
+		pathNodes = pathOutput.resolve(fileNames.getSplitNodes());
+		pathWays = pathOutput.resolve(fileNames.getSplitWays());
+		pathRelations = pathOutput.resolve(fileNames.getSplitRelations());
 
-		pathTree = pathOutput.resolve(fileNames.TREE);
-		pathWaysByNodes = pathOutput.resolve(fileNames.WAYS_BY_NODES);
+		pathTree = pathOutput.resolve(fileNames.getTree());
+		pathWaysByNodes = pathOutput.resolve(fileNames.getWaysByNodes());
 
 		pathSimpleRelations = pathOutput
 				.resolve("relations.simple" + extension);
@@ -186,18 +186,18 @@ public class ExtractionFilesBuilder
 				.resolve("relations.simple.nontree.bboxlist");
 		pathComplexRelationsNonTreeBboxes = pathOutput
 				.resolve("relations.complex.nontree.bboxlist");
-		pathSimpleRelationsEmpty = pathOutput
-				.resolve(fileNames.SIMPLE_RELATIONS_EMPTY);
-		pathComplexRelationsEmpty = pathOutput
-				.resolve(fileNames.COMPLEX_RELATIONS_EMPTY);
-		pathSimpleRelationsSorted = pathOutput
-				.resolve(fileNames.SIMPLE_RELATIONS);
-		pathComplexRelationsSorted = pathOutput
-				.resolve(fileNames.COMPLEX_RELATIONS);
-		pathSimpleRelationsSortedBboxes = pathOutput
-				.resolve(fileNames.SIMPLE_RELATIONS_BBOXES);
-		pathComplexRelationsSortedBboxes = pathOutput
-				.resolve(fileNames.COMPLEX_RELATIONS_BBOXES);
+		pathSimpleRelationsEmpty = pathOutput.resolve(fileNames
+				.getSimpleRelationsEmpty());
+		pathComplexRelationsEmpty = pathOutput.resolve(fileNames
+				.getComplexRelationsEmpty());
+		pathSimpleRelationsSorted = pathOutput.resolve(fileNames
+				.getSimpleRelations());
+		pathComplexRelationsSorted = pathOutput.resolve(fileNames
+				.getComplexRelations());
+		pathSimpleRelationsSortedBboxes = pathOutput.resolve(fileNames
+				.getSimpleRelationsBboxes());
+		pathComplexRelationsSortedBboxes = pathOutput.resolve(fileNames
+				.getComplexRelationsBboxes());
 
 		OsmFileInput fileInput = new OsmFileInput(pathInput, inputFormat);
 
@@ -206,10 +206,12 @@ public class ExtractionFilesBuilder
 		OsmFileInput fileInputRelations = new OsmFileInput(pathRelations,
 				outputFormat);
 
-		String fileNamesFinalNodes = fileNames.TREE_NODES;
-		String fileNamesFinalWays = fileNames.TREE_WAYS;
-		String fileNamesFinalRelationsSimple = fileNames.TREE_SIMPLE_RELATIONS;
-		String fileNamesFinalRelationsComplex = fileNames.TREE_COMPLEX_RELATIONS;
+		String fileNamesFinalNodes = fileNames.getTreeNodes();
+		String fileNamesFinalWays = fileNames.getTreeWays();
+		String fileNamesFinalRelationsSimple = fileNames
+				.getTreeSimpleRelations();
+		String fileNamesFinalRelationsComplex = fileNames
+				.getTreeComplexRelations();
 
 		String fileNamesInitialNodes = "initial-nodes" + extension;
 		String fileNamesInitialWays = "dist-ways" + extension;
@@ -218,7 +220,7 @@ public class ExtractionFilesBuilder
 		String fileNamesDistributedWays = "ways-unsorted" + extension;
 		String fileNamesDistributedNodes = "nodes-unsorted" + extension;
 
-		String fileNamesRelations = fileNames.RELATION_RELATIONS;
+		String fileNamesRelations = fileNames.getRelationRelations();
 
 		OsmOutputConfig outputConfigSplit = new OsmOutputConfig(outputFormat,
 				includeMetadata);
