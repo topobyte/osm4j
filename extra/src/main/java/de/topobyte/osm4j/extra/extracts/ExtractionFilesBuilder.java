@@ -23,6 +23,8 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.io.FileUtils;
+
 import de.topobyte.adt.geo.BBox;
 import de.topobyte.adt.geo.BBoxString;
 import de.topobyte.osm4j.core.access.OsmInputException;
@@ -84,6 +86,7 @@ public class ExtractionFilesBuilder
 	private static final String KEY_SPLIT_RELATIONS = "split relations, collect members";
 	private static final String KEY_DISTRIBUTE_RELATIONS = "distribute relations";
 	private static final String KEY_SORT_RELATIONS = "sort non-tree relations";
+	private static final String KEY_CLEAN_UP = "clean up";
 
 	private static final int SPLIT_INITIAL = 20;
 	private static final int SPLIT_ITERATION = 8;
@@ -118,6 +121,14 @@ public class ExtractionFilesBuilder
 	private Path pathComplexRelationsSorted;
 	private Path pathSimpleRelationsSortedBboxes;
 	private Path pathComplexRelationsSortedBboxes;
+
+	private boolean keepSplittedNodes = false;
+	private boolean keepSplittedWays = false;
+	private boolean keepSplittedRelations = false;
+	private boolean keepWaysByNodes = false;
+	private boolean keepRelations = false;
+	private boolean keepRelationBatches = false;
+	private boolean keepNonTreeRelations = false;
 
 	private TimeTable t = new TimeTable();
 
@@ -326,6 +337,10 @@ public class ExtractionFilesBuilder
 
 		inputNodes.close();
 
+		if (!keepWaysByNodes) {
+			FileUtils.deleteDirectory(pathWaysByNodes.toFile());
+		}
+
 		t.stop(KEY_MAP_WAYS);
 		printInfo();
 
@@ -432,6 +447,11 @@ public class ExtractionFilesBuilder
 				outputConfigRelations);
 		relationSplitter.execute();
 
+		if (!keepRelations) {
+			Files.delete(pathSimpleRelations);
+			Files.delete(pathComplexRelations);
+		}
+
 		t.stop(KEY_SPLIT_RELATIONS);
 		printInfo();
 
@@ -474,7 +494,35 @@ public class ExtractionFilesBuilder
 				maxMembersComplex);
 		nonTreeSplitter.execute();
 
+		if (!keepRelationBatches) {
+			FileUtils.deleteDirectory(pathSimpleRelationsDir.toFile());
+			FileUtils.deleteDirectory(pathComplexRelationsDir.toFile());
+		}
+
 		t.stop(KEY_SORT_RELATIONS);
+
+		// Clean up
+		t.start(KEY_CLEAN_UP);
+
+		if (!keepNonTreeRelations) {
+			Files.delete(pathSimpleRelationsNonTree);
+			Files.delete(pathComplexRelationsNonTree);
+			Files.delete(pathSimpleRelationsNonTreeBboxes);
+			Files.delete(pathComplexRelationsNonTreeBboxes);
+		}
+
+		if (!keepSplittedNodes) {
+			Files.delete(pathNodes);
+		}
+		if (!keepSplittedWays) {
+			Files.delete(pathWays);
+		}
+		if (!keepSplittedRelations) {
+			Files.delete(pathRelations);
+		}
+
+		t.stop(KEY_CLEAN_UP);
+
 		t.stop(KEY_TOTAL);
 		printInfo();
 	}
@@ -486,7 +534,7 @@ public class ExtractionFilesBuilder
 				KEY_FIND_MISSING_WAY_NODES, KEY_EXTRACT_MISSING_WAY_NODES,
 				KEY_DISTRIBUTE_WAYS, KEY_MERGE_NODES, KEY_MERGE_WAYS,
 				KEY_SEPARATE_RELATIONS, KEY_SPLIT_RELATIONS,
-				KEY_DISTRIBUTE_RELATIONS, KEY_SORT_RELATIONS };
+				KEY_DISTRIBUTE_RELATIONS, KEY_SORT_RELATIONS, KEY_CLEAN_UP };
 
 		for (String key : keys) {
 			System.out.println(String.format("%s: %s", key, t.htime(key)));
