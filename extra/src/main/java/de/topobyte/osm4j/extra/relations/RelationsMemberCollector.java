@@ -18,6 +18,7 @@
 package de.topobyte.osm4j.extra.relations;
 
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +26,7 @@ import java.util.List;
 import de.topobyte.osm4j.core.access.OsmIteratorInput;
 import de.topobyte.osm4j.core.access.OsmIteratorInputFactory;
 import de.topobyte.osm4j.core.model.iface.EntityType;
+import de.topobyte.osm4j.extra.batch.BatchFilesUtil;
 import de.topobyte.osm4j.extra.idextract.ExtractionItem;
 import de.topobyte.osm4j.extra.idextract.ExtractionUtil;
 import de.topobyte.osm4j.extra.idextract.Extractor;
@@ -122,5 +124,18 @@ public class RelationsMemberCollector
 				nodeInput.getIterator(), threaded);
 		nodeExtractor.execute();
 		nodeInput.close();
+
+		for (Path path : pathsRelations) {
+			delete(BatchFilesUtil.getPaths(path, fileNamesRelationNodeIds));
+			delete(BatchFilesUtil.getPaths(path, fileNamesRelationWayIds));
+			delete(BatchFilesUtil.getPaths(path, fileNamesWayNodeIds));
+		}
+	}
+
+	private void delete(List<Path> paths) throws IOException
+	{
+		for (Path path : paths) {
+			Files.delete(path);
+		}
 	}
 }
