@@ -447,6 +447,7 @@ public class Query extends AbstractQuery
 					dataNodes, dataWays, dataRelations, test, fastRelationTests);
 			simpleRelationsQuery.execute(queryBag);
 		} else {
+			dataRelations.sort();
 			ComplexRelationsQuery complexRelationsQuery = new ComplexRelationsQuery(
 					dataNodes, dataWays, dataRelations, test, fastRelationTests);
 			complexRelationsQuery.execute(queryBag);
