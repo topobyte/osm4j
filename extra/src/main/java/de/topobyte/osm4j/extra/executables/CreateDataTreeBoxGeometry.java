@@ -15,7 +15,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with osm4j. If not, see <http://www.gnu.org/licenses/>.
 
-package de.topobyte.osm4j.extra.datatree;
+package de.topobyte.osm4j.extra.executables;
 
 import java.io.File;
 import java.io.IOException;
@@ -26,6 +26,7 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
+import de.topobyte.osm4j.extra.datatree.DataTreeBoxGeometryCreator;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
 public class CreateDataTreeBoxGeometry
