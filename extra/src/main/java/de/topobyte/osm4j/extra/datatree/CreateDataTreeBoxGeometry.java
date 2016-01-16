@@ -18,7 +18,6 @@
 package de.topobyte.osm4j.extra.datatree;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 
 import org.apache.commons.cli.CommandLine;
@@ -26,9 +25,6 @@ import org.apache.commons.cli.GnuParser;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
-
-import com.vividsolutions.jts.geom.GeometryCollection;
-import com.vividsolutions.jts.io.WKTWriter;
 
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
@@ -66,33 +62,9 @@ public class CreateDataTreeBoxGeometry
 		File dirTree = new File(pathInput);
 		File fileOutput = new File(pathOutput);
 
-		CreateDataTreeBoxGeometry task = new CreateDataTreeBoxGeometry(dirTree,
-				fileOutput);
+		DataTreeBoxGeometryCreator task = new DataTreeBoxGeometryCreator(
+				dirTree, fileOutput);
 		task.execute();
-	}
-
-	private File dirTree;
-	private File fileOutput;
-
-	public CreateDataTreeBoxGeometry(File dirTree, File fileOutput)
-	{
-		this.dirTree = dirTree;
-		this.fileOutput = fileOutput;
-	}
-
-	private void execute() throws IOException
-	{
-		System.out.println("Opening data tree: " + dirTree);
-
-		DataTree tree = DataTreeOpener.open(dirTree);
-		GeometryCollection geometry = BoxUtil.createBoxesGeometry(tree,
-				BoxUtil.WORLD_BOUNDS);
-
-		System.out.println("Writing output to: " + fileOutput);
-
-		FileWriter writer = new FileWriter(fileOutput);
-		new WKTWriter().write(geometry, writer);
-		writer.close();
 	}
 
 }

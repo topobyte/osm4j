@@ -26,9 +26,6 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
-import com.vividsolutions.jts.geom.Envelope;
-
-import de.topobyte.adt.geo.BBox;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
 public class CreateEmptyDataTreeFromOther
@@ -65,49 +62,9 @@ public class CreateEmptyDataTreeFromOther
 		File dirInputTree = new File(pathInput);
 		File dirOutputTree = new File(pathOutput);
 
-		CreateEmptyDataTreeFromOther task = new CreateEmptyDataTreeFromOther(
+		EmptyDataTreeFromOtherCreator task = new EmptyDataTreeFromOtherCreator(
 				dirInputTree, dirOutputTree);
 		task.execute();
-	}
-
-	private File dirInputTree;
-	private File dirOutputTree;
-
-	public CreateEmptyDataTreeFromOther(File dirInputTree, File dirOutputTree)
-	{
-		this.dirInputTree = dirInputTree;
-		this.dirOutputTree = dirOutputTree;
-	}
-
-	private void execute() throws IOException
-	{
-		System.out.println("Opening data tree: " + dirInputTree);
-
-		DataTree tree = DataTreeOpener.open(dirInputTree);
-
-		System.out.println("Creating new data tree: " + dirOutputTree);
-
-		dirOutputTree.mkdirs();
-
-		if (!dirOutputTree.isDirectory()) {
-			System.out.println("Unable to create output directory");
-			System.exit(1);
-		}
-
-		if (dirOutputTree.listFiles().length != 0) {
-			System.out.println("Output directory not empty");
-			System.exit(1);
-		}
-
-		Envelope envelope = tree.getRoot().getEnvelope();
-		BBox bbox = new BBox(envelope);
-		DataTreeUtil.writeTreeInfo(dirOutputTree, bbox);
-
-		for (Node leaf : tree.getLeafs()) {
-			String subdirName = Long.toHexString(leaf.getPath());
-			File subdir = new File(dirOutputTree, subdirName);
-			subdir.mkdir();
-		}
 	}
 
 }
