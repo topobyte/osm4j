@@ -25,6 +25,11 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.vividsolutions.jts.geom.Envelope;
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.GeometryFactory;
+
+import de.topobyte.osm4j.extra.datatree.BoxUtil;
 import de.topobyte.osm4j.utils.StreamUtil;
 
 public class IdBboxUtil
@@ -56,6 +61,42 @@ public class IdBboxUtil
 	{
 		InputStream input = StreamUtil.bufferedInputStream(file);
 		List<IdBboxEntry> entries = read(input);
+		input.close();
+		return entries;
+	}
+
+	public static List<Geometry> readBoxes(InputStream input)
+			throws IOException
+	{
+		GeometryFactory factory = new GeometryFactory();
+		List<Geometry> boxList = new ArrayList<>();
+
+		IdBboxListInputStream bboxes = new IdBboxListInputStream(input);
+		while (true) {
+			try {
+				IdBboxEntry entry = bboxes.next();
+				Envelope e = entry.getEnvelope().intersection(
+						BoxUtil.WORLD_BOUNDS);
+				boxList.add(factory.toGeometry(e));
+			} catch (EOFException e) {
+				break;
+			}
+		}
+		return boxList;
+	}
+
+	public static List<Geometry> readBoxes(Path path) throws IOException
+	{
+		InputStream input = StreamUtil.bufferedInputStream(path);
+		List<Geometry> entries = readBoxes(input);
+		input.close();
+		return entries;
+	}
+
+	public static List<Geometry> readBoxes(File file) throws IOException
+	{
+		InputStream input = StreamUtil.bufferedInputStream(file);
+		List<Geometry> entries = readBoxes(input);
 		input.close();
 		return entries;
 	}

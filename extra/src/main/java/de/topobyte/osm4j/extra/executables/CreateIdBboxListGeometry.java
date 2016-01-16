@@ -17,12 +17,9 @@
 
 package de.topobyte.osm4j.extra.executables;
 
-import java.io.EOFException;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.cli.CommandLine;
@@ -31,16 +28,12 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
-import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryCollection;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.io.WKTWriter;
 
-import de.topobyte.osm4j.extra.datatree.BoxUtil;
-import de.topobyte.osm4j.extra.idbboxlist.IdBboxEntry;
-import de.topobyte.osm4j.extra.idbboxlist.IdBboxListInputStream;
-import de.topobyte.osm4j.utils.StreamUtil;
+import de.topobyte.osm4j.extra.idbboxlist.IdBboxUtil;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
 public class CreateIdBboxListGeometry
@@ -95,25 +88,10 @@ public class CreateIdBboxListGeometry
 	{
 		System.out.println("Opening file: " + fileInput);
 
-		GeometryFactory factory = new GeometryFactory();
-		List<Geometry> boxList = new ArrayList<>();
+		List<Geometry> boxList = IdBboxUtil.readBoxes(fileInput);
 
-		InputStream input = StreamUtil.bufferedInputStream(fileInput);
-		IdBboxListInputStream entryInput = new IdBboxListInputStream(input);
-		while (true) {
-			try {
-				IdBboxEntry entry = entryInput.next();
-				Envelope e = entry.getEnvelope().intersection(
-						BoxUtil.WORLD_BOUNDS);
-				boxList.add(factory.toGeometry(e));
-			} catch (EOFException e) {
-				break;
-			}
-		}
-
-		Geometry[] boxes = boxList.toArray(new Geometry[0]);
-
-		GeometryCollection geometry = factory.createGeometryCollection(boxes);
+		GeometryCollection geometry = new GeometryFactory()
+				.createGeometryCollection(boxList.toArray(new Geometry[0]));
 
 		System.out.println("Writing output to: " + fileOutput);
 
