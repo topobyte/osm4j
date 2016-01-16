@@ -18,9 +18,7 @@
 package de.topobyte.osm4j.extra.executables;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.util.List;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.GnuParser;
@@ -28,12 +26,7 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.GeometryCollection;
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.io.WKTWriter;
-
-import de.topobyte.osm4j.extra.idbboxlist.IdBboxUtil;
+import de.topobyte.osm4j.extra.idbboxlist.IdBboxListGeometryCreator;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
 public class CreateIdBboxListGeometry
@@ -70,34 +63,9 @@ public class CreateIdBboxListGeometry
 		File dirTree = new File(pathInput);
 		File fileOutput = new File(pathOutput);
 
-		CreateIdBboxListGeometry task = new CreateIdBboxListGeometry(dirTree,
+		IdBboxListGeometryCreator task = new IdBboxListGeometryCreator(dirTree,
 				fileOutput);
 		task.execute();
-	}
-
-	private File fileInput;
-	private File fileOutput;
-
-	public CreateIdBboxListGeometry(File fileInput, File fileOutput)
-	{
-		this.fileInput = fileInput;
-		this.fileOutput = fileOutput;
-	}
-
-	private void execute() throws IOException
-	{
-		System.out.println("Opening file: " + fileInput);
-
-		List<Geometry> boxList = IdBboxUtil.readBoxes(fileInput);
-
-		GeometryCollection geometry = new GeometryFactory()
-				.createGeometryCollection(boxList.toArray(new Geometry[0]));
-
-		System.out.println("Writing output to: " + fileOutput);
-
-		FileWriter writer = new FileWriter(fileOutput);
-		new WKTWriter().write(geometry, writer);
-		writer.close();
 	}
 
 }
