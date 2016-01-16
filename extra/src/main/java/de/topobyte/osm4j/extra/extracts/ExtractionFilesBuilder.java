@@ -32,6 +32,7 @@ import de.topobyte.osm4j.core.access.OsmIteratorInput;
 import de.topobyte.osm4j.core.model.iface.OsmBounds;
 import de.topobyte.osm4j.extra.batch.BatchFilesUtil;
 import de.topobyte.osm4j.extra.datatree.DataTree;
+import de.topobyte.osm4j.extra.datatree.DataTreeBoxGeometryCreator;
 import de.topobyte.osm4j.extra.datatree.DataTreeFiles;
 import de.topobyte.osm4j.extra.datatree.DataTreeUtil;
 import de.topobyte.osm4j.extra.datatree.merge.ThreadedTreeFilesMerger;
@@ -50,6 +51,7 @@ import de.topobyte.osm4j.extra.datatree.ways.ThreadedWaysDistributor;
 import de.topobyte.osm4j.extra.datatree.ways.ThreadedWaysToTreeMapper;
 import de.topobyte.osm4j.extra.datatree.ways.WaysDistributor;
 import de.topobyte.osm4j.extra.datatree.ways.WaysToTreeMapper;
+import de.topobyte.osm4j.extra.idbboxlist.IdBboxListGeometryCreator;
 import de.topobyte.osm4j.extra.relations.ComplexRelationsDistributor;
 import de.topobyte.osm4j.extra.relations.NonTreeRelationsSplitter;
 import de.topobyte.osm4j.extra.relations.RelationsMemberCollector;
@@ -87,6 +89,7 @@ public class ExtractionFilesBuilder
 	private static final String KEY_DISTRIBUTE_RELATIONS = "distribute relations";
 	private static final String KEY_SORT_RELATIONS = "sort non-tree relations";
 	private static final String KEY_CLEAN_UP = "clean up";
+	private static final String KEY_CREATE_GEOMETRIES = "create geometries";
 
 	private static final int SPLIT_INITIAL = 20;
 	private static final int SPLIT_ITERATION = 8;
@@ -123,6 +126,10 @@ public class ExtractionFilesBuilder
 	private Path pathComplexRelationsSorted;
 	private Path pathSimpleRelationsSortedBboxes;
 	private Path pathComplexRelationsSortedBboxes;
+
+	private Path pathTreeGeometry;
+	private Path pathSimpleRelationsSortedGeometry;
+	private Path pathComplexRelationsSortedGeometry;
 
 	private boolean keepSplittedNodes = false;
 	private boolean keepSplittedWays = false;
@@ -201,6 +208,10 @@ public class ExtractionFilesBuilder
 				.getSimpleRelationsBboxes());
 		pathComplexRelationsSortedBboxes = pathOutput.resolve(fileNames
 				.getComplexRelationsBboxes());
+
+		pathTreeGeometry = pathOutput.resolve("tree.wkt");
+		pathSimpleRelationsSortedGeometry = pathOutput.resolve("simple.wkt");
+		pathComplexRelationsSortedGeometry = pathOutput.resolve("complex.wkt");
 
 		OsmFileInput fileInput = new OsmFileInput(pathInput, inputFormat);
 
@@ -529,6 +540,24 @@ public class ExtractionFilesBuilder
 
 		t.stop(KEY_CLEAN_UP);
 
+		t.start(KEY_CREATE_GEOMETRIES);
+
+		DataTreeBoxGeometryCreator dataTreeBoxGeometryCreator = new DataTreeBoxGeometryCreator(
+				pathTree.toFile(), pathTreeGeometry.toFile());
+		dataTreeBoxGeometryCreator.execute();
+
+		IdBboxListGeometryCreator idBboxListGeometryCreatorSimple = new IdBboxListGeometryCreator(
+				pathSimpleRelationsSortedBboxes.toFile(),
+				pathSimpleRelationsSortedGeometry.toFile());
+		idBboxListGeometryCreatorSimple.execute();
+
+		IdBboxListGeometryCreator idBboxListGeometryCreatorComplex = new IdBboxListGeometryCreator(
+				pathComplexRelationsSortedBboxes.toFile(),
+				pathComplexRelationsSortedGeometry.toFile());
+		idBboxListGeometryCreatorComplex.execute();
+
+		t.stop(KEY_CREATE_GEOMETRIES);
+
 		t.stop(KEY_TOTAL);
 		printInfo();
 	}
@@ -540,7 +569,8 @@ public class ExtractionFilesBuilder
 				KEY_FIND_MISSING_WAY_NODES, KEY_EXTRACT_MISSING_WAY_NODES,
 				KEY_DISTRIBUTE_WAYS, KEY_MERGE_NODES, KEY_MERGE_WAYS,
 				KEY_SEPARATE_RELATIONS, KEY_SPLIT_RELATIONS,
-				KEY_DISTRIBUTE_RELATIONS, KEY_SORT_RELATIONS, KEY_CLEAN_UP };
+				KEY_DISTRIBUTE_RELATIONS, KEY_SORT_RELATIONS, KEY_CLEAN_UP,
+				KEY_CREATE_GEOMETRIES };
 
 		for (String key : keys) {
 			System.out.println(String.format("%s: %s", key, t.htime(key)));
