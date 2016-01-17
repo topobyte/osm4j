@@ -27,6 +27,7 @@ import de.topobyte.jts.utils.predicate.PredicateEvaluator;
 import de.topobyte.osm4j.extra.datatree.DataTree;
 import de.topobyte.osm4j.extra.extracts.ExtractionFileNames;
 import de.topobyte.osm4j.extra.extracts.ExtractionFilesHelper;
+import de.topobyte.osm4j.extra.extracts.ExtractionPaths;
 import de.topobyte.osm4j.extra.extracts.FileNameDefaults;
 import de.topobyte.osm4j.extra.extracts.query.Query;
 import de.topobyte.osm4j.utils.AbstractExecutableInputOutput;
@@ -57,6 +58,7 @@ public abstract class BaseQuery extends AbstractExecutableInputOutput
 	}
 
 	private ExtractionFileNames fileNames;
+	private ExtractionPaths extractionPaths;
 
 	protected Path pathInput;
 	protected Path pathOutput;
@@ -94,6 +96,7 @@ public abstract class BaseQuery extends AbstractExecutableInputOutput
 		fileNames = FileNameDefaults.forFormat(inputFormat);
 
 		ExtractionFilesHelper.parse(line, fileNames);
+		extractionPaths = new ExtractionPaths(pathInput, fileNames);
 
 		pathTree = pathInput.resolve(fileNames.getTree());
 		pathSimpleRelations = pathInput.resolve(fileNames.getSimpleRelations());
@@ -115,9 +118,7 @@ public abstract class BaseQuery extends AbstractExecutableInputOutput
 		OsmOutputConfig outputConfig = new OsmOutputConfig(outputFormat,
 				pbfConfig, tboConfig, writeMetadata);
 
-		Query query = new Query(pathOutput, pathTmp, pathTree,
-				pathSimpleRelations, pathComplexRelations,
-				pathSimpleRelationsBboxes, pathComplexRelationsBboxes,
+		Query query = new Query(pathOutput, pathTmp, extractionPaths,
 				fileNames.getTreeNames(), fileNames.getRelationNames(),
 				queryEnvelope, test, inputFormat, outputConfigIntermediate,
 				outputConfig, keepTmp, simpleRelationTests);

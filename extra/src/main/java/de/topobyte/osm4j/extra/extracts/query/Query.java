@@ -45,6 +45,7 @@ import de.topobyte.osm4j.extra.datatree.DataTreeFiles;
 import de.topobyte.osm4j.extra.datatree.DataTreeOpener;
 import de.topobyte.osm4j.extra.datatree.Node;
 import de.topobyte.osm4j.extra.extracts.BatchFileNames;
+import de.topobyte.osm4j.extra.extracts.ExtractionPaths;
 import de.topobyte.osm4j.extra.extracts.TreeFileNames;
 import de.topobyte.osm4j.extra.idbboxlist.IdBboxEntry;
 import de.topobyte.osm4j.extra.idbboxlist.IdBboxUtil;
@@ -58,11 +59,7 @@ public class Query extends AbstractQuery
 
 	private Path pathOutput;
 	private Path pathTmp;
-	private Path pathTree;
-	private Path pathSimpleRelations;
-	private Path pathComplexRelations;
-	private Path pathSimpleRelationsBboxes;
-	private Path pathComplexRelationsBboxes;
+	private ExtractionPaths paths;
 
 	private TreeFileNames treeNames;
 	private BatchFileNames relationNames;
@@ -74,9 +71,7 @@ public class Query extends AbstractQuery
 
 	private boolean fastRelationTests;
 
-	public Query(Path pathOutput, Path pathTmp, Path pathTree,
-			Path pathSimpleRelations, Path pathComplexRelations,
-			Path pathSimpleRelationsBboxes, Path pathComplexRelationsBboxes,
+	public Query(Path pathOutput, Path pathTmp, ExtractionPaths paths,
 			TreeFileNames treeNames, BatchFileNames relationNames,
 			Envelope queryEnvelope, PredicateEvaluator test,
 			FileFormat inputFormat, OsmOutputConfig outputConfigIntermediate,
@@ -87,11 +82,7 @@ public class Query extends AbstractQuery
 
 		this.pathOutput = pathOutput;
 		this.pathTmp = pathTmp;
-		this.pathTree = pathTree;
-		this.pathSimpleRelations = pathSimpleRelations;
-		this.pathComplexRelations = pathComplexRelations;
-		this.pathSimpleRelationsBboxes = pathSimpleRelationsBboxes;
-		this.pathComplexRelationsBboxes = pathComplexRelationsBboxes;
+		this.paths = paths;
 		this.treeNames = treeNames;
 		this.relationNames = relationNames;
 		this.queryEnvelope = queryEnvelope;
@@ -171,24 +162,24 @@ public class Query extends AbstractQuery
 
 		// Query relations
 
-		List<IdBboxEntry> entriesSimple = IdBboxUtil
-				.read(pathSimpleRelationsBboxes);
-		List<IdBboxEntry> entriesComplex = IdBboxUtil
-				.read(pathComplexRelationsBboxes);
+		List<IdBboxEntry> entriesSimple = IdBboxUtil.read(paths
+				.getSimpleRelationsBboxes());
+		List<IdBboxEntry> entriesComplex = IdBboxUtil.read(paths
+				.getComplexRelationsBboxes());
 
 		for (IdBboxEntry entry : entriesSimple) {
 			long id = entry.getId();
 			if (test.contains(entry.getEnvelope())) {
 				System.out.println("Simple batch completely contained: " + id);
-				addCompletelyContainedBatch(pathSimpleRelations, id,
+				addCompletelyContainedBatch(paths.getSimpleRelations(), id,
 						filesSimpleRelations);
 			} else if (test.intersects(entry.getEnvelope())) {
 				System.out.println("Loading data from simple batch: " + id);
 				tmpIndexSimple++;
 				String tmpFilenames = filename(tmpIndexSimple);
 
-				Path pathDir = pathSimpleRelations.resolve(Long.toString(entry
-						.getId()));
+				Path pathDir = paths.getSimpleRelations().resolve(
+						Long.toString(entry.getId()));
 				Path pathNodes = pathDir.resolve(relationNames.getNodes());
 				Path pathWays = pathDir.resolve(relationNames.getWays());
 				Path pathRelations = pathDir.resolve(relationNames
@@ -209,15 +200,15 @@ public class Query extends AbstractQuery
 			long id = entry.getId();
 			if (test.contains(entry.getEnvelope())) {
 				System.out.println("Complex batch completely contained: " + id);
-				addCompletelyContainedBatch(pathComplexRelations, id,
+				addCompletelyContainedBatch(paths.getComplexRelations(), id,
 						filesComplexRelations);
 			} else if (test.intersects(entry.getEnvelope())) {
 				System.out.println("Loading data from complex batch: " + id);
 				tmpIndexComplex++;
 				String tmpFilenames = filename(tmpIndexComplex);
 
-				Path pathDir = pathComplexRelations.resolve(Long.toString(entry
-						.getId()));
+				Path pathDir = paths.getComplexRelations().resolve(
+						Long.toString(entry.getId()));
 				Path pathNodes = pathDir.resolve(relationNames.getNodes());
 				Path pathWays = pathDir.resolve(relationNames.getWays());
 				Path pathRelations = pathDir.resolve(relationNames
@@ -336,6 +327,7 @@ public class Query extends AbstractQuery
 
 	private void openTree() throws IOException
 	{
+		Path pathTree = paths.getTree();
 		tree = DataTreeOpener.open(pathTree.toFile());
 
 		filesTreeNodes = new DataTreeFiles(pathTree, treeNames.getNodes());
