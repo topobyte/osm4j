@@ -24,7 +24,7 @@ import de.topobyte.adt.geo.BBoxString;
 import de.topobyte.jts.utils.predicate.PredicateEvaluatorRectangle;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
-public class BboxQuery extends BaseQuery
+public class QueryBbox extends BaseQuery
 {
 
 	private static final String OPTION_BBOX = "bbox";
@@ -37,14 +37,14 @@ public class BboxQuery extends BaseQuery
 
 	public static void main(String[] args) throws IOException
 	{
-		BboxQuery task = new BboxQuery();
+		QueryBbox task = new QueryBbox();
 
 		task.setup(args);
 
 		task.execute();
 	}
 
-	public BboxQuery()
+	public QueryBbox()
 	{
 		// @formatter:off
 		OptionHelper.add(options, OPTION_BBOX, true, true, "the bbox to extract");

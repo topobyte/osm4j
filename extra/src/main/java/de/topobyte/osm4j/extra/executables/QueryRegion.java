@@ -27,7 +27,7 @@ import com.vividsolutions.jts.io.WKTReader;
 import de.topobyte.jts.utils.predicate.PredicateEvaluatorPrepared;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
-public class RegionQuery extends BaseQuery
+public class QueryRegion extends BaseQuery
 {
 
 	private static final String OPTION_REGION = "region";
@@ -40,14 +40,14 @@ public class RegionQuery extends BaseQuery
 
 	public static void main(String[] args) throws IOException
 	{
-		RegionQuery task = new RegionQuery();
+		QueryRegion task = new QueryRegion();
 
 		task.setup(args);
 
 		task.execute();
 	}
 
-	public RegionQuery()
+	public QueryRegion()
 	{
 		// @formatter:off
 		OptionHelper.add(options, OPTION_REGION, true, true, "a WKT file containing the region to extract");
