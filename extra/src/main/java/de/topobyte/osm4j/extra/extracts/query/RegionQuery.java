@@ -38,8 +38,8 @@ public class RegionQuery extends Query
 			OsmOutputConfig outputConfig, boolean keepTmp,
 			boolean fastRelationTests)
 	{
-		super(pathOutput, pathTmp, paths, treeNames, relationNames, region
-				.getEnvelopeInternal(), new PredicateEvaluatorPrepared(region),
+		super(region.getEnvelopeInternal(), new PredicateEvaluatorPrepared(
+				region), pathOutput, pathTmp, paths, treeNames, relationNames,
 				inputFormat, outputConfigIntermediate, outputConfig, keepTmp,
 				fastRelationTests);
 	}

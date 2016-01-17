@@ -118,10 +118,11 @@ public abstract class BaseQuery extends AbstractExecutableInputOutput
 		OsmOutputConfig outputConfig = new OsmOutputConfig(outputFormat,
 				pbfConfig, tboConfig, writeMetadata);
 
-		Query query = new Query(pathOutput, pathTmp, extractionPaths,
-				fileNames.getTreeNames(), fileNames.getRelationNames(),
-				queryEnvelope, test, inputFormat, outputConfigIntermediate,
-				outputConfig, keepTmp, simpleRelationTests);
+		Query query = new Query(queryEnvelope, test, pathOutput, pathTmp,
+				extractionPaths, fileNames.getTreeNames(),
+				fileNames.getRelationNames(), inputFormat,
+				outputConfigIntermediate, outputConfig, keepTmp,
+				simpleRelationTests);
 		query.execute();
 	}
 

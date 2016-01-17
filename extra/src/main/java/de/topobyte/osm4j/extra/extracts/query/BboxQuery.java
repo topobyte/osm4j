@@ -37,9 +37,10 @@ public class BboxQuery extends Query
 			OsmOutputConfig outputConfig, boolean keepTmp,
 			boolean fastRelationTests)
 	{
-		super(pathOutput, pathTmp, paths, treeNames, relationNames, bbox
-				.toEnvelope(), new PredicateEvaluatorRectangle(bbox.getLon1(),
-				bbox.getLat2(), bbox.getLon2(), bbox.getLat1()), inputFormat,
+		super(bbox.toEnvelope(),
+				new PredicateEvaluatorRectangle(bbox.getLon1(), bbox.getLat2(),
+						bbox.getLon2(), bbox.getLat1()), pathOutput, pathTmp,
+				paths, treeNames, relationNames, inputFormat,
 				outputConfigIntermediate, outputConfig, keepTmp,
 				fastRelationTests);
 	}

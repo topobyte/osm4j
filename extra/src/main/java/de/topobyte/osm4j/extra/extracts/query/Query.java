@@ -57,6 +57,9 @@ import de.topobyte.osm4j.utils.merge.sorted.SortedMerge;
 public class Query extends AbstractQuery
 {
 
+	private Envelope queryEnvelope;
+	private PredicateEvaluator test;
+
 	private Path pathOutput;
 	private Path pathTmp;
 	private ExtractionPaths paths;
@@ -64,29 +67,26 @@ public class Query extends AbstractQuery
 	private TreeFileNames treeNames;
 	private BatchFileNames relationNames;
 
-	private Envelope queryEnvelope;
-	private PredicateEvaluator test;
-
 	private boolean keepTmp;
 
 	private boolean fastRelationTests;
 
-	public Query(Path pathOutput, Path pathTmp, ExtractionPaths paths,
+	public Query(Envelope queryEnvelope, PredicateEvaluator test,
+			Path pathOutput, Path pathTmp, ExtractionPaths paths,
 			TreeFileNames treeNames, BatchFileNames relationNames,
-			Envelope queryEnvelope, PredicateEvaluator test,
 			FileFormat inputFormat, OsmOutputConfig outputConfigIntermediate,
 			OsmOutputConfig outputConfig, boolean keepTmp,
 			boolean fastRelationTests)
 	{
 		super(inputFormat, outputConfigIntermediate, outputConfig);
 
+		this.queryEnvelope = queryEnvelope;
+		this.test = test;
 		this.pathOutput = pathOutput;
 		this.pathTmp = pathTmp;
 		this.paths = paths;
 		this.treeNames = treeNames;
 		this.relationNames = relationNames;
-		this.queryEnvelope = queryEnvelope;
-		this.test = test;
 		this.keepTmp = keepTmp;
 		this.fastRelationTests = fastRelationTests;
 	}
