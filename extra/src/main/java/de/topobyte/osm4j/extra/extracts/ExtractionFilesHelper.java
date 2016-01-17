@@ -58,6 +58,9 @@ public class ExtractionFilesHelper
 
 	public static void parse(CommandLine line, ExtractionFileNames fileNames)
 	{
+		TreeFileNames treeNames = fileNames.getTreeNames();
+		BatchFileNames relationNames = fileNames.getRelationNames();
+
 		if (line.hasOption(OPTION_TREE)) {
 			fileNames.setTree(line.getOptionValue(OPTION_TREE));
 		}
@@ -78,31 +81,30 @@ public class ExtractionFilesHelper
 					.getOptionValue(OPTION_COMPLEX_RELATIONS_BBOXES));
 		}
 		if (line.hasOption(OPTION_FILE_NAMES_TREE_NODES)) {
-			fileNames.setTreeNodes(line
+			treeNames.setNodes(line
 					.getOptionValue(OPTION_FILE_NAMES_TREE_NODES));
 		}
 		if (line.hasOption(OPTION_FILE_NAMES_TREE_WAYS)) {
-			fileNames.setTreeWays(line
-					.getOptionValue(OPTION_FILE_NAMES_TREE_WAYS));
+			treeNames.setWays(line.getOptionValue(OPTION_FILE_NAMES_TREE_WAYS));
 		}
 		if (line.hasOption(OPTION_FILE_NAMES_TREE_RELATIONS_SIMPLE)) {
-			fileNames.setTreeSimpleRelations(line
+			treeNames.setSimpleRelations(line
 					.getOptionValue(OPTION_FILE_NAMES_TREE_RELATIONS_SIMPLE));
 		}
 		if (line.hasOption(OPTION_FILE_NAMES_TREE_RELATIONS_COMPLEX)) {
-			fileNames.setTreeComplexRelations(line
+			treeNames.setComplexRelations(line
 					.getOptionValue(OPTION_FILE_NAMES_TREE_RELATIONS_COMPLEX));
 		}
 		if (line.hasOption(OPTION_FILE_NAMES_RELATION_NODES)) {
-			fileNames.setRelationNodes(line
+			relationNames.setNodes(line
 					.getOptionValue(OPTION_FILE_NAMES_RELATION_NODES));
 		}
 		if (line.hasOption(OPTION_FILE_NAMES_RELATION_WAYS)) {
-			fileNames.setRelationWays(line
+			relationNames.setWays(line
 					.getOptionValue(OPTION_FILE_NAMES_RELATION_WAYS));
 		}
 		if (line.hasOption(OPTION_FILE_NAMES_RELATION_RELATIONS)) {
-			fileNames.setRelationRelations(line
+			relationNames.setRelations(line
 					.getOptionValue(OPTION_FILE_NAMES_RELATION_RELATIONS));
 		}
 	}

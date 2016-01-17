@@ -39,14 +39,8 @@ public class ExtractionFileNames
 	private String simpleRelationsEmpty;
 	private String complexRelationsEmpty;
 
-	private String treeNodes;
-	private String treeWays;
-	private String treeSimpleRelations;
-	private String treeComplexRelations;
-
-	private String relationNodes;
-	private String relationWays;
-	private String relationRelations;
+	private TreeFileNames treeNames;
+	private BatchFileNames relationNames;
 
 	public ExtractionFileNames(FileFormat outputFormat)
 	{
@@ -56,14 +50,8 @@ public class ExtractionFileNames
 		splitWays = "ways" + extension;
 		splitRelations = "relations" + extension;
 
-		treeNodes = "nodes" + extension;
-		treeWays = "ways" + extension;
-		treeSimpleRelations = "relations.simple" + extension;
-		treeComplexRelations = "relations.complex" + extension;
-
-		relationNodes = "nodes" + extension;
-		relationWays = "ways" + extension;
-		relationRelations = "relations" + extension;
+		treeNames = new TreeFileNames(outputFormat);
+		relationNames = new BatchFileNames(outputFormat);
 
 		simpleRelationsEmpty = "relations.simple.empty" + extension;
 		complexRelationsEmpty = "relations.complex.empty" + extension;
@@ -179,74 +167,24 @@ public class ExtractionFileNames
 		this.complexRelationsEmpty = complexRelationsEmpty;
 	}
 
-	public String getTreeNodes()
+	public TreeFileNames getTreeNames()
 	{
-		return treeNodes;
+		return treeNames;
 	}
 
-	public void setTreeNodes(String treeNodes)
+	public void setTreeNames(TreeFileNames treeNames)
 	{
-		this.treeNodes = treeNodes;
+		this.treeNames = treeNames;
 	}
 
-	public String getTreeWays()
+	public BatchFileNames getRelationNames()
 	{
-		return treeWays;
+		return relationNames;
 	}
 
-	public void setTreeWays(String treeWays)
+	public void setRelationNames(BatchFileNames relationNames)
 	{
-		this.treeWays = treeWays;
-	}
-
-	public String getTreeSimpleRelations()
-	{
-		return treeSimpleRelations;
-	}
-
-	public void setTreeSimpleRelations(String treeSimpleRelations)
-	{
-		this.treeSimpleRelations = treeSimpleRelations;
-	}
-
-	public String getTreeComplexRelations()
-	{
-		return treeComplexRelations;
-	}
-
-	public void setTreeComplexRelations(String treeComplexRelations)
-	{
-		this.treeComplexRelations = treeComplexRelations;
-	}
-
-	public String getRelationNodes()
-	{
-		return relationNodes;
-	}
-
-	public void setRelationNodes(String relationNodes)
-	{
-		this.relationNodes = relationNodes;
-	}
-
-	public String getRelationWays()
-	{
-		return relationWays;
-	}
-
-	public void setRelationWays(String relationWays)
-	{
-		this.relationWays = relationWays;
-	}
-
-	public String getRelationRelations()
-	{
-		return relationRelations;
-	}
-
-	public void setRelationRelations(String relationRelations)
-	{
-		this.relationRelations = relationRelations;
+		this.relationNames = relationNames;
 	}
 
 }

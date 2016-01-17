@@ -118,13 +118,9 @@ public abstract class BaseQuery extends AbstractExecutableInputOutput
 		Query query = new Query(pathOutput, pathTmp, pathTree,
 				pathSimpleRelations, pathComplexRelations,
 				pathSimpleRelationsBboxes, pathComplexRelationsBboxes,
-				fileNames.getTreeNodes(), fileNames.getTreeWays(),
-				fileNames.getTreeSimpleRelations(),
-				fileNames.getTreeComplexRelations(),
-				fileNames.getRelationNodes(), fileNames.getRelationWays(),
-				fileNames.getRelationRelations(), queryEnvelope, test,
-				inputFormat, outputConfigIntermediate, outputConfig, keepTmp,
-				simpleRelationTests);
+				fileNames.getTreeNames(), fileNames.getRelationNames(),
+				queryEnvelope, test, inputFormat, outputConfigIntermediate,
+				outputConfig, keepTmp, simpleRelationTests);
 		query.execute();
 	}
 

@@ -220,12 +220,11 @@ public class ExtractionFilesBuilder
 		OsmFileInput fileInputRelations = new OsmFileInput(pathRelations,
 				outputFormat);
 
-		String fileNamesFinalNodes = fileNames.getTreeNodes();
-		String fileNamesFinalWays = fileNames.getTreeWays();
-		String fileNamesFinalRelationsSimple = fileNames
-				.getTreeSimpleRelations();
-		String fileNamesFinalRelationsComplex = fileNames
-				.getTreeComplexRelations();
+		TreeFileNames treeNames = fileNames.getTreeNames();
+		String fileNamesFinalNodes = treeNames.getNodes();
+		String fileNamesFinalWays = treeNames.getWays();
+		String fileNamesFinalRelationsSimple = treeNames.getSimpleRelations();
+		String fileNamesFinalRelationsComplex = treeNames.getComplexRelations();
 
 		String fileNamesInitialNodes = "initial-nodes" + extension;
 		String fileNamesInitialWays = "dist-ways" + extension;
@@ -234,7 +233,8 @@ public class ExtractionFilesBuilder
 		String fileNamesDistributedWays = "ways-unsorted" + extension;
 		String fileNamesDistributedNodes = "nodes-unsorted" + extension;
 
-		String fileNamesRelations = fileNames.getRelationRelations();
+		BatchFileNames relationNames = fileNames.getRelationNames();
+		String fileNamesRelations = relationNames.getRelations();
 
 		OsmOutputConfig outputConfigSplit = new OsmOutputConfig(outputFormat,
 				includeMetadata);

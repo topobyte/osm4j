@@ -44,6 +44,8 @@ import de.topobyte.osm4j.extra.datatree.DataTree;
 import de.topobyte.osm4j.extra.datatree.DataTreeFiles;
 import de.topobyte.osm4j.extra.datatree.DataTreeOpener;
 import de.topobyte.osm4j.extra.datatree.Node;
+import de.topobyte.osm4j.extra.extracts.BatchFileNames;
+import de.topobyte.osm4j.extra.extracts.TreeFileNames;
 import de.topobyte.osm4j.extra.idbboxlist.IdBboxEntry;
 import de.topobyte.osm4j.extra.idbboxlist.IdBboxUtil;
 import de.topobyte.osm4j.utils.FileFormat;
@@ -62,13 +64,8 @@ public class Query extends AbstractQuery
 	private Path pathSimpleRelationsBboxes;
 	private Path pathComplexRelationsBboxes;
 
-	private String fileNamesTreeNodes;
-	private String fileNamesTreeWays;
-	private String fileNamesTreeSimpleRelations;
-	private String fileNamesTreeComplexRelations;
-	private String fileNamesRelationNodes;
-	private String fileNamesRelationWays;
-	private String fileNamesRelationRelations;
+	private TreeFileNames treeNames;
+	private BatchFileNames relationNames;
 
 	private Envelope queryEnvelope;
 	private PredicateEvaluator test;
@@ -80,13 +77,9 @@ public class Query extends AbstractQuery
 	public Query(Path pathOutput, Path pathTmp, Path pathTree,
 			Path pathSimpleRelations, Path pathComplexRelations,
 			Path pathSimpleRelationsBboxes, Path pathComplexRelationsBboxes,
-			String fileNamesTreeNodes, String fileNamesTreeWays,
-			String fileNamesTreeSimpleRelations,
-			String fileNamesTreeComplexRelations,
-			String fileNamesRelationNodes, String fileNamesRelationWays,
-			String fileNamesRelationRelations, Envelope queryEnvelope,
-			PredicateEvaluator test, FileFormat inputFormat,
-			OsmOutputConfig outputConfigIntermediate,
+			TreeFileNames treeNames, BatchFileNames relationNames,
+			Envelope queryEnvelope, PredicateEvaluator test,
+			FileFormat inputFormat, OsmOutputConfig outputConfigIntermediate,
 			OsmOutputConfig outputConfig, boolean keepTmp,
 			boolean fastRelationTests)
 	{
@@ -99,13 +92,8 @@ public class Query extends AbstractQuery
 		this.pathComplexRelations = pathComplexRelations;
 		this.pathSimpleRelationsBboxes = pathSimpleRelationsBboxes;
 		this.pathComplexRelationsBboxes = pathComplexRelationsBboxes;
-		this.fileNamesTreeNodes = fileNamesTreeNodes;
-		this.fileNamesTreeWays = fileNamesTreeWays;
-		this.fileNamesTreeSimpleRelations = fileNamesTreeSimpleRelations;
-		this.fileNamesTreeComplexRelations = fileNamesTreeComplexRelations;
-		this.fileNamesRelationNodes = fileNamesRelationNodes;
-		this.fileNamesRelationWays = fileNamesRelationWays;
-		this.fileNamesRelationRelations = fileNamesRelationRelations;
+		this.treeNames = treeNames;
+		this.relationNames = relationNames;
 		this.queryEnvelope = queryEnvelope;
 		this.test = test;
 		this.keepTmp = keepTmp;
@@ -201,10 +189,10 @@ public class Query extends AbstractQuery
 
 				Path pathDir = pathSimpleRelations.resolve(Long.toString(entry
 						.getId()));
-				Path pathNodes = pathDir.resolve(fileNamesRelationNodes);
-				Path pathWays = pathDir.resolve(fileNamesRelationWays);
-				Path pathRelations = pathDir
-						.resolve(fileNamesRelationRelations);
+				Path pathNodes = pathDir.resolve(relationNames.getNodes());
+				Path pathWays = pathDir.resolve(relationNames.getWays());
+				Path pathRelations = pathDir.resolve(relationNames
+						.getRelations());
 
 				Path pathOutNodes = pathTmpSimpleNodes.resolve(tmpFilenames);
 				Path pathOutWays = pathTmpSimpleWays.resolve(tmpFilenames);
@@ -230,10 +218,10 @@ public class Query extends AbstractQuery
 
 				Path pathDir = pathComplexRelations.resolve(Long.toString(entry
 						.getId()));
-				Path pathNodes = pathDir.resolve(fileNamesRelationNodes);
-				Path pathWays = pathDir.resolve(fileNamesRelationWays);
-				Path pathRelations = pathDir
-						.resolve(fileNamesRelationRelations);
+				Path pathNodes = pathDir.resolve(relationNames.getNodes());
+				Path pathWays = pathDir.resolve(relationNames.getWays());
+				Path pathRelations = pathDir.resolve(relationNames
+						.getRelations());
 
 				Path pathOutNodes = pathTmpComplexNodes.resolve(tmpFilenames);
 				Path pathOutWays = pathTmpComplexWays.resolve(tmpFilenames);
@@ -350,12 +338,12 @@ public class Query extends AbstractQuery
 	{
 		tree = DataTreeOpener.open(pathTree.toFile());
 
-		filesTreeNodes = new DataTreeFiles(pathTree, fileNamesTreeNodes);
-		filesTreeWays = new DataTreeFiles(pathTree, fileNamesTreeWays);
+		filesTreeNodes = new DataTreeFiles(pathTree, treeNames.getNodes());
+		filesTreeWays = new DataTreeFiles(pathTree, treeNames.getWays());
 		filesTreeSimpleRelations = new DataTreeFiles(pathTree,
-				fileNamesTreeSimpleRelations);
+				treeNames.getSimpleRelations());
 		filesTreeComplexRelations = new DataTreeFiles(pathTree,
-				fileNamesTreeComplexRelations);
+				treeNames.getComplexRelations());
 	}
 
 	private OsmFileInput input(Path path)
@@ -428,9 +416,9 @@ public class Query extends AbstractQuery
 			List<OsmFileInput> filesRelations)
 	{
 		Path path = pathRelations.resolve(Long.toString(id));
-		filesNodes.add(input(path.resolve(fileNamesRelationNodes)));
-		filesWays.add(input(path.resolve(fileNamesRelationWays)));
-		filesRelations.add(input(path.resolve(fileNamesRelationRelations)));
+		filesNodes.add(input(path.resolve(relationNames.getNodes())));
+		filesWays.add(input(path.resolve(relationNames.getWays())));
+		filesRelations.add(input(path.resolve(relationNames.getRelations())));
 	}
 
 	private void runRelationsQuery(boolean simple, String tmpFilenames,
