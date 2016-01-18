@@ -71,6 +71,41 @@ public class Query extends AbstractQuery
 
 	private boolean fastRelationTests;
 
+	/**
+	 * Create a query to extract data contained in an area from an extraction
+	 * database.
+	 * 
+	 * @param queryEnvelope
+	 *            the bounding envelope of the region to extract.
+	 * @param test
+	 *            a PredicateEvaluator used for determining inclusion in the
+	 *            extract.
+	 * @param pathOutput
+	 *            a path to a file to store output data in.
+	 * @param pathTmp
+	 *            a directory to store intermediate, temporary files (pass null
+	 *            to use the system's default temporary storage, i.e. {@link
+	 *            Files#createTempDirectory(String, FileAttribute<?>...)} will
+	 *            be used.)
+	 * @param paths
+	 *            an ExtractionPaths object configured for an extraction
+	 *            database.
+	 * @param treeNames
+	 *            the names of the files in the data tree.
+	 * @param relationNames
+	 *            the names of the files in the relation batches.
+	 * @param inputFormat
+	 *            the {@link FileFormat} of the database extract files.
+	 * @param outputConfigIntermediate
+	 *            configuration for intermediate file storage
+	 * @param outputConfig
+	 *            configuration for the final output file.
+	 * @param keepTmp
+	 *            whether to keep temporary files after the extraction is done.
+	 * @param fastRelationTests
+	 *            whether to include relations based on their bounding box (and
+	 *            not by evaluating their exact geometry).
+	 */
 	public Query(Envelope queryEnvelope, PredicateEvaluator test,
 			Path pathOutput, Path pathTmp, ExtractionPaths paths,
 			TreeFileNames treeNames, BatchFileNames relationNames,
