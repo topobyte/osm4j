@@ -34,16 +34,16 @@ import org.slf4j.LoggerFactory;
 
 import com.google.protobuf.ByteString;
 
-import crosby.binary.Fileformat;
-import crosby.binary.Fileformat.Blob;
-import crosby.binary.Osmformat;
-import crosby.binary.Osmformat.HeaderBlock;
-import crosby.binary.Osmformat.PrimitiveBlock;
-import crosby.binary.Osmformat.PrimitiveBlock.Builder;
-import crosby.binary.Osmformat.PrimitiveGroup;
 import de.topobyte.osm4j.core.model.iface.EntityType;
 import de.topobyte.osm4j.pbf.Compression;
 import de.topobyte.osm4j.pbf.Constants;
+import de.topobyte.osm4j.pbf.protobuf.Fileformat;
+import de.topobyte.osm4j.pbf.protobuf.Fileformat.Blob;
+import de.topobyte.osm4j.pbf.protobuf.Osmformat;
+import de.topobyte.osm4j.pbf.protobuf.Osmformat.HeaderBlock;
+import de.topobyte.osm4j.pbf.protobuf.Osmformat.PrimitiveBlock;
+import de.topobyte.osm4j.pbf.protobuf.Osmformat.PrimitiveBlock.Builder;
+import de.topobyte.osm4j.pbf.protobuf.Osmformat.PrimitiveGroup;
 import de.topobyte.osm4j.pbf.raf.FileStructure;
 import de.topobyte.osm4j.pbf.raf.FileStructureAnalyzer;
 import de.topobyte.osm4j.pbf.raf.Interval;

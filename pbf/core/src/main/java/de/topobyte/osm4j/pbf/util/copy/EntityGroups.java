@@ -20,9 +20,9 @@ package de.topobyte.osm4j.pbf.util.copy;
 import java.util.ArrayList;
 import java.util.List;
 
-import crosby.binary.Osmformat.PrimitiveBlock;
-import crosby.binary.Osmformat.PrimitiveGroup;
 import de.topobyte.osm4j.core.model.iface.EntityType;
+import de.topobyte.osm4j.pbf.protobuf.Osmformat.PrimitiveBlock;
+import de.topobyte.osm4j.pbf.protobuf.Osmformat.PrimitiveGroup;
 
 public class EntityGroups
 {

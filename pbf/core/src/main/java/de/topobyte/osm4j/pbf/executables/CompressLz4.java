@@ -25,8 +25,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import crosby.binary.Fileformat;
 import de.topobyte.osm4j.pbf.Compression;
+import de.topobyte.osm4j.pbf.protobuf.Fileformat;
 import de.topobyte.osm4j.pbf.seq.BlockWriter;
 import de.topobyte.osm4j.pbf.util.BlobHeader;
 import de.topobyte.osm4j.pbf.util.BlockData;

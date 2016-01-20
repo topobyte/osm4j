@@ -25,7 +25,7 @@ import java.util.Comparator;
 
 import com.google.protobuf.ByteString;
 
-import crosby.binary.Osmformat;
+import de.topobyte.osm4j.pbf.protobuf.Osmformat;
 
 /**
  * Class for mapping a set of strings to integers, giving frequently occurring

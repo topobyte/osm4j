@@ -19,9 +19,9 @@ package de.topobyte.osm4j.pbf.seq;
 
 import java.io.IOException;
 
-import crosby.binary.Osmformat;
-import crosby.binary.Osmformat.HeaderBBox;
 import de.topobyte.osm4j.core.access.OsmHandler;
+import de.topobyte.osm4j.pbf.protobuf.Osmformat;
+import de.topobyte.osm4j.pbf.protobuf.Osmformat.HeaderBBox;
 import de.topobyte.osm4j.pbf.util.PbfUtil;
 
 public class PbfParser extends BlockParser

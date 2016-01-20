@@ -28,8 +28,8 @@ import net.jpountz.lz4.LZ4Factory;
 
 import com.google.protobuf.ByteString;
 
-import crosby.binary.Fileformat;
 import de.topobyte.osm4j.pbf.Compression;
+import de.topobyte.osm4j.pbf.protobuf.Fileformat;
 
 public class BlockWriter
 {

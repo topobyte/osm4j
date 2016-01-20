@@ -28,13 +28,13 @@ import net.jpountz.lz4.LZ4FastDecompressor;
 
 import com.google.protobuf.ByteString;
 
-import crosby.binary.Fileformat;
-import crosby.binary.Osmformat;
-import crosby.binary.Osmformat.HeaderBBox;
 import de.topobyte.osm4j.core.model.iface.OsmBounds;
 import de.topobyte.osm4j.core.model.impl.Bounds;
 import de.topobyte.osm4j.pbf.Compression;
 import de.topobyte.osm4j.pbf.Constants;
+import de.topobyte.osm4j.pbf.protobuf.Fileformat;
+import de.topobyte.osm4j.pbf.protobuf.Osmformat;
+import de.topobyte.osm4j.pbf.protobuf.Osmformat.HeaderBBox;
 
 public class PbfUtil
 {

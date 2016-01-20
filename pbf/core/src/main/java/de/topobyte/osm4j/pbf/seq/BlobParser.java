@@ -23,7 +23,7 @@ import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 
-import crosby.binary.Fileformat;
+import de.topobyte.osm4j.pbf.protobuf.Fileformat;
 import de.topobyte.osm4j.pbf.util.BlobHeader;
 import de.topobyte.osm4j.pbf.util.PbfUtil;
 

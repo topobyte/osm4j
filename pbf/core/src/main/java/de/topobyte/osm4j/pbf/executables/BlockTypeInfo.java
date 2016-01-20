@@ -22,8 +22,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Set;
 
-import crosby.binary.Osmformat;
 import de.topobyte.osm4j.core.model.iface.EntityType;
+import de.topobyte.osm4j.pbf.protobuf.Osmformat;
 import de.topobyte.osm4j.pbf.seq.BlockParser;
 import de.topobyte.osm4j.pbf.util.PbfMeta;
 

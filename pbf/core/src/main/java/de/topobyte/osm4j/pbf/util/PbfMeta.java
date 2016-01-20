@@ -20,8 +20,8 @@ package de.topobyte.osm4j.pbf.util;
 import java.util.HashSet;
 import java.util.Set;
 
-import crosby.binary.Osmformat;
 import de.topobyte.osm4j.core.model.iface.EntityType;
+import de.topobyte.osm4j.pbf.protobuf.Osmformat;
 
 public class PbfMeta
 {

@@ -21,8 +21,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import crosby.binary.Osmformat;
-import crosby.binary.Osmformat.PrimitiveGroup;
+import de.topobyte.osm4j.pbf.protobuf.Osmformat;
+import de.topobyte.osm4j.pbf.protobuf.Osmformat.PrimitiveGroup;
 import de.topobyte.osm4j.pbf.seq.BlockParser;
 
 public class BlockElementCountInfo extends BlockParser

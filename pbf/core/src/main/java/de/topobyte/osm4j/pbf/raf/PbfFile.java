@@ -25,9 +25,9 @@ import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.List;
 
-import crosby.binary.Fileformat;
-import crosby.binary.Osmformat;
 import de.topobyte.osm4j.pbf.Constants;
+import de.topobyte.osm4j.pbf.protobuf.Fileformat;
+import de.topobyte.osm4j.pbf.protobuf.Osmformat;
 import de.topobyte.osm4j.pbf.util.BlobHeader;
 import de.topobyte.osm4j.pbf.util.BlockData;
 import de.topobyte.osm4j.pbf.util.PbfUtil;

@@ -28,9 +28,9 @@ import java.util.List;
 
 import com.google.protobuf.ByteString;
 
-import crosby.binary.Fileformat;
-import crosby.binary.Osmformat;
 import de.topobyte.osm4j.pbf.Constants;
+import de.topobyte.osm4j.pbf.protobuf.Fileformat;
+import de.topobyte.osm4j.pbf.protobuf.Osmformat;
 import de.topobyte.osm4j.pbf.seq.BlockWriter;
 import de.topobyte.osm4j.pbf.util.BlobHeader;
 import de.topobyte.osm4j.pbf.util.BlockData;
