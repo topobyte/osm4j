@@ -22,6 +22,7 @@ import gnu.trove.set.TLongSet;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.attribute.FileAttribute;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -84,9 +85,9 @@ public class Query extends AbstractQuery
 	 *            a path to a file to store output data in.
 	 * @param pathTmp
 	 *            a directory to store intermediate, temporary files (pass null
-	 *            to use the system's default temporary storage, i.e. {@link
-	 *            Files#createTempDirectory(String, FileAttribute<?>...)} will
-	 *            be used.)
+	 *            to use the system's default temporary storage, i.e.
+	 *            {@link Files#createTempDirectory(String, FileAttribute...)}
+	 *            will be used.)
 	 * @param paths
 	 *            an ExtractionPaths object configured for an extraction
 	 *            database.
