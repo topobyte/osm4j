@@ -139,8 +139,6 @@ public class RelationUtil
 	 * not, print some status information.
 	 * 
 	 * @param missingEntitiesStrategy
-	 * 
-	 * @return whether all rings are closed.
 	 */
 	public static void checkRings(Collection<ChainOfWays> rings,
 			OsmEntityProvider resolver,
