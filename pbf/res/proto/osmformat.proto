@@ -16,7 +16,7 @@
 */
 
 option optimize_for = LITE_RUNTIME;
-option java_package = "crosby.binary";
+option java_package = "de.topobyte.osm4j.pbf.protobuf";
 package OSMPBF;
 
 /* OSM Binary file format 
