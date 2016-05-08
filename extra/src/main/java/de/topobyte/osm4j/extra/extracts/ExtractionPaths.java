@@ -44,6 +44,8 @@ public class ExtractionPaths
 		splitWays = base.resolve(fileNames.getSplitWays());
 		splitRelations = base.resolve(fileNames.getSplitRelations());
 
+		tree = base.resolve(fileNames.getTree());
+
 		simpleRelations = base.resolve(fileNames.getSimpleRelations());
 		complexRelations = base.resolve(fileNames.getComplexRelations());
 
