@@ -28,8 +28,8 @@ import org.joda.time.format.PeriodFormatterBuilder;
 public class TimeTable
 {
 
-	private Map<String, Long> starts = new HashMap<String, Long>();
-	private Map<String, Long> stops = new HashMap<String, Long>();
+	private Map<String, Long> starts = new HashMap<>();
+	private Map<String, Long> stops = new HashMap<>();
 
 	public void start(String key)
 	{

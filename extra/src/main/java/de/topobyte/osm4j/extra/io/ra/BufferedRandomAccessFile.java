@@ -50,7 +50,7 @@ public class BufferedRandomAccessFile implements RandomAccess
 		this.cacheSize = cacheSize;
 
 		fileSize = file.length();
-		pages = new LruHashMap<Long, Page>(cacheSize);
+		pages = new LruHashMap<>(cacheSize);
 	}
 
 	public int getPageSize()
