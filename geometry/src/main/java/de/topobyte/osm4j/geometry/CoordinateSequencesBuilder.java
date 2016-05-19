@@ -92,16 +92,14 @@ class CoordinateSequencesBuilder
 		// If the input way is closed and the first coordinate is not missing,
 		// combine the first and the last chain of coordinates to a single
 		// segment without the common coordinate repeated.
-		if (closed && !firstMissing) {
+		if (closed && results.size() > 1 && !firstMissing) {
 			List<Coordinate> coords = new ArrayList<>();
 			List<Coordinate> c1 = results.get(first);
 			List<Coordinate> c2 = results.get(last);
 			coords.addAll(c2);
 			coords.addAll(c1.subList(1, c1.size()));
 
-			result.getLineStrings()
-					.add(factory.createLineString(coords
-							.toArray(new Coordinate[0])));
+			addToResult(factory, result, coords);
 
 			first++;
 			last--;
@@ -120,16 +118,22 @@ class CoordinateSequencesBuilder
 
 		for (int i = first; i <= last; i++) {
 			List<Coordinate> coords = results.get(i);
-			if (coords.size() == 1) {
-				result.getCoordinates().add(coords.get(0));
-			} else {
-				CoordinateSequence cs = factory.getCoordinateSequenceFactory()
-						.create(coords.toArray(new Coordinate[0]));
-				result.getLineStrings().add(factory.createLineString(cs));
-			}
+			addToResult(factory, result, coords);
 		}
 
 		return result;
+	}
+
+	private void addToResult(GeometryFactory factory, WayBuilderResult result,
+			List<Coordinate> coords)
+	{
+		if (coords.size() == 1) {
+			result.getCoordinates().add(coords.get(0));
+		} else {
+			CoordinateSequence cs = factory.getCoordinateSequenceFactory()
+					.create(coords.toArray(new Coordinate[0]));
+			result.getLineStrings().add(factory.createLineString(cs));
+		}
 	}
 
 }

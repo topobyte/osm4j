@@ -22,7 +22,7 @@ repositories {
 }
 
 dependencies {
-    compile 'de.topobyte:osm4j-core:0.0.15'
+    compile 'de.topobyte:osm4j-core:0.0.17'
     compile 'de.topobyte:jts-utils:0.0.4'
 
     compile 'org.slf4j:slf4j-api:1.6.1'
