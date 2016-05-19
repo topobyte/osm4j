@@ -55,7 +55,7 @@ public class AbstractUnsortedMerge extends AbstractMerge
 	protected <T extends OsmEntity> Input<T> createItem(T element,
 			OsmIterator iterator)
 	{
-		Input<T> item = new Input<T>(iterator);
+		Input<T> item = new Input<>(iterator);
 		item.firstEntity = element;
 		return item;
 	}

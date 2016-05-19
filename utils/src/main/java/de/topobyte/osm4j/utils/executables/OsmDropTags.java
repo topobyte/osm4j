@@ -34,7 +34,8 @@ import de.topobyte.osm4j.core.model.impl.Relation;
 import de.topobyte.osm4j.core.model.impl.Way;
 import de.topobyte.osm4j.utils.AbstractExecutableSingleInputStreamSingleOutput;
 
-public class OsmDropTags extends AbstractExecutableSingleInputStreamSingleOutput
+public class OsmDropTags extends
+		AbstractExecutableSingleInputStreamSingleOutput
 {
 
 	@Override
@@ -92,7 +93,7 @@ public class OsmDropTags extends AbstractExecutableSingleInputStreamSingleOutput
 			case Relation: {
 				OsmRelation relation = (OsmRelation) entityContainer
 						.getEntity();
-				List<OsmRelationMember> members = new ArrayList<OsmRelationMember>();
+				List<OsmRelationMember> members = new ArrayList<>();
 				for (int i = 0; i < relation.getNumberOfMembers(); i++) {
 					members.add(relation.getMember(i));
 				}

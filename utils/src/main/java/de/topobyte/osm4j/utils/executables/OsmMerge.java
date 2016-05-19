@@ -68,7 +68,7 @@ public class OsmMerge extends AbstractExecutableSingleOutput
 
 	private boolean readMetadata = true;
 	private FileFormat inputFormat;
-	private List<String> additionalPaths = new ArrayList<String>();
+	private List<String> additionalPaths = new ArrayList<>();
 
 	@Override
 	protected void setup(String[] args)
