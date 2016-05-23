@@ -79,6 +79,7 @@ public class RelationSelector
 			}
 			for (long id : idQueue.toArray()) {
 				try {
+					idQueue.remove(id);
 					OsmRelation relation = data.getRelation(id);
 					resultRelations.add(relation);
 					ids.add(relation.getId());
