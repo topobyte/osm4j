@@ -71,6 +71,7 @@ public class ComplexRelationsQuery extends AbstractRelationsQuery
 		RelationGraph relationGraph = new RelationGraph(false, true);
 		relationGraph.build(dataRelations.getRelations());
 		List<Group> groups = relationGraph.buildGroups();
+		logger.debug(String.format("This batch has %d groups", groups.size()));
 		for (Group group : groups) {
 			TLongSet ids = group.getRelationIds();
 			logger.debug(String.format("group with %d relations", ids.size()));
