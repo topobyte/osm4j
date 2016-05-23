@@ -178,5 +178,4 @@ public class ComplexRelationsQuery extends AbstractRelationsQuery
 
 		return false;
 	}
-
 }
