@@ -122,7 +122,7 @@ public abstract class BaseQuery extends AbstractExecutableInputOutput
 				extractionPaths, fileNames.getTreeNames(),
 				fileNames.getRelationNames(), inputFormat,
 				outputConfigIntermediate, outputConfig, keepTmp,
-				simpleRelationTests);
+				simpleRelationTests, null);
 		query.execute();
 	}
 

@@ -72,6 +72,8 @@ public class Query extends AbstractQuery
 
 	private boolean fastRelationTests;
 
+	private RelationFilter relationFilter;
+
 	/**
 	 * Create a query to extract data contained in an area from an extraction
 	 * database.
@@ -106,13 +108,18 @@ public class Query extends AbstractQuery
 	 * @param fastRelationTests
 	 *            whether to include relations based on their bounding box (and
 	 *            not by evaluating their exact geometry).
+	 * @param relationFilter
+	 *            a filter to select a subset of relations with. Pass null to
+	 *            select all relations. If only a subset of relations is
+	 *            selected, all transitively referenced relations will be
+	 *            included as well.
 	 */
 	public Query(Envelope queryEnvelope, PredicateEvaluator test,
 			Path pathOutput, Path pathTmp, ExtractionPaths paths,
 			TreeFileNames treeNames, BatchFileNames relationNames,
 			FileFormat inputFormat, OsmOutputConfig outputConfigIntermediate,
 			OsmOutputConfig outputConfig, boolean keepTmp,
-			boolean fastRelationTests)
+			boolean fastRelationTests, RelationFilter relationFilter)
 	{
 		super(inputFormat, outputConfigIntermediate, outputConfig);
 
@@ -125,6 +132,7 @@ public class Query extends AbstractQuery
 		this.relationNames = relationNames;
 		this.keepTmp = keepTmp;
 		this.fastRelationTests = fastRelationTests;
+		this.relationFilter = relationFilter;
 	}
 
 	private Path pathTmpTreeNodes;
@@ -459,6 +467,14 @@ public class Query extends AbstractQuery
 		InMemoryListDataSet dataWays = read(pathWays);
 		InMemoryListDataSet dataRelations = read(pathRelations);
 
+		InMemoryListDataSet selectedRelations;
+		if (relationFilter == null) {
+			selectedRelations = dataRelations;
+		} else {
+			selectedRelations = new RelationSelector().select(relationFilter,
+					dataRelations);
+		}
+
 		OsmStreamOutput outRelations = createOutput(pathOutRelations);
 		RelationQueryBag queryBag = new RelationQueryBag(outRelations);
 
@@ -468,12 +484,14 @@ public class Query extends AbstractQuery
 
 		if (simple) {
 			SimpleRelationsQuery simpleRelationsQuery = new SimpleRelationsQuery(
-					dataNodes, dataWays, dataRelations, test, fastRelationTests);
+					dataNodes, dataWays, selectedRelations, test,
+					fastRelationTests);
 			simpleRelationsQuery.execute(queryBag);
 		} else {
-			dataRelations.sort();
+			selectedRelations.sort();
 			ComplexRelationsQuery complexRelationsQuery = new ComplexRelationsQuery(
-					dataNodes, dataWays, dataRelations, test, fastRelationTests);
+					dataNodes, dataWays, selectedRelations, test,
+					fastRelationTests);
 			complexRelationsQuery.execute(queryBag);
 		}
 
