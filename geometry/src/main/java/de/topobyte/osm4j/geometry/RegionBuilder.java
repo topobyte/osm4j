@@ -167,7 +167,7 @@ public class RegionBuilder extends AbstractGeometryBuilder
 		MultiSet<OsmWay> ways = new HashMultiSet<>();
 		EntityFinder finder = EntityFinders.create(resolver, enfs);
 		relations.add(relation);
-		finder.findMemberRelations(relation, relations);
+		finder.findMemberRelationsRecursively(relation, relations);
 		finder.findMemberWays(relations, ways);
 
 		Set<OsmNode> nodes = new HashSet<>();
