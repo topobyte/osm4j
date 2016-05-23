@@ -471,6 +471,7 @@ public class Query extends AbstractQuery
 		if (relationFilter == null) {
 			selectedRelations = dataRelations;
 		} else {
+			dataRelations.sort();
 			selectedRelations = new RelationSelector().select(relationFilter,
 					dataRelations);
 		}
