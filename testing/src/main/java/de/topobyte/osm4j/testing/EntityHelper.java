@@ -109,7 +109,7 @@ public class EntityHelper
 
 	private static List<TestRelationMember> cloneMembers(OsmRelation relation)
 	{
-		List<TestRelationMember> members = new ArrayList<TestRelationMember>(
+		List<TestRelationMember> members = new ArrayList<>(
 				relation.getNumberOfMembers());
 		for (int i = 0; i < relation.getNumberOfMembers(); i++) {
 			OsmRelationMember member = relation.getMember(i);
