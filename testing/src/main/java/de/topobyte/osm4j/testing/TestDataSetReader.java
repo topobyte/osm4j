@@ -59,6 +59,7 @@ public class TestDataSetReader implements OsmReader
 			for (TestRelation relation : data.getRelations()) {
 				handler.handle(relation);
 			}
+			handler.complete();
 		} catch (IOException e) {
 			throw new OsmInputException(e);
 		}
