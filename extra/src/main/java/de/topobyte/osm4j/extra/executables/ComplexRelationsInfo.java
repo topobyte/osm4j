@@ -83,29 +83,32 @@ public class ComplexRelationsInfo extends AbstractExecutableSingleInputStream
 
 		long n = countWayReferences(data.getRelations());
 		long m = 0;
+		long l = 0;
 
 		List<Group> groups = graph.buildGroups();
 		System.out.println("Number of complex groups: " + groups.size());
 		for (Group group : groups) {
 			TLongSet ids = group.getRelationIds();
-			System.out.println(String.format("group with %d relations",
+			System.out.println(String.format("Group with %d relations",
 					ids.size()));
 
 			List<OsmRelation> groupRelations = finder.findRelations(ids);
 			RelationGraph groupGraph = new RelationGraph(true, false);
 			groupGraph.build(groupRelations);
 			List<Group> groupGroups = groupGraph.buildGroups();
-			System.out.println("subgroups: " + groupGroups.size());
+			System.out.println("Number of subgroups: " + groupGroups.size());
 
 			for (Group subGroup : groupGroups) {
+				l += subGroup.getNumRelations();
 				List<OsmRelation> subRelations = finder.findRelations(subGroup
 						.getRelationIds());
 				m += countWayReferences(subRelations);
 			}
 		}
 
-		System.out.println("number of referenced ways: " + n);
-		System.out.println("number of referenced ways by groups: " + m);
+		System.out.println("Number of relations in subgroups: " + l);
+		System.out.println("Number of referenced ways: " + n);
+		System.out.println("Number of referenced ways by subgroups: " + m);
 	}
 
 	private long countWayReferences(Collection<OsmRelation> relations)
