@@ -21,6 +21,8 @@ import gnu.trove.set.TLongSet;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import de.topobyte.osm4j.core.access.OsmIterator;
@@ -40,6 +42,9 @@ import de.topobyte.osm4j.utils.AbstractExecutableSingleInputStream;
 
 public class ComplexRelationsInfo extends AbstractExecutableSingleInputStream
 {
+
+	private static final String OPTION_GROUP_INFO = "groupinfo";
+	private static final String OPTION_SUBGROUP_INFO = "subgroupinfo";
 
 	@Override
 	protected String getHelpMessage()
@@ -61,6 +66,26 @@ public class ComplexRelationsInfo extends AbstractExecutableSingleInputStream
 		task.finish();
 	}
 
+	private boolean groupInfo;
+	private boolean subGroupInfo;
+
+	public ComplexRelationsInfo()
+	{
+		options.addOption(OPTION_GROUP_INFO, false,
+				"print detailes about groups");
+		options.addOption(OPTION_SUBGROUP_INFO, false,
+				"print details about subgroups");
+	}
+
+	@Override
+	protected void setup(String[] args)
+	{
+		super.setup(args);
+
+		groupInfo = line.hasOption(OPTION_GROUP_INFO);
+		subGroupInfo = line.hasOption(OPTION_SUBGROUP_INFO);
+	}
+
 	private void execute() throws IOException, EntityNotFoundException
 	{
 		RelationGraph graph = new RelationGraph(true, true);
@@ -77,6 +102,15 @@ public class ComplexRelationsInfo extends AbstractExecutableSingleInputStream
 		TLongSet simpleRelationIds = graph.getIdsSimpleRelations();
 		System.out.println("Number of simple relations: "
 				+ simpleRelationIds.size());
+		System.out.println("Size of complex relation graph: "
+				+ graph.getGraph().getNodes().size());
+		System.out.println("Complex relation graph info:");
+		System.out.println("  Number of relations with children: "
+				+ graph.getIdsHasChildRelations().size());
+		System.out.println("  Number of relations without children: "
+				+ (graph.getNumNoChildren() - simpleRelationIds.size()));
+		System.out.println("  Number of child relations: "
+				+ graph.getIdsIsChildRelation().size());
 
 		EntityFinder finder = EntityFinders.create(data,
 				EntityNotFoundStrategy.LOG_WARN);
@@ -86,19 +120,32 @@ public class ComplexRelationsInfo extends AbstractExecutableSingleInputStream
 		long l = 0;
 
 		List<Group> groups = graph.buildGroups();
+		Collections.sort(groups, new GroupComparator());
+
 		System.out.println("Number of complex groups: " + groups.size());
 		for (Group group : groups) {
 			TLongSet ids = group.getRelationIds();
-			System.out.println(String.format("Group with %d relations",
-					ids.size()));
 
 			List<OsmRelation> groupRelations = finder.findRelations(ids);
 			RelationGraph groupGraph = new RelationGraph(true, false);
 			groupGraph.build(groupRelations);
 			List<Group> groupGroups = groupGraph.buildGroups();
-			System.out.println("Number of subgroups: " + groupGroups.size());
+			if (groupInfo || subGroupInfo) {
+				System.out.println(String.format(
+						"Group start=%d has %d relations and %d subgroups",
+						group.getStart(), ids.size(), groupGroups.size()));
+			}
+
+			Collections.sort(groupGroups, new GroupComparator());
 
 			for (Group subGroup : groupGroups) {
+				if (subGroupInfo && groupGroups.size() > 1) {
+					System.out.println(String.format(
+							"  Subgroup start=%d has %d relations", subGroup
+									.getStart(), subGroup.getRelationIds()
+									.size()));
+				}
+
 				l += subGroup.getNumRelations();
 				List<OsmRelation> subRelations = finder.findRelations(subGroup
 						.getRelationIds());
@@ -124,6 +171,17 @@ public class ComplexRelationsInfo extends AbstractExecutableSingleInputStream
 			}
 		}
 		return n;
+	}
+
+	private static class GroupComparator implements Comparator<Group>
+	{
+
+		@Override
+		public int compare(Group o1, Group o2)
+		{
+			return Long.compare(o1.getStart(), o2.getStart());
+		}
+
 	}
 
 }
