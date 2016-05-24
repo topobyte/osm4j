@@ -141,7 +141,7 @@ class OsmSaxHandler extends DynamicSaxHandler
 		relation = new Element(NAME_RELATION, false);
 		relation.addAttribute(ATTR_ID);
 
-		List<Element> entities = new ArrayList<Element>();
+		List<Element> entities = new ArrayList<>();
 		entities.add(node);
 		entities.add(way);
 		entities.add(relation);
@@ -306,7 +306,7 @@ class OsmSaxHandler extends DynamicSaxHandler
 			String aId = data.getAttribute(ATTR_ID);
 			long id = Long.parseLong(aId);
 
-			List<OsmRelationMember> members = new ArrayList<OsmRelationMember>();
+			List<OsmRelationMember> members = new ArrayList<>();
 
 			List<Data> memberDs = data.getList(NAME_MEMBER);
 			if (memberDs != null) {
@@ -349,7 +349,7 @@ class OsmSaxHandler extends DynamicSaxHandler
 			return;
 		}
 
-		List<OsmTag> tags = new ArrayList<OsmTag>();
+		List<OsmTag> tags = new ArrayList<>();
 		for (Data child : list) {
 			String k = child.getAttribute(ATTR_K);
 			String v = child.getAttribute(ATTR_V);
