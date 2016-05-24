@@ -35,7 +35,7 @@ public class Entity implements OsmEntity
 	{
 		this.id = id;
 		this.metadata = metadata;
-		tags = new ArrayList<OsmTag>();
+		tags = new ArrayList<>();
 	}
 
 	public Entity(long id, List<? extends OsmTag> tags, OsmMetadata metadata)

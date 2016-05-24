@@ -43,7 +43,7 @@ public class OsmModelUtil
 	 */
 	public static Map<String, String> getTagsAsMap(OsmEntity entity)
 	{
-		Map<String, String> map = new HashMap<String, String>();
+		Map<String, String> map = new HashMap<>();
 		for (int i = 0; i < entity.getNumberOfTags(); i++) {
 			OsmTag tag = entity.getTag(i);
 			map.put(tag.getKey(), tag.getValue());
@@ -53,7 +53,7 @@ public class OsmModelUtil
 
 	public static List<? extends OsmTag> getTagsAsList(OsmEntity entity)
 	{
-		List<OsmTag> list = new ArrayList<OsmTag>();
+		List<OsmTag> list = new ArrayList<>();
 		for (int i = 0; i < entity.getNumberOfTags(); i++) {
 			OsmTag tag = entity.getTag(i);
 			list.add(tag);
@@ -72,7 +72,7 @@ public class OsmModelUtil
 
 	public static List<OsmRelationMember> membersAsList(OsmRelation relation)
 	{
-		List<OsmRelationMember> members = new ArrayList<OsmRelationMember>();
+		List<OsmRelationMember> members = new ArrayList<>();
 		for (int i = 0; i < relation.getNumberOfMembers(); i++) {
 			members.add(relation.getMember(i));
 		}
