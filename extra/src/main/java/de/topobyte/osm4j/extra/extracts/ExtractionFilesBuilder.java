@@ -577,4 +577,74 @@ public class ExtractionFilesBuilder
 		}
 	}
 
+	public boolean isKeepSplittedNodes()
+	{
+		return keepSplittedNodes;
+	}
+
+	public void setKeepSplittedNodes(boolean keepSplittedNodes)
+	{
+		this.keepSplittedNodes = keepSplittedNodes;
+	}
+
+	public boolean isKeepSplittedWays()
+	{
+		return keepSplittedWays;
+	}
+
+	public void setKeepSplittedWays(boolean keepSplittedWays)
+	{
+		this.keepSplittedWays = keepSplittedWays;
+	}
+
+	public boolean isKeepSplittedRelations()
+	{
+		return keepSplittedRelations;
+	}
+
+	public void setKeepSplittedRelations(boolean keepSplittedRelations)
+	{
+		this.keepSplittedRelations = keepSplittedRelations;
+	}
+
+	public boolean isKeepWaysByNodes()
+	{
+		return keepWaysByNodes;
+	}
+
+	public void setKeepWaysByNodes(boolean keepWaysByNodes)
+	{
+		this.keepWaysByNodes = keepWaysByNodes;
+	}
+
+	public boolean isKeepRelations()
+	{
+		return keepRelations;
+	}
+
+	public void setKeepRelations(boolean keepRelations)
+	{
+		this.keepRelations = keepRelations;
+	}
+
+	public boolean isKeepRelationBatches()
+	{
+		return keepRelationBatches;
+	}
+
+	public void setKeepRelationBatches(boolean keepRelationBatches)
+	{
+		this.keepRelationBatches = keepRelationBatches;
+	}
+
+	public boolean isKeepNonTreeRelations()
+	{
+		return keepNonTreeRelations;
+	}
+
+	public void setKeepNonTreeRelations(boolean keepNonTreeRelations)
+	{
+		this.keepNonTreeRelations = keepNonTreeRelations;
+	}
+
 }

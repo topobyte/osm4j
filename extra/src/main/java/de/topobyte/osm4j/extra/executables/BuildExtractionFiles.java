@@ -41,6 +41,16 @@ public class BuildExtractionFiles extends AbstractExecutableInput
 	private static final String OPTION_MAX_MEMBERS_COMPLEX = "max_members_complex";
 	private static final String OPTION_COMPUTE_BBOX = "compute_bbox";
 
+	private static final String OPTION_KEEP_ALL = "keep_all";
+	private static final String OPTION_KEEP_SPLITTED = "keep_splitted";
+	private static final String OPTION_KEEP_SPLITTED_NODES = "keep_splitted_nodes";
+	private static final String OPTION_KEEP_SPLITTED_WAYS = "keep_splitted_ways";
+	private static final String OPTION_KEEP_SPLITTED_RELATIONS = "keep_splitted_relations";
+	private static final String OPTION_KEEP_WAYS_BY_NODES = "keep_ways_by_nodes";
+	private static final String OPTION_KEEP_RELATIONS = "keep_relations";
+	private static final String OPTION_KEEP_RELATION_BATCHES = "keep_relation_batches";
+	private static final String OPTION_KEEP_NONTREE_RELATIONS = "keep_nontree_relations";
+
 	@Override
 	protected String getHelpMessage()
 	{
@@ -68,6 +78,16 @@ public class BuildExtractionFiles extends AbstractExecutableInput
 	private FileFormat outputFormat = FileFormat.TBO;
 	private ExtractionFileNames fileNames;
 
+	private boolean keepAll = false;
+	private boolean keepSplitted = false;
+	private boolean keepSplittedNodes = false;
+	private boolean keepSplittedWays = false;
+	private boolean keepSplittedRelations = false;
+	private boolean keepWaysByNodes = false;
+	private boolean keepRelations = false;
+	private boolean keepRelationBatches = false;
+	private boolean keepNonTreeRelations = false;
+
 	public BuildExtractionFiles()
 	{
 		// @formatter:off
@@ -78,6 +98,15 @@ public class BuildExtractionFiles extends AbstractExecutableInput
 		OptionHelper.add(options, OPTION_MAX_MEMBERS_COMPLEX, true, true, "maximum number of nodes per batch");
 		OptionHelper.add(options, OPTION_COMPUTE_BBOX, false, false, "compute bbox instead of using bbox declared in input file");
 		ExtractionFilesHelper.addOptions(options);
+		OptionHelper.add(options, OPTION_KEEP_ALL, false, false, "keep all temporary files");
+		OptionHelper.add(options, OPTION_KEEP_SPLITTED, false, false, "keep the files containing only input nodes/ways/relations");
+		OptionHelper.add(options, OPTION_KEEP_SPLITTED_NODES, false, false, "keep the file containing only input nodes");
+		OptionHelper.add(options, OPTION_KEEP_SPLITTED_WAYS, false, false, "keep the file containing only input ways");
+		OptionHelper.add(options, OPTION_KEEP_SPLITTED_RELATIONS, false, false, "keep the file containing only input relations");
+		OptionHelper.add(options, OPTION_KEEP_WAYS_BY_NODES, false, false, "keep the directory with ways sorted by first node id");
+		OptionHelper.add(options, OPTION_KEEP_RELATIONS, false, false, "keep the files with simple and complex relations");
+		OptionHelper.add(options, OPTION_KEEP_RELATION_BATCHES, false, false, "keep the directories with relation batches");
+		OptionHelper.add(options, OPTION_KEEP_NONTREE_RELATIONS, false, false, "keep the files containing nontree relations");
 		// @formatter:on
 	}
 
@@ -122,6 +151,30 @@ public class BuildExtractionFiles extends AbstractExecutableInput
 		fileNames = FileNameDefaults.forFormat(outputFormat);
 
 		ExtractionFilesHelper.parse(line, fileNames);
+
+		keepAll = line.hasOption(OPTION_KEEP_ALL);
+		keepSplitted = line.hasOption(OPTION_KEEP_SPLITTED);
+
+		keepSplittedNodes = line.hasOption(OPTION_KEEP_SPLITTED_NODES);
+		keepSplittedWays = line.hasOption(OPTION_KEEP_SPLITTED_WAYS);
+		keepSplittedRelations = line.hasOption(OPTION_KEEP_SPLITTED_RELATIONS);
+
+		keepWaysByNodes = line.hasOption(OPTION_KEEP_WAYS_BY_NODES);
+		keepRelations = line.hasOption(OPTION_KEEP_RELATIONS);
+		keepRelationBatches = line.hasOption(OPTION_KEEP_RELATION_BATCHES);
+		keepNonTreeRelations = line.hasOption(OPTION_KEEP_NONTREE_RELATIONS);
+
+		if (keepAll || keepSplitted) {
+			keepSplittedNodes = true;
+			keepSplittedWays = true;
+			keepSplittedRelations = true;
+		}
+		if (keepAll) {
+			keepWaysByNodes = true;
+			keepRelations = true;
+			keepRelationBatches = true;
+			keepNonTreeRelations = true;
+		}
 	}
 
 	private void execute() throws IOException, OsmInputException
@@ -130,6 +183,14 @@ public class BuildExtractionFiles extends AbstractExecutableInput
 				Paths.get(pathInput), inputFormat, Paths.get(pathOutput),
 				outputFormat, fileNames, maxNodes, includeMetadata,
 				maxMembersSimple, maxMembersComplex, computeBbox);
+
+		builder.setKeepSplittedNodes(keepSplittedNodes);
+		builder.setKeepSplittedWays(keepSplittedWays);
+		builder.setKeepSplittedRelations(keepSplittedRelations);
+		builder.setKeepWaysByNodes(keepWaysByNodes);
+		builder.setKeepRelations(keepRelations);
+		builder.setKeepRelationBatches(keepRelationBatches);
+		builder.setKeepNonTreeRelations(keepNonTreeRelations);
 
 		builder.execute();
 	}
