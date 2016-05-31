@@ -82,6 +82,16 @@ public class WayBuilder extends AbstractGeometryBuilder
 		this.missingWayNodeStrategy = missingWayNodeStrategy;
 	}
 
+	public boolean isIncludePuntal()
+	{
+		return includePuntal;
+	}
+
+	public void setIncludePuntal(boolean includePuntal)
+	{
+		this.includePuntal = includePuntal;
+	}
+
 	public boolean isLog()
 	{
 		return log;
