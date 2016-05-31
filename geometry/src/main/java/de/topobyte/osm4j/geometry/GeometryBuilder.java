@@ -58,6 +58,41 @@ public class GeometryBuilder extends AbstractGeometryBuilder
 		regionBuilder.setMissingWayNodeStrategy(missingWayNodeStrategy);
 	}
 
+	/**
+	 * Get the {@link NodeBuilder} used to build {@link Point}s and
+	 * {@link Coordinate}s from {@link OsmNode}s using
+	 * {@link #buildCoordinate(OsmNode)} and {@link #build(OsmNode)}.
+	 * 
+	 * @return the {@link NodeBuilder} instance.
+	 */
+	public NodeBuilder getNodeBuilder()
+	{
+		return nodeBuilder;
+	}
+
+	/**
+	 * Get the {@link WayBuilder} used to build {@link Geometry} from
+	 * {@link OsmWay}s using {@link #build(OsmWay, OsmEntityProvider)}.
+	 * 
+	 * @return the {@link WayBuilder} instance.
+	 */
+	public WayBuilder getWayBuilder()
+	{
+		return wayBuilder;
+	}
+
+	/**
+	 * Get the {@link RegionBuilder} used to build {@link Geometry} from
+	 * {@link OsmRelation}s using {@link #build(OsmRelation, OsmEntityProvider)}
+	 * .
+	 * 
+	 * @return the {@link RegionBuilder} instance.
+	 */
+	public RegionBuilder getRegionBuilder()
+	{
+		return regionBuilder;
+	}
+
 	public MissingEntitiesStrategy getMissingEntitiesStrategy()
 	{
 		return missingEntitiesStrategy;
