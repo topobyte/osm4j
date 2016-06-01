@@ -28,9 +28,9 @@ import java.util.List;
 import de.topobyte.osm4j.core.access.OsmIteratorInput;
 import de.topobyte.osm4j.core.access.OsmIteratorInputFactory;
 import de.topobyte.osm4j.core.model.iface.OsmRelation;
+import de.topobyte.osm4j.core.util.RelationIterator;
 import de.topobyte.osm4j.extra.relations.Group;
 import de.topobyte.osm4j.extra.relations.RelationGraph;
-import de.topobyte.osm4j.extra.relations.RelationIterator;
 
 public class ComplexRelationGrouper
 {

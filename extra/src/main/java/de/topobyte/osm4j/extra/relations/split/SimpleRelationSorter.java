@@ -24,7 +24,7 @@ import de.topobyte.osm4j.core.access.OsmIteratorInput;
 import de.topobyte.osm4j.core.access.OsmIteratorInputFactory;
 import de.topobyte.osm4j.core.access.OsmStreamOutput;
 import de.topobyte.osm4j.core.model.iface.OsmRelation;
-import de.topobyte.osm4j.extra.relations.RelationIterator;
+import de.topobyte.osm4j.core.util.RelationIterator;
 import de.topobyte.osm4j.utils.OsmOutputConfig;
 
 public class SimpleRelationSorter extends RelationSorterBase
