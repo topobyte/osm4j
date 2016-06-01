@@ -22,11 +22,11 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.topobyte.melon.io.StreamUtil;
 import de.topobyte.osm4j.core.access.OsmIterator;
 import de.topobyte.osm4j.utils.AbstractExecutableSingleOutput;
 import de.topobyte.osm4j.utils.FileFormat;
 import de.topobyte.osm4j.utils.OsmIoUtils;
-import de.topobyte.osm4j.utils.StreamUtil;
 import de.topobyte.osm4j.utils.merge.sorted.SortedMerge;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 

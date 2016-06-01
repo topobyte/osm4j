@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
 
+import de.topobyte.melon.io.StreamUtil;
 import de.topobyte.osm4j.core.access.OsmIdIterator;
 import de.topobyte.osm4j.core.access.OsmIdIteratorInput;
 import de.topobyte.osm4j.core.access.OsmIdReader;

@@ -30,6 +30,7 @@ dependencies {
     compile 'de.topobyte:large-scale-file-io:0.0.1'
     compile 'de.topobyte:adt-geo:0.0.2'
     compile 'de.topobyte:commons-cli-helper:0.0.1'
+    compile 'de.topobyte:melon-io:0.0.1'
 
     compile 'org.apache.commons:commons-compress:1.8'
     compile 'com.google.guava:guava:18.0'
