@@ -62,7 +62,7 @@ public class OsmMerge extends AbstractExecutableSingleOutput
 	public OsmMerge()
 	{
 		// @formatter:off
-		OptionHelper.add(options, OPTION_INPUT_FORMAT, true, true, "the file format of the input files");
+		OptionHelper.addL(options, OPTION_INPUT_FORMAT, true, true, "the file format of the input files");
 		// @formatter:on
 	}
 

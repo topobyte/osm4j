@@ -54,7 +54,7 @@ public class OsmBboxFilter extends AbstractAreaFilter
 	public OsmBboxFilter()
 	{
 		// @formatter:off
-		OptionHelper.add(options, OPTION_BBOX, true, true, "the bbox to extract (lon1,lat1,lon2,lat2)");
+		OptionHelper.addL(options, OPTION_BBOX, true, true, "the bbox to extract (lon1,lat1,lon2,lat2)");
 		// @formatter:on
 	}
 

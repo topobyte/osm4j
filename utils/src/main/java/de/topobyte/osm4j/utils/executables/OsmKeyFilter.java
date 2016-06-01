@@ -69,7 +69,7 @@ public class OsmKeyFilter extends AbstractExecutableSingleInputStreamSingleOutpu
 	public OsmKeyFilter()
 	{
 		// @formatter:off
-		OptionHelper.add(options, OPTION_KEY, true, true, "the key that elements have to carry");
+		OptionHelper.addL(options, OPTION_KEY, true, true, "the key that elements have to carry");
 		// @formatter:on
 	}
 

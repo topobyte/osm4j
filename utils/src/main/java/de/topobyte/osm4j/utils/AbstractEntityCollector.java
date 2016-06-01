@@ -51,8 +51,8 @@ public abstract class AbstractEntityCollector extends
 	public AbstractEntityCollector()
 	{
 		// @formatter:off
-		OptionHelper.add(options, OPTION_REFERENCES, true, true, "the file to determine references from");
-		OptionHelper.add(options, OPTION_REFERENCES_FORMAT, true, true, "the file format of the references file");
+		OptionHelper.addL(options, OPTION_REFERENCES, true, true, "the file to determine references from");
+		OptionHelper.addL(options, OPTION_REFERENCES_FORMAT, true, true, "the file format of the references file");
 		// @formatter:on
 	}
 

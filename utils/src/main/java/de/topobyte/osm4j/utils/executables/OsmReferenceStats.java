@@ -60,10 +60,10 @@ public class OsmReferenceStats extends AbstractExecutableSingleInputStream
 	public OsmReferenceStats()
 	{
 		// @formatter:off
-		OptionHelper.add(options, OPTION_NO_WAY_NODES, false, false, "do not check for way nodes");
-		OptionHelper.add(options, OPTION_NO_RELATION_NODES, false, false, "do not check for relation node members");
-		OptionHelper.add(options, OPTION_NO_RELATION_WAYS, false, false, "do not check for relation way members");
-		OptionHelper.add(options, OPTION_NO_RELATION_RELATIONS, false, false, "do not check for relation relation members");
+		OptionHelper.addL(options, OPTION_NO_WAY_NODES, false, false, "do not check for way nodes");
+		OptionHelper.addL(options, OPTION_NO_RELATION_NODES, false, false, "do not check for relation node members");
+		OptionHelper.addL(options, OPTION_NO_RELATION_WAYS, false, false, "do not check for relation way members");
+		OptionHelper.addL(options, OPTION_NO_RELATION_RELATIONS, false, false, "do not check for relation relation members");
 		// @formatter:on
 	}
 

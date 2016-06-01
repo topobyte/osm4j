@@ -71,8 +71,8 @@ public class OsmTagFilter extends AbstractExecutableSingleInputStreamSingleOutpu
 	public OsmTagFilter()
 	{
 		// @formatter:off
-		OptionHelper.add(options, OPTION_KEY, true, true, "the key that elements have to carry");
-		OptionHelper.add(options, OPTION_VALUE, true, true, "the value of the tag");
+		OptionHelper.addL(options, OPTION_KEY, true, true, "the key that elements have to carry");
+		OptionHelper.addL(options, OPTION_VALUE, true, true, "the value of the tag");
 		// @formatter:on
 	}
 

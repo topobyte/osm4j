@@ -31,7 +31,7 @@ public abstract class AbstractExecutableInput extends AbstractExecutable
 	public AbstractExecutableInput()
 	{
 		// @formatter:off
-		OptionHelper.add(options, OPTION_INPUT_FORMAT, true, true, "the file format of the input");
+		OptionHelper.addL(options, OPTION_INPUT_FORMAT, true, true, "the file format of the input");
 		// @formatter:on
 	}
 

@@ -70,7 +70,7 @@ public class OsmIdFilter extends AbstractExecutableSingleInputStreamSingleOutput
 	public OsmIdFilter()
 	{
 		// @formatter:off
-		OptionHelper.add(options, OPTION_ID, true, true, "the id of elements to pass");
+		OptionHelper.addL(options, OPTION_ID, true, true, "the id of elements to pass");
 		// @formatter:on
 	}
 

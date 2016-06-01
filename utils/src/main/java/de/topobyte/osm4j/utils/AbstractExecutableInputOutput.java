@@ -42,8 +42,8 @@ public abstract class AbstractExecutableInputOutput extends AbstractExecutable
 	public AbstractExecutableInputOutput()
 	{
 		// @formatter:off
-		OptionHelper.add(options, OPTION_INPUT_FORMAT, true, true, "the file format of the input");
-		OptionHelper.add(options, OPTION_OUTPUT_FORMAT, true, true, "the file format of the output");
+		OptionHelper.addL(options, OPTION_INPUT_FORMAT, true, true, "the file format of the input");
+		OptionHelper.addL(options, OPTION_OUTPUT_FORMAT, true, true, "the file format of the output");
 		PbfOptions.add(options);
 		TboOptions.add(options);
 		// @formatter:on

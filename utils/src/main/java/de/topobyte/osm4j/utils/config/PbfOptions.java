@@ -34,9 +34,9 @@ public class PbfOptions
 	public static void add(Options options)
 	{
 		// @formatter:off
-		OptionHelper.add(options, OPTION_PBF_COMPRESSION, true, false,
+		OptionHelper.addL(options, OPTION_PBF_COMPRESSION, true, false,
 				"PBF output compression. One of " + POSSIBLE_COMPRESSION_ARGUMENTS);
-		OptionHelper.add(options, OPTION_PBF_NONE_DENSE, false, false,
+		OptionHelper.addL(options, OPTION_PBF_NONE_DENSE, false, false,
 				"Disable dense node packing");
 		// @formatter:on
 	}

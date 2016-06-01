@@ -54,8 +54,8 @@ public abstract class AbstractExecutableSingleOutput extends AbstractExecutable
 	public AbstractExecutableSingleOutput()
 	{
 		// @formatter:off
-		OptionHelper.add(options, OPTION_OUTPUT, true, false, "the output file");
-		OptionHelper.add(options, OPTION_OUTPUT_FORMAT, true, true, "the file format of the output");
+		OptionHelper.addL(options, OPTION_OUTPUT, true, false, "the output file");
+		OptionHelper.addL(options, OPTION_OUTPUT_FORMAT, true, true, "the file format of the output");
 		PbfOptions.add(options);
 		TboOptions.add(options);
 		// @formatter:on

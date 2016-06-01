@@ -24,10 +24,10 @@ import de.topobyte.osm4j.tbo.Compression;
 import de.topobyte.osm4j.utils.config.limit.ElementCountLimit;
 import de.topobyte.osm4j.utils.config.limit.RelationMemberLimit;
 import de.topobyte.osm4j.utils.config.limit.WayNodeLimit;
-import de.topobyte.utilities.apache.commons.cli.ArgumentHelper;
-import de.topobyte.utilities.apache.commons.cli.ArgumentParseException;
-import de.topobyte.utilities.apache.commons.cli.IntegerOption;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
+import de.topobyte.utilities.apache.commons.cli.parsing.ArgumentHelper;
+import de.topobyte.utilities.apache.commons.cli.parsing.ArgumentParseException;
+import de.topobyte.utilities.apache.commons.cli.parsing.IntegerOption;
 
 public class TboOptions
 {
@@ -46,13 +46,13 @@ public class TboOptions
 	public static void add(Options options)
 	{
 		// @formatter:off
-		OptionHelper.add(options, OPTION_TBO_COMPRESSION, true, false, "TBO output compression. One of " + POSSIBLE_COMPRESSION_ARGUMENTS);
-		OptionHelper.add(options, OPTION_TBO_MAX_ELEMENTS_PER_BLOCK, true, false, "TBO: max number of elements per block");
-		OptionHelper.add(options, OPTION_TBO_MAX_NODES_PER_BLOCK, true, false, "TBO: max number of nodes per block");
-		OptionHelper.add(options, OPTION_TBO_MAX_WAYS_PER_BLOCK, true, false, "TBO: max number of ways per block");
-		OptionHelper.add(options, OPTION_TBO_MAX_RELATIONS_PER_BLOCK, true, false, "TBO: max number of relations per block");
-		OptionHelper.add(options, OPTION_TBO_MAX_WAY_NODES_PER_BLOCK, true, false, "TBO: max number of way nodes per block");
-		OptionHelper.add(options, OPTION_TBO_MAX_RELATION_MEMBERS_PER_BLOCK, true, false, "TBO: max number of relation members per block");
+		OptionHelper.addL(options, OPTION_TBO_COMPRESSION, true, false, "TBO output compression. One of " + POSSIBLE_COMPRESSION_ARGUMENTS);
+		OptionHelper.addL(options, OPTION_TBO_MAX_ELEMENTS_PER_BLOCK, true, false, "TBO: max number of elements per block");
+		OptionHelper.addL(options, OPTION_TBO_MAX_NODES_PER_BLOCK, true, false, "TBO: max number of nodes per block");
+		OptionHelper.addL(options, OPTION_TBO_MAX_WAYS_PER_BLOCK, true, false, "TBO: max number of ways per block");
+		OptionHelper.addL(options, OPTION_TBO_MAX_RELATIONS_PER_BLOCK, true, false, "TBO: max number of relations per block");
+		OptionHelper.addL(options, OPTION_TBO_MAX_WAY_NODES_PER_BLOCK, true, false, "TBO: max number of way nodes per block");
+		OptionHelper.addL(options, OPTION_TBO_MAX_RELATION_MEMBERS_PER_BLOCK, true, false, "TBO: max number of relation members per block");
 		// @formatter:on
 	}
 

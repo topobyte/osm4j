@@ -63,10 +63,10 @@ public class OsmEntitySplit extends AbstractExecutableSingleInputStreamOutput
 	public OsmEntitySplit()
 	{
 		// @formatter:off
-		OptionHelper.add(options, OPTION_OUTPUT_NODES, true, false, "the file to write nodes to");
-		OptionHelper.add(options, OPTION_OUTPUT_WAYS, true, false, "the file to write ways to");
-		OptionHelper.add(options, OPTION_OUTPUT_RELATIONS, true, false, "the file to write relations to");
-		OptionHelper.add(options, OPTION_THREADED, false, false, "use a multi-threaded implementation");
+		OptionHelper.addL(options, OPTION_OUTPUT_NODES, true, false, "the file to write nodes to");
+		OptionHelper.addL(options, OPTION_OUTPUT_WAYS, true, false, "the file to write ways to");
+		OptionHelper.addL(options, OPTION_OUTPUT_RELATIONS, true, false, "the file to write relations to");
+		OptionHelper.addL(options, OPTION_THREADED, false, false, "use a multi-threaded implementation");
 		// @formatter:on
 	}
 

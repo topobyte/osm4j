@@ -57,7 +57,7 @@ public class OsmRegionFilter extends AbstractAreaFilter
 	public OsmRegionFilter()
 	{
 		// @formatter:off
-		OptionHelper.add(options, OPTION_REGION, true, true, "a WKT file containing the region to extract");
+		OptionHelper.addL(options, OPTION_REGION, true, true, "a WKT file containing the region to extract");
 		// @formatter:on
 	}
 

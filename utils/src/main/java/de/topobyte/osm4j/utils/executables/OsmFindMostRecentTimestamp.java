@@ -53,7 +53,7 @@ public class OsmFindMostRecentTimestamp extends AbstractExecutableSingleInputStr
 	public OsmFindMostRecentTimestamp()
 	{
 		// @formatter:off
-		OptionHelper.add(options, OPTION_VERBOSE, false, false, "report each more recent timestamp as soon as it is found");
+		OptionHelper.addL(options, OPTION_VERBOSE, false, false, "report each more recent timestamp as soon as it is found");
 		// @formatter:on
 	}
 

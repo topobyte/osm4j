@@ -41,7 +41,7 @@ public abstract class AbstractExecutableSingleInputStreamSingleOutput extends
 	public AbstractExecutableSingleInputStreamSingleOutput()
 	{
 		// @formatter:off
-		OptionHelper.add(options, OPTION_OUTPUT, true, false, "the output file");
+		OptionHelper.addL(options, OPTION_OUTPUT, true, false, "the output file");
 		// @formatter:on
 	}
 

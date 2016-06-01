@@ -73,8 +73,8 @@ public class OsmTagFilterRegex extends
 	public OsmTagFilterRegex()
 	{
 		// @formatter:off
-		OptionHelper.add(options, OPTION_KEY, true, true, "the key that elements have to carry");
-		OptionHelper.add(options, OPTION_VALUE, true, true, "a java-style regular expression for the value of the tag");
+		OptionHelper.addL(options, OPTION_KEY, true, true, "the key that elements have to carry");
+		OptionHelper.addL(options, OPTION_VALUE, true, true, "a java-style regular expression for the value of the tag");
 		// @formatter:on
 	}
 

@@ -51,7 +51,7 @@ public abstract class AbstractAreaFilter extends
 	public AbstractAreaFilter()
 	{
 		// @formatter:off
-		OptionHelper.add(options, OPTION_ONLY_NODES, false, false, "extract only nodes");
+		OptionHelper.addL(options, OPTION_ONLY_NODES, false, false, "extract only nodes");
 		// @formatter:on
 	}
 

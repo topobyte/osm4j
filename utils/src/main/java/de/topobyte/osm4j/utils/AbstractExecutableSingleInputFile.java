@@ -31,7 +31,7 @@ public abstract class AbstractExecutableSingleInputFile extends AbstractExecutab
 	public AbstractExecutableSingleInputFile()
 	{
 		// @formatter:off
-		OptionHelper.add(options, OPTION_INPUT, true, true, "the input file");
+		OptionHelper.addL(options, OPTION_INPUT, true, true, "the input file");
 		// @formatter:on
 	}
 
