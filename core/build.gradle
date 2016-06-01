@@ -31,6 +31,8 @@ dependencies {
 
     testCompile 'junit:junit:4.12'
     testCompile 'de.topobyte:osm4j-xml:0.0.3'
+    testCompile 'de.topobyte:osm4j-utils:0.0.21'
+    testCompile 'com.google.guava:guava:19.0'
 }
 
 task sourcesJar(type: Jar, dependsOn: classes) {
