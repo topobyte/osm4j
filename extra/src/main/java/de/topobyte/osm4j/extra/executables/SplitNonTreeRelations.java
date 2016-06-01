@@ -23,9 +23,9 @@ import java.nio.file.Paths;
 import de.topobyte.osm4j.extra.relations.NonTreeRelationsSplitter;
 import de.topobyte.osm4j.utils.AbstractExecutableInputOutput;
 import de.topobyte.osm4j.utils.OsmOutputConfig;
-import de.topobyte.utilities.apache.commons.cli.ArgumentHelper;
-import de.topobyte.utilities.apache.commons.cli.ArgumentParseException;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
+import de.topobyte.utilities.apache.commons.cli.parsing.ArgumentHelper;
+import de.topobyte.utilities.apache.commons.cli.parsing.ArgumentParseException;
 
 public class SplitNonTreeRelations extends AbstractExecutableInputOutput
 {
@@ -79,20 +79,20 @@ public class SplitNonTreeRelations extends AbstractExecutableInputOutput
 	public SplitNonTreeRelations()
 	{
 		// @formatter:off
-		OptionHelper.add(options, OPTION_INPUT_SIMPLE, true, true, "input: simple relations");
-		OptionHelper.add(options, OPTION_INPUT_COMPLEX, true, true, "input: complex relations");
-		OptionHelper.add(options, OPTION_INPUT_SIMPLE_BBOXES, true, true, "input: simple relation bboxes");
-		OptionHelper.add(options, OPTION_INPUT_COMPLEX_BBOXES, true, true, "input: complex relation bboxes");
-		OptionHelper.add(options, OPTION_INPUT_SIMPLE_OLD, true, true, "input: simple relation (splitted)");
-		OptionHelper.add(options, OPTION_INPUT_COMPLEX_OLD, true, true, "input: complex relation (splitted)");
-		OptionHelper.add(options, OPTION_INPUT_SIMPLE, true, true, "input: simple relations");
-		OptionHelper.add(options, OPTION_INPUT_COMPLEX, true, true, "input: complex relations");
-		OptionHelper.add(options, OPTION_OUTPUT_SIMPLE, true, true, "output: simple relations");
-		OptionHelper.add(options, OPTION_OUTPUT_COMPLEX, true, true, "output: complex relations");
-		OptionHelper.add(options, OPTION_OUTPUT_SIMPLE_BBOXES, true, true, "output: simple relations bboxes");
-		OptionHelper.add(options, OPTION_OUTPUT_COMPLEX_BBOXES, true, true, "output: complex relations bboxes");
-		OptionHelper.add(options, OPTION_MAX_MEMBERS_SIMPLE, true, true, "maximum number of nodes per batch");
-		OptionHelper.add(options, OPTION_MAX_MEMBERS_COMPLEX, true, true, "maximum number of nodes per batch");
+		OptionHelper.addL(options, OPTION_INPUT_SIMPLE, true, true, "input: simple relations");
+		OptionHelper.addL(options, OPTION_INPUT_COMPLEX, true, true, "input: complex relations");
+		OptionHelper.addL(options, OPTION_INPUT_SIMPLE_BBOXES, true, true, "input: simple relation bboxes");
+		OptionHelper.addL(options, OPTION_INPUT_COMPLEX_BBOXES, true, true, "input: complex relation bboxes");
+		OptionHelper.addL(options, OPTION_INPUT_SIMPLE_OLD, true, true, "input: simple relation (splitted)");
+		OptionHelper.addL(options, OPTION_INPUT_COMPLEX_OLD, true, true, "input: complex relation (splitted)");
+		OptionHelper.addL(options, OPTION_INPUT_SIMPLE, true, true, "input: simple relations");
+		OptionHelper.addL(options, OPTION_INPUT_COMPLEX, true, true, "input: complex relations");
+		OptionHelper.addL(options, OPTION_OUTPUT_SIMPLE, true, true, "output: simple relations");
+		OptionHelper.addL(options, OPTION_OUTPUT_COMPLEX, true, true, "output: complex relations");
+		OptionHelper.addL(options, OPTION_OUTPUT_SIMPLE_BBOXES, true, true, "output: simple relations bboxes");
+		OptionHelper.addL(options, OPTION_OUTPUT_COMPLEX_BBOXES, true, true, "output: complex relations bboxes");
+		OptionHelper.addL(options, OPTION_MAX_MEMBERS_SIMPLE, true, true, "maximum number of nodes per batch");
+		OptionHelper.addL(options, OPTION_MAX_MEMBERS_COMPLEX, true, true, "maximum number of nodes per batch");
 		// @formatter:on
 	}
 

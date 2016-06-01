@@ -69,10 +69,10 @@ public class ExtractEntities extends AbstractExecutableSingleInputStreamOutput
 	public ExtractEntities()
 	{
 		// @formatter:off
-		OptionHelper.add(options, OPTION_DIRECTORY, true, true, "directory to work on");
-		OptionHelper.add(options, OPTION_FILE_NAMES_IDS, true, true, "names of the id files in the directory");
-		OptionHelper.add(options, OPTION_FILE_NAMES_OUTPUT, true, true, "names of the data files to create");
-		OptionHelper.add(options, OPTION_TYPE, true, true, "entity type (nodes, ways, relations)");
+		OptionHelper.addL(options, OPTION_DIRECTORY, true, true, "directory to work on");
+		OptionHelper.addL(options, OPTION_FILE_NAMES_IDS, true, true, "names of the id files in the directory");
+		OptionHelper.addL(options, OPTION_FILE_NAMES_OUTPUT, true, true, "names of the data files to create");
+		OptionHelper.addL(options, OPTION_TYPE, true, true, "entity type (nodes, ways, relations)");
 		// @formatter:on
 	}
 

@@ -74,8 +74,8 @@ public class NodeArrayInfo extends AbstractExecutable
 	public NodeArrayInfo()
 	{
 		// @formatter:off
-		OptionHelper.add(options, OPTION_INPUT, true, true, "input file");
-		OptionHelper.add(options, OPTION_TYPE, true, true, POSSIBLE_TYPES);
+		OptionHelper.addL(options, OPTION_INPUT, true, true, "input file");
+		OptionHelper.addL(options, OPTION_TYPE, true, true, POSSIBLE_TYPES);
 		// @formatter:on
 	}
 

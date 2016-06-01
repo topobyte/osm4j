@@ -55,9 +55,9 @@ public class ExtractWayMemberNodeIds extends AbstractExecutableInput
 	public ExtractWayMemberNodeIds()
 	{
 		// @formatter:off
-		OptionHelper.add(options, OPTION_DIRECTORY, true, true, "directory to store output in");
-		OptionHelper.add(options, OPTION_FILE_NAMES_WAYS, true, true, "names of the way files in each directory");
-		OptionHelper.add(options, OPTION_FILE_NAMES_NODE_IDS, true, true, "names of the node id files in each directory");
+		OptionHelper.addL(options, OPTION_DIRECTORY, true, true, "directory to store output in");
+		OptionHelper.addL(options, OPTION_FILE_NAMES_WAYS, true, true, "names of the way files in each directory");
+		OptionHelper.addL(options, OPTION_FILE_NAMES_NODE_IDS, true, true, "names of the node id files in each directory");
 		// @formatter:on
 	}
 

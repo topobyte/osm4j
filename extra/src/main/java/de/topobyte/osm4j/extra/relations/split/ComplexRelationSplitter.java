@@ -33,6 +33,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
+import de.topobyte.melon.io.StreamUtil;
 import de.topobyte.osm4j.core.access.OsmIteratorInputFactory;
 import de.topobyte.osm4j.core.access.OsmOutputStream;
 import de.topobyte.osm4j.core.dataset.InMemoryMapDataSet;
@@ -41,7 +42,6 @@ import de.topobyte.osm4j.extra.relations.Group;
 import de.topobyte.osm4j.extra.relations.RelationGroupUtil;
 import de.topobyte.osm4j.utils.OsmIoUtils;
 import de.topobyte.osm4j.utils.OsmOutputConfig;
-import de.topobyte.osm4j.utils.StreamUtil;
 
 public class ComplexRelationSplitter
 {

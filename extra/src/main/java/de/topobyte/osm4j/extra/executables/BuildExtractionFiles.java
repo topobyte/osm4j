@@ -27,9 +27,9 @@ import de.topobyte.osm4j.extra.extracts.ExtractionFilesHelper;
 import de.topobyte.osm4j.extra.extracts.FileNameDefaults;
 import de.topobyte.osm4j.utils.AbstractExecutableInput;
 import de.topobyte.osm4j.utils.FileFormat;
-import de.topobyte.utilities.apache.commons.cli.ArgumentHelper;
-import de.topobyte.utilities.apache.commons.cli.ArgumentParseException;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
+import de.topobyte.utilities.apache.commons.cli.parsing.ArgumentHelper;
+import de.topobyte.utilities.apache.commons.cli.parsing.ArgumentParseException;
 
 public class BuildExtractionFiles extends AbstractExecutableInput
 {
@@ -91,22 +91,22 @@ public class BuildExtractionFiles extends AbstractExecutableInput
 	public BuildExtractionFiles()
 	{
 		// @formatter:off
-		OptionHelper.add(options, OPTION_INPUT, true, true, "input file");
-		OptionHelper.add(options, OPTION_OUTPUT, true, true, "directory to store output in");
-		OptionHelper.add(options, OPTION_MAX_NODES, true, true, "the maximum number of nodes per file");
-		OptionHelper.add(options, OPTION_MAX_MEMBERS_SIMPLE, true, true, "maximum number of nodes per batch");
-		OptionHelper.add(options, OPTION_MAX_MEMBERS_COMPLEX, true, true, "maximum number of nodes per batch");
-		OptionHelper.add(options, OPTION_COMPUTE_BBOX, false, false, "compute bbox instead of using bbox declared in input file");
+		OptionHelper.addL(options, OPTION_INPUT, true, true, "input file");
+		OptionHelper.addL(options, OPTION_OUTPUT, true, true, "directory to store output in");
+		OptionHelper.addL(options, OPTION_MAX_NODES, true, true, "the maximum number of nodes per file");
+		OptionHelper.addL(options, OPTION_MAX_MEMBERS_SIMPLE, true, true, "maximum number of nodes per batch");
+		OptionHelper.addL(options, OPTION_MAX_MEMBERS_COMPLEX, true, true, "maximum number of nodes per batch");
+		OptionHelper.addL(options, OPTION_COMPUTE_BBOX, false, false, "compute bbox instead of using bbox declared in input file");
 		ExtractionFilesHelper.addOptions(options);
-		OptionHelper.add(options, OPTION_KEEP_ALL, false, false, "keep all temporary files");
-		OptionHelper.add(options, OPTION_KEEP_SPLITTED, false, false, "keep the files containing only input nodes/ways/relations");
-		OptionHelper.add(options, OPTION_KEEP_SPLITTED_NODES, false, false, "keep the file containing only input nodes");
-		OptionHelper.add(options, OPTION_KEEP_SPLITTED_WAYS, false, false, "keep the file containing only input ways");
-		OptionHelper.add(options, OPTION_KEEP_SPLITTED_RELATIONS, false, false, "keep the file containing only input relations");
-		OptionHelper.add(options, OPTION_KEEP_WAYS_BY_NODES, false, false, "keep the directory with ways sorted by first node id");
-		OptionHelper.add(options, OPTION_KEEP_RELATIONS, false, false, "keep the files with simple and complex relations");
-		OptionHelper.add(options, OPTION_KEEP_RELATION_BATCHES, false, false, "keep the directories with relation batches");
-		OptionHelper.add(options, OPTION_KEEP_NONTREE_RELATIONS, false, false, "keep the files containing nontree relations");
+		OptionHelper.addL(options, OPTION_KEEP_ALL, false, false, "keep all temporary files");
+		OptionHelper.addL(options, OPTION_KEEP_SPLITTED, false, false, "keep the files containing only input nodes/ways/relations");
+		OptionHelper.addL(options, OPTION_KEEP_SPLITTED_NODES, false, false, "keep the file containing only input nodes");
+		OptionHelper.addL(options, OPTION_KEEP_SPLITTED_WAYS, false, false, "keep the file containing only input ways");
+		OptionHelper.addL(options, OPTION_KEEP_SPLITTED_RELATIONS, false, false, "keep the file containing only input relations");
+		OptionHelper.addL(options, OPTION_KEEP_WAYS_BY_NODES, false, false, "keep the directory with ways sorted by first node id");
+		OptionHelper.addL(options, OPTION_KEEP_RELATIONS, false, false, "keep the files with simple and complex relations");
+		OptionHelper.addL(options, OPTION_KEEP_RELATION_BATCHES, false, false, "keep the directories with relation batches");
+		OptionHelper.addL(options, OPTION_KEEP_NONTREE_RELATIONS, false, false, "keep the files containing nontree relations");
 		// @formatter:on
 	}
 

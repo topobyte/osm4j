@@ -61,9 +61,9 @@ public class MapWaysToTreeUsingArray extends
 	public MapWaysToTreeUsingArray()
 	{
 		// @formatter:off
-		OptionHelper.add(options, OPTION_FILE_NAMES, true, true, "names of the data files to create");
-		OptionHelper.add(options, OPTION_TREE, true, true, "directory to store output in");
-		OptionHelper.add(options, OPTION_NODE_ARRAY, true, true, "a path to a node array");
+		OptionHelper.addL(options, OPTION_FILE_NAMES, true, true, "names of the data files to create");
+		OptionHelper.addL(options, OPTION_TREE, true, true, "directory to store output in");
+		OptionHelper.addL(options, OPTION_NODE_ARRAY, true, true, "a path to a node array");
 		// @formatter:on
 	}
 

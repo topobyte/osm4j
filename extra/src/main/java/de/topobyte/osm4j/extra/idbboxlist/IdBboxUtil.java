@@ -29,8 +29,8 @@ import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
 
+import de.topobyte.melon.io.StreamUtil;
 import de.topobyte.osm4j.extra.datatree.BoxUtil;
-import de.topobyte.osm4j.utils.StreamUtil;
 
 public class IdBboxUtil
 {

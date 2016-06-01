@@ -73,9 +73,9 @@ public class CreateNodeTreeMaxNodes extends
 	public CreateNodeTreeMaxNodes()
 	{
 		// @formatter:off
-		OptionHelper.add(options, OPTION_OUTPUT, true, true, "directory to store output in");
-		OptionHelper.add(options, OPTION_MAX_NODES, true, true, "the maximum number of nodes per file");
-		OptionHelper.add(options, OPTION_FILE_NAMES, true, true, "names of the data files to create");
+		OptionHelper.addL(options, OPTION_OUTPUT, true, true, "directory to store output in");
+		OptionHelper.addL(options, OPTION_MAX_NODES, true, true, "the maximum number of nodes per file");
+		OptionHelper.addL(options, OPTION_FILE_NAMES, true, true, "names of the data files to create");
 		// @formatter:on
 	}
 

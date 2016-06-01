@@ -70,15 +70,15 @@ public abstract class DistributeRelationsBase extends
 	public DistributeRelationsBase()
 	{
 		// @formatter:off
-		OptionHelper.add(options, OPTION_TREE, true, true, "tree to use for small relations");
-		OptionHelper.add(options, OPTION_DIRECTORY, true, true, "directory to store output in");
-		OptionHelper.add(options, OPTION_FILE_NAMES_RELATIONS, true, true, "names of the relations files in each directory");
-		OptionHelper.add(options, OPTION_FILE_NAMES_WAYS, true, true, "names of the ways files in each directory");
-		OptionHelper.add(options, OPTION_FILE_NAMES_NODES, true, true, "names of the nodes files in each directory");
-		OptionHelper.add(options, OPTION_FILE_NAMES_TREE_RELATIONS, true, true, "names of the relation files in the tree");
-		OptionHelper.add(options, OPTION_OUTPUT_EMPTY_RELATIONS, true, true, "where to store relations without geometry");
-		OptionHelper.add(options, OPTION_OUTPUT_NON_TREE_RELATIONS, true, true, "where to store relations not matched with the tree");
-		OptionHelper.add(options, OPTION_OUTPUT_NON_TREE_BBOXES, true, true, "where to store bboxes of non-matched relations");
+		OptionHelper.addL(options, OPTION_TREE, true, true, "tree to use for small relations");
+		OptionHelper.addL(options, OPTION_DIRECTORY, true, true, "directory to store output in");
+		OptionHelper.addL(options, OPTION_FILE_NAMES_RELATIONS, true, true, "names of the relations files in each directory");
+		OptionHelper.addL(options, OPTION_FILE_NAMES_WAYS, true, true, "names of the ways files in each directory");
+		OptionHelper.addL(options, OPTION_FILE_NAMES_NODES, true, true, "names of the nodes files in each directory");
+		OptionHelper.addL(options, OPTION_FILE_NAMES_TREE_RELATIONS, true, true, "names of the relation files in the tree");
+		OptionHelper.addL(options, OPTION_OUTPUT_EMPTY_RELATIONS, true, true, "where to store relations without geometry");
+		OptionHelper.addL(options, OPTION_OUTPUT_NON_TREE_RELATIONS, true, true, "where to store relations not matched with the tree");
+		OptionHelper.addL(options, OPTION_OUTPUT_NON_TREE_BBOXES, true, true, "where to store bboxes of non-matched relations");
 		// @formatter:on
 	}
 

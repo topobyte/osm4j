@@ -67,12 +67,12 @@ public class DistributeWays extends AbstractExecutableInputOutput
 	public DistributeWays()
 	{
 		// @formatter:off
-		OptionHelper.add(options, OPTION_FILE_NAMES_NODES1, true, true, "names of the node files in the tree");
-		OptionHelper.add(options, OPTION_FILE_NAMES_NODES2, true, true, "names of the node files in the tree");
-		OptionHelper.add(options, OPTION_FILE_NAMES_WAYS, true, true, "names of the way files in the tree");
-		OptionHelper.add(options, OPTION_TREE, true, true, "tree directory to work on");
-		OptionHelper.add(options, OPTION_FILE_NAMES_OUTPUT_WAYS, true, true, "name of files for intersecting ways");
-		OptionHelper.add(options, OPTION_FILE_NAMES_OUTPUT_NODES, true, true, "name of files for intersecting ways' nodes");
+		OptionHelper.addL(options, OPTION_FILE_NAMES_NODES1, true, true, "names of the node files in the tree");
+		OptionHelper.addL(options, OPTION_FILE_NAMES_NODES2, true, true, "names of the node files in the tree");
+		OptionHelper.addL(options, OPTION_FILE_NAMES_WAYS, true, true, "names of the way files in the tree");
+		OptionHelper.addL(options, OPTION_TREE, true, true, "tree directory to work on");
+		OptionHelper.addL(options, OPTION_FILE_NAMES_OUTPUT_WAYS, true, true, "name of files for intersecting ways");
+		OptionHelper.addL(options, OPTION_FILE_NAMES_OUTPUT_NODES, true, true, "name of files for intersecting ways' nodes");
 		// @formatter:on
 	}
 

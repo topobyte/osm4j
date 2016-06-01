@@ -26,6 +26,7 @@ import java.util.Set;
 
 import com.vividsolutions.jts.geom.Envelope;
 
+import de.topobyte.melon.io.StreamUtil;
 import de.topobyte.osm4j.core.access.OsmIterator;
 import de.topobyte.osm4j.core.access.OsmStreamOutput;
 import de.topobyte.osm4j.core.dataset.InMemoryMapDataSet;
@@ -45,7 +46,6 @@ import de.topobyte.osm4j.geometry.BboxBuilder;
 import de.topobyte.osm4j.utils.FileFormat;
 import de.topobyte.osm4j.utils.OsmIoUtils;
 import de.topobyte.osm4j.utils.OsmOutputConfig;
-import de.topobyte.osm4j.utils.StreamUtil;
 
 public class SimpleRelationsDistributor extends RelationsDistributorBase
 {

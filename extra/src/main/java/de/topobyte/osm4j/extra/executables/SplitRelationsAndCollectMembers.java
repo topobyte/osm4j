@@ -67,12 +67,12 @@ public class SplitRelationsAndCollectMembers extends
 	public SplitRelationsAndCollectMembers()
 	{
 		// @formatter:off
-		OptionHelper.add(options, OPTION_INPUT_NODES, true, true, "input: nodes");
-		OptionHelper.add(options, OPTION_INPUT_WAYS, true, true, "input: ways");
-		OptionHelper.add(options, OPTION_INPUT_SIMPLE, true, true, "input: simple relations");
-		OptionHelper.add(options, OPTION_INPUT_COMPLEX, true, true, "input: complex relations");
-		OptionHelper.add(options, OPTION_OUTPUT_SIMPLE, true, true, "output: simple relations");
-		OptionHelper.add(options, OPTION_OUTPUT_COMPLEX, true, true, "output: complex relations");
+		OptionHelper.addL(options, OPTION_INPUT_NODES, true, true, "input: nodes");
+		OptionHelper.addL(options, OPTION_INPUT_WAYS, true, true, "input: ways");
+		OptionHelper.addL(options, OPTION_INPUT_SIMPLE, true, true, "input: simple relations");
+		OptionHelper.addL(options, OPTION_INPUT_COMPLEX, true, true, "input: complex relations");
+		OptionHelper.addL(options, OPTION_OUTPUT_SIMPLE, true, true, "output: simple relations");
+		OptionHelper.addL(options, OPTION_OUTPUT_COMPLEX, true, true, "output: complex relations");
 		// @formatter:on
 	}
 

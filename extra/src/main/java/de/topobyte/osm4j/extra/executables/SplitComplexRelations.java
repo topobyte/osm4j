@@ -59,8 +59,8 @@ public class SplitComplexRelations extends
 	public SplitComplexRelations()
 	{
 		// @formatter:off
-		OptionHelper.add(options, OPTION_OUTPUT, true, true, "directory to store output in");
-		OptionHelper.add(options, OPTION_FILE_NAMES_RELATIONS, true, true, "names of the relation files in each directory");
+		OptionHelper.addL(options, OPTION_OUTPUT, true, true, "directory to store output in");
+		OptionHelper.addL(options, OPTION_FILE_NAMES_RELATIONS, true, true, "names of the relation files in each directory");
 		// @formatter:on
 	}
 

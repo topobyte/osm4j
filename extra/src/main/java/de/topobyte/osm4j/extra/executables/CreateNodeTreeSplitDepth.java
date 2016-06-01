@@ -64,7 +64,7 @@ public class CreateNodeTreeSplitDepth extends CreateNodeTreeBase
 	public CreateNodeTreeSplitDepth()
 	{
 		// @formatter:off
-		OptionHelper.add(options, OPTION_SPLIT_DEPTH, true, true, "how often to split the root node");
+		OptionHelper.addL(options, OPTION_SPLIT_DEPTH, true, true, "how often to split the root node");
 		// @formatter:on
 	}
 

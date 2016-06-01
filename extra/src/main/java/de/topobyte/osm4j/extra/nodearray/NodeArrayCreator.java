@@ -22,11 +22,11 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Path;
 
+import de.topobyte.melon.io.StreamUtil;
 import de.topobyte.osm4j.core.access.OsmIterator;
 import de.topobyte.osm4j.core.model.iface.EntityContainer;
 import de.topobyte.osm4j.core.model.iface.EntityType;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
-import de.topobyte.osm4j.utils.StreamUtil;
 
 public class NodeArrayCreator
 {

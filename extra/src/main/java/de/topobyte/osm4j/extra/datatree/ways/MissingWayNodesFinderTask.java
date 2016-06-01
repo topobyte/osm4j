@@ -28,6 +28,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 
+import de.topobyte.melon.io.StreamUtil;
 import de.topobyte.osm4j.core.access.OsmIdIterator;
 import de.topobyte.osm4j.core.access.OsmIdIteratorInput;
 import de.topobyte.osm4j.core.access.OsmIteratorInput;
@@ -40,7 +41,6 @@ import de.topobyte.osm4j.extra.idlist.IdListOutputStream;
 import de.topobyte.osm4j.extra.threading.Task;
 import de.topobyte.osm4j.utils.OsmFile;
 import de.topobyte.osm4j.utils.OsmFileInput;
-import de.topobyte.osm4j.utils.StreamUtil;
 
 public class MissingWayNodesFinderTask implements Task
 {

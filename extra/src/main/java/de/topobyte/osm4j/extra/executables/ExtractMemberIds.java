@@ -57,10 +57,10 @@ public class ExtractMemberIds extends AbstractExecutableInput
 	public ExtractMemberIds()
 	{
 		// @formatter:off
-		OptionHelper.add(options, OPTION_DIRECTORY, true, true, "directory to store output in");
-		OptionHelper.add(options, OPTION_FILE_NAMES_RELATIONS, true, true, "names of the relation files in each directory");
-		OptionHelper.add(options, OPTION_FILE_NAMES_NODE_IDS, true, true, "names of the node id files in each directory");
-		OptionHelper.add(options, OPTION_FILE_NAMES_WAY_IDS, true, true, "names of the way id files in each directory");
+		OptionHelper.addL(options, OPTION_DIRECTORY, true, true, "directory to store output in");
+		OptionHelper.addL(options, OPTION_FILE_NAMES_RELATIONS, true, true, "names of the relation files in each directory");
+		OptionHelper.addL(options, OPTION_FILE_NAMES_NODE_IDS, true, true, "names of the node id files in each directory");
+		OptionHelper.addL(options, OPTION_FILE_NAMES_WAY_IDS, true, true, "names of the way id files in each directory");
 		// @formatter:on
 	}
 

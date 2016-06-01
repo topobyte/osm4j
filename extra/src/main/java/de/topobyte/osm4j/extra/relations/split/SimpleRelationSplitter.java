@@ -25,6 +25,7 @@ import java.text.NumberFormat;
 import java.util.List;
 import java.util.Locale;
 
+import de.topobyte.melon.io.StreamUtil;
 import de.topobyte.osm4j.core.access.OsmIteratorInput;
 import de.topobyte.osm4j.core.access.OsmIteratorInputFactory;
 import de.topobyte.osm4j.core.access.OsmOutputStream;
@@ -32,7 +33,6 @@ import de.topobyte.osm4j.core.model.iface.OsmRelation;
 import de.topobyte.osm4j.core.util.RelationIterator;
 import de.topobyte.osm4j.utils.OsmIoUtils;
 import de.topobyte.osm4j.utils.OsmOutputConfig;
-import de.topobyte.osm4j.utils.StreamUtil;
 
 public class SimpleRelationSplitter
 {

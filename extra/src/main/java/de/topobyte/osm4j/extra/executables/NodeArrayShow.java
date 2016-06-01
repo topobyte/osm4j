@@ -77,9 +77,9 @@ public class NodeArrayShow extends AbstractExecutable
 	public NodeArrayShow()
 	{
 		// @formatter:off
-		OptionHelper.add(options, OPTION_INPUT, true, true, "input file");
-		OptionHelper.add(options, OPTION_TYPE, true, true, POSSIBLE_TYPES);
-		OptionHelper.add(options, OPTION_ID, true, true, "a node id");
+		OptionHelper.addL(options, OPTION_INPUT, true, true, "input file");
+		OptionHelper.addL(options, OPTION_TYPE, true, true, POSSIBLE_TYPES);
+		OptionHelper.addL(options, OPTION_ID, true, true, "a node id");
 		// @formatter:on
 	}
 

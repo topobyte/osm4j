@@ -32,9 +32,9 @@ import de.topobyte.osm4j.utils.OsmFileInput;
 import de.topobyte.osm4j.utils.OsmFileSetInput;
 import de.topobyte.osm4j.utils.OsmIoUtils;
 import de.topobyte.osm4j.utils.OsmOutputConfig;
-import de.topobyte.utilities.apache.commons.cli.ArgumentHelper;
-import de.topobyte.utilities.apache.commons.cli.ArgumentParseException;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
+import de.topobyte.utilities.apache.commons.cli.parsing.ArgumentHelper;
+import de.topobyte.utilities.apache.commons.cli.parsing.ArgumentParseException;
 
 public class SortComplexRelationsAndCollectMembers extends
 		AbstractExecutableSingleInputFileOutput
@@ -75,12 +75,12 @@ public class SortComplexRelationsAndCollectMembers extends
 	public SortComplexRelationsAndCollectMembers()
 	{
 		// @formatter:off
-		OptionHelper.add(options, OPTION_INPUT_BBOXES, true, true, "bbox information file");
-		OptionHelper.add(options, OPTION_OUTPUT, true, true, "directory to store output in");
-		OptionHelper.add(options, OPTION_FILE_NAMES_RELATIONS, true, true, "names of the relation files in each directory");
-		OptionHelper.add(options, OPTION_OUTPUT_BBOXES, true, true, "bbox information file");
-		OptionHelper.add(options, OPTION_INPUT_OLD, true, true, "input: relations (splitted)");
-		OptionHelper.add(options, OPTION_MAX_MEMBERS, true, true, "maximum number of nodes per batch");
+		OptionHelper.addL(options, OPTION_INPUT_BBOXES, true, true, "bbox information file");
+		OptionHelper.addL(options, OPTION_OUTPUT, true, true, "directory to store output in");
+		OptionHelper.addL(options, OPTION_FILE_NAMES_RELATIONS, true, true, "names of the relation files in each directory");
+		OptionHelper.addL(options, OPTION_OUTPUT_BBOXES, true, true, "bbox information file");
+		OptionHelper.addL(options, OPTION_INPUT_OLD, true, true, "input: relations (splitted)");
+		OptionHelper.addL(options, OPTION_MAX_MEMBERS, true, true, "maximum number of nodes per batch");
 		// @formatter:on
 	}
 

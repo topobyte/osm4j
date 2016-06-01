@@ -64,10 +64,10 @@ public class FindMissingWayNodes extends AbstractExecutableInput
 	public FindMissingWayNodes()
 	{
 		// @formatter:off
-		OptionHelper.add(options, OPTION_FILE_NAMES_OUTPUT, true, true, "names of the data files to create");
-		OptionHelper.add(options, OPTION_FILE_NAMES_NODES, true, true, "names of the node files in the tree");
-		OptionHelper.add(options, OPTION_FILE_NAMES_WAYS, true, true, "names of the way files in the tree");
-		OptionHelper.add(options, OPTION_TREE, true, true, "tree directory to work on");
+		OptionHelper.addL(options, OPTION_FILE_NAMES_OUTPUT, true, true, "names of the data files to create");
+		OptionHelper.addL(options, OPTION_FILE_NAMES_NODES, true, true, "names of the node files in the tree");
+		OptionHelper.addL(options, OPTION_FILE_NAMES_WAYS, true, true, "names of the way files in the tree");
+		OptionHelper.addL(options, OPTION_TREE, true, true, "tree directory to work on");
 		// @formatter:on
 	}
 

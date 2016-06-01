@@ -62,9 +62,9 @@ public class ExtractMissingWayNodes extends
 	public ExtractMissingWayNodes()
 	{
 		// @formatter:off
-		OptionHelper.add(options, OPTION_TREE, true, true, "tree directory to work on");
-		OptionHelper.add(options, OPTION_FILE_NAMES_OUTPUT, true, true, "names of the data files to create");
-		OptionHelper.add(options, OPTION_FILE_NAMES_IDS, true, true, "names of the node id files in the tree");
+		OptionHelper.addL(options, OPTION_TREE, true, true, "tree directory to work on");
+		OptionHelper.addL(options, OPTION_FILE_NAMES_OUTPUT, true, true, "names of the data files to create");
+		OptionHelper.addL(options, OPTION_FILE_NAMES_IDS, true, true, "names of the node id files in the tree");
 		// @formatter:on
 	}
 

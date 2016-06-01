@@ -33,11 +33,11 @@ import de.topobyte.osm4j.extra.relations.Group;
 import de.topobyte.osm4j.extra.relations.RelationGraph;
 import de.topobyte.osm4j.extra.relations.RelationGroupUtil;
 import de.topobyte.osm4j.utils.AbstractExecutableSingleInputStream;
-import de.topobyte.utilities.apache.commons.cli.ArgumentHelper;
-import de.topobyte.utilities.apache.commons.cli.ArgumentParseException;
-import de.topobyte.utilities.apache.commons.cli.BooleanOption;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
-import de.topobyte.utilities.apache.commons.cli.StringOption;
+import de.topobyte.utilities.apache.commons.cli.parsing.ArgumentHelper;
+import de.topobyte.utilities.apache.commons.cli.parsing.ArgumentParseException;
+import de.topobyte.utilities.apache.commons.cli.parsing.BooleanOption;
+import de.topobyte.utilities.apache.commons.cli.parsing.StringOption;
 
 public class RelationGraphInfo extends AbstractExecutableSingleInputStream
 {
@@ -70,8 +70,8 @@ public class RelationGraphInfo extends AbstractExecutableSingleInputStream
 	public RelationGraphInfo()
 	{
 		// @formatter:off
-		OptionHelper.add(options, OPTION_UNDIRECTED, false, false, "build an undirected graph");
-		OptionHelper.add(options, OPTION_KEYS, true, false, "comma separated list of tag-keys to display for each start relation");
+		OptionHelper.addL(options, OPTION_UNDIRECTED, false, false, "build an undirected graph");
+		OptionHelper.addL(options, OPTION_KEYS, true, false, "comma separated list of tag-keys to display for each start relation");
 		// @formatter:on
 	}
 

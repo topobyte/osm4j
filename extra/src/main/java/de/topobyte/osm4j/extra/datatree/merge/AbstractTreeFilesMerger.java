@@ -25,6 +25,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.topobyte.melon.io.StreamUtil;
 import de.topobyte.osm4j.core.access.OsmIterator;
 import de.topobyte.osm4j.core.access.OsmOutputStream;
 import de.topobyte.osm4j.extra.datatree.DataTree;
@@ -34,7 +35,6 @@ import de.topobyte.osm4j.extra.datatree.Node;
 import de.topobyte.osm4j.utils.FileFormat;
 import de.topobyte.osm4j.utils.OsmIoUtils;
 import de.topobyte.osm4j.utils.OsmOutputConfig;
-import de.topobyte.osm4j.utils.StreamUtil;
 import de.topobyte.osm4j.utils.merge.sorted.SortedMerge;
 import de.topobyte.osm4j.utils.sort.MemorySortIterator;
 

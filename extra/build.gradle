@@ -23,14 +23,14 @@ repositories {
 
 dependencies {
     compile 'de.topobyte:osm4j-core:0.0.18'
-    compile 'de.topobyte:osm4j-geometry:0.0.13'
+    compile 'de.topobyte:osm4j-geometry:0.0.14'
     compile 'de.topobyte:osm4j-tbo:0.0.9'
     compile 'de.topobyte:adt-geo:0.0.2'
     compile 'de.topobyte:adt-graph:0.0.1'
-    compile 'de.topobyte:osm4j-utils:0.0.21'
+    compile 'de.topobyte:osm4j-utils:0.0.22'
     compile 'de.topobyte:jts-utils:0.0.3'
     compile 'de.topobyte:large-scale-file-io:0.0.1'
-    compile 'de.topobyte:commons-cli-helper:0.0.1'
+    compile 'de.topobyte:commons-cli-helper:0.0.3'
     compile 'commons-io:commons-io:2.4'
 
     compile 'org.slf4j:slf4j-api:1.6.1'

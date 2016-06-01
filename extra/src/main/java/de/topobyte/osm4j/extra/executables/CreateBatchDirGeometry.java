@@ -71,9 +71,9 @@ public class CreateBatchDirGeometry extends AbstractExecutableInput
 	public CreateBatchDirGeometry()
 	{
 		// @formatter:off
-		OptionHelper.add(options, OPTION_INPUT, true, true, "a directory containing batches");
-		OptionHelper.add(options, OPTION_FILE_NAMES, true, true, "file name in each batch to read");
-		OptionHelper.add(options, OPTION_OUTPUT, true, true, "a wkt file to create");
+		OptionHelper.addL(options, OPTION_INPUT, true, true, "a directory containing batches");
+		OptionHelper.addL(options, OPTION_FILE_NAMES, true, true, "file name in each batch to read");
+		OptionHelper.addL(options, OPTION_OUTPUT, true, true, "a wkt file to create");
 		// @formatter:on
 	}
 

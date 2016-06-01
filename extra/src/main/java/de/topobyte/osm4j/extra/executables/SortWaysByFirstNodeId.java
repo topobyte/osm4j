@@ -58,7 +58,7 @@ public class SortWaysByFirstNodeId extends
 	public SortWaysByFirstNodeId()
 	{
 		// @formatter:off
-		OptionHelper.add(options, OPTION_OUTPUT, true, true, "directory to store output in");
+		OptionHelper.addL(options, OPTION_OUTPUT, true, true, "directory to store output in");
 		// @formatter:on
 	}
 

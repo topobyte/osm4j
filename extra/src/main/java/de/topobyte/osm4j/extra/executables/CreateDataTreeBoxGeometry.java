@@ -21,7 +21,7 @@ import java.io.File;
 import java.io.IOException;
 
 import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.GnuParser;
+import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
@@ -43,13 +43,13 @@ public class CreateDataTreeBoxGeometry
 		Options options = new Options();
 
 		// @formatter:off
-		OptionHelper.add(options, OPTION_INPUT, true, true, "directory with data tree");
-		OptionHelper.add(options, OPTION_OUTPUT, true, true, "a wkt file to create");
+		OptionHelper.addL(options, OPTION_INPUT, true, true, "directory with data tree");
+		OptionHelper.addL(options, OPTION_OUTPUT, true, true, "a wkt file to create");
 		// @formatter:on
 
 		CommandLine line = null;
 		try {
-			line = new GnuParser().parse(options, args);
+			line = new DefaultParser().parse(options, args);
 		} catch (ParseException e) {
 			System.out.println("unable to parse command line: "
 					+ e.getMessage());

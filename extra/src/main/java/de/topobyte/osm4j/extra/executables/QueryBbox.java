@@ -47,7 +47,7 @@ public class QueryBbox extends BaseQuery
 	public QueryBbox()
 	{
 		// @formatter:off
-		OptionHelper.add(options, OPTION_BBOX, true, true, "the bbox to extract");
+		OptionHelper.addL(options, OPTION_BBOX, true, true, "the bbox to extract");
 		// @formatter:on
 	}
 

@@ -33,8 +33,8 @@ public abstract class CreateNodeTreeBase extends
 	public CreateNodeTreeBase()
 	{
 		// @formatter:off
-		OptionHelper.add(options, OPTION_OUTPUT, true, true, "directory to store output in");
-		OptionHelper.add(options, OPTION_FILE_NAMES, true, true, "names of the data files to create");
+		OptionHelper.addL(options, OPTION_OUTPUT, true, true, "directory to store output in");
+		OptionHelper.addL(options, OPTION_FILE_NAMES, true, true, "names of the data files to create");
 		// @formatter:on
 	}
 

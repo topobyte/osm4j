@@ -53,10 +53,10 @@ public class RenameFiles extends AbstractExecutable
 	public RenameFiles()
 	{
 		// @formatter:off
-		OptionHelper.add(options, OPTION_DIRECTORY, true, true, "input file");
-		OptionHelper.add(options, OPTION_FROM, true, true, "directory to store output in");
-		OptionHelper.add(options, OPTION_TO, true, true, "the maximum number of nodes per file");
-		OptionHelper.add(options, OPTION_DRY, false, false, "don't do any renaming, just print what would be done");
+		OptionHelper.addL(options, OPTION_DIRECTORY, true, true, "input file");
+		OptionHelper.addL(options, OPTION_FROM, true, true, "directory to store output in");
+		OptionHelper.addL(options, OPTION_TO, true, true, "the maximum number of nodes per file");
+		OptionHelper.addL(options, OPTION_DRY, false, false, "don't do any renaming, just print what would be done");
 		// @formatter:on
 	}
 

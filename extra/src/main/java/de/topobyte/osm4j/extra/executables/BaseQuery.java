@@ -48,11 +48,11 @@ public abstract class BaseQuery extends AbstractExecutableInputOutput
 	public BaseQuery()
 	{
 		// @formatter:off
-		OptionHelper.add(options, OPTION_INPUT, true, true, "directory with extraction files");
-		OptionHelper.add(options, OPTION_OUTPUT, true, true, "directory to store output in");
-		OptionHelper.add(options, OPTION_TMP, true, false, "directory to store intermediate files");
-		OptionHelper.add(options, OPTION_KEEP_TMP, false, false, "directory to store intermediate files");
-		OptionHelper.add(options, OPTION_FAST_RELATION_QUERIES, false, false, "include relations based on their bounding box");
+		OptionHelper.addL(options, OPTION_INPUT, true, true, "directory with extraction files");
+		OptionHelper.addL(options, OPTION_OUTPUT, true, true, "directory to store output in");
+		OptionHelper.addL(options, OPTION_TMP, true, false, "directory to store intermediate files");
+		OptionHelper.addL(options, OPTION_KEEP_TMP, false, false, "directory to store intermediate files");
+		OptionHelper.addL(options, OPTION_FAST_RELATION_QUERIES, false, false, "include relations based on their bounding box");
 		ExtractionFilesHelper.addOptions(options);
 		// @formatter:on
 	}

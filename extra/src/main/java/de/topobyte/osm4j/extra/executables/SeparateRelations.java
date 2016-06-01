@@ -52,8 +52,8 @@ public class SeparateRelations extends AbstractExecutableSingleInputFileOutput
 	public SeparateRelations()
 	{
 		// @formatter:off
-		OptionHelper.add(options, OPTION_OUTPUT_SIMPLE, true, true, "output: simple relations");
-		OptionHelper.add(options, OPTION_OUTPUT_COMPLEX, true, true, "output: complex relations");
+		OptionHelper.addL(options, OPTION_OUTPUT_SIMPLE, true, true, "output: simple relations");
+		OptionHelper.addL(options, OPTION_OUTPUT_COMPLEX, true, true, "output: complex relations");
 		// @formatter:on
 	}
 

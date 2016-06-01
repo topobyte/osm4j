@@ -65,11 +65,11 @@ public class MergeTreeFiles extends AbstractExecutableInputOutput
 	public MergeTreeFiles()
 	{
 		// @formatter:off
-		OptionHelper.add(options, OPTION_FILE_NAMES_SORTED, true, false, "name of a data file with sorted data in the tree");
-		OptionHelper.add(options, OPTION_FILE_NAMES_UNSORTED, true, false, "name of a data file with unsorted data in the tree");
-		OptionHelper.add(options, OPTION_TREE, true, true, "tree directory to work on");
-		OptionHelper.add(options, OPTION_FILE_NAMES_OUTPUT, true, true, "name of files for merged data");
-		OptionHelper.add(options, OPTION_DELETE, false, false, "delete input files");
+		OptionHelper.addL(options, OPTION_FILE_NAMES_SORTED, true, false, "name of a data file with sorted data in the tree");
+		OptionHelper.addL(options, OPTION_FILE_NAMES_UNSORTED, true, false, "name of a data file with unsorted data in the tree");
+		OptionHelper.addL(options, OPTION_TREE, true, true, "tree directory to work on");
+		OptionHelper.addL(options, OPTION_FILE_NAMES_OUTPUT, true, true, "name of files for merged data");
+		OptionHelper.addL(options, OPTION_DELETE, false, false, "delete input files");
 		// @formatter:on
 	}
 

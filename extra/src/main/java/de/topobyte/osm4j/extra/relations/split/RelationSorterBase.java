@@ -35,6 +35,7 @@ import com.vividsolutions.jts.geom.Envelope;
 
 import de.topobyte.largescalefileio.ClosingFileOutputStreamFactory;
 import de.topobyte.largescalefileio.SimpleClosingFileOutputStreamFactory;
+import de.topobyte.melon.io.StreamUtil;
 import de.topobyte.osm4j.core.access.OsmIteratorInputFactory;
 import de.topobyte.osm4j.core.access.OsmOutputStream;
 import de.topobyte.osm4j.core.access.OsmOutputStreamStreamOutput;
@@ -45,7 +46,6 @@ import de.topobyte.osm4j.extra.idbboxlist.IdBboxListOutputStream;
 import de.topobyte.osm4j.extra.idbboxlist.IdBboxUtil;
 import de.topobyte.osm4j.utils.OsmIoUtils;
 import de.topobyte.osm4j.utils.OsmOutputConfig;
-import de.topobyte.osm4j.utils.StreamUtil;
 
 public class RelationSorterBase
 {

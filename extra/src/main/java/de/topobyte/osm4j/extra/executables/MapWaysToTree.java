@@ -65,9 +65,9 @@ public class MapWaysToTree extends AbstractExecutableSingleInputStreamOutput
 	public MapWaysToTree()
 	{
 		// @formatter:off
-		OptionHelper.add(options, OPTION_FILE_NAMES_OUTPUT, true, true, "names of the data files to create");
-		OptionHelper.add(options, OPTION_WAYS, true, true, "directory with ways sorted by first node id");
-		OptionHelper.add(options, OPTION_TREE, true, true, "tree directory to work on");
+		OptionHelper.addL(options, OPTION_FILE_NAMES_OUTPUT, true, true, "names of the data files to create");
+		OptionHelper.addL(options, OPTION_WAYS, true, true, "directory with ways sorted by first node id");
+		OptionHelper.addL(options, OPTION_TREE, true, true, "tree directory to work on");
 		// @formatter:on
 	}
 

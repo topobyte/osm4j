@@ -41,18 +41,18 @@ public class ExtractionFilesHelper
 	public static void addOptions(Options options)
 	{
 		// @formatter:off
-		OptionHelper.add(options, OPTION_TREE, true, false, "relative path to the data tree");
-		OptionHelper.add(options, OPTION_SIMPLE_RELATIONS, true, false, "relative path to simple relation batches");
-		OptionHelper.add(options, OPTION_COMPLEX_RELATIONS, true, false, "relative path to complex relation batches");
-		OptionHelper.add(options, OPTION_SIMPLE_RELATIONS_BBOXES, true, false, "relative path to simple relation batches bboxes");
-		OptionHelper.add(options, OPTION_COMPLEX_RELATIONS_BBOXES, true, false, "relative path to complex relation batches bboxes");
-		OptionHelper.add(options, OPTION_FILE_NAMES_TREE_NODES, true, false, "name of node files in tree");
-		OptionHelper.add(options, OPTION_FILE_NAMES_TREE_WAYS, true, false, "name of way files in tree");
-		OptionHelper.add(options, OPTION_FILE_NAMES_TREE_RELATIONS_SIMPLE, true, false, "name of simple relations in tree");
-		OptionHelper.add(options, OPTION_FILE_NAMES_TREE_RELATIONS_COMPLEX, true, false, "name of complex relations in tree");
-		OptionHelper.add(options, OPTION_FILE_NAMES_RELATION_NODES, true, false, "name of node files in relation batches");
-		OptionHelper.add(options, OPTION_FILE_NAMES_RELATION_WAYS, true, false, "name of way files in relation batches");
-		OptionHelper.add(options, OPTION_FILE_NAMES_RELATION_RELATIONS, true, false, "name of relation files in relation batches");
+		OptionHelper.addL(options, OPTION_TREE, true, false, "relative path to the data tree");
+		OptionHelper.addL(options, OPTION_SIMPLE_RELATIONS, true, false, "relative path to simple relation batches");
+		OptionHelper.addL(options, OPTION_COMPLEX_RELATIONS, true, false, "relative path to complex relation batches");
+		OptionHelper.addL(options, OPTION_SIMPLE_RELATIONS_BBOXES, true, false, "relative path to simple relation batches bboxes");
+		OptionHelper.addL(options, OPTION_COMPLEX_RELATIONS_BBOXES, true, false, "relative path to complex relation batches bboxes");
+		OptionHelper.addL(options, OPTION_FILE_NAMES_TREE_NODES, true, false, "name of node files in tree");
+		OptionHelper.addL(options, OPTION_FILE_NAMES_TREE_WAYS, true, false, "name of way files in tree");
+		OptionHelper.addL(options, OPTION_FILE_NAMES_TREE_RELATIONS_SIMPLE, true, false, "name of simple relations in tree");
+		OptionHelper.addL(options, OPTION_FILE_NAMES_TREE_RELATIONS_COMPLEX, true, false, "name of complex relations in tree");
+		OptionHelper.addL(options, OPTION_FILE_NAMES_RELATION_NODES, true, false, "name of node files in relation batches");
+		OptionHelper.addL(options, OPTION_FILE_NAMES_RELATION_WAYS, true, false, "name of way files in relation batches");
+		OptionHelper.addL(options, OPTION_FILE_NAMES_RELATION_RELATIONS, true, false, "name of relation files in relation batches");
 		// @formatter:on
 	}
 
