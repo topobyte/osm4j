@@ -38,7 +38,7 @@ public abstract class AbstractAreaFilter extends
 		AbstractExecutableSingleInputStreamSingleOutput
 {
 
-	private static final String OPTION_ONLY_NODES = "nodes_only";
+	private static final String OPTION_ONLY_NODES = "nodes-only";
 
 	private boolean onlyNodes;
 

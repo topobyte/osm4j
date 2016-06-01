@@ -26,8 +26,8 @@ import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 public abstract class AbstractExecutableInputOutput extends AbstractExecutable
 {
 
-	private static final String OPTION_INPUT_FORMAT = "input_format";
-	private static final String OPTION_OUTPUT_FORMAT = "output_format";
+	private static final String OPTION_INPUT_FORMAT = "input-format";
+	private static final String OPTION_OUTPUT_FORMAT = "output-format";
 
 	protected FileFormat inputFormat;
 	protected FileFormat outputFormat;

@@ -33,7 +33,7 @@ import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 public class OsmMerge extends AbstractExecutableSingleOutput
 {
 
-	private static final String OPTION_INPUT_FORMAT = "input_format";
+	private static final String OPTION_INPUT_FORMAT = "input-format";
 
 	@Override
 	protected String getHelpMessage()

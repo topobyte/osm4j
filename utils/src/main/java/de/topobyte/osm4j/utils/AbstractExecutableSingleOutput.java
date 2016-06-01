@@ -37,7 +37,7 @@ public abstract class AbstractExecutableSingleOutput extends AbstractExecutable
 {
 
 	private static final String OPTION_OUTPUT = "output";
-	private static final String OPTION_OUTPUT_FORMAT = "output_format";
+	private static final String OPTION_OUTPUT_FORMAT = "output-format";
 
 	protected FileFormat outputFormat;
 	protected PbfConfig pbfConfig;

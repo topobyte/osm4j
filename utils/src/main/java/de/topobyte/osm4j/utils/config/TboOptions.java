@@ -34,14 +34,14 @@ public class TboOptions
 
 	public static final String POSSIBLE_COMPRESSION_ARGUMENTS = "none, deflate, lz4";
 
-	private static final String OPTION_TBO_COMPRESSION = "tbo_compression";
+	private static final String OPTION_TBO_COMPRESSION = "tbo-compression";
 
-	private static final String OPTION_TBO_MAX_ELEMENTS_PER_BLOCK = "tbo_max_elements_per_block";
-	private static final String OPTION_TBO_MAX_NODES_PER_BLOCK = "tbo_max_nodes_per_block";
-	private static final String OPTION_TBO_MAX_WAYS_PER_BLOCK = "tbo_max_ways_per_block";
-	private static final String OPTION_TBO_MAX_RELATIONS_PER_BLOCK = "tbo_max_relations_per_block";
-	private static final String OPTION_TBO_MAX_WAY_NODES_PER_BLOCK = "tbo_max_way_nodes_per_block";
-	private static final String OPTION_TBO_MAX_RELATION_MEMBERS_PER_BLOCK = "tbo_max_relation_members_per_block";
+	private static final String OPTION_TBO_MAX_ELEMENTS_PER_BLOCK = "tbo-max-elements-per-block";
+	private static final String OPTION_TBO_MAX_NODES_PER_BLOCK = "tbo-max-nodes-per-block";
+	private static final String OPTION_TBO_MAX_WAYS_PER_BLOCK = "tbo-max-ways-per-block";
+	private static final String OPTION_TBO_MAX_RELATIONS_PER_BLOCK = "tbo-max-relations-per-block";
+	private static final String OPTION_TBO_MAX_WAY_NODES_PER_BLOCK = "tbo-max-way-nodes-per-block";
+	private static final String OPTION_TBO_MAX_RELATION_MEMBERS_PER_BLOCK = "tbo-max-relation-members-per-block";
 
 	public static void add(Options options)
 	{

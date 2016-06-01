@@ -31,9 +31,9 @@ import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 public class OsmEntitySplit extends AbstractExecutableSingleInputStreamOutput
 {
 
-	private static final String OPTION_OUTPUT_NODES = "output_nodes";
-	private static final String OPTION_OUTPUT_WAYS = "output_ways";
-	private static final String OPTION_OUTPUT_RELATIONS = "output_relations";
+	private static final String OPTION_OUTPUT_NODES = "output-nodes";
+	private static final String OPTION_OUTPUT_WAYS = "output-ways";
+	private static final String OPTION_OUTPUT_RELATIONS = "output-relations";
 	private static final String OPTION_THREADED = "threaded";
 
 	@Override

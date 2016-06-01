@@ -40,7 +40,7 @@ public abstract class AbstractEntityCollector extends
 {
 
 	private static final String OPTION_REFERENCES = "references";
-	private static final String OPTION_REFERENCES_FORMAT = "references_format";
+	private static final String OPTION_REFERENCES_FORMAT = "references-format";
 
 	private String pathReferences;
 	private InputStream inRefs;

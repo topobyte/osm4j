@@ -33,10 +33,10 @@ import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 public class OsmReferenceStats extends AbstractExecutableSingleInputStream
 {
 
-	private static final String OPTION_NO_WAY_NODES = "no_way_nodes";
-	private static final String OPTION_NO_RELATION_NODES = "no_relation_nodes";
-	private static final String OPTION_NO_RELATION_WAYS = "no_relation_ways";
-	private static final String OPTION_NO_RELATION_RELATIONS = "no_relation_relations";
+	private static final String OPTION_NO_WAY_NODES = "no-way-nodes";
+	private static final String OPTION_NO_RELATION_NODES = "no-relation-nodes";
+	private static final String OPTION_NO_RELATION_WAYS = "no-relation-ways";
+	private static final String OPTION_NO_RELATION_RELATIONS = "no-relation-relations";
 
 	@Override
 	protected String getHelpMessage()

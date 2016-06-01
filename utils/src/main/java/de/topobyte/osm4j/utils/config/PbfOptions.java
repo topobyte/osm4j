@@ -28,8 +28,8 @@ public class PbfOptions
 
 	public static final String POSSIBLE_COMPRESSION_ARGUMENTS = "none, deflate, lz4";
 
-	private static final String OPTION_PBF_COMPRESSION = "pbf_compression";
-	private static final String OPTION_PBF_NONE_DENSE = "pbf_none_dense";
+	private static final String OPTION_PBF_COMPRESSION = "pbf-compression";
+	private static final String OPTION_PBF_NONE_DENSE = "pbf-none-dense";
 
 	public static void add(Options options)
 	{

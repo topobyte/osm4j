@@ -22,7 +22,7 @@ import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 public abstract class AbstractExecutableInput extends AbstractExecutable
 {
 
-	private static final String OPTION_INPUT_FORMAT = "input_format";
+	private static final String OPTION_INPUT_FORMAT = "input-format";
 
 	protected FileFormat inputFormat;
 	protected boolean readTags = true;
