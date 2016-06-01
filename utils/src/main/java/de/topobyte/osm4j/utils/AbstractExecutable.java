@@ -18,7 +18,7 @@
 package de.topobyte.osm4j.utils;
 
 import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.GnuParser;
+import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
@@ -34,7 +34,7 @@ public abstract class AbstractExecutable
 	protected void setup(String[] args)
 	{
 		try {
-			line = new GnuParser().parse(options, args);
+			line = new DefaultParser().parse(options, args);
 		} catch (ParseException e) {
 			System.out.println("unable to parse command line: "
 					+ e.getMessage());
