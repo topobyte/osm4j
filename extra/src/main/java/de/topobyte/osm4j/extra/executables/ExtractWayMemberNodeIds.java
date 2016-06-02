@@ -30,7 +30,7 @@ public class ExtractWayMemberNodeIds extends AbstractExecutableInput
 
 	private static final String OPTION_DIRECTORY = "directory";
 	private static final String OPTION_FILE_NAMES_WAYS = "ways";
-	private static final String OPTION_FILE_NAMES_NODE_IDS = "node_ids";
+	private static final String OPTION_FILE_NAMES_NODE_IDS = "node-ids";
 
 	@Override
 	protected String getHelpMessage()

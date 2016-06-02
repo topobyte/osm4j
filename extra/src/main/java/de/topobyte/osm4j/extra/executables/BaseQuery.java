@@ -42,8 +42,8 @@ public abstract class BaseQuery extends AbstractExecutableInputOutput
 	private static final String OPTION_INPUT = "input";
 	private static final String OPTION_OUTPUT = "output";
 	private static final String OPTION_TMP = "tmp";
-	private static final String OPTION_KEEP_TMP = "keep_tmp";
-	private static final String OPTION_FAST_RELATION_QUERIES = "fast_relation_queries";
+	private static final String OPTION_KEEP_TMP = "keep-tmp";
+	private static final String OPTION_FAST_RELATION_QUERIES = "fast-relation-queries";
 
 	public BaseQuery()
 	{

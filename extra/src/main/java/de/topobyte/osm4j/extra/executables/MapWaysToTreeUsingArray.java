@@ -32,7 +32,7 @@ public class MapWaysToTreeUsingArray extends
 
 	private static final String OPTION_FILE_NAMES = "filenames";
 	private static final String OPTION_TREE = "tree";
-	private static final String OPTION_NODE_ARRAY = "node_array";
+	private static final String OPTION_NODE_ARRAY = "node-array";
 
 	@Override
 	protected String getHelpMessage()

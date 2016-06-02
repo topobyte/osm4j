@@ -39,10 +39,10 @@ public abstract class DistributeRelationsBase extends
 	private static final String OPTION_FILE_NAMES_RELATIONS = "relations";
 	private static final String OPTION_FILE_NAMES_WAYS = "ways";
 	private static final String OPTION_FILE_NAMES_NODES = "nodes";
-	private static final String OPTION_FILE_NAMES_TREE_RELATIONS = "tree_relations";
-	private static final String OPTION_OUTPUT_EMPTY_RELATIONS = "empty_relations";
-	private static final String OPTION_OUTPUT_NON_TREE_RELATIONS = "non_tree_relations";
-	private static final String OPTION_OUTPUT_NON_TREE_BBOXES = "non_tree_bboxes";
+	private static final String OPTION_FILE_NAMES_TREE_RELATIONS = "tree-relations";
+	private static final String OPTION_OUTPUT_EMPTY_RELATIONS = "empty-relations";
+	private static final String OPTION_OUTPUT_NON_TREE_RELATIONS = "non-tree-relations";
+	private static final String OPTION_OUTPUT_NON_TREE_BBOXES = "non-tree-bboxes";
 
 	protected String pathTree;
 	protected String pathData;

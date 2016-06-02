@@ -32,14 +32,14 @@ public class SplitRelationsAndCollectMembers extends
 		AbstractExecutableInputOutput
 {
 
-	private static final String OPTION_INPUT_NODES = "input_nodes";
-	private static final String OPTION_INPUT_WAYS = "input_ways";
+	private static final String OPTION_INPUT_NODES = "input-nodes";
+	private static final String OPTION_INPUT_WAYS = "input-ways";
 
-	private static final String OPTION_INPUT_SIMPLE = "input_simple";
-	private static final String OPTION_INPUT_COMPLEX = "input_complex";
+	private static final String OPTION_INPUT_SIMPLE = "input-simple";
+	private static final String OPTION_INPUT_COMPLEX = "input-complex";
 
-	private static final String OPTION_OUTPUT_SIMPLE = "output_simple";
-	private static final String OPTION_OUTPUT_COMPLEX = "output_complex";
+	private static final String OPTION_OUTPUT_SIMPLE = "output-simple";
+	private static final String OPTION_OUTPUT_COMPLEX = "output-complex";
 
 	@Override
 	protected String getHelpMessage()

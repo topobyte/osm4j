@@ -30,23 +30,23 @@ import de.topobyte.utilities.apache.commons.cli.parsing.ArgumentParseException;
 public class SplitNonTreeRelations extends AbstractExecutableInputOutput
 {
 
-	private static final String OPTION_INPUT_SIMPLE = "input_simple";
-	private static final String OPTION_INPUT_COMPLEX = "input_complex";
+	private static final String OPTION_INPUT_SIMPLE = "input-simple";
+	private static final String OPTION_INPUT_COMPLEX = "input-complex";
 
-	private static final String OPTION_INPUT_SIMPLE_BBOXES = "input_simple_bboxes";
-	private static final String OPTION_INPUT_COMPLEX_BBOXES = "input_complex_bboxes";
+	private static final String OPTION_INPUT_SIMPLE_BBOXES = "input-simple-bboxes";
+	private static final String OPTION_INPUT_COMPLEX_BBOXES = "input-complex-bboxes";
 
-	private static final String OPTION_INPUT_SIMPLE_OLD = "input_simple_old";
-	private static final String OPTION_INPUT_COMPLEX_OLD = "input_complex_old";
+	private static final String OPTION_INPUT_SIMPLE_OLD = "input-simple-old";
+	private static final String OPTION_INPUT_COMPLEX_OLD = "input-complex-old";
 
-	private static final String OPTION_OUTPUT_SIMPLE = "output_simple";
-	private static final String OPTION_OUTPUT_COMPLEX = "output_complex";
+	private static final String OPTION_OUTPUT_SIMPLE = "output-simple";
+	private static final String OPTION_OUTPUT_COMPLEX = "output-complex";
 
-	private static final String OPTION_OUTPUT_SIMPLE_BBOXES = "output_simple_bboxes";
-	private static final String OPTION_OUTPUT_COMPLEX_BBOXES = "output_complex_bboxes";
+	private static final String OPTION_OUTPUT_SIMPLE_BBOXES = "output-simple-bboxes";
+	private static final String OPTION_OUTPUT_COMPLEX_BBOXES = "output-complex-bboxes";
 
-	private static final String OPTION_MAX_MEMBERS_SIMPLE = "max_members_simple";
-	private static final String OPTION_MAX_MEMBERS_COMPLEX = "max_members_complex";
+	private static final String OPTION_MAX_MEMBERS_SIMPLE = "max-members-simple";
+	private static final String OPTION_MAX_MEMBERS_COMPLEX = "max-members-complex";
 
 	@Override
 	protected String getHelpMessage()

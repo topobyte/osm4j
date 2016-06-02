@@ -36,20 +36,20 @@ public class BuildExtractionFiles extends AbstractExecutableInput
 
 	private static final String OPTION_INPUT = "input";
 	private static final String OPTION_OUTPUT = "output";
-	private static final String OPTION_MAX_NODES = "max_nodes";
-	private static final String OPTION_MAX_MEMBERS_SIMPLE = "max_members_simple";
-	private static final String OPTION_MAX_MEMBERS_COMPLEX = "max_members_complex";
-	private static final String OPTION_COMPUTE_BBOX = "compute_bbox";
+	private static final String OPTION_MAX_NODES = "max-nodes";
+	private static final String OPTION_MAX_MEMBERS_SIMPLE = "max-members-simple";
+	private static final String OPTION_MAX_MEMBERS_COMPLEX = "max-members-complex";
+	private static final String OPTION_COMPUTE_BBOX = "compute-bbox";
 
-	private static final String OPTION_KEEP_ALL = "keep_all";
-	private static final String OPTION_KEEP_SPLITTED = "keep_splitted";
-	private static final String OPTION_KEEP_SPLITTED_NODES = "keep_splitted_nodes";
-	private static final String OPTION_KEEP_SPLITTED_WAYS = "keep_splitted_ways";
-	private static final String OPTION_KEEP_SPLITTED_RELATIONS = "keep_splitted_relations";
-	private static final String OPTION_KEEP_WAYS_BY_NODES = "keep_ways_by_nodes";
-	private static final String OPTION_KEEP_RELATIONS = "keep_relations";
-	private static final String OPTION_KEEP_RELATION_BATCHES = "keep_relation_batches";
-	private static final String OPTION_KEEP_NONTREE_RELATIONS = "keep_nontree_relations";
+	private static final String OPTION_KEEP_ALL = "keep-all";
+	private static final String OPTION_KEEP_SPLITTED = "keep-splitted";
+	private static final String OPTION_KEEP_SPLITTED_NODES = "keep-splitted-nodes";
+	private static final String OPTION_KEEP_SPLITTED_WAYS = "keep-splitted-ways";
+	private static final String OPTION_KEEP_SPLITTED_RELATIONS = "keep-splitted-relations";
+	private static final String OPTION_KEEP_WAYS_BY_NODES = "keep-ways-by-nodes";
+	private static final String OPTION_KEEP_RELATIONS = "keep-relations";
+	private static final String OPTION_KEEP_RELATION_BATCHES = "keep-relation-batches";
+	private static final String OPTION_KEEP_NONTREE_RELATIONS = "keep-nontree-relations";
 
 	@Override
 	protected String getHelpMessage()

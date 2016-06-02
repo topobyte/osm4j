@@ -34,8 +34,8 @@ public class MergeTreeFiles extends AbstractExecutableInputOutput
 {
 
 	private static final String OPTION_TREE = "tree";
-	private static final String OPTION_FILE_NAMES_SORTED = "input_sorted";
-	private static final String OPTION_FILE_NAMES_UNSORTED = "input_unsorted";
+	private static final String OPTION_FILE_NAMES_SORTED = "input-sorted";
+	private static final String OPTION_FILE_NAMES_UNSORTED = "input-unsorted";
 	private static final String OPTION_FILE_NAMES_OUTPUT = "output";
 	private static final String OPTION_DELETE = "delete";
 

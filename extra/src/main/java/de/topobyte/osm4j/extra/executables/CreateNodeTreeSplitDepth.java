@@ -38,7 +38,7 @@ import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 public class CreateNodeTreeSplitDepth extends CreateNodeTreeBase
 {
 
-	private static final String OPTION_SPLIT_DEPTH = "split_depth";
+	private static final String OPTION_SPLIT_DEPTH = "split-depth";
 
 	@Override
 	protected String getHelpMessage()

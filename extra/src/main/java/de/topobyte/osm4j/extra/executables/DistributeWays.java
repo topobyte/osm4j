@@ -35,8 +35,8 @@ public class DistributeWays extends AbstractExecutableInputOutput
 	private static final String OPTION_FILE_NAMES_NODES1 = "nodes1";
 	private static final String OPTION_FILE_NAMES_NODES2 = "nodes2";
 	private static final String OPTION_FILE_NAMES_WAYS = "ways";
-	private static final String OPTION_FILE_NAMES_OUTPUT_WAYS = "ways_out";
-	private static final String OPTION_FILE_NAMES_OUTPUT_NODES = "nodes_out";
+	private static final String OPTION_FILE_NAMES_OUTPUT_WAYS = "ways-out";
+	private static final String OPTION_FILE_NAMES_OUTPUT_NODES = "nodes-out";
 
 	@Override
 	protected String getHelpMessage()

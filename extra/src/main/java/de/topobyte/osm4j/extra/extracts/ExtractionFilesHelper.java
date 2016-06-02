@@ -26,17 +26,17 @@ public class ExtractionFilesHelper
 {
 
 	private static final String OPTION_TREE = "tree";
-	private static final String OPTION_SIMPLE_RELATIONS = "simple_relations";
-	private static final String OPTION_COMPLEX_RELATIONS = "complex_relations";
-	private static final String OPTION_SIMPLE_RELATIONS_BBOXES = "simple_relations_bboxes";
-	private static final String OPTION_COMPLEX_RELATIONS_BBOXES = "complex_relations_bboxes";
-	private static final String OPTION_FILE_NAMES_TREE_NODES = "tree_nodes";
-	private static final String OPTION_FILE_NAMES_TREE_WAYS = "tree_ways";
-	private static final String OPTION_FILE_NAMES_TREE_RELATIONS_SIMPLE = "tree_simple_relations";
-	private static final String OPTION_FILE_NAMES_TREE_RELATIONS_COMPLEX = "tree_complex_relations";
-	private static final String OPTION_FILE_NAMES_RELATION_NODES = "relation_nodes";
-	private static final String OPTION_FILE_NAMES_RELATION_WAYS = "relation_ways";
-	private static final String OPTION_FILE_NAMES_RELATION_RELATIONS = "relation_relations";
+	private static final String OPTION_SIMPLE_RELATIONS = "simple-relations";
+	private static final String OPTION_COMPLEX_RELATIONS = "complex-relations";
+	private static final String OPTION_SIMPLE_RELATIONS_BBOXES = "simple-relations-bboxes";
+	private static final String OPTION_COMPLEX_RELATIONS_BBOXES = "complex-relations-bboxes";
+	private static final String OPTION_FILE_NAMES_TREE_NODES = "tree-nodes";
+	private static final String OPTION_FILE_NAMES_TREE_WAYS = "tree-ways";
+	private static final String OPTION_FILE_NAMES_TREE_RELATIONS_SIMPLE = "tree-simple-relations";
+	private static final String OPTION_FILE_NAMES_TREE_RELATIONS_COMPLEX = "tree-complex-relations";
+	private static final String OPTION_FILE_NAMES_RELATION_NODES = "relation-nodes";
+	private static final String OPTION_FILE_NAMES_RELATION_WAYS = "relation-ways";
+	private static final String OPTION_FILE_NAMES_RELATION_RELATIONS = "relation-relations";
 
 	public static void addOptions(Options options)
 	{

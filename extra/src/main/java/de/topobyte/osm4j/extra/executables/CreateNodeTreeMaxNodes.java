@@ -46,7 +46,7 @@ public class CreateNodeTreeMaxNodes extends
 
 	private static final String OPTION_OUTPUT = "output";
 	private static final String OPTION_FILE_NAMES = "filenames";
-	private static final String OPTION_MAX_NODES = "max_nodes";
+	private static final String OPTION_MAX_NODES = "max-nodes";
 
 	private static final int SPLIT_INITIAL = 20;
 	private static final int SPLIT_ITERATION = 8;

@@ -35,8 +35,8 @@ public class SortComplexRelations extends
 	private static final String OPTION_INPUT_BBOXES = "bboxes";
 	private static final String OPTION_OUTPUT = "output";
 	private static final String OPTION_FILE_NAMES_RELATIONS = "relations";
-	private static final String OPTION_OUTPUT_BBOXES = "output_bboxes";
-	private static final String OPTION_MAX_MEMBERS = "max_members";
+	private static final String OPTION_OUTPUT_BBOXES = "output-bboxes";
+	private static final String OPTION_MAX_MEMBERS = "max-members";
 
 	@Override
 	protected String getHelpMessage()

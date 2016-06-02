@@ -28,8 +28,8 @@ import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 public class SeparateRelations extends AbstractExecutableSingleInputFileOutput
 {
 
-	private static final String OPTION_OUTPUT_SIMPLE = "output_simple";
-	private static final String OPTION_OUTPUT_COMPLEX = "output_complex";
+	private static final String OPTION_OUTPUT_SIMPLE = "output-simple";
+	private static final String OPTION_OUTPUT_COMPLEX = "output-complex";
 
 	@Override
 	protected String getHelpMessage()
