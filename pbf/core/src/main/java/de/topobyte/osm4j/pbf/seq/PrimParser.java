@@ -219,8 +219,14 @@ public class PrimParser
 
 	public OsmMetadata convertMetadata(Osmformat.Info info)
 	{
+		boolean visible = true;
+
+		if (info.hasVisible() && !info.getVisible()) {
+			visible = info.getVisible();
+		}
+
 		Metadata metadata = new Metadata(info.getVersion(), getTimestamp(info),
-				info.getUid(), strings[info.getUserSid()], info.getChangeset());
+				info.getUid(), strings[info.getUserSid()], info.getChangeset(), visible);
 		return metadata;
 	}
 
