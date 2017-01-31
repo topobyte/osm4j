@@ -146,7 +146,7 @@ public class PrimParser
 		double lat = parseLat(n.getLat());
 		double lon = parseLon(n.getLon());
 
-		List<OsmTag> tags = new ArrayList<OsmTag>();
+		List<OsmTag> tags = new ArrayList<>();
 		for (int j = 0; j < n.getKeysCount(); j++) {
 			tags.add(new Tag(strings[n.getKeys(j)], strings[n.getVals(j)]));
 		}
@@ -171,7 +171,7 @@ public class PrimParser
 			lastId = j + lastId;
 		}
 
-		List<OsmTag> tags = new ArrayList<OsmTag>();
+		List<OsmTag> tags = new ArrayList<>();
 		for (int j = 0; j < w.getKeysCount(); j++) {
 			tags.add(new Tag(strings[w.getKeys(j)], strings[w.getVals(j)]));
 		}
@@ -190,12 +190,12 @@ public class PrimParser
 		long id = r.getId();
 		long lastMid = 0;
 
-		List<OsmTag> tags = new ArrayList<OsmTag>();
+		List<OsmTag> tags = new ArrayList<>();
 		for (int j = 0; j < r.getKeysCount(); j++) {
 			tags.add(new Tag(strings[r.getKeys(j)], strings[r.getVals(j)]));
 		}
 
-		List<RelationMember> members = new ArrayList<RelationMember>();
+		List<RelationMember> members = new ArrayList<>();
 		for (int j = 0; j < r.getMemidsCount(); j++) {
 			long mid = lastMid + r.getMemids(j);
 			lastMid = mid;
@@ -265,7 +265,7 @@ public class PrimParser
 			lon += nodes.getLon(i);
 
 			double latf = parseLat(lat), lonf = parseLon(lon);
-			List<OsmTag> tags = new ArrayList<OsmTag>();
+			List<OsmTag> tags = new ArrayList<>();
 
 			OsmMetadata metadata = null;
 
@@ -316,7 +316,7 @@ public class PrimParser
 			lon += nodes.getLon(i);
 
 			double latf = parseLat(lat), lonf = parseLon(lon);
-			List<OsmTag> tags = new ArrayList<OsmTag>();
+			List<OsmTag> tags = new ArrayList<>();
 
 			OsmMetadata metadata = null;
 
