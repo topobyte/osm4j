@@ -40,7 +40,7 @@ public class Metadata implements OsmMetadata
 	}
 
 	public Metadata(int version, long timestamp, long uid, String user,
-		long changeset, boolean visible)
+			long changeset, boolean visible)
 	{
 		this(version, timestamp, uid, user, changeset);
 		this.visible = visible;
@@ -76,12 +76,15 @@ public class Metadata implements OsmMetadata
 		return changeset;
 	}
 
-	public void setVisible(boolean visible) {
+	public void setVisible(boolean visible)
+	{
 		this.visible = visible;
 	}
 
 	@Override
-	public boolean isVisible() {
+	public boolean isVisible()
+	{
 		return visible;
 	}
+
 }
