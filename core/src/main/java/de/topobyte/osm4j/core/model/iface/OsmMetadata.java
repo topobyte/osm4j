@@ -30,4 +30,6 @@ public interface OsmMetadata
 
 	public long getChangeset();
 
+	public boolean isVisible();
+
 }
