@@ -226,7 +226,8 @@ public class PrimParser
 		}
 
 		Metadata metadata = new Metadata(info.getVersion(), getTimestamp(info),
-				info.getUid(), strings[info.getUserSid()], info.getChangeset(), visible);
+				info.getUid(), strings[info.getUserSid()], info.getChangeset(),
+				visible);
 		return metadata;
 	}
 
