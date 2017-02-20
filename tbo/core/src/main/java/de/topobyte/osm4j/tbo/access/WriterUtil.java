@@ -32,7 +32,7 @@ public class WriterUtil
 
 	public static FileHeader createHeader(boolean hasMetadata, OsmBounds bounds)
 	{
-		Map<String, String> tags = new HashMap<String, String>();
+		Map<String, String> tags = new HashMap<>();
 		FileHeader header = new FileHeader(Definitions.VERSION, tags,
 				hasMetadata, bounds);
 

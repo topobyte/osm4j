@@ -59,7 +59,7 @@ public class ReaderUtil
 
 		int version = (int) reader.readVariableLengthUnsignedInteger();
 
-		Map<String, String> tags = new TreeMap<String, String>();
+		Map<String, String> tags = new TreeMap<>();
 		int numTags = (int) reader.readVariableLengthUnsignedInteger();
 		for (int i = 0; i < numTags; i++) {
 			String key = reader.readString();
@@ -86,7 +86,7 @@ public class ReaderUtil
 	private static List<String> parsePool(CompactReader reader)
 			throws IOException
 	{
-		List<String> pool = new ArrayList<String>();
+		List<String> pool = new ArrayList<>();
 		long size = reader.readVariableLengthUnsignedInteger();
 		for (int i = 0; i < size; i++) {
 			String string = reader.readString();
@@ -104,7 +104,7 @@ public class ReaderUtil
 			throws IOException
 	{
 		int num = (int) reader.readVariableLengthUnsignedInteger();
-		List<Tag> tags = new ArrayList<Tag>();
+		List<Tag> tags = new ArrayList<>();
 		for (int i = 0; i < num; i++) {
 			int k = (int) reader.readVariableLengthUnsignedInteger();
 			int v = (int) reader.readVariableLengthUnsignedInteger();
@@ -129,7 +129,7 @@ public class ReaderUtil
 		}
 
 		int n = block.getNumObjects();
-		List<Node> nodes = new ArrayList<Node>(n);
+		List<Node> nodes = new ArrayList<>(n);
 
 		long idOffset = 0;
 		long latOffset = 0;
@@ -213,7 +213,7 @@ public class ReaderUtil
 		}
 
 		int n = block.getNumObjects();
-		List<Way> ways = new ArrayList<Way>(n);
+		List<Way> ways = new ArrayList<>(n);
 
 		long idOffset = 0;
 		long nidOffset = 0;
@@ -296,7 +296,7 @@ public class ReaderUtil
 		List<String> poolMembers = parsePool(reader);
 
 		int n = block.getNumObjects();
-		List<Relation> relations = new ArrayList<Relation>(n);
+		List<Relation> relations = new ArrayList<>(n);
 
 		long idOffset = 0;
 		long midOffset = 0;
@@ -311,7 +311,7 @@ public class ReaderUtil
 
 		reader.readVariableLengthUnsignedInteger();
 		for (int i = 0; i < n; i++) {
-			List<RelationMember> members = new ArrayList<RelationMember>();
+			List<RelationMember> members = new ArrayList<>();
 			long numMembers = reader.readVariableLengthUnsignedInteger();
 			for (int k = 0; k < numMembers; k++) {
 				int typeByte = reader.readByte();

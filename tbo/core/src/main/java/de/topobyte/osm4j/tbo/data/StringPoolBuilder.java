@@ -28,7 +28,7 @@ import java.util.List;
 public class StringPoolBuilder
 {
 
-	private TMap<String, StringPoolEntry> map = new THashMap<String, StringPoolEntry>();
+	private TMap<String, StringPoolEntry> map = new THashMap<>();
 
 	public void add(String string)
 	{
@@ -43,7 +43,7 @@ public class StringPoolBuilder
 	public StringPool buildStringPool()
 	{
 		int size = map.size();
-		final List<StringPoolEntry> list = new ArrayList<StringPoolEntry>(size);
+		final List<StringPoolEntry> list = new ArrayList<>(size);
 
 		map.forEachValue(new TObjectProcedure<StringPoolEntry>() {
 
@@ -55,7 +55,7 @@ public class StringPoolBuilder
 			}
 		});
 		Collections.sort(list);
-		List<String> strings = new ArrayList<String>(size);
+		List<String> strings = new ArrayList<>(size);
 		int i = 0;
 		for (StringPoolEntry entry : list) {
 			strings.add(entry.key);
