@@ -79,10 +79,24 @@ public class OsmModelUtil
 		return members;
 	}
 
+	/**
+	 * Determine whether a way is closed, i.e. the first node has the same id as
+	 * the last node. Empty ways and ways with only a single node are considered
+	 * closed.
+	 * 
+	 * @param way
+	 *            a way to check
+	 * @return whether the specified way is closed
+	 */
 	public static boolean isClosed(OsmWay way)
 	{
+		int n = way.getNumberOfNodes();
+		// empty ways and ways with a single node are trivially closed
+		if (n < 2) {
+			return true;
+		}
 		long id0 = way.getNodeId(0);
-		long idN = way.getNodeId(way.getNumberOfNodes() - 1);
+		long idN = way.getNodeId(n - 1);
 		return id0 == idN;
 	}
 
