@@ -27,6 +27,7 @@ public class TestMetadata implements OsmMetadata
 	private long uid;
 	private String user;
 	private long changeset;
+	private boolean visible = true;
 
 	public TestMetadata(int version, long timestamp, long uid, String user,
 			long changeset)
@@ -36,6 +37,13 @@ public class TestMetadata implements OsmMetadata
 		this.uid = uid;
 		this.user = user;
 		this.changeset = changeset;
+	}
+
+	public TestMetadata(int version, long timestamp, long uid, String user,
+			long changeset, boolean visible)
+	{
+		this(version, timestamp, uid, user, changeset);
+		this.visible = visible;
 	}
 
 	@Override
@@ -66,6 +74,12 @@ public class TestMetadata implements OsmMetadata
 	public long getChangeset()
 	{
 		return changeset;
+	}
+
+	@Override
+	public boolean isVisible()
+	{
+		return visible;
 	}
 
 }
