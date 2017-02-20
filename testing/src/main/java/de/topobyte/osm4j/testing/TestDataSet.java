@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import de.topobyte.osm4j.core.dataset.InMemoryListDataSet;
 import de.topobyte.osm4j.core.dataset.InMemoryMapDataSet;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.osm4j.core.model.iface.OsmRelation;
@@ -43,6 +44,19 @@ public class TestDataSet
 	}
 
 	public TestDataSet(TestDataSet data)
+	{
+		for (OsmNode node : data.getNodes()) {
+			nodes.add(EntityHelper.clone(node));
+		}
+		for (OsmWay way : data.getWays()) {
+			ways.add(EntityHelper.clone(way));
+		}
+		for (OsmRelation relation : data.getRelations()) {
+			relations.add(EntityHelper.clone(relation));
+		}
+	}
+
+	public TestDataSet(InMemoryListDataSet data)
 	{
 		for (OsmNode node : data.getNodes()) {
 			nodes.add(EntityHelper.clone(node));
