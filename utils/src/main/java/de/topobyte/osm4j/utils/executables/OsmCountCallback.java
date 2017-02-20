@@ -26,10 +26,11 @@ import de.topobyte.osm4j.core.model.iface.OsmBounds;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.osm4j.core.model.iface.OsmRelation;
 import de.topobyte.osm4j.core.model.iface.OsmWay;
+import de.topobyte.osm4j.core.model.util.OsmModelUtil;
 import de.topobyte.osm4j.utils.AbstractExecutableSingleInputStream;
 
-public class OsmCountCallback extends AbstractExecutableSingleInputStream implements
-		OsmHandler
+public class OsmCountCallback extends AbstractExecutableSingleInputStream
+		implements OsmHandler
 {
 
 	@Override
@@ -77,8 +78,7 @@ public class OsmCountCallback extends AbstractExecutableSingleInputStream implem
 	public void handle(OsmWay way) throws IOException
 	{
 		wc++;
-		boolean closed = way.getNodeId(0) == way.getNodeId(way
-				.getNumberOfNodes() - 1);
+		boolean closed = OsmModelUtil.isClosed(way);
 		if (closed) {
 			closedWays++;
 		}
