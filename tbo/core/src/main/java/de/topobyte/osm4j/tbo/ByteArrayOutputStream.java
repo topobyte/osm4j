@@ -48,9 +48,9 @@ public class ByteArrayOutputStream extends OutputStream
 {
 
 	// This class has been modified for osm4j-tbo: removed 'synchronized'
-	// keyword from all methods.
+	// keyword from all methods. Also added type argument to the 'buffers' list.
 
-	private List buffers = new java.util.ArrayList();
+	private List<byte[]> buffers = new java.util.ArrayList<>();
 	private int currentBufferIndex;
 	private int filledBufferSum;
 	private byte[] currentBuffer;
@@ -84,7 +84,7 @@ public class ByteArrayOutputStream extends OutputStream
 
 	private byte[] getBuffer(int index)
 	{
-		return (byte[]) buffers.get(index);
+		return buffers.get(index);
 	}
 
 	private void needNewBuffer(int newcount)
