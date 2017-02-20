@@ -176,6 +176,9 @@ public class OsmXmlOutputStream implements OsmOutputStream
 			out.print(" user=\"" + user + "\"");
 		}
 		out.print(" changeset=\"" + metadata.getChangeset() + "\"");
+		if (!metadata.isVisible()) {
+			out.print(" visible=\"false\"");
+		}
 	}
 
 	private void printTags(OsmEntity entity)

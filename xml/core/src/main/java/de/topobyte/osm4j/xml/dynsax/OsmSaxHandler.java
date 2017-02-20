@@ -110,6 +110,7 @@ class OsmSaxHandler extends DynamicSaxHandler
 	private static final String ATTR_UID = "uid";
 	private static final String ATTR_USER = "user";
 	private static final String ATTR_CHANGESET = "changeset";
+	private static final String ATTR_VISIBLE = "visible";
 
 	private Element createRoot()
 	{
@@ -172,6 +173,7 @@ class OsmSaxHandler extends DynamicSaxHandler
 				element.addAttribute(ATTR_UID);
 				element.addAttribute(ATTR_USER);
 				element.addAttribute(ATTR_CHANGESET);
+				element.addAttribute(ATTR_VISIBLE);
 			}
 		}
 
@@ -234,6 +236,7 @@ class OsmSaxHandler extends DynamicSaxHandler
 			String aUid = data.getAttribute(ATTR_UID);
 			String user = data.getAttribute(ATTR_USER);
 			String aChangeset = data.getAttribute(ATTR_CHANGESET);
+			String aVisible = data.getAttribute(ATTR_VISIBLE);
 
 			long uid = -1;
 			if (aUid != null) {
@@ -260,7 +263,15 @@ class OsmSaxHandler extends DynamicSaxHandler
 				timestamp = date.getMillis();
 			}
 
-			metadata = new Metadata(version, timestamp, uid, user, changeset);
+			boolean visible = true;
+			if (aVisible != null) {
+				if (aVisible.equals("false")) {
+					visible = false;
+				}
+			}
+
+			metadata = new Metadata(version, timestamp, uid, user, changeset,
+					visible);
 		}
 
 		if (data.getElement() == node) {
