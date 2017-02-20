@@ -31,14 +31,14 @@ import org.junit.Test;
 
 import de.topobyte.osm4j.core.access.OsmIterator;
 import de.topobyte.osm4j.core.access.OsmOutputStream;
-import de.topobyte.osm4j.core.resolve.DataSetReader;
-import de.topobyte.osm4j.core.resolve.InMemoryDataSet;
+import de.topobyte.osm4j.core.dataset.InMemoryListDataSet;
+import de.topobyte.osm4j.core.dataset.ListDataSetLoader;
 import de.topobyte.osm4j.tbo.access.TboIterator;
 import de.topobyte.osm4j.tbo.access.TboWriter;
-import de.topobyte.osm4j.testing.DataSet;
 import de.topobyte.osm4j.testing.DataSetGenerator;
 import de.topobyte.osm4j.testing.DataSetHelper;
 import de.topobyte.osm4j.testing.EntityGenerator;
+import de.topobyte.osm4j.testing.TestDataSet;
 
 public class TestWriteRead
 {
@@ -65,13 +65,13 @@ public class TestWriteRead
 	public void testCompleteMetadata() throws IOException
 	{
 		// Generate some data
-		DataSet generated = dataSetGenerator.generate(10, 3, 2);
+		TestDataSet generated = dataSetGenerator.generate(10, 3, 2);
 
 		// Write to file
 		write(generated);
 
 		// Read from file
-		DataSet read = read();
+		TestDataSet read = read();
 
 		// Compare data
 		compare(generated, read);
@@ -82,13 +82,13 @@ public class TestWriteRead
 	{
 		// Generate some data
 		entityGenerator.setGenerateMetadata(false);
-		DataSet generated = dataSetGenerator.generate(10, 3, 2);
+		TestDataSet generated = dataSetGenerator.generate(10, 3, 2);
 
 		// Write to file
 		write(generated);
 
 		// Read from file
-		DataSet read = read();
+		TestDataSet read = read();
 
 		// Compare data
 		compare(generated, read);
@@ -98,7 +98,7 @@ public class TestWriteRead
 	public void testPartialMetadata() throws IOException
 	{
 		// Generate some data
-		DataSet generated = dataSetGenerator.generate(10, 3, 2);
+		TestDataSet generated = dataSetGenerator.generate(10, 3, 2);
 
 		generated.getNodes().get(2).setMetadata(null);
 		generated.getWays().get(2).setMetadata(null);
@@ -108,7 +108,7 @@ public class TestWriteRead
 		write(generated);
 
 		// Read from file
-		DataSet read = read();
+		TestDataSet read = read();
 
 		// Compare data
 		compare(generated, read);
@@ -118,13 +118,13 @@ public class TestWriteRead
 	public void testNodesOnly() throws IOException
 	{
 		// Generate some data
-		DataSet generated = dataSetGenerator.generate(30, 0, 0);
+		TestDataSet generated = dataSetGenerator.generate(30, 0, 0);
 
 		// Write to file
 		write(generated);
 
 		// Read from file
-		DataSet read = read();
+		TestDataSet read = read();
 
 		// Compare data
 		compare(generated, read);
@@ -134,13 +134,13 @@ public class TestWriteRead
 	public void testWaysOnly() throws IOException
 	{
 		// Generate some data
-		DataSet generated = dataSetGenerator.generate(0, 30, 0);
+		TestDataSet generated = dataSetGenerator.generate(0, 30, 0);
 
 		// Write to file
 		write(generated);
 
 		// Read from file
-		DataSet read = read();
+		TestDataSet read = read();
 
 		// Compare data
 		compare(generated, read);
@@ -150,19 +150,19 @@ public class TestWriteRead
 	public void testRelationsOnly() throws IOException
 	{
 		// Generate some data
-		DataSet generated = dataSetGenerator.generate(0, 0, 30);
+		TestDataSet generated = dataSetGenerator.generate(0, 0, 30);
 
 		// Write to file
 		write(generated);
 
 		// Read from file
-		DataSet read = read();
+		TestDataSet read = read();
 
 		// Compare data
 		compare(generated, read);
 	}
 
-	private void write(DataSet data) throws IOException
+	private void write(TestDataSet data) throws IOException
 	{
 		OutputStream output = new FileOutputStream(file);
 		OsmOutputStream osmOutput = new TboWriter(output, true);
@@ -171,23 +171,24 @@ public class TestWriteRead
 		output.close();
 	}
 
-	private DataSet read() throws IOException
+	private TestDataSet read() throws IOException
 	{
 		InputStream input = new FileInputStream(file);
 		OsmIterator iterator = new TboIterator(input, true, true);
-		InMemoryDataSet data = DataSetReader.read(iterator, true, true, true);
-		return new DataSet(data);
+		InMemoryListDataSet data = ListDataSetLoader.read(iterator, true, true,
+				true);
+		return new TestDataSet(data);
 	}
 
-	private void compare(DataSet generated, DataSet read)
+	private void compare(TestDataSet generated, TestDataSet read)
 	{
 		Assert.assertTrue(DataSetHelper.equals(generated, read));
 		Assert.assertTrue(DataSetHelper.nodesEqual(generated.getNodes(),
 				read.getNodes()));
-		Assert.assertTrue(DataSetHelper.waysEqual(generated.getWays(),
-				read.getWays()));
-		Assert.assertTrue(DataSetHelper.relationsEqual(
-				generated.getRelations(), read.getRelations()));
+		Assert.assertTrue(
+				DataSetHelper.waysEqual(generated.getWays(), read.getWays()));
+		Assert.assertTrue(DataSetHelper.relationsEqual(generated.getRelations(),
+				read.getRelations()));
 	}
 
 }
