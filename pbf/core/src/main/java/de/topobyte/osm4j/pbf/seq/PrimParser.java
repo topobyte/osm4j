@@ -39,8 +39,6 @@
 
 package de.topobyte.osm4j.pbf.seq;
 
-import gnu.trove.list.array.TLongArrayList;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -59,6 +57,7 @@ import de.topobyte.osm4j.core.model.impl.RelationMember;
 import de.topobyte.osm4j.core.model.impl.Tag;
 import de.topobyte.osm4j.core.model.impl.Way;
 import de.topobyte.osm4j.pbf.protobuf.Osmformat;
+import gnu.trove.list.array.TLongArrayList;
 
 public class PrimParser
 {
@@ -132,8 +131,8 @@ public class PrimParser
 		}
 	}
 
-	public void parseRelations(List<Osmformat.Relation> rels, OsmHandler handler)
-			throws IOException
+	public void parseRelations(List<Osmformat.Relation> rels,
+			OsmHandler handler) throws IOException
 	{
 		for (Osmformat.Relation r : rels) {
 			handler.handle(convert(r));
@@ -248,8 +247,10 @@ public class PrimParser
 			throws IOException
 	{
 		Osmformat.DenseInfo denseInfo = null;
+		boolean hasVisible = false;
 		if (fetchMetadata && nodes.hasDenseinfo()) {
 			denseInfo = nodes.getDenseinfo();
+			hasVisible = denseInfo.getVisibleCount() != 0;
 		}
 
 		long id = 0, lat = 0, lon = 0;
@@ -275,8 +276,12 @@ public class PrimParser
 				uid += denseInfo.getUid(i);
 				userSid += denseInfo.getUserSid(i);
 				changeset += denseInfo.getChangeset(i);
+				boolean visible = true;
+				if (hasVisible) {
+					visible = denseInfo.getVisible(i);
+				}
 				metadata = new Metadata(version, timestamp * dateGranularity,
-						uid, strings[userSid], changeset);
+						uid, strings[userSid], changeset, visible);
 			}
 
 			// If empty, assume that nothing here has keys or vals.
@@ -299,8 +304,10 @@ public class PrimParser
 		List<OsmNode> results = new ArrayList<>(nodes.getIdCount());
 
 		Osmformat.DenseInfo denseInfo = null;
+		boolean hasVisible = false;
 		if (fetchMetadata && nodes.hasDenseinfo()) {
 			denseInfo = nodes.getDenseinfo();
+			hasVisible = denseInfo.getVisibleCount() != 0;
 		}
 
 		long id = 0, lat = 0, lon = 0;
@@ -326,8 +333,12 @@ public class PrimParser
 				uid += denseInfo.getUid(i);
 				userSid += denseInfo.getUserSid(i);
 				changeset += denseInfo.getChangeset(i);
+				boolean visible = true;
+				if (hasVisible) {
+					visible = denseInfo.getVisible(i);
+				}
 				metadata = new Metadata(version, timestamp * dateGranularity,
-						uid, strings[userSid], changeset);
+						uid, strings[userSid], changeset, visible);
 			}
 
 			// If empty, assume that nothing here has keys or vals.
