@@ -27,15 +27,27 @@ public class TestReadWithoutMetadata
 	private String resource = "data-without-metadata.pbf";
 
 	@Test
-	public void testFetchMetadata() throws IOException
+	public void testIterateFetchMetadata() throws IOException
 	{
 		Util.iterate(resource, true);
 	}
 
 	@Test
-	public void testDontFetchMetadata() throws IOException
+	public void testIterateDontFetchMetadata() throws IOException
 	{
 		Util.iterate(resource, false);
+	}
+
+	@Test
+	public void testReadFetchMetadata() throws IOException
+	{
+		Util.read(resource, true);
+	}
+
+	@Test
+	public void testReadDontFetchMetadata() throws IOException
+	{
+		Util.read(resource, false);
 	}
 
 }
