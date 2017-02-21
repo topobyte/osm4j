@@ -19,10 +19,13 @@ package de.topobyte.osm4j.pbf;
 
 import java.io.IOException;
 
+import org.junit.Test;
+
 public class TestReadWrite
 {
 
-	public static void main(String[] args) throws IOException
+	@Test
+	public void test() throws IOException
 	{
 		String resource1 = "data-with-metadata.pbf";
 		String resource2 = "data-without-metadata.pbf";

@@ -19,13 +19,22 @@ package de.topobyte.osm4j.pbf;
 
 import java.io.IOException;
 
+import org.junit.Test;
+
 public class TestReadWithoutMetadata
 {
 
-	public static void main(String[] args) throws IOException
+	private String resource = "data-without-metadata.pbf";
+
+	@Test
+	public void testFetchMetadata() throws IOException
 	{
-		String resource = "data-without-metadata.pbf";
 		Util.iterate(resource, true);
+	}
+
+	@Test
+	public void testDontFetchMetadata() throws IOException
+	{
 		Util.iterate(resource, false);
 	}
 
