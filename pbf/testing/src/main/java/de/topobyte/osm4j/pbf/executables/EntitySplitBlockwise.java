@@ -72,10 +72,10 @@ public class EntitySplitBlockwise
 	{
 		// @formatter:off
 		Options options = new Options();
-		OptionHelper.add(options, OPTION_INPUT, true, true, "input file");
-		OptionHelper.add(options, OPTION_OUTPUT_NODES, true, false, "the file to write nodes to");
-		OptionHelper.add(options, OPTION_OUTPUT_WAYS, true, false, "the file to write ways to");
-		OptionHelper.add(options, OPTION_OUTPUT_RELATIONS, true, false, "the file to write relations to");
+		OptionHelper.addL(options, OPTION_INPUT, true, true, "input file");
+		OptionHelper.addL(options, OPTION_OUTPUT_NODES, true, false, "the file to write nodes to");
+		OptionHelper.addL(options, OPTION_OUTPUT_WAYS, true, false, "the file to write ways to");
+		OptionHelper.addL(options, OPTION_OUTPUT_RELATIONS, true, false, "the file to write relations to");
 		// @formatter:on
 
 		CommandLine line = null;
