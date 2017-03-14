@@ -4,9 +4,9 @@ if (project.hasProperty("topobyte")) {
 }
 
 dependencies {
-    compile 'de.topobyte:osm4j-core:0.0.20'
-    compile 'de.topobyte:jts-utils:0.0.8'
-    compile 'de.topobyte:jts-medical-kit:0.0.1'
+    compile 'de.topobyte:osm4j-core:0.0.21'
+    compile 'de.topobyte:jts-utils:0.0.9'
+    compile 'de.topobyte:jts-medical-kit:0.0.2'
 
     compile 'org.slf4j:slf4j-api:1.6.1'
 }
