@@ -17,17 +17,39 @@
 
 package de.topobyte.osm4j.extra.datatree;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+
 import com.vividsolutions.jts.geom.Envelope;
+import com.vividsolutions.jts.geom.GeometryCollection;
+import com.vividsolutions.jts.io.WKTWriter;
 
 public class TestDataTree
 {
 
-	public static void main(String[] args)
+	public static void main(String[] args) throws IOException
 	{
-		Envelope box = new Envelope(10, 20, -8, 24);
+		test(new Envelope(-180, 180, -90, 90), 14);
+		test(new Envelope(10, 20, -8, 24), 5);
+	}
+
+	private static void test(Envelope box, int splitDepth) throws IOException
+	{
 		DataTree tree = new DataTree(box);
-		tree.getRoot().split(5);
+		tree.getRoot().split(splitDepth);
 		tree.print();
+
+		File fileOutput = File.createTempFile("tree", ".wkt");
+
+		GeometryCollection geometry = BoxUtil.createBoxesGeometry(tree,
+				BoxUtil.WORLD_BOUNDS);
+
+		System.out.println("Writing output to: " + fileOutput);
+
+		FileWriter writer = new FileWriter(fileOutput);
+		new WKTWriter().write(geometry, writer);
+		writer.close();
 	}
 
 }
