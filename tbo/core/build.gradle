@@ -11,7 +11,7 @@ dependencies {
     compile 'org.apache.commons:commons-lang3:3.3.2'
     compile 'org.slf4j:slf4j-api:1.6.1'
 
-    testCompile 'de.topobyte:osm4j-pbf:0.0.11'
+    testCompile 'de.topobyte:osm4j-pbf:0.0.12'
     testCompile 'de.topobyte:osm4j-xml:0.0.6'
     testCompile 'de.topobyte:osm4j-testing:0.0.6'
     testCompile 'junit:junit:4.11'
