@@ -2,64 +2,29 @@ task wrapper(type: Wrapper) {
     gradleVersion = '2.3'
 }
 
-apply plugin: 'java'
-apply plugin: 'eclipse'
-apply plugin: 'maven'
-
-if (project.hasProperty("topobyte")) {
-    apply from: 'file:///' + System.getProperty("user.home") \
-        + '/.gradle/topobyte.gradle'
+allprojects {
+    group = pGroup
+    version = pVersion
 }
 
-group = pGroup
-version = pVersion
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'eclipse'
+    apply plugin: 'maven'
 
-repositories {
-    maven {
-        url 'http://mvn.topobyte.de'
+    repositories {
+        maven {
+            url 'http://mvn.topobyte.de'
+        }
+        mavenCentral()
     }
-    mavenCentral()
-}
 
-dependencies {
-    compile 'de.topobyte:osm4j-core:0.0.21'
-    compile 'de.topobyte:osm4j-geometry:0.0.16'
-    compile 'de.topobyte:osm4j-tbo:0.0.11'
-    compile 'de.topobyte:adt-geo:0.0.2'
-    compile 'de.topobyte:adt-graph:0.0.4'
-    compile 'de.topobyte:osm4j-utils:0.0.24'
-    compile 'de.topobyte:jts-utils:0.0.9'
-    compile 'de.topobyte:large-scale-file-io:0.0.1'
-    compile 'de.topobyte:commons-cli-helper:0.0.5'
-    compile 'commons-io:commons-io:2.4'
+    task sourcesJar(type: Jar, dependsOn: classes) {
+        classifier = 'sources'
+        from sourceSets.main.allSource
+    }
 
-    compile 'org.slf4j:slf4j-api:1.6.1'
-    runtime 'org.slf4j:slf4j-log4j12:1.6.1'
-    runtime 'log4j:log4j:1.2.16'
-
-    testCompile 'junit:junit:4.11'
-    testCompile 'commons-io:commons-io:2.4'
-}
-
-task sourcesJar(type: Jar, dependsOn: classes) {
-    classifier = 'sources'
-    from sourceSets.main.allSource
-}
-
-artifacts {
-    archives sourcesJar
-}
-
-task copyJars(type: Copy) {
-    into "$buildDir/lib-run"
-    from jar
-}
-
-task copyDeps(type: Copy) {
-    into "$buildDir/lib-run"
-    from configurations.runtime
-}
-
-task createRuntime(dependsOn: [copyJars, copyDeps]) {
-    description 'Setup the execution environment for the scripts'
+    artifacts {
+        archives sourcesJar
+    }
 }
