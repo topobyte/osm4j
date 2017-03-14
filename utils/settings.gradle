@@ -1,1 +1,3 @@
-rootProject.name = pName
+include 'core', 'cli'
+project(':core').name = 'osm4j-utils'
+project(':cli').name = 'osm4j-utils-cli'
