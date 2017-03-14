@@ -1,0 +1,7 @@
+#!/bin/bash
+
+DIR=$(dirname $0)
+CMD="$DIR/osm4j-geometry-testing.sh"
+CLASS="de.topobyte.osm4j.geometry.test.TestBuildLinework"
+
+exec "$CMD" "$CLASS" "$@"
