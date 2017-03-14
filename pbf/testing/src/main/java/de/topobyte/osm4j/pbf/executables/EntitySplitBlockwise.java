@@ -25,7 +25,7 @@ import java.io.OutputStream;
 import java.util.List;
 
 import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.GnuParser;
+import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
@@ -80,7 +80,7 @@ public class EntitySplitBlockwise
 
 		CommandLine line = null;
 		try {
-			line = new GnuParser().parse(options, args);
+			line = new DefaultParser().parse(options, args);
 		} catch (ParseException e) {
 			System.out.println("unable to parse command line: "
 					+ e.getMessage());
