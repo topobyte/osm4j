@@ -1,0 +1,19 @@
+if (project.hasProperty("topobyte")) {
+    apply from: 'file:///' + System.getProperty("user.home") \
+        + '/.gradle/topobyte.gradle'
+}
+
+sourceSets {
+    main {
+        java {
+            srcDir 'src/gen/java'
+        }
+    }
+}
+
+dependencies {
+    compile 'de.topobyte:adt-multicollections:0.0.4'
+    compile 'net.sf.trove4j:trove4j:3.0.3'
+
+    compile 'org.slf4j:slf4j-api:1.6.1'
+}
