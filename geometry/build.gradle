@@ -2,43 +2,29 @@ task wrapper(type: Wrapper) {
     gradleVersion = '2.3'
 }
 
-apply plugin: 'java'
-apply plugin: 'eclipse'
-apply plugin: 'maven'
-
-if (project.hasProperty("topobyte")) {
-    apply from: 'file:///' + System.getProperty("user.home") \
-        + '/.gradle/topobyte.gradle'
+allprojects {
+    group = pGroup
+    version = pVersion
 }
 
-group = pGroup
-version = pVersion
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'eclipse'
+    apply plugin: 'maven'
 
-repositories {
-    maven {
-        url 'http://mvn.topobyte.de'
+    repositories {
+        maven {
+            url 'http://mvn.topobyte.de'
+        }
+        mavenCentral()
     }
-    mavenCentral()
-}
 
-dependencies {
-    compile 'de.topobyte:osm4j-core:0.0.20'
-    compile 'de.topobyte:jts-utils:0.0.8'
-    compile 'de.topobyte:jts-medical-kit:0.0.1'
+    task sourcesJar(type: Jar, dependsOn: classes) {
+        classifier = 'sources'
+        from sourceSets.main.allSource
+    }
 
-    compile 'org.slf4j:slf4j-api:1.6.1'
-    runtime 'org.slf4j:slf4j-log4j12:1.6.1'
-    runtime 'log4j:log4j:1.2.16'
-
-    testCompile 'de.topobyte:osm4j-xml:0.0.5'
-    testCompile 'de.topobyte:osm4j-tbo:0.0.10'
-}
-
-task sourcesJar(type: Jar, dependsOn: classes) {
-    classifier = 'sources'
-    from sourceSets.main.allSource
-}
-
-artifacts {
-    archives sourcesJar
+    artifacts {
+        archives sourcesJar
+    }
 }

@@ -1,1 +1,4 @@
 rootProject.name = pName
+include 'core', 'testing'
+project(':core').name = 'osm4j-geometry'
+project(':testing').name = 'osm4j-geometry-testing'
