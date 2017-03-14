@@ -17,9 +17,6 @@
 
 package de.topobyte.osm4j.geometry.test;
 
-import gnu.trove.iterator.TLongObjectIterator;
-import gnu.trove.map.TLongObjectMap;
-
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -43,13 +40,15 @@ import de.topobyte.osm4j.geometry.GeometryBuilder;
 import de.topobyte.osm4j.geometry.MissingEntitiesStrategy;
 import de.topobyte.osm4j.geometry.MissingWayNodeStrategy;
 import de.topobyte.osm4j.xml.dynsax.OsmXmlIterator;
+import gnu.trove.iterator.TLongObjectIterator;
+import gnu.trove.map.TLongObjectMap;
 
 public class TestBuildPolygon
 {
 
-	public static void main(String[] args) throws MalformedURLException,
-			IOException, ParserConfigurationException, SAXException,
-			EntityNotFoundException
+	public static void main(String[] args)
+			throws MalformedURLException, IOException,
+			ParserConfigurationException, SAXException, EntityNotFoundException
 	{
 		String query = "http://overpass-api.de/api/interpreter?data=(rel(8638);>;);out;";
 
@@ -76,10 +75,10 @@ public class TestBuildPolygon
 		File file = new File(outputDir, filename);
 
 		GeometryBuilder geometryBuilder = new GeometryBuilder();
-		geometryBuilder
-				.setMissingEntitiesStrategy(MissingEntitiesStrategy.BUILD_PARTIAL);
-		geometryBuilder
-				.setMissingWayNodeStrategy(MissingWayNodeStrategy.OMIT_VERTEX_FROM_POLYLINE);
+		geometryBuilder.setMissingEntitiesStrategy(
+				MissingEntitiesStrategy.BUILD_PARTIAL);
+		geometryBuilder.setMissingWayNodeStrategy(
+				MissingWayNodeStrategy.OMIT_VERTEX_FROM_POLYLINE);
 		Geometry polygon = geometryBuilder.build(relation, data);
 		WKTWriter writer = new WKTWriter();
 		FileWriter fileWriter = new FileWriter(file);
