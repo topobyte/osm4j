@@ -44,6 +44,7 @@ import de.topobyte.osm4j.extra.datatree.nodetree.distribute.NodeTreeDistributorF
 import de.topobyte.osm4j.extra.datatree.nodetree.distribute.ThreadedNodeTreeDistributorFactory;
 import de.topobyte.osm4j.extra.datatree.output.ClosingDataTreeOutputFactory;
 import de.topobyte.osm4j.extra.datatree.output.DataTreeOutputFactory;
+import de.topobyte.osm4j.extra.datatree.sort.TreeFileSorter;
 import de.topobyte.osm4j.extra.datatree.ways.MissingWayNodesExtractor;
 import de.topobyte.osm4j.extra.datatree.ways.MissingWayNodesFinder;
 import de.topobyte.osm4j.extra.datatree.ways.ThreadedMissingWayNodesFinder;
@@ -87,6 +88,7 @@ public class ExtractionFilesBuilder
 	private static final String KEY_SEPARATE_RELATIONS = "separate simple/complex relations";
 	private static final String KEY_SPLIT_RELATIONS = "split relations, collect members";
 	private static final String KEY_DISTRIBUTE_RELATIONS = "distribute relations";
+	private static final String KEY_SORT_COMPLEX_RELATIONS = "sort complex tree relations";
 	private static final String KEY_SORT_RELATIONS = "sort non-tree relations";
 	private static final String KEY_CLEAN_UP = "clean up";
 	private static final String KEY_CREATE_GEOMETRIES = "create geometries";
@@ -233,6 +235,8 @@ public class ExtractionFilesBuilder
 		String fileNamesMissingNodes = "missing-nodes" + extension;
 		String fileNamesDistributedWays = "ways-unsorted" + extension;
 		String fileNamesDistributedNodes = "nodes-unsorted" + extension;
+		String fileNamesRelationsComplexUnsorted = "relations-complex-unsorted"
+				+ extension;
 
 		BatchFileNames relationNames = fileNames.getRelationNames();
 		String fileNamesRelations = relationNames.getRelations();
@@ -492,11 +496,23 @@ public class ExtractionFilesBuilder
 				pathTree, pathComplexRelationsDir, pathComplexRelationsEmpty,
 				pathComplexRelationsNonTree, pathComplexRelationsNonTreeBboxes,
 				fileNamesRelations, fileNamesWays, fileNamesNodes,
-				fileNamesFinalRelationsComplex, outputFormat, outputConfigTree);
+				fileNamesRelationsComplexUnsorted, outputFormat,
+				outputConfigTree);
 		complexRelationsDistributor.execute();
 
 		t.stop(KEY_DISTRIBUTE_RELATIONS);
 		printInfo();
+
+		// Sort complex tree relations
+		t.start(KEY_SORT_COMPLEX_RELATIONS);
+
+		TreeFileSorter sorter = new TreeFileSorter(pathTree,
+				fileNamesRelationsComplexUnsorted,
+				fileNamesFinalRelationsComplex, outputFormat,
+				outputConfigRelations, keepUnsortedRelations);
+		sorter.execute();
+
+		t.stop(KEY_SORT_COMPLEX_RELATIONS);
 
 		// Sort non-tree relations
 		t.start(KEY_SORT_RELATIONS);
@@ -570,8 +586,8 @@ public class ExtractionFilesBuilder
 				KEY_FIND_MISSING_WAY_NODES, KEY_EXTRACT_MISSING_WAY_NODES,
 				KEY_DISTRIBUTE_WAYS, KEY_MERGE_NODES, KEY_MERGE_WAYS,
 				KEY_SEPARATE_RELATIONS, KEY_SPLIT_RELATIONS,
-				KEY_DISTRIBUTE_RELATIONS, KEY_SORT_RELATIONS, KEY_CLEAN_UP,
-				KEY_CREATE_GEOMETRIES };
+				KEY_DISTRIBUTE_RELATIONS, KEY_SORT_COMPLEX_RELATIONS,
+				KEY_SORT_RELATIONS, KEY_CLEAN_UP, KEY_CREATE_GEOMETRIES };
 
 		for (String key : keys) {
 			System.out.println(String.format("%s: %s", key, t.htime(key)));
