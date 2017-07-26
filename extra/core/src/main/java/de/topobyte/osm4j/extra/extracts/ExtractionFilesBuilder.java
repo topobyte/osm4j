@@ -138,6 +138,7 @@ public class ExtractionFilesBuilder
 	private boolean keepRelations = false;
 	private boolean keepRelationBatches = false;
 	private boolean keepNonTreeRelations = false;
+	private boolean keepUnsortedRelations = false;
 
 	private TimeTable t = new TimeTable();
 
@@ -183,8 +184,8 @@ public class ExtractionFilesBuilder
 
 		pathSimpleRelations = pathOutput
 				.resolve("relations.simple" + extension);
-		pathComplexRelations = pathOutput.resolve("relations.complex"
-				+ extension);
+		pathComplexRelations = pathOutput
+				.resolve("relations.complex" + extension);
 
 		pathSimpleRelationsDir = pathOutput.resolve("relations.simple");
 		pathComplexRelationsDir = pathOutput.resolve("relations.complex");
@@ -196,18 +197,18 @@ public class ExtractionFilesBuilder
 				.resolve("relations.simple.nontree.bboxlist");
 		pathComplexRelationsNonTreeBboxes = pathOutput
 				.resolve("relations.complex.nontree.bboxlist");
-		pathSimpleRelationsEmpty = pathOutput.resolve(fileNames
-				.getSimpleRelationsEmpty());
-		pathComplexRelationsEmpty = pathOutput.resolve(fileNames
-				.getComplexRelationsEmpty());
-		pathSimpleRelationsSorted = pathOutput.resolve(fileNames
-				.getSimpleRelations());
-		pathComplexRelationsSorted = pathOutput.resolve(fileNames
-				.getComplexRelations());
-		pathSimpleRelationsSortedBboxes = pathOutput.resolve(fileNames
-				.getSimpleRelationsBboxes());
-		pathComplexRelationsSortedBboxes = pathOutput.resolve(fileNames
-				.getComplexRelationsBboxes());
+		pathSimpleRelationsEmpty = pathOutput
+				.resolve(fileNames.getSimpleRelationsEmpty());
+		pathComplexRelationsEmpty = pathOutput
+				.resolve(fileNames.getComplexRelationsEmpty());
+		pathSimpleRelationsSorted = pathOutput
+				.resolve(fileNames.getSimpleRelations());
+		pathComplexRelationsSorted = pathOutput
+				.resolve(fileNames.getComplexRelations());
+		pathSimpleRelationsSortedBboxes = pathOutput
+				.resolve(fileNames.getSimpleRelationsBboxes());
+		pathComplexRelationsSortedBboxes = pathOutput
+				.resolve(fileNames.getComplexRelationsBboxes());
 
 		pathTreeGeometry = pathOutput.resolve("tree.wkt");
 		pathSimpleRelationsSortedGeometry = pathOutput.resolve("simple.wkt");
@@ -245,14 +246,14 @@ public class ExtractionFilesBuilder
 		OsmOutputConfig outputConfigRelations = new OsmOutputConfig(
 				outputFormat, includeMetadata);
 
-		outputConfigTree.getTboConfig().setLimitNodes(
-				new ElementCountLimit(1024));
+		outputConfigTree.getTboConfig()
+				.setLimitNodes(new ElementCountLimit(1024));
 		outputConfigTree.getTboConfig().setLimitWays(new WayNodeLimit(2048));
-		outputConfigTree.getTboConfig().setLimitRelations(
-				new RelationMemberLimit(2048));
+		outputConfigTree.getTboConfig()
+				.setLimitRelations(new RelationMemberLimit(2048));
 
-		outputConfigRelations.getTboConfig().setLimitRelations(
-				new RelationMemberLimit(1024));
+		outputConfigRelations.getTboConfig()
+				.setLimitRelations(new RelationMemberLimit(1024));
 
 		OsmOutputConfig outputConfigTreeFinal = new OsmOutputConfig(
 				outputFormat, includeMetadata);
@@ -282,8 +283,8 @@ public class ExtractionFilesBuilder
 		t.start(KEY_TOTAL);
 		t.start(KEY_SPLIT);
 
-		OsmIteratorInput input = fileInput
-				.createIterator(true, includeMetadata);
+		OsmIteratorInput input = fileInput.createIterator(true,
+				includeMetadata);
 
 		ThreadedEntitySplitter splitter = new ThreadedEntitySplitter(
 				input.getIterator(), pathNodes, pathWays, pathRelations,
@@ -505,10 +506,10 @@ public class ExtractionFilesBuilder
 				pathSimpleRelationsNonTreeBboxes,
 				pathComplexRelationsNonTreeBboxes, pathSimpleRelationsDir,
 				pathComplexRelationsDir, pathSimpleRelationsSorted,
-				pathComplexRelationsSorted, outputFormat,
-				outputConfigRelations, pathSimpleRelationsSortedBboxes,
+				pathComplexRelationsSorted, outputFormat, outputConfigRelations,
+				pathSimpleRelationsSortedBboxes,
 				pathComplexRelationsSortedBboxes, maxMembersSimple,
-				maxMembersComplex);
+				maxMembersComplex, keepUnsortedRelations);
 		nonTreeSplitter.execute();
 
 		if (!keepRelationBatches) {
@@ -645,6 +646,16 @@ public class ExtractionFilesBuilder
 	public void setKeepNonTreeRelations(boolean keepNonTreeRelations)
 	{
 		this.keepNonTreeRelations = keepNonTreeRelations;
+	}
+
+	public boolean isKeepUnsortedRelations()
+	{
+		return keepUnsortedRelations;
+	}
+
+	public void setKeepUnsortedRelations(boolean keepUnsortedRelations)
+	{
+		this.keepUnsortedRelations = keepUnsortedRelations;
 	}
 
 }

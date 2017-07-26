@@ -52,14 +52,16 @@ public class NonTreeRelationsSplitter
 	private Path pathOutputSimpleBboxList;
 	private Path pathOutputComplexBboxList;
 
-	public NonTreeRelationsSplitter(Path pathInputSimple,
-			Path pathInputComplex, Path pathInputSimpleBboxes,
-			Path pathInputComplexBboxes, Path pathInputSimpleOld,
-			Path pathInputComplexOld, Path pathOutputSimple,
-			Path pathOutputComplex, FileFormat inputFormat,
-			OsmOutputConfig outputConfig, Path pathOutputSimpleBboxList,
-			Path pathOutputComplexBboxList, int maxMembersSimple,
-			int maxMembersComplex)
+	private boolean keepUnsortedRelations;
+
+	public NonTreeRelationsSplitter(Path pathInputSimple, Path pathInputComplex,
+			Path pathInputSimpleBboxes, Path pathInputComplexBboxes,
+			Path pathInputSimpleOld, Path pathInputComplexOld,
+			Path pathOutputSimple, Path pathOutputComplex,
+			FileFormat inputFormat, OsmOutputConfig outputConfig,
+			Path pathOutputSimpleBboxList, Path pathOutputComplexBboxList,
+			int maxMembersSimple, int maxMembersComplex,
+			boolean keepUnsortedRelations)
 	{
 		this.pathInputSimple = pathInputSimple;
 		this.pathInputComplex = pathInputComplex;
@@ -75,13 +77,13 @@ public class NonTreeRelationsSplitter
 		this.pathOutputComplexBboxList = pathOutputComplexBboxList;
 		this.maxMembersSimple = maxMembersSimple;
 		this.maxMembersComplex = maxMembersComplex;
+		this.keepUnsortedRelations = keepUnsortedRelations;
 	}
 
 	public void execute() throws IOException
 	{
-		List<Path> nodePathsSimple = BatchFilesUtil
-				.getPaths(pathInputSimpleOld,
-						"nodes" + OsmIoUtils.extension(inputFormat));
+		List<Path> nodePathsSimple = BatchFilesUtil.getPaths(pathInputSimpleOld,
+				"nodes" + OsmIoUtils.extension(inputFormat));
 		Collection<OsmFile> nodeFilesSimple = createOsmFiles(nodePathsSimple);
 
 		List<Path> wayPathsSimple = BatchFilesUtil.getPaths(pathInputSimpleOld,
@@ -93,9 +95,9 @@ public class NonTreeRelationsSplitter
 				"nodes" + OsmIoUtils.extension(inputFormat));
 		Collection<OsmFile> nodeFilesComplex = createOsmFiles(nodePathsComplex);
 
-		List<Path> wayPathsComplex = BatchFilesUtil
-				.getPaths(pathInputComplexOld,
-						"ways" + OsmIoUtils.extension(inputFormat));
+		List<Path> wayPathsComplex = BatchFilesUtil.getPaths(
+				pathInputComplexOld,
+				"ways" + OsmIoUtils.extension(inputFormat));
 		Collection<OsmFile> wayFilesComplex = createOsmFiles(wayPathsComplex);
 
 		OsmFileSetInput inputNodesSimple = new OsmFileSetInput(nodeFilesSimple);
@@ -115,6 +117,8 @@ public class NonTreeRelationsSplitter
 
 		String fileNamesRelations = "relations"
 				+ OsmIoUtils.extension(outputConfig.getFileFormat());
+		String fileNamesRelationsUnsorted = "relations-unsorted"
+				+ OsmIoUtils.extension(outputConfig.getFileFormat());
 
 		SimpleRelationsSorterAndMemberCollector task1 = new SimpleRelationsSorterAndMemberCollector(
 				inputSimpleRelations, pathInputSimpleBboxes,
@@ -126,9 +130,10 @@ public class NonTreeRelationsSplitter
 
 		ComplexRelationsSorterAndMemberCollector task2 = new ComplexRelationsSorterAndMemberCollector(
 				inputComplexRelations, pathInputComplexBboxes,
-				pathOutputComplexRelations, fileNamesRelations,
-				inputWaysComplex, inputNodesComplex, outputConfig,
-				pathOutputComplexBboxList, maxMembersComplex);
+				pathOutputComplexRelations, fileNamesRelationsUnsorted,
+				fileNamesRelations, inputWaysComplex, inputNodesComplex,
+				outputConfig, pathOutputComplexBboxList, maxMembersComplex,
+				keepUnsortedRelations);
 
 		task2.execute();
 	}

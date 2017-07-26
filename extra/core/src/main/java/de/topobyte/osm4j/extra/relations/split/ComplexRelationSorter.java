@@ -17,29 +17,42 @@
 
 package de.topobyte.osm4j.extra.relations.split;
 
-import gnu.trove.map.TLongObjectMap;
-import gnu.trove.set.TLongSet;
-
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 
+import de.topobyte.melon.io.StreamUtil;
+import de.topobyte.osm4j.core.access.OsmIterator;
 import de.topobyte.osm4j.core.access.OsmIteratorInputFactory;
+import de.topobyte.osm4j.core.access.OsmOutputStream;
 import de.topobyte.osm4j.core.access.OsmStreamOutput;
 import de.topobyte.osm4j.core.model.iface.OsmRelation;
 import de.topobyte.osm4j.extra.relations.Group;
+import de.topobyte.osm4j.utils.OsmIoUtils;
 import de.topobyte.osm4j.utils.OsmOutputConfig;
+import de.topobyte.osm4j.utils.sort.MemorySort;
+import gnu.trove.map.TLongObjectMap;
+import gnu.trove.set.TLongSet;
 
 public class ComplexRelationSorter extends RelationSorterBase
 {
 
+	private String fileNamesRelationsSorted;
+	private boolean keepUnsortedRelations;
+
 	public ComplexRelationSorter(Path pathInputBboxes, Path pathOutput,
-			String fileNamesRelations, OsmIteratorInputFactory iteratorFactory,
+			String fileNamesRelationsUnsorted, String fileNamesRelations,
+			OsmIteratorInputFactory iteratorFactory,
 			OsmOutputConfig outputConfig, Path pathOutputBboxList,
-			int maxMembers)
+			int maxMembers, boolean keepUnsortedRelations)
 	{
-		super(pathInputBboxes, pathOutput, fileNamesRelations, iteratorFactory,
-				outputConfig, pathOutputBboxList, maxMembers);
+		super(pathInputBboxes, pathOutput, fileNamesRelationsUnsorted,
+				iteratorFactory, outputConfig, pathOutputBboxList, maxMembers);
+		this.fileNamesRelationsSorted = fileNamesRelations;
+		this.keepUnsortedRelations = keepUnsortedRelations;
 	}
 
 	public void execute() throws IOException
@@ -83,6 +96,33 @@ public class ComplexRelationSorter extends RelationSorterBase
 
 		System.out.println(String.format("Wrote %s relations in %d batches",
 				format.format(relationCount), batches.size()));
+
+		boolean useMetadata = outputConfig.isWriteMetadata();
+
+		for (int i = 0; i < batches.size(); i++) {
+			int id = i + 1;
+			System.out.println("sorting " + id);
+			Path pathUnsorted = batchFile(id, fileNamesRelations);
+			Path pathSorted = batchFile(id, fileNamesRelationsSorted);
+
+			InputStream input = StreamUtil.bufferedInputStream(pathUnsorted);
+			OutputStream output = StreamUtil.bufferedOutputStream(pathSorted);
+
+			OsmIterator osmInput = OsmIoUtils.setupOsmIterator(input,
+					outputConfig.getFileFormat(), useMetadata);
+			OsmOutputStream osmOutput = OsmIoUtils.setupOsmOutput(output,
+					outputConfig);
+
+			MemorySort memorySort = new MemorySort(osmOutput, osmInput);
+			memorySort.setIgnoreDuplicates(true);
+			memorySort.run();
+
+			output.close();
+
+			if (!keepUnsortedRelations) {
+				Files.delete(pathUnsorted);
+			}
+		}
 	}
 
 }

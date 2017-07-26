@@ -116,22 +116,22 @@ public class SplitNonTreeRelations extends AbstractExecutableInputOutput
 				.getOptionValue(OPTION_OUTPUT_COMPLEX_BBOXES);
 
 		try {
-			maxMembersSimple = ArgumentHelper.getInteger(line,
-					OPTION_MAX_MEMBERS_SIMPLE).getValue();
+			maxMembersSimple = ArgumentHelper
+					.getInteger(line, OPTION_MAX_MEMBERS_SIMPLE).getValue();
 		} catch (ArgumentParseException e) {
-			System.out.println(String.format(
-					"Error while parsing option '%s': %s",
-					OPTION_MAX_MEMBERS_SIMPLE, e.getMessage()));
+			System.out.println(
+					String.format("Error while parsing option '%s': %s",
+							OPTION_MAX_MEMBERS_SIMPLE, e.getMessage()));
 			System.exit(1);
 		}
 
 		try {
-			maxMembersComplex = ArgumentHelper.getInteger(line,
-					OPTION_MAX_MEMBERS_COMPLEX).getValue();
+			maxMembersComplex = ArgumentHelper
+					.getInteger(line, OPTION_MAX_MEMBERS_COMPLEX).getValue();
 		} catch (ArgumentParseException e) {
-			System.out.println(String.format(
-					"Error while parsing option '%s': %s",
-					OPTION_MAX_MEMBERS_COMPLEX, e.getMessage()));
+			System.out.println(
+					String.format("Error while parsing option '%s': %s",
+							OPTION_MAX_MEMBERS_COMPLEX, e.getMessage()));
 			System.exit(1);
 		}
 	}
@@ -149,7 +149,7 @@ public class SplitNonTreeRelations extends AbstractExecutableInputOutput
 				Paths.get(pathOutputSimple), Paths.get(pathOutputComplex),
 				inputFormat, outputConfig, Paths.get(pathOutputSimpleBboxes),
 				Paths.get(pathOutputComplexBboxes), maxMembersSimple,
-				maxMembersComplex);
+				maxMembersComplex, false);
 		splitter.execute();
 	}
 

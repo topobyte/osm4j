@@ -200,6 +200,7 @@ public class ComplexRelationsDistributor extends RelationsDistributorBase
 							outputConfig.isWriteMetadata()), true, true, true);
 
 			data.sort();
+			// TODO: remove duplicates
 
 			OutputStream output = StreamUtil.bufferedOutputStream(path);
 			OsmOutputStream osmOutput = OsmIoUtils.setupOsmOutput(output,

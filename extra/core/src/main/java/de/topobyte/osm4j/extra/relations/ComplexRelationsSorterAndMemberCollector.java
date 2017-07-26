@@ -40,7 +40,10 @@ public class ComplexRelationsSorterAndMemberCollector
 	private OsmIteratorInputFactory inputNodes;
 
 	private Path pathOutputComplexRelations;
+	private String fileNamesRelationsUnsorted;
 	private String fileNamesRelations;
+
+	private boolean keepUnsortedRelations;
 
 	private OsmOutputConfig outputConfig;
 
@@ -49,20 +52,23 @@ public class ComplexRelationsSorterAndMemberCollector
 	public ComplexRelationsSorterAndMemberCollector(
 			OsmIteratorInputFactory inputComplexRelations,
 			Path pathInputComplexRelationsBboxes,
-			Path pathOutputComplexRelations, String fileNamesRelations,
-			OsmIteratorInputFactory inputWays,
+			Path pathOutputComplexRelations, String fileNamesRelationsUnsorted,
+			String fileNamesRelations, OsmIteratorInputFactory inputWays,
 			OsmIteratorInputFactory inputNodes, OsmOutputConfig outputConfig,
-			Path pathOutputBboxList, int maxMembers)
+			Path pathOutputBboxList, int maxMembers,
+			boolean keepUnsortedRelations)
 	{
 		this.inputComplexRelations = inputComplexRelations;
 		this.pathInputComplexRelationsBboxes = pathInputComplexRelationsBboxes;
 		this.pathOutputComplexRelations = pathOutputComplexRelations;
+		this.fileNamesRelationsUnsorted = fileNamesRelationsUnsorted;
 		this.fileNamesRelations = fileNamesRelations;
 		this.inputWays = inputWays;
 		this.inputNodes = inputNodes;
 		this.outputConfig = outputConfig;
 		this.pathOutputBboxList = pathOutputBboxList;
 		this.maxMembers = maxMembers;
+		this.keepUnsortedRelations = keepUnsortedRelations;
 	}
 
 	public void execute() throws IOException
@@ -75,8 +81,9 @@ public class ComplexRelationsSorterAndMemberCollector
 
 		ComplexRelationSorter complexRelationSorter = new ComplexRelationSorter(
 				pathInputComplexRelationsBboxes, pathOutputComplexRelations,
-				fileNamesRelations, inputComplexRelations, outputConfig,
-				pathOutputBboxList, maxMembers);
+				fileNamesRelationsUnsorted, fileNamesRelations,
+				inputComplexRelations, outputConfig, pathOutputBboxList,
+				maxMembers, keepUnsortedRelations);
 
 		complexRelationSorter.execute();
 

@@ -28,12 +28,13 @@ import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 import de.topobyte.utilities.apache.commons.cli.parsing.ArgumentHelper;
 import de.topobyte.utilities.apache.commons.cli.parsing.ArgumentParseException;
 
-public class SortComplexRelations extends
-		AbstractExecutableSingleInputFileOutput
+public class SortComplexRelations
+		extends AbstractExecutableSingleInputFileOutput
 {
 
 	private static final String OPTION_INPUT_BBOXES = "bboxes";
 	private static final String OPTION_OUTPUT = "output";
+	private static final String OPTION_FILE_NAMES_RELATIONS_TEMP = "relations-unsorted";
 	private static final String OPTION_FILE_NAMES_RELATIONS = "relations";
 	private static final String OPTION_OUTPUT_BBOXES = "output-bboxes";
 	private static final String OPTION_MAX_MEMBERS = "max-members";
@@ -58,6 +59,7 @@ public class SortComplexRelations extends
 	private String pathOutputBboxes;
 
 	private String fileNamesRelations;
+	private String fileNamesRelationsUnsorted;
 
 	private int maxMembers;
 
@@ -67,6 +69,7 @@ public class SortComplexRelations extends
 		OptionHelper.addL(options, OPTION_INPUT_BBOXES, true, true, "bbox information file");
 		OptionHelper.addL(options, OPTION_OUTPUT, true, true, "directory to store output in");
 		OptionHelper.addL(options, OPTION_FILE_NAMES_RELATIONS, true, true, "names of the relation files in each directory");
+		OptionHelper.addL(options, OPTION_FILE_NAMES_RELATIONS_TEMP, true, true, "names of the unsorted relation files in each directory");
 		OptionHelper.addL(options, OPTION_OUTPUT_BBOXES, true, true, "bbox information file");
 		OptionHelper.addL(options, OPTION_MAX_MEMBERS, true, true, "maximum number of nodes per batch");
 		// @formatter:on
@@ -82,14 +85,16 @@ public class SortComplexRelations extends
 		pathOutputBboxes = line.getOptionValue(OPTION_OUTPUT_BBOXES);
 
 		fileNamesRelations = line.getOptionValue(OPTION_FILE_NAMES_RELATIONS);
+		fileNamesRelationsUnsorted = line
+				.getOptionValue(OPTION_FILE_NAMES_RELATIONS_TEMP);
 
 		try {
 			maxMembers = ArgumentHelper.getInteger(line, OPTION_MAX_MEMBERS)
 					.getValue();
 		} catch (ArgumentParseException e) {
-			System.out.println(String.format(
-					"Error while parsing option '%s': %s", OPTION_MAX_MEMBERS,
-					e.getMessage()));
+			System.out.println(
+					String.format("Error while parsing option '%s': %s",
+							OPTION_MAX_MEMBERS, e.getMessage()));
 			System.exit(1);
 		}
 	}
@@ -103,8 +108,8 @@ public class SortComplexRelations extends
 
 		ComplexRelationSorter sorter = new ComplexRelationSorter(
 				Paths.get(pathInputBboxes), Paths.get(pathOutput),
-				fileNamesRelations, fileInput, outputConfig,
-				Paths.get(pathOutputBboxes), maxMembers);
+				fileNamesRelationsUnsorted, fileNamesRelations, fileInput,
+				outputConfig, Paths.get(pathOutputBboxes), maxMembers, false);
 
 		sorter.execute();
 	}

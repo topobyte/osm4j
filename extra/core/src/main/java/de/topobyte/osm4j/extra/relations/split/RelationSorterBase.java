@@ -17,9 +17,6 @@
 
 package de.topobyte.osm4j.extra.relations.split;
 
-import gnu.trove.map.TLongIntMap;
-import gnu.trove.map.hash.TLongIntHashMap;
-
 import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -46,6 +43,8 @@ import de.topobyte.osm4j.extra.idbboxlist.IdBboxListOutputStream;
 import de.topobyte.osm4j.extra.idbboxlist.IdBboxUtil;
 import de.topobyte.osm4j.utils.OsmIoUtils;
 import de.topobyte.osm4j.utils.OsmOutputConfig;
+import gnu.trove.map.TLongIntMap;
+import gnu.trove.map.hash.TLongIntHashMap;
 
 public class RelationSorterBase
 {
@@ -54,7 +53,7 @@ public class RelationSorterBase
 
 	private Path pathInputBboxes;
 	private Path pathOutput;
-	private String fileNamesRelations;
+	protected String fileNamesRelations;
 	protected OsmIteratorInputFactory iteratorFactory;
 	protected OsmOutputConfig outputConfig;
 	private Path pathOutputBboxList;
@@ -131,13 +130,12 @@ public class RelationSorterBase
 
 			IdBboxEntry batchEntry = sum(id, batch);
 
-			String subdirName = String.format("%d", id);
-			Path subdir = pathOutput.resolve(subdirName);
-			Path path = subdir.resolve(fileNamesRelations);
+			Path subdir = batchDir(id);
 			Files.createDirectory(subdir);
+			Path path = batchFile(id, fileNamesRelations);
 
-			OutputStream output = new BufferedOutputStream(factory.create(path
-					.toFile()));
+			OutputStream output = new BufferedOutputStream(
+					factory.create(path.toFile()));
 			OsmOutputStream osmOutput = OsmIoUtils.setupOsmOutput(output,
 					outputConfig);
 			outputs.add(new OsmOutputStreamStreamOutput(output, osmOutput));
@@ -149,6 +147,18 @@ public class RelationSorterBase
 
 			bboxOutput.write(batchEntry);
 		}
+	}
+
+	protected Path batchDir(int id)
+	{
+		String subdirName = String.format("%d", id);
+		return pathOutput.resolve(subdirName);
+	}
+
+	protected Path batchFile(int id, String fileName)
+	{
+		Path subdir = batchDir(id);
+		return subdir.resolve(fileName);
 	}
 
 	protected void closeOutputs() throws IOException

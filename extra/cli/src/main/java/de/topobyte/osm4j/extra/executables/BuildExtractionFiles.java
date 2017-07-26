@@ -50,6 +50,7 @@ public class BuildExtractionFiles extends AbstractExecutableInput
 	private static final String OPTION_KEEP_RELATIONS = "keep-relations";
 	private static final String OPTION_KEEP_RELATION_BATCHES = "keep-relation-batches";
 	private static final String OPTION_KEEP_NONTREE_RELATIONS = "keep-nontree-relations";
+	private static final String OPTION_KEEP_UNSORTED_RELATIONS = "keep-unsorted-relations";
 
 	@Override
 	protected String getHelpMessage()
@@ -57,8 +58,7 @@ public class BuildExtractionFiles extends AbstractExecutableInput
 		return BuildExtractionFiles.class.getSimpleName() + " [options]";
 	}
 
-	public static void main(String[] args) throws IOException,
-			OsmInputException
+	public static void main(String[] args) throws IOException, OsmInputException
 	{
 		BuildExtractionFiles task = new BuildExtractionFiles();
 
@@ -87,6 +87,7 @@ public class BuildExtractionFiles extends AbstractExecutableInput
 	private boolean keepRelations = false;
 	private boolean keepRelationBatches = false;
 	private boolean keepNonTreeRelations = false;
+	private boolean keepUnsortedRelations = false;
 
 	public BuildExtractionFiles()
 	{
@@ -107,6 +108,7 @@ public class BuildExtractionFiles extends AbstractExecutableInput
 		OptionHelper.addL(options, OPTION_KEEP_RELATIONS, false, false, "keep the files with simple and complex relations");
 		OptionHelper.addL(options, OPTION_KEEP_RELATION_BATCHES, false, false, "keep the directories with relation batches");
 		OptionHelper.addL(options, OPTION_KEEP_NONTREE_RELATIONS, false, false, "keep the files containing nontree relations");
+		OptionHelper.addL(options, OPTION_KEEP_UNSORTED_RELATIONS, false, false, "keep the files containing unsorted complex relation groups");
 		// @formatter:on
 	}
 
@@ -127,22 +129,22 @@ public class BuildExtractionFiles extends AbstractExecutableInput
 		}
 
 		try {
-			maxMembersSimple = ArgumentHelper.getInteger(line,
-					OPTION_MAX_MEMBERS_SIMPLE).getValue();
+			maxMembersSimple = ArgumentHelper
+					.getInteger(line, OPTION_MAX_MEMBERS_SIMPLE).getValue();
 		} catch (ArgumentParseException e) {
-			System.out.println(String.format(
-					"Error while parsing option '%s': %s",
-					OPTION_MAX_MEMBERS_SIMPLE, e.getMessage()));
+			System.out.println(
+					String.format("Error while parsing option '%s': %s",
+							OPTION_MAX_MEMBERS_SIMPLE, e.getMessage()));
 			System.exit(1);
 		}
 
 		try {
-			maxMembersComplex = ArgumentHelper.getInteger(line,
-					OPTION_MAX_MEMBERS_COMPLEX).getValue();
+			maxMembersComplex = ArgumentHelper
+					.getInteger(line, OPTION_MAX_MEMBERS_COMPLEX).getValue();
 		} catch (ArgumentParseException e) {
-			System.out.println(String.format(
-					"Error while parsing option '%s': %s",
-					OPTION_MAX_MEMBERS_COMPLEX, e.getMessage()));
+			System.out.println(
+					String.format("Error while parsing option '%s': %s",
+							OPTION_MAX_MEMBERS_COMPLEX, e.getMessage()));
 			System.exit(1);
 		}
 
@@ -163,6 +165,7 @@ public class BuildExtractionFiles extends AbstractExecutableInput
 		keepRelations = line.hasOption(OPTION_KEEP_RELATIONS);
 		keepRelationBatches = line.hasOption(OPTION_KEEP_RELATION_BATCHES);
 		keepNonTreeRelations = line.hasOption(OPTION_KEEP_NONTREE_RELATIONS);
+		keepUnsortedRelations = line.hasOption(OPTION_KEEP_UNSORTED_RELATIONS);
 
 		if (keepAll || keepSplitted) {
 			keepSplittedNodes = true;
@@ -174,6 +177,7 @@ public class BuildExtractionFiles extends AbstractExecutableInput
 			keepRelations = true;
 			keepRelationBatches = true;
 			keepNonTreeRelations = true;
+			keepUnsortedRelations = true;
 		}
 	}
 
@@ -191,6 +195,7 @@ public class BuildExtractionFiles extends AbstractExecutableInput
 		builder.setKeepRelations(keepRelations);
 		builder.setKeepRelationBatches(keepRelationBatches);
 		builder.setKeepNonTreeRelations(keepNonTreeRelations);
+		builder.setKeepUnsortedRelations(keepUnsortedRelations);
 
 		builder.execute();
 	}
