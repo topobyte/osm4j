@@ -118,6 +118,7 @@ public class ComplexRelationSorter extends RelationSorterBase
 			memorySort.run();
 
 			output.close();
+			input.close();
 
 			if (!keepUnsortedRelations) {
 				Files.delete(pathUnsorted);
