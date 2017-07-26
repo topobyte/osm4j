@@ -20,9 +20,8 @@ package de.topobyte.osm4j.utils.executables;
 import java.io.IOException;
 
 import de.topobyte.osm4j.core.access.OsmIterator;
-import de.topobyte.osm4j.core.model.iface.EntityContainer;
-import de.topobyte.osm4j.core.model.iface.OsmEntity;
 import de.topobyte.osm4j.utils.AbstractExecutableSingleInputStream;
+import de.topobyte.osm4j.utils.check.OrderCheck;
 
 public class OsmCheckSorted extends AbstractExecutableSingleInputStream
 {
@@ -46,46 +45,22 @@ public class OsmCheckSorted extends AbstractExecutableSingleInputStream
 		task.finish();
 	}
 
-	private long nc = -1, wc = -1, rc = -1;
-	private long nw = 0, ww = 0, rw = 0;
-	private long nd = 0, wd = 0, rd = 0;
-
 	private void run() throws IOException
 	{
 		OsmIterator iterator = createIterator();
-		while (iterator.hasNext()) {
-			EntityContainer container = iterator.next();
-			OsmEntity entity = container.getEntity();
-			long id = entity.getId();
-			switch (container.getType()) {
-			case Node:
-				if (id < nc) {
-					nw++;
-				} else if (id == nc) {
-					nd++;
-				}
-				nc = id;
-				break;
-			case Way:
-				if (id < wc) {
-					ww++;
-				} else if (id == wc) {
-					wd++;
-				}
-				wc = id;
-				break;
-			case Relation:
-				if (id < rc) {
-					rw++;
-				} else if (id == rc) {
-					rd++;
-				}
-				rc = id;
-				break;
-			}
-		}
 
-		if (nw == 0 && ww == 0 && rw == 0) {
+		OrderCheck check = new OrderCheck(iterator);
+		check.run();
+
+		long nw = check.getNodesWrong();
+		long ww = check.getWaysWrong();
+		long rw = check.getRelationsWrong();
+
+		long nd = check.getNodeDuplicates();
+		long wd = check.getWayDuplicates();
+		long rd = check.getRelationDuplicates();
+
+		if (!check.hasWrongOrder()) {
 			System.out.println("Order is fine");
 		} else {
 			if (nw != 0) {
@@ -99,7 +74,7 @@ public class OsmCheckSorted extends AbstractExecutableSingleInputStream
 			}
 		}
 
-		if (nd == 0 && wd == 0 && rd == 0) {
+		if (!check.hasDuplicates()) {
 			System.out.println("No duplicates");
 		} else {
 			if (nd != 0) {
