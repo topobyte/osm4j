@@ -471,9 +471,9 @@ public class Query extends AbstractQuery
 		if (relationFilter == null) {
 			selectedRelations = dataRelations;
 		} else {
-			dataRelations.sort();
 			selectedRelations = new RelationSelector().select(relationFilter,
 					dataRelations);
+			selectedRelations.sort();
 		}
 
 		OsmStreamOutput outRelations = createOutput(pathOutRelations);
@@ -489,7 +489,6 @@ public class Query extends AbstractQuery
 					fastRelationTests);
 			simpleRelationsQuery.execute(queryBag);
 		} else {
-			selectedRelations.sort();
 			ComplexRelationsQuery complexRelationsQuery = new ComplexRelationsQuery(
 					dataNodes, dataWays, selectedRelations, test,
 					fastRelationTests);
