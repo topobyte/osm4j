@@ -17,10 +17,6 @@
 
 package de.topobyte.osm4j.extra.extracts.query;
 
-import gnu.trove.map.TLongObjectMap;
-import gnu.trove.map.hash.TLongObjectHashMap;
-import gnu.trove.set.TLongSet;
-
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
@@ -29,12 +25,11 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.vividsolutions.jts.geom.Envelope;
+import com.google.common.collect.Sets;
+import com.google.common.collect.Sets.SetView;
 
-import de.topobyte.jts.utils.GeometryGroup;
 import de.topobyte.jts.utils.predicate.PredicateEvaluator;
 import de.topobyte.osm4j.core.dataset.InMemoryListDataSet;
-import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.osm4j.core.model.iface.OsmRelation;
 import de.topobyte.osm4j.core.resolve.EntityFinder;
 import de.topobyte.osm4j.core.resolve.EntityFinders;
@@ -44,9 +39,9 @@ import de.topobyte.osm4j.extra.MissingEntityCounter;
 import de.topobyte.osm4j.extra.QueryUtil;
 import de.topobyte.osm4j.extra.relations.Group;
 import de.topobyte.osm4j.extra.relations.RelationGraph;
-import de.topobyte.osm4j.geometry.BboxBuilder;
-import de.topobyte.osm4j.geometry.LineworkBuilderResult;
-import de.topobyte.osm4j.geometry.RegionBuilderResult;
+import gnu.trove.map.TLongObjectMap;
+import gnu.trove.map.hash.TLongObjectHashMap;
+import gnu.trove.set.TLongSet;
 
 public class ComplexRelationsQuery extends AbstractRelationsQuery
 {
@@ -63,15 +58,77 @@ public class ComplexRelationsQuery extends AbstractRelationsQuery
 
 	public void execute(RelationQueryBag queryBag) throws IOException
 	{
+		RelationGraph relationGraph = new RelationGraph(true, true);
+		relationGraph.build(dataRelations.getRelations());
+		List<Group> groups = relationGraph.buildGroups();
+		logger.debug(String.format(
+				"This batch has %d groups and %d simple relations",
+				groups.size(), relationGraph.getIdsSimpleRelations().size()));
+
+		Set<OsmRelation> foundSimple = new HashSet<>();
+		Set<OsmRelation> foundComplex = new HashSet<>();
+
+		if (!relationGraph.getIdsSimpleRelations().isEmpty()) {
+			executeSimple(queryBag, relationGraph.getIdsSimpleRelations(),
+					foundSimple);
+		}
+
+		if (!groups.isEmpty()) {
+			executeGroups(queryBag, groups, foundComplex);
+		}
+
+		SetView<OsmRelation> found = Sets.union(foundSimple, foundComplex);
+
+		TLongObjectMap<OsmRelation> relations = new TLongObjectHashMap<>();
+		for (OsmRelation relation : found) {
+			relations.put(relation.getId(), relation);
+		}
+		logger.debug(String.format("writing %d relations", relations.size()));
+		QueryUtil.writeRelations(relations,
+				queryBag.outRelations.getOsmOutput());
+	}
+
+	private void executeSimple(RelationQueryBag queryBag,
+			TLongSet simpleRelationIds, Set<OsmRelation> found)
+			throws IOException
+	{
 		EntityFinder finder = EntityFinders.create(provider,
 				EntityNotFoundStrategy.IGNORE);
 
-		Set<OsmRelation> found = new HashSet<>();
+		for (OsmRelation relation : dataRelations.getRelations()) {
+			if (!simpleRelationIds.contains(relation.getId())) {
+				continue;
+			}
 
-		RelationGraph relationGraph = new RelationGraph(false, true);
-		relationGraph.build(dataRelations.getRelations());
-		List<Group> groups = relationGraph.buildGroups();
-		logger.debug(String.format("This batch has %d groups", groups.size()));
+			if (!intersects(relation, queryBag, finder)) {
+				continue;
+			}
+
+			found.add(relation);
+			queryBag.nSimple++;
+
+			MissingEntityCounter counter = new MissingEntityCounter();
+			QueryUtil.putNodes(relation, queryBag.additionalNodes, dataNodes,
+					queryBag.nodeIds, counter);
+			QueryUtil
+					.putWaysAndWayNodes(relation, queryBag.additionalNodes,
+							queryBag.additionalWays, provider, queryBag.wayIds,
+							counter);
+
+			if (counter.nonZero()) {
+				System.out.println(String.format(
+						"relation %d: unable to find %s", relation.getId(),
+						counter.toMessage()));
+			}
+		}
+	}
+
+	private void executeGroups(RelationQueryBag queryBag, List<Group> groups,
+			Set<OsmRelation> found) throws IOException
+	{
+		EntityFinder finder = EntityFinders.create(provider,
+				EntityNotFoundStrategy.IGNORE);
+
 		for (Group group : groups) {
 			TLongSet ids = group.getRelationIds();
 			logger.debug(String.format("group with %d relations", ids.size()));
@@ -107,13 +164,6 @@ public class ComplexRelationsQuery extends AbstractRelationsQuery
 
 		queryBag.nComplex += found.size();
 
-		TLongObjectMap<OsmRelation> relations = new TLongObjectHashMap<>();
-		for (OsmRelation relation : found) {
-			relations.put(relation.getId(), relation);
-		}
-		QueryUtil.writeRelations(relations,
-				queryBag.outRelations.getOsmOutput());
-
 		for (OsmRelation relation : found) {
 			MissingEntityCounter counter = new MissingEntityCounter();
 			QueryUtil.putNodes(relation, queryBag.additionalNodes, dataNodes,
@@ -131,51 +181,4 @@ public class ComplexRelationsQuery extends AbstractRelationsQuery
 		}
 	}
 
-	private boolean intersects(OsmRelation start, List<OsmRelation> relations,
-			RelationQueryBag queryBag, EntityFinder finder) throws IOException
-	{
-		if (QueryUtil.anyMemberContainedIn(relations, queryBag.nodeIds,
-				queryBag.wayIds)) {
-			return true;
-		}
-
-		Set<OsmNode> nodes = new HashSet<>();
-		try {
-			finder.findMemberNodesAndWayNodes(relations, nodes);
-		} catch (EntityNotFoundException e) {
-			// Can't happen, because we're using the IGNORE strategy
-		}
-
-		Envelope envelope = BboxBuilder.box(nodes);
-		if (test.intersects(envelope)) {
-			if (fastRelationTests) {
-				return true;
-			}
-		} else {
-			return false;
-		}
-
-		try {
-			LineworkBuilderResult result = lineworkBuilder.build(relations,
-					provider);
-			GeometryGroup group = result.toGeometryGroup(factory);
-			if (test.intersects(group)) {
-				return true;
-			}
-		} catch (EntityNotFoundException e) {
-			System.out.println("Unable to build relation group");
-		}
-
-		try {
-			RegionBuilderResult result = regionBuilder.build(start, provider);
-			GeometryGroup group = result.toGeometryGroup(factory);
-			if (test.intersects(group)) {
-				return true;
-			}
-		} catch (EntityNotFoundException e) {
-			System.out.println("Unable to build relation group");
-		}
-
-		return false;
-	}
 }

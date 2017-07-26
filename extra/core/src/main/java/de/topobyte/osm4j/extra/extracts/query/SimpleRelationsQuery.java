@@ -18,25 +18,15 @@
 package de.topobyte.osm4j.extra.extracts.query;
 
 import java.io.IOException;
-import java.util.HashSet;
-import java.util.Set;
 
-import com.vividsolutions.jts.geom.Envelope;
-
-import de.topobyte.jts.utils.GeometryGroup;
 import de.topobyte.jts.utils.predicate.PredicateEvaluator;
 import de.topobyte.osm4j.core.dataset.InMemoryListDataSet;
-import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.osm4j.core.model.iface.OsmRelation;
 import de.topobyte.osm4j.core.resolve.EntityFinder;
 import de.topobyte.osm4j.core.resolve.EntityFinders;
-import de.topobyte.osm4j.core.resolve.EntityNotFoundException;
 import de.topobyte.osm4j.core.resolve.EntityNotFoundStrategy;
 import de.topobyte.osm4j.extra.MissingEntityCounter;
 import de.topobyte.osm4j.extra.QueryUtil;
-import de.topobyte.osm4j.geometry.BboxBuilder;
-import de.topobyte.osm4j.geometry.LineworkBuilderResult;
-import de.topobyte.osm4j.geometry.RegionBuilderResult;
 
 public class SimpleRelationsQuery extends AbstractRelationsQuery
 {
@@ -75,55 +65,6 @@ public class SimpleRelationsQuery extends AbstractRelationsQuery
 						counter.toMessage()));
 			}
 		}
-	}
-
-	private boolean intersects(OsmRelation relation, RelationQueryBag queryBag,
-			EntityFinder finder)
-	{
-		if (QueryUtil.anyMemberContainedIn(relation, queryBag.nodeIds,
-				queryBag.wayIds)) {
-			return true;
-		}
-
-		Set<OsmNode> nodes = new HashSet<>();
-		try {
-			finder.findMemberNodesAndWayNodes(relation, nodes);
-		} catch (EntityNotFoundException e) {
-			// Can't happen, because we're using the IGNORE strategy
-		}
-
-		Envelope envelope = BboxBuilder.box(nodes);
-		if (test.intersects(envelope)) {
-			if (fastRelationTests) {
-				return true;
-			}
-		} else {
-			return false;
-		}
-
-		try {
-			LineworkBuilderResult result = lineworkBuilder.build(relation,
-					provider);
-			GeometryGroup group = result.toGeometryGroup(factory);
-			if (test.intersects(group)) {
-				return true;
-			}
-		} catch (EntityNotFoundException e) {
-			System.out.println("Unable to build relation: " + relation.getId());
-		}
-
-		try {
-			RegionBuilderResult result = regionBuilder
-					.build(relation, provider);
-			GeometryGroup group = result.toGeometryGroup(factory);
-			if (test.intersects(group)) {
-				return true;
-			}
-		} catch (EntityNotFoundException e) {
-			System.out.println("Unable to build relation: " + relation.getId());
-		}
-
-		return false;
 	}
 
 }

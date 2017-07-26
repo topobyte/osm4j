@@ -17,8 +17,6 @@
 
 package de.topobyte.osm4j.extra.extracts.query;
 
-import gnu.trove.set.TLongSet;
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -54,6 +52,7 @@ import de.topobyte.osm4j.utils.FileFormat;
 import de.topobyte.osm4j.utils.OsmFileInput;
 import de.topobyte.osm4j.utils.OsmOutputConfig;
 import de.topobyte.osm4j.utils.merge.sorted.SortedMerge;
+import gnu.trove.set.TLongSet;
 
 public class Query extends AbstractQuery
 {
@@ -221,6 +220,7 @@ public class Query extends AbstractQuery
 				System.out.println("Loading data from simple batch: " + id);
 				tmpIndexSimple++;
 				String tmpFilenames = filename(tmpIndexSimple);
+				System.out.println("Writing to files: " + tmpFilenames);
 
 				Path pathDir = paths.getSimpleRelations().resolve(
 						Long.toString(entry.getId()));
@@ -250,6 +250,7 @@ public class Query extends AbstractQuery
 				System.out.println("Loading data from complex batch: " + id);
 				tmpIndexComplex++;
 				String tmpFilenames = filename(tmpIndexComplex);
+				System.out.println("Writing to files: " + tmpFilenames);
 
 				Path pathDir = paths.getComplexRelations().resolve(
 						Long.toString(entry.getId()));
@@ -463,10 +464,9 @@ public class Query extends AbstractQuery
 			throws IOException
 	{
 		System.out.println("loading data");
-		InMemoryListDataSet dataNodes = read(pathNodes);
-		InMemoryListDataSet dataWays = read(pathWays);
 		InMemoryListDataSet dataRelations = read(pathRelations);
 
+		dataRelations.sort();
 		InMemoryListDataSet selectedRelations;
 		if (relationFilter == null) {
 			selectedRelations = dataRelations;
@@ -474,7 +474,19 @@ public class Query extends AbstractQuery
 			selectedRelations = new RelationSelector().select(relationFilter,
 					dataRelations);
 			selectedRelations.sort();
+
+			System.out.println(String.format("selected %d of %d relations",
+					selectedRelations.getRelations().size(), dataRelations
+							.getRelations().size()));
 		}
+
+		if (selectedRelations.getRelations().isEmpty()) {
+			System.out.println("nothing selected, skipping");
+			return;
+		}
+
+		InMemoryListDataSet dataNodes = read(pathNodes);
+		InMemoryListDataSet dataWays = read(pathWays);
 
 		OsmStreamOutput outRelations = createOutput(pathOutRelations);
 		RelationQueryBag queryBag = new RelationQueryBag(outRelations);
