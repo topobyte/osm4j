@@ -17,13 +17,13 @@
 
 package de.topobyte.osm4j.utils.merge.sorted;
 
-import gnu.trove.set.TIntSet;
-import gnu.trove.set.hash.TIntHashSet;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
+import com.slimjars.dist.gnu.trove.set.TIntSet;
+import com.slimjars.dist.gnu.trove.set.hash.TIntHashSet;
 
 import de.topobyte.osm4j.testing.DataSetGenerator;
 import de.topobyte.osm4j.testing.EntityGenerator;

@@ -17,11 +17,11 @@
 
 package de.topobyte.osm4j.utils.executables;
 
-import gnu.trove.list.array.TLongArrayList;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.slimjars.dist.gnu.trove.list.array.TLongArrayList;
 
 import de.topobyte.osm4j.core.access.OsmIterator;
 import de.topobyte.osm4j.core.model.iface.EntityContainer;

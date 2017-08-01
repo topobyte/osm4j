@@ -17,12 +17,12 @@
 
 package de.topobyte.osm4j.utils;
 
-import gnu.trove.set.TLongSet;
-import gnu.trove.set.hash.TLongHashSet;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Iterator;
+
+import com.slimjars.dist.gnu.trove.set.TLongSet;
+import com.slimjars.dist.gnu.trove.set.hash.TLongHashSet;
 
 import de.topobyte.melon.io.StreamUtil;
 import de.topobyte.osm4j.core.access.OsmHandler;

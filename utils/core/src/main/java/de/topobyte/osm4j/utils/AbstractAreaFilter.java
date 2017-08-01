@@ -17,10 +17,9 @@
 
 package de.topobyte.osm4j.utils;
 
-import gnu.trove.set.hash.TLongHashSet;
-
 import java.io.IOException;
 
+import com.slimjars.dist.gnu.trove.set.hash.TLongHashSet;
 import com.vividsolutions.jts.geom.Coordinate;
 
 import de.topobyte.jts.utils.predicate.PredicateEvaluator;
