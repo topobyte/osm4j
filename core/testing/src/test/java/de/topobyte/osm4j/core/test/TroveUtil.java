@@ -17,8 +17,8 @@
 
 package de.topobyte.osm4j.core.test;
 
-import gnu.trove.TLongCollection;
-import gnu.trove.list.array.TLongArrayList;
+import com.slimjars.dist.gnu.trove.TLongCollection;
+import com.slimjars.dist.gnu.trove.list.array.TLongArrayList;
 
 public class TroveUtil
 {
