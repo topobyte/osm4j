@@ -17,11 +17,6 @@
 
 package de.topobyte.osm4j.core.resolve;
 
-import gnu.trove.TLongCollection;
-import gnu.trove.iterator.TLongIterator;
-import gnu.trove.set.TLongSet;
-import gnu.trove.set.hash.TLongHashSet;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Deque;
@@ -32,6 +27,11 @@ import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.slimjars.dist.gnu.trove.TLongCollection;
+import com.slimjars.dist.gnu.trove.iterator.TLongIterator;
+import com.slimjars.dist.gnu.trove.set.TLongSet;
+import com.slimjars.dist.gnu.trove.set.hash.TLongHashSet;
 
 import de.topobyte.adt.multicollections.MultiSet;
 import de.topobyte.osm4j.core.model.iface.EntityType;

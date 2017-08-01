@@ -17,8 +17,9 @@
 
 package de.topobyte.osm4j.core.dataset;
 
-import gnu.trove.map.TLongObjectMap;
-import gnu.trove.map.hash.TLongObjectHashMap;
+import com.slimjars.dist.gnu.trove.map.TLongObjectMap;
+import com.slimjars.dist.gnu.trove.map.hash.TLongObjectHashMap;
+
 import de.topobyte.osm4j.core.model.iface.OsmBounds;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.osm4j.core.model.iface.OsmRelation;
@@ -112,8 +113,8 @@ public class InMemoryMapDataSet implements OsmEntityProvider
 	{
 		OsmNode node = nodes.get(id);
 		if (node == null) {
-			throw new EntityNotFoundException("unable to find node with id: "
-					+ id);
+			throw new EntityNotFoundException(
+					"unable to find node with id: " + id);
 		}
 		return node;
 	}
@@ -123,8 +124,8 @@ public class InMemoryMapDataSet implements OsmEntityProvider
 	{
 		OsmWay way = ways.get(id);
 		if (way == null) {
-			throw new EntityNotFoundException("unable to find way with id: "
-					+ id);
+			throw new EntityNotFoundException(
+					"unable to find way with id: " + id);
 		}
 		return way;
 	}

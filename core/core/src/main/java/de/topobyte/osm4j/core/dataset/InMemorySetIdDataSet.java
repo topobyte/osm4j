@@ -17,8 +17,9 @@
 
 package de.topobyte.osm4j.core.dataset;
 
-import gnu.trove.set.TLongSet;
-import gnu.trove.set.hash.TLongHashSet;
+import com.slimjars.dist.gnu.trove.set.TLongSet;
+import com.slimjars.dist.gnu.trove.set.hash.TLongHashSet;
+
 import de.topobyte.osm4j.core.model.iface.OsmBounds;
 
 /**

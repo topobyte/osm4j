@@ -17,12 +17,12 @@
 
 package de.topobyte.osm4j.core.dataset;
 
-import gnu.trove.list.array.TLongArrayList;
-import gnu.trove.map.TLongObjectMap;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.slimjars.dist.gnu.trove.list.array.TLongArrayList;
+import com.slimjars.dist.gnu.trove.map.TLongObjectMap;
 
 import de.topobyte.osm4j.core.access.OsmHandler;
 import de.topobyte.osm4j.core.access.OsmInputException;

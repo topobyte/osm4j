@@ -17,9 +17,9 @@
 
 package de.topobyte.osm4j.core.dataset;
 
-import gnu.trove.set.TLongSet;
-
 import java.io.IOException;
+
+import com.slimjars.dist.gnu.trove.set.TLongSet;
 
 import de.topobyte.osm4j.core.access.OsmHandler;
 import de.topobyte.osm4j.core.access.OsmIdHandler;

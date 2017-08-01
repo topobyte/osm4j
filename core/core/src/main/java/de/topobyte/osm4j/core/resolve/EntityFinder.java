@@ -17,11 +17,11 @@
 
 package de.topobyte.osm4j.core.resolve;
 
-import gnu.trove.TLongCollection;
-
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
+
+import com.slimjars.dist.gnu.trove.TLongCollection;
 
 import de.topobyte.adt.multicollections.MultiSet;
 import de.topobyte.osm4j.core.model.iface.OsmNode;

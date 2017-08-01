@@ -17,10 +17,10 @@
 
 package de.topobyte.osm4j.core.util;
 
-import gnu.trove.TLongCollection;
-import gnu.trove.iterator.TLongIterator;
-
 import java.util.Collection;
+
+import com.slimjars.dist.gnu.trove.TLongCollection;
+import com.slimjars.dist.gnu.trove.iterator.TLongIterator;
 
 import de.topobyte.osm4j.core.model.iface.OsmEntity;
 

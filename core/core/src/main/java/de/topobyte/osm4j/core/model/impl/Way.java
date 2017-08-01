@@ -17,9 +17,9 @@
 
 package de.topobyte.osm4j.core.model.impl;
 
-import gnu.trove.list.TLongList;
-
 import java.util.List;
+
+import com.slimjars.dist.gnu.trove.list.TLongList;
 
 import de.topobyte.osm4j.core.model.iface.OsmMetadata;
 import de.topobyte.osm4j.core.model.iface.OsmTag;
