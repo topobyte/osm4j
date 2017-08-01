@@ -28,6 +28,8 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.xml.sax.SAXException;
 
+import com.slimjars.dist.gnu.trove.iterator.TLongObjectIterator;
+import com.slimjars.dist.gnu.trove.map.TLongObjectMap;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.io.WKTWriter;
 
@@ -40,8 +42,6 @@ import de.topobyte.osm4j.geometry.GeometryBuilder;
 import de.topobyte.osm4j.geometry.MissingEntitiesStrategy;
 import de.topobyte.osm4j.geometry.MissingWayNodeStrategy;
 import de.topobyte.osm4j.xml.dynsax.OsmXmlIterator;
-import gnu.trove.iterator.TLongObjectIterator;
-import gnu.trove.map.TLongObjectMap;
 
 public class TestBuildPolygon
 {

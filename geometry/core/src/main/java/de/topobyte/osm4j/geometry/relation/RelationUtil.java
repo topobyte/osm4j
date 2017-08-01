@@ -17,8 +17,6 @@
 
 package de.topobyte.osm4j.geometry.relation;
 
-import gnu.trove.list.array.TLongArrayList;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -27,6 +25,8 @@ import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.slimjars.dist.gnu.trove.list.array.TLongArrayList;
 
 import de.topobyte.adt.multicollections.CountingMultiValMap;
 import de.topobyte.adt.multicollections.MultiSet;

@@ -17,10 +17,10 @@
 
 package de.topobyte.osm4j.geometry.relation;
 
-import gnu.trove.set.TLongSet;
-import gnu.trove.set.hash.TLongHashSet;
-import gnu.trove.stack.TLongStack;
-import gnu.trove.stack.array.TLongArrayStack;
+import com.slimjars.dist.gnu.trove.set.TLongSet;
+import com.slimjars.dist.gnu.trove.set.hash.TLongHashSet;
+import com.slimjars.dist.gnu.trove.stack.TLongStack;
+import com.slimjars.dist.gnu.trove.stack.array.TLongArrayStack;
 
 class LongSetStack
 {

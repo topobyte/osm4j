@@ -17,13 +17,13 @@
 
 package de.topobyte.osm4j.geometry.relation;
 
-import gnu.trove.list.TLongList;
-import gnu.trove.list.array.TLongArrayList;
-import gnu.trove.set.TLongSet;
-import gnu.trove.set.hash.TLongHashSet;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import com.slimjars.dist.gnu.trove.list.TLongList;
+import com.slimjars.dist.gnu.trove.list.array.TLongArrayList;
+import com.slimjars.dist.gnu.trove.set.TLongSet;
+import com.slimjars.dist.gnu.trove.set.hash.TLongHashSet;
 
 public class ChainOfNodes
 {

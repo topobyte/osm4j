@@ -29,6 +29,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 
+import com.slimjars.dist.gnu.trove.map.TLongObjectMap;
+
 import de.topobyte.osm4j.core.access.OsmIterator;
 import de.topobyte.osm4j.core.dataset.InMemoryMapDataSet;
 import de.topobyte.osm4j.core.dataset.MapDataSetLoader;
@@ -39,7 +41,6 @@ import de.topobyte.osm4j.geometry.MissingEntitiesStrategy;
 import de.topobyte.osm4j.geometry.MissingWayNodeStrategy;
 import de.topobyte.osm4j.geometry.RegionBuilder;
 import de.topobyte.osm4j.tbo.access.TboIterator;
-import gnu.trove.map.TLongObjectMap;
 
 public class TestBuildLinework
 {
