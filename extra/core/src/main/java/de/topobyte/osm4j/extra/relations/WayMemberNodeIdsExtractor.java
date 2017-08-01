@@ -17,9 +17,6 @@
 
 package de.topobyte.osm4j.extra.relations;
 
-import gnu.trove.set.TLongSet;
-import gnu.trove.set.hash.TLongHashSet;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -29,6 +26,9 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import com.slimjars.dist.gnu.trove.set.TLongSet;
+import com.slimjars.dist.gnu.trove.set.hash.TLongHashSet;
 
 import de.topobyte.melon.io.StreamUtil;
 import de.topobyte.osm4j.core.access.OsmIterator;

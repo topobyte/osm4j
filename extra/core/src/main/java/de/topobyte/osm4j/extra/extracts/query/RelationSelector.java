@@ -17,12 +17,12 @@
 
 package de.topobyte.osm4j.extra.extracts.query;
 
-import gnu.trove.set.TLongSet;
-import gnu.trove.set.hash.TLongHashSet;
-
 import java.util.ArrayDeque;
 import java.util.List;
 import java.util.Queue;
+
+import com.slimjars.dist.gnu.trove.set.TLongSet;
+import com.slimjars.dist.gnu.trove.set.hash.TLongHashSet;
 
 import de.topobyte.osm4j.core.dataset.InMemoryListDataSet;
 import de.topobyte.osm4j.core.model.iface.EntityType;

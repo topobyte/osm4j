@@ -17,9 +17,6 @@
 
 package de.topobyte.osm4j.extra.datatree.ways;
 
-import gnu.trove.map.TLongObjectMap;
-import gnu.trove.map.hash.TLongObjectHashMap;
-
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.IOException;
@@ -27,6 +24,9 @@ import java.io.OutputStream;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.slimjars.dist.gnu.trove.map.TLongObjectMap;
+import com.slimjars.dist.gnu.trove.map.hash.TLongObjectHashMap;
 
 import de.topobyte.largescalefileio.ClosingFileOutputStreamFactory;
 import de.topobyte.largescalefileio.SimpleClosingFileOutputStreamFactory;

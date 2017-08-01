@@ -17,14 +17,13 @@
 
 package de.topobyte.osm4j.extra.extracts.query;
 
-import gnu.trove.map.TLongObjectMap;
-import gnu.trove.map.hash.TLongObjectHashMap;
-import gnu.trove.set.TLongSet;
-import gnu.trove.set.hash.TLongHashSet;
-
 import java.io.IOException;
 import java.nio.file.Path;
 
+import com.slimjars.dist.gnu.trove.map.TLongObjectMap;
+import com.slimjars.dist.gnu.trove.map.hash.TLongObjectHashMap;
+import com.slimjars.dist.gnu.trove.set.TLongSet;
+import com.slimjars.dist.gnu.trove.set.hash.TLongHashSet;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.GeometryFactory;
 

@@ -17,12 +17,6 @@
 
 package de.topobyte.osm4j.extra.relations;
 
-import gnu.trove.iterator.TLongIterator;
-import gnu.trove.list.TLongList;
-import gnu.trove.list.array.TLongArrayList;
-import gnu.trove.set.TLongSet;
-import gnu.trove.set.hash.TLongHashSet;
-
 import java.io.IOException;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -31,6 +25,12 @@ import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.slimjars.dist.gnu.trove.iterator.TLongIterator;
+import com.slimjars.dist.gnu.trove.list.TLongList;
+import com.slimjars.dist.gnu.trove.list.array.TLongArrayList;
+import com.slimjars.dist.gnu.trove.set.TLongSet;
+import com.slimjars.dist.gnu.trove.set.hash.TLongHashSet;
 
 import de.topobyte.adt.graph.Graph;
 import de.topobyte.adt.graph.UndirectedGraph;

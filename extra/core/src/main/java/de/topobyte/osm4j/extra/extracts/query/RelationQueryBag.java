@@ -17,10 +17,11 @@
 
 package de.topobyte.osm4j.extra.extracts.query;
 
-import gnu.trove.map.TLongObjectMap;
-import gnu.trove.map.hash.TLongObjectHashMap;
-import gnu.trove.set.TLongSet;
-import gnu.trove.set.hash.TLongHashSet;
+import com.slimjars.dist.gnu.trove.map.TLongObjectMap;
+import com.slimjars.dist.gnu.trove.map.hash.TLongObjectHashMap;
+import com.slimjars.dist.gnu.trove.set.TLongSet;
+import com.slimjars.dist.gnu.trove.set.hash.TLongHashSet;
+
 import de.topobyte.osm4j.core.access.OsmStreamOutput;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.osm4j.core.model.iface.OsmWay;

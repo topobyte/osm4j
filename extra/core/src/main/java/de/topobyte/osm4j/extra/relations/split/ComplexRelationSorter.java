@@ -24,6 +24,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 
+import com.slimjars.dist.gnu.trove.map.TLongObjectMap;
+import com.slimjars.dist.gnu.trove.set.TLongSet;
+
 import de.topobyte.melon.io.StreamUtil;
 import de.topobyte.osm4j.core.access.OsmIterator;
 import de.topobyte.osm4j.core.access.OsmIteratorInputFactory;
@@ -34,8 +37,6 @@ import de.topobyte.osm4j.extra.relations.Group;
 import de.topobyte.osm4j.utils.OsmIoUtils;
 import de.topobyte.osm4j.utils.OsmOutputConfig;
 import de.topobyte.osm4j.utils.sort.MemorySort;
-import gnu.trove.map.TLongObjectMap;
-import gnu.trove.set.TLongSet;
 
 public class ComplexRelationSorter extends RelationSorterBase
 {

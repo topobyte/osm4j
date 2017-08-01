@@ -17,13 +17,13 @@
 
 package de.topobyte.osm4j.extra.relations.split;
 
-import gnu.trove.map.TLongObjectMap;
-import gnu.trove.map.hash.TLongObjectHashMap;
-import gnu.trove.set.TLongSet;
-
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
+
+import com.slimjars.dist.gnu.trove.map.TLongObjectMap;
+import com.slimjars.dist.gnu.trove.map.hash.TLongObjectHashMap;
+import com.slimjars.dist.gnu.trove.set.TLongSet;
 
 import de.topobyte.osm4j.core.access.OsmIteratorInput;
 import de.topobyte.osm4j.core.access.OsmIteratorInputFactory;

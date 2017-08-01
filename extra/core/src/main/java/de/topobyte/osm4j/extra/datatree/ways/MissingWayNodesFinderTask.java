@@ -17,16 +17,16 @@
 
 package de.topobyte.osm4j.extra.datatree.ways;
 
-import gnu.trove.iterator.TLongIterator;
-import gnu.trove.iterator.TLongObjectIterator;
-import gnu.trove.list.TLongList;
-import gnu.trove.list.array.TLongArrayList;
-import gnu.trove.set.TLongSet;
-import gnu.trove.set.hash.TLongHashSet;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
+
+import com.slimjars.dist.gnu.trove.iterator.TLongIterator;
+import com.slimjars.dist.gnu.trove.iterator.TLongObjectIterator;
+import com.slimjars.dist.gnu.trove.list.TLongList;
+import com.slimjars.dist.gnu.trove.list.array.TLongArrayList;
+import com.slimjars.dist.gnu.trove.set.TLongSet;
+import com.slimjars.dist.gnu.trove.set.hash.TLongHashSet;
 
 import de.topobyte.melon.io.StreamUtil;
 import de.topobyte.osm4j.core.access.OsmIdIterator;

@@ -17,12 +17,12 @@
 
 package de.topobyte.osm4j.extra;
 
-import gnu.trove.map.TLongObjectMap;
-import gnu.trove.set.TLongSet;
-
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
+
+import com.slimjars.dist.gnu.trove.map.TLongObjectMap;
+import com.slimjars.dist.gnu.trove.set.TLongSet;
 
 import de.topobyte.osm4j.core.access.OsmOutputStream;
 import de.topobyte.osm4j.core.model.iface.EntityType;
@@ -318,7 +318,7 @@ public class QueryUtil
 			if (member.getType() == EntityType.Node
 					&& nodeIds.contains(member.getId())
 					|| member.getType() == EntityType.Way
-					&& wayIds.contains(member.getId())) {
+							&& wayIds.contains(member.getId())) {
 				return true;
 			}
 		}
@@ -326,7 +326,8 @@ public class QueryUtil
 	}
 
 	public static boolean anyMemberContainedIn(
-			Collection<OsmRelation> relations, TLongSet nodeIds, TLongSet wayIds)
+			Collection<OsmRelation> relations, TLongSet nodeIds,
+			TLongSet wayIds)
 	{
 		for (OsmRelation relation : relations) {
 			if (anyMemberContainedIn(relation, nodeIds, wayIds)) {

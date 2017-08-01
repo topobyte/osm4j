@@ -17,11 +17,11 @@
 
 package de.topobyte.osm4j.extra;
 
-import gnu.trove.list.TIntList;
-import gnu.trove.list.array.TIntArrayList;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import com.slimjars.dist.gnu.trove.list.TIntList;
+import com.slimjars.dist.gnu.trove.list.array.TIntArrayList;
 
 public class MissingEntityCounter
 {

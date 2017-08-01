@@ -4,15 +4,20 @@ if (project.hasProperty("topobyte")) {
 }
 
 dependencies {
-    compile 'de.topobyte:osm4j-core:0.0.21'
-    compile 'de.topobyte:osm4j-geometry:0.0.16'
-    compile 'de.topobyte:osm4j-tbo:0.0.11'
-    compile 'de.topobyte:adt-geo:0.0.2'
-    compile 'de.topobyte:adt-graph:0.0.4'
-    compile 'de.topobyte:osm4j-utils:0.0.25'
-    compile 'de.topobyte:jts-utils:0.0.9'
+    compile 'de.topobyte:osm4j-core:0.1.0'
+    compile 'de.topobyte:osm4j-geometry:0.1.0'
+    compile 'de.topobyte:osm4j-tbo:0.1.0'
+    compile 'de.topobyte:adt-geo:0.0.3'
+    compile 'de.topobyte:adt-graph:0.0.6'
+    compile 'de.topobyte:osm4j-utils:0.1.0'
+    compile 'de.topobyte:jts-utils:0.1.2'
     compile 'de.topobyte:large-scale-file-io:0.0.1'
     compile 'de.topobyte:commons-cli-helper:0.0.5'
+
+    compile 'com.slimjars.trove4j:trove4j-long-long-hash-map:1.0.1'
+    compile 'com.slimjars.trove4j:trove4j-long-int-hash-map:1.0.1'
+    compile 'com.slimjars.trove4j:trove4j-object-long-hash-map:1.0.1'
+
     compile 'commons-io:commons-io:2.4'
 
     compile 'org.slf4j:slf4j-api:1.6.1'

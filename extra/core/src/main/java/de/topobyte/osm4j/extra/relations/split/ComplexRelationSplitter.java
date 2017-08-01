@@ -17,10 +17,6 @@
 
 package de.topobyte.osm4j.extra.relations.split;
 
-import gnu.trove.map.TLongObjectMap;
-import gnu.trove.set.TLongSet;
-import gnu.trove.set.hash.TLongHashSet;
-
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Files;
@@ -32,6 +28,10 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+
+import com.slimjars.dist.gnu.trove.map.TLongObjectMap;
+import com.slimjars.dist.gnu.trove.set.TLongSet;
+import com.slimjars.dist.gnu.trove.set.hash.TLongHashSet;
 
 import de.topobyte.melon.io.StreamUtil;
 import de.topobyte.osm4j.core.access.OsmIteratorInputFactory;

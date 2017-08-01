@@ -17,7 +17,7 @@
 
 package de.topobyte.osm4j.extra.relations;
 
-import gnu.trove.set.TLongSet;
+import com.slimjars.dist.gnu.trove.set.TLongSet;
 
 public class Group
 {

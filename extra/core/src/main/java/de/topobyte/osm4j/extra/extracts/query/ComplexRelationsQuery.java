@@ -27,6 +27,9 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.Sets;
 import com.google.common.collect.Sets.SetView;
+import com.slimjars.dist.gnu.trove.map.TLongObjectMap;
+import com.slimjars.dist.gnu.trove.map.hash.TLongObjectHashMap;
+import com.slimjars.dist.gnu.trove.set.TLongSet;
 
 import de.topobyte.jts.utils.predicate.PredicateEvaluator;
 import de.topobyte.osm4j.core.dataset.InMemoryListDataSet;
@@ -39,9 +42,6 @@ import de.topobyte.osm4j.extra.MissingEntityCounter;
 import de.topobyte.osm4j.extra.QueryUtil;
 import de.topobyte.osm4j.extra.relations.Group;
 import de.topobyte.osm4j.extra.relations.RelationGraph;
-import gnu.trove.map.TLongObjectMap;
-import gnu.trove.map.hash.TLongObjectHashMap;
-import gnu.trove.set.TLongSet;
 
 public class ComplexRelationsQuery extends AbstractRelationsQuery
 {

@@ -17,12 +17,12 @@
 
 package de.topobyte.osm4j.extra.datatree.ways;
 
-import gnu.trove.map.TLongObjectMap;
-
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.slimjars.dist.gnu.trove.map.TLongObjectMap;
 
 import de.topobyte.osm4j.core.access.OsmStreamOutput;
 import de.topobyte.osm4j.core.model.iface.OsmNode;

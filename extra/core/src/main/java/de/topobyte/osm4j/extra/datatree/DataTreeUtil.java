@@ -17,10 +17,6 @@
 
 package de.topobyte.osm4j.extra.datatree;
 
-import gnu.trove.map.TLongLongMap;
-import gnu.trove.map.TObjectLongMap;
-import gnu.trove.map.hash.TObjectLongHashMap;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -32,6 +28,9 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import com.slimjars.dist.gnu.trove.map.TLongLongMap;
+import com.slimjars.dist.gnu.trove.map.TObjectLongMap;
+import com.slimjars.dist.gnu.trove.map.hash.TObjectLongHashMap;
 import com.vividsolutions.jts.geom.Envelope;
 
 import de.topobyte.adt.geo.BBox;
