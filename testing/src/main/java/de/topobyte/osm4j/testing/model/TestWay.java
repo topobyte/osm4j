@@ -17,9 +17,9 @@
 
 package de.topobyte.osm4j.testing.model;
 
-import gnu.trove.list.TLongList;
-
 import java.util.List;
+
+import com.slimjars.dist.gnu.trove.list.TLongList;
 
 import de.topobyte.osm4j.core.model.iface.OsmWay;
 
