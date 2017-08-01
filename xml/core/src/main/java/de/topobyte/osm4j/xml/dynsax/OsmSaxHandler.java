@@ -17,13 +17,13 @@
 
 package de.topobyte.osm4j.xml.dynsax;
 
-import gnu.trove.list.array.TLongArrayList;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.joda.time.DateTime;
+
+import com.slimjars.dist.gnu.trove.list.array.TLongArrayList;
 
 import de.topobyte.osm4j.core.access.OsmHandler;
 import de.topobyte.osm4j.core.model.iface.EntityType;

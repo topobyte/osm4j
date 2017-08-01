@@ -16,6 +16,9 @@ subprojects {
         maven {
             url 'http://mvn.topobyte.de'
         }
+        maven {
+            url 'http://mvn.slimjars.com'
+        }
         mavenCentral()
     }
 
