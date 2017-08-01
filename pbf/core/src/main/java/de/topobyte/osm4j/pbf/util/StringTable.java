@@ -17,13 +17,12 @@
 
 package de.topobyte.osm4j.pbf.util;
 
-import gnu.trove.map.TObjectIntMap;
-import gnu.trove.map.hash.TObjectIntHashMap;
-
 import java.util.Arrays;
 import java.util.Comparator;
 
 import com.google.protobuf.ByteString;
+import com.slimjars.dist.gnu.trove.map.TObjectIntMap;
+import com.slimjars.dist.gnu.trove.map.hash.TObjectIntHashMap;
 
 import de.topobyte.osm4j.pbf.protobuf.Osmformat;
 

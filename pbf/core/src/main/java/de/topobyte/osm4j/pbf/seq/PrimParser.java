@@ -43,6 +43,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.slimjars.dist.gnu.trove.list.array.TLongArrayList;
+
 import de.topobyte.osm4j.core.access.OsmHandler;
 import de.topobyte.osm4j.core.model.iface.EntityType;
 import de.topobyte.osm4j.core.model.iface.OsmMetadata;
@@ -57,7 +59,6 @@ import de.topobyte.osm4j.core.model.impl.RelationMember;
 import de.topobyte.osm4j.core.model.impl.Tag;
 import de.topobyte.osm4j.core.model.impl.Way;
 import de.topobyte.osm4j.pbf.protobuf.Osmformat;
-import gnu.trove.list.array.TLongArrayList;
 
 public class PrimParser
 {
