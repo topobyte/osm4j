@@ -17,15 +17,15 @@
 
 package de.topobyte.osm4j.tbo.access;
 
-import gnu.trove.list.TLongList;
-import gnu.trove.list.array.TLongArrayList;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+
+import com.slimjars.dist.gnu.trove.list.TLongList;
+import com.slimjars.dist.gnu.trove.list.array.TLongArrayList;
 
 import de.topobyte.compactio.CompactReader;
 import de.topobyte.osm4j.core.model.iface.EntityType;

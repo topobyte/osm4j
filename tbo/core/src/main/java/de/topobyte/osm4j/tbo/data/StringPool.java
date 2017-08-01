@@ -17,9 +17,9 @@
 
 package de.topobyte.osm4j.tbo.data;
 
-import gnu.trove.map.TMap;
-
 import java.util.List;
+
+import com.slimjars.dist.gnu.trove.map.TMap;
 
 public class StringPool
 {

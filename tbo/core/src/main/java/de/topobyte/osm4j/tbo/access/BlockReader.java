@@ -17,12 +17,12 @@
 
 package de.topobyte.osm4j.tbo.access;
 
-import gnu.trove.map.TIntObjectMap;
-import gnu.trove.map.hash.TIntObjectHashMap;
-
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
+
+import com.slimjars.dist.gnu.trove.map.TIntObjectMap;
+import com.slimjars.dist.gnu.trove.map.hash.TIntObjectHashMap;
 
 import de.topobyte.compactio.CompactReader;
 import de.topobyte.compactio.CompactWriter;

@@ -17,13 +17,13 @@
 
 package de.topobyte.osm4j.tbo.data;
 
-import gnu.trove.map.TMap;
-import gnu.trove.map.hash.THashMap;
-import gnu.trove.procedure.TObjectProcedure;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import com.slimjars.dist.gnu.trove.map.TMap;
+import com.slimjars.dist.gnu.trove.map.hash.THashMap;
+import com.slimjars.dist.gnu.trove.procedure.TObjectProcedure;
 
 public class StringPoolBuilder
 {
