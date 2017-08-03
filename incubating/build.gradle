@@ -18,15 +18,18 @@ repositories {
     maven {
         url 'http://mvn.topobyte.de'
     }
+    maven {
+        url 'http://mvn.slimjars.com'
+    }
     mavenCentral()
 }
 
 dependencies {
-    compile 'de.topobyte:osm4j-core:0.0.21'
-    compile 'de.topobyte:osm4j-geometry:0.0.16'
-    compile 'de.topobyte:osm4j-tbo:0.0.11'
-    compile 'de.topobyte:osm4j-utils:0.0.24'
-    compile 'de.topobyte:osm4j-extra:0.0.6'
+    compile 'de.topobyte:osm4j-core:0.1.0'
+    compile 'de.topobyte:osm4j-geometry:0.1.0'
+    compile 'de.topobyte:osm4j-tbo:0.1.0'
+    compile 'de.topobyte:osm4j-utils:0.1.0'
+    compile 'de.topobyte:osm4j-extra:0.1.0'
     compile 'de.topobyte:melon-io:0.0.1'
 
     compile 'org.slf4j:slf4j-api:1.6.1'
