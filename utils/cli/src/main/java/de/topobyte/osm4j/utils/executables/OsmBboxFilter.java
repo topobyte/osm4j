@@ -21,8 +21,9 @@ import java.io.IOException;
 
 import de.topobyte.adt.geo.BBox;
 import de.topobyte.adt.geo.BBoxString;
-import de.topobyte.jts.utils.predicate.PredicateEvaluatorRectangle;
+import de.topobyte.osm4j.core.access.OsmIterator;
 import de.topobyte.osm4j.utils.AbstractAreaFilter;
+import de.topobyte.osm4j.utils.areafilter.BboxFilter;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
 public class OsmBboxFilter extends AbstractAreaFilter
@@ -74,13 +75,13 @@ public class OsmBboxFilter extends AbstractAreaFilter
 		}
 	}
 
-	@Override
-	protected void init() throws IOException
+	protected void run() throws IOException
 	{
-		super.init();
+		OsmIterator iterator = createIterator();
 
-		test = new PredicateEvaluatorRectangle(bbox.getLon1(), bbox.getLat2(),
-				bbox.getLon2(), bbox.getLat1());
+		BboxFilter filter = new BboxFilter(osmOutputStream, iterator, bbox,
+				onlyNodes);
+		filter.run();
 	}
 
 }

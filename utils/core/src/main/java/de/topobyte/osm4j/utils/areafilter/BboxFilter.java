@@ -1,4 +1,4 @@
-// Copyright 2015 Sebastian Kuerten
+// Copyright 2017 Sebastian Kuerten
 //
 // This file is part of osm4j.
 //
@@ -15,32 +15,23 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with osm4j. If not, see <http://www.gnu.org/licenses/>.
 
-package de.topobyte.osm4j.utils;
+package de.topobyte.osm4j.utils.areafilter;
 
-import de.topobyte.utilities.apache.commons.cli.OptionHelper;
+import de.topobyte.adt.geo.BBox;
+import de.topobyte.jts.utils.predicate.PredicateEvaluatorRectangle;
+import de.topobyte.osm4j.core.access.OsmIterator;
+import de.topobyte.osm4j.core.access.OsmOutputStream;
 
-public abstract class AbstractAreaFilter
-		extends AbstractExecutableSingleInputStreamSingleOutput
+public class BboxFilter extends AbstractAreaFilter
 {
 
-	private static final String OPTION_ONLY_NODES = "nodes-only";
-
-	protected boolean onlyNodes;
-
-	public AbstractAreaFilter()
+	public BboxFilter(OsmOutputStream output, OsmIterator input, BBox bbox,
+			boolean onlyNodes)
 	{
-		// @formatter:off
-		OptionHelper.addL(options, OPTION_ONLY_NODES, false, false, "extract only nodes");
-		// @formatter:on
-	}
+		super(output, input, onlyNodes);
 
-	@Override
-	protected void setup(String[] args)
-	{
-		super.setup(args);
-
-		onlyNodes = false;
-		onlyNodes = line.hasOption(OPTION_ONLY_NODES);
+		test = new PredicateEvaluatorRectangle(bbox.getLon1(), bbox.getLat2(),
+				bbox.getLon2(), bbox.getLat1());
 	}
 
 }

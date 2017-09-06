@@ -24,8 +24,9 @@ import java.io.Reader;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.io.WKTReader;
 
-import de.topobyte.jts.utils.predicate.PredicateEvaluatorPrepared;
+import de.topobyte.osm4j.core.access.OsmIterator;
 import de.topobyte.osm4j.utils.AbstractAreaFilter;
+import de.topobyte.osm4j.utils.areafilter.RegionFilter;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
 public class OsmRegionFilter extends AbstractAreaFilter
@@ -78,12 +79,13 @@ public class OsmRegionFilter extends AbstractAreaFilter
 		}
 	}
 
-	@Override
-	protected void init() throws IOException
+	protected void run() throws IOException
 	{
-		super.init();
+		OsmIterator iterator = createIterator();
 
-		test = new PredicateEvaluatorPrepared(region);
+		RegionFilter filter = new RegionFilter(osmOutputStream, iterator,
+				region, onlyNodes);
+		filter.run();
 	}
 
 }
