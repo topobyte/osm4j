@@ -23,7 +23,17 @@ import java.io.Writer;
 class BuilderWriter extends Writer
 {
 
-	private StringBuilder buf = new StringBuilder();
+	private StringBuilder buf;
+
+	public BuilderWriter()
+	{
+		buf = new StringBuilder();
+	}
+
+	public BuilderWriter(StringBuilder buf)
+	{
+		this.buf = buf;
+	}
 
 	@Override
 	public void write(char[] cbuf, int off, int len) throws IOException

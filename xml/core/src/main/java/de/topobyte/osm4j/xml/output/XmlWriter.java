@@ -42,12 +42,15 @@ class XmlWriter
 
 	private final String indent1;
 	private final String indent2;
+	private final String newline;
 	private final boolean printMetadata;
 
-	public XmlWriter(String indent1, String indent2, boolean printMetadata)
+	public XmlWriter(String indent1, String indent2, String newline,
+			boolean printMetadata)
 	{
 		this.indent1 = indent1;
 		this.indent2 = indent2;
+		this.newline = newline;
 		this.printMetadata = printMetadata;
 	}
 
@@ -58,7 +61,6 @@ class XmlWriter
 			.forPattern("yyyy-MM-dd'T'HH:mm:ss'Z'");
 
 	private CharSequenceTranslator escaper = StringEscapeUtils.ESCAPE_XML11;
-	private String newline = "\n";
 
 	private String templateBounds = "<bounds minlon=\"%f\" minlat=\"%f\" maxlon=\"%f\" maxlat=\"%f\"/>";
 
@@ -67,7 +69,6 @@ class XmlWriter
 		buf.append(indent1);
 		buf.append(String.format(templateBounds, bounds.getLeft(),
 				bounds.getBottom(), bounds.getRight(), bounds.getTop()));
-		buf.append(newline);
 	}
 
 	public void write(BuilderWriter buf, OsmNode node)
@@ -88,14 +89,12 @@ class XmlWriter
 		}
 		if (node.getNumberOfTags() == 0) {
 			buf.append("/>");
-			buf.append(newline);
 		} else {
 			buf.append(">");
 			buf.append(newline);
 			printTags(buf, node);
 			buf.append(indent1);
 			buf.append("</node>");
-			buf.append(newline);
 		}
 	}
 
@@ -111,7 +110,6 @@ class XmlWriter
 		}
 		if (way.getNumberOfTags() == 0 && way.getNumberOfNodes() == 0) {
 			buf.append("/>");
-			buf.append(newline);
 		} else {
 			buf.append(">");
 			buf.append(newline);
@@ -126,7 +124,6 @@ class XmlWriter
 			printTags(buf, way);
 			buf.append(indent1);
 			buf.append("</way>");
-			buf.append(newline);
 		}
 	}
 
@@ -143,7 +140,6 @@ class XmlWriter
 		if (relation.getNumberOfTags() == 0
 				&& relation.getNumberOfMembers() == 0) {
 			buf.append("/>");
-			buf.append(newline);
 		} else {
 			buf.append(">");
 			buf.append(newline);
@@ -165,7 +161,6 @@ class XmlWriter
 			printTags(buf, relation);
 			buf.append(indent1);
 			buf.append("</relation>");
-			buf.append(newline);
 		}
 	}
 

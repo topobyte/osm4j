@@ -30,13 +30,14 @@ import de.topobyte.osm4j.core.model.iface.OsmWay;
 public class OsmXmlOutputStream implements OsmOutputStream
 {
 
+	private final String newline = "\n";
 	private final PrintWriter out;
 	private final XmlWriter writer;
 
 	public OsmXmlOutputStream(PrintWriter out, boolean printMetadata)
 	{
 		this.out = out;
-		this.writer = new XmlWriter("  ", "    ", printMetadata);
+		this.writer = new XmlWriter("  ", "    ", newline, printMetadata);
 		writeHeader();
 	}
 
@@ -63,6 +64,7 @@ public class OsmXmlOutputStream implements OsmOutputStream
 	{
 		BuilderWriter buf = new BuilderWriter();
 		writer.write(buf, bounds);
+		buf.append(newline);
 		out.print(buf.toString());
 	}
 
@@ -71,6 +73,7 @@ public class OsmXmlOutputStream implements OsmOutputStream
 	{
 		BuilderWriter buf = new BuilderWriter();
 		writer.write(buf, node);
+		buf.append(newline);
 		out.print(buf.toString());
 	}
 
@@ -79,6 +82,7 @@ public class OsmXmlOutputStream implements OsmOutputStream
 	{
 		BuilderWriter buf = new BuilderWriter();
 		writer.write(buf, way);
+		buf.append(newline);
 		out.print(buf.toString());
 	}
 
@@ -87,6 +91,7 @@ public class OsmXmlOutputStream implements OsmOutputStream
 	{
 		BuilderWriter buf = new BuilderWriter();
 		writer.write(buf, relation);
+		buf.append(newline);
 		out.print(buf.toString());
 	}
 
