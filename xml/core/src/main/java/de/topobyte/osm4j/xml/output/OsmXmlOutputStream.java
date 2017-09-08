@@ -92,7 +92,7 @@ public class OsmXmlOutputStream implements OsmOutputStream
 	@Override
 	public void write(OsmNode node)
 	{
-		StringBuilder buf = new StringBuilder();
+		BuilderWriter buf = new BuilderWriter();
 		buf.append("  <node id=\"" + node.getId() + "\"");
 		buf.append(" lat=\"" + f.format(node.getLatitude()) + "\"");
 		buf.append(" lon=\"" + f.format(node.getLongitude()) + "\"");
@@ -116,7 +116,7 @@ public class OsmXmlOutputStream implements OsmOutputStream
 	@Override
 	public void write(OsmWay way)
 	{
-		StringBuilder buf = new StringBuilder();
+		BuilderWriter buf = new BuilderWriter();
 		buf.append("  <way id=\"" + way.getId() + "\"");
 		if (printMetadata) {
 			OsmMetadata metadata = way.getMetadata();
@@ -143,7 +143,7 @@ public class OsmXmlOutputStream implements OsmOutputStream
 	@Override
 	public void write(OsmRelation relation)
 	{
-		StringBuilder buf = new StringBuilder();
+		BuilderWriter buf = new BuilderWriter();
 		buf.append("  <relation id=\"" + relation.getId() + "\"");
 		if (printMetadata) {
 			OsmMetadata metadata = relation.getMetadata();
@@ -174,7 +174,7 @@ public class OsmXmlOutputStream implements OsmOutputStream
 		out.print(buf.toString());
 	}
 
-	private void printMetadata(StringBuilder buf, OsmMetadata metadata)
+	private void printMetadata(BuilderWriter buf, OsmMetadata metadata)
 	{
 		if (metadata == null) {
 			return;
@@ -196,7 +196,7 @@ public class OsmXmlOutputStream implements OsmOutputStream
 		}
 	}
 
-	private void printTags(StringBuilder buf, OsmEntity entity)
+	private void printTags(BuilderWriter buf, OsmEntity entity)
 	{
 		for (int i = 0; i < entity.getNumberOfTags(); i++) {
 			OsmTag tag = entity.getTag(i);
