@@ -78,6 +78,7 @@ public class OsmXmlOutputStream implements OsmOutputStream
 			.forPattern("yyyy-MM-dd'T'HH:mm:ss'Z'");
 
 	private CharSequenceTranslator escaper = StringEscapeUtils.ESCAPE_XML11;
+	private String newline = "\n";
 
 	private String templateBounds = "  <bounds minlon=\"%f\" minlat=\"%f\" maxlon=\"%f\" maxlat=\"%f\"/>";
 
@@ -91,56 +92,70 @@ public class OsmXmlOutputStream implements OsmOutputStream
 	@Override
 	public void write(OsmNode node)
 	{
-		out.print("  <node id=\"" + node.getId() + "\"");
-		out.print(" lat=\"" + f.format(node.getLatitude()) + "\"");
-		out.print(" lon=\"" + f.format(node.getLongitude()) + "\"");
+		StringBuilder buf = new StringBuilder();
+		buf.append("  <node id=\"" + node.getId() + "\"");
+		buf.append(" lat=\"" + f.format(node.getLatitude()) + "\"");
+		buf.append(" lon=\"" + f.format(node.getLongitude()) + "\"");
 		if (printMetadata) {
 			OsmMetadata metadata = node.getMetadata();
-			printMetadata(metadata);
+			printMetadata(buf, metadata);
 		}
 		if (node.getNumberOfTags() == 0) {
-			out.println("/>");
+			buf.append("/>");
+			buf.append(newline);
 		} else {
-			out.println(">");
-			printTags(node);
-			out.println("  </node>");
+			buf.append(">");
+			buf.append(newline);
+			printTags(buf, node);
+			buf.append("  </node>");
+			buf.append(newline);
 		}
+		out.print(buf.toString());
 	}
 
 	@Override
 	public void write(OsmWay way)
 	{
-		out.print("  <way id=\"" + way.getId() + "\"");
+		StringBuilder buf = new StringBuilder();
+		buf.append("  <way id=\"" + way.getId() + "\"");
 		if (printMetadata) {
 			OsmMetadata metadata = way.getMetadata();
-			printMetadata(metadata);
+			printMetadata(buf, metadata);
 		}
 		if (way.getNumberOfTags() == 0 && way.getNumberOfNodes() == 0) {
-			out.println("/>");
+			buf.append("/>");
+			buf.append(newline);
 		} else {
-			out.println(">");
+			buf.append(">");
+			buf.append(newline);
 			for (int i = 0; i < way.getNumberOfNodes(); i++) {
 				long nodeId = way.getNodeId(i);
-				out.println("    <nd ref=\"" + nodeId + "\"/>");
+				buf.append("    <nd ref=\"" + nodeId + "\"/>");
+				buf.append(newline);
 			}
-			printTags(way);
-			out.println("  </way>");
+			printTags(buf, way);
+			buf.append("  </way>");
+			buf.append(newline);
 		}
+		out.print(buf.toString());
 	}
 
 	@Override
 	public void write(OsmRelation relation)
 	{
-		out.print("  <relation id=\"" + relation.getId() + "\"");
+		StringBuilder buf = new StringBuilder();
+		buf.append("  <relation id=\"" + relation.getId() + "\"");
 		if (printMetadata) {
 			OsmMetadata metadata = relation.getMetadata();
-			printMetadata(metadata);
+			printMetadata(buf, metadata);
 		}
 		if (relation.getNumberOfTags() == 0
 				&& relation.getNumberOfMembers() == 0) {
-			out.println("/>");
+			buf.append("/>");
+			buf.append(newline);
 		} else {
-			out.println(">");
+			buf.append(">");
+			buf.append(newline);
 			for (int i = 0; i < relation.getNumberOfMembers(); i++) {
 				OsmRelationMember member = relation.getMember(i);
 				EntityType type = member.getType();
@@ -148,37 +163,40 @@ public class OsmXmlOutputStream implements OsmOutputStream
 						: type == EntityType.Way ? "way" : "relation";
 				String role = member.getRole();
 				role = escaper.translate(role);
-				out.println("    <member type=\"" + t + "\" ref=\""
+				buf.append("    <member type=\"" + t + "\" ref=\""
 						+ member.getId() + "\" role=\"" + role + "\"/>");
+				buf.append(newline);
 			}
-			printTags(relation);
-			out.println("  </relation>");
+			printTags(buf, relation);
+			buf.append("  </relation>");
+			buf.append(newline);
 		}
+		out.print(buf.toString());
 	}
 
-	private void printMetadata(OsmMetadata metadata)
+	private void printMetadata(StringBuilder buf, OsmMetadata metadata)
 	{
 		if (metadata == null) {
 			return;
 		}
-		out.print(" version=\"" + metadata.getVersion() + "\"");
-		out.print(" timestamp=\"" + formatter.print(metadata.getTimestamp())
+		buf.append(" version=\"" + metadata.getVersion() + "\"");
+		buf.append(" timestamp=\"" + formatter.print(metadata.getTimestamp())
 				+ "\"");
 		if (metadata.getUid() >= 0) {
-			out.print(" uid=\"" + metadata.getUid() + "\"");
+			buf.append(" uid=\"" + metadata.getUid() + "\"");
 			String user = metadata.getUser();
 			if (user != null) {
 				user = escaper.translate(user);
 			}
-			out.print(" user=\"" + user + "\"");
+			buf.append(" user=\"" + user + "\"");
 		}
-		out.print(" changeset=\"" + metadata.getChangeset() + "\"");
+		buf.append(" changeset=\"" + metadata.getChangeset() + "\"");
 		if (!metadata.isVisible()) {
-			out.print(" visible=\"false\"");
+			buf.append(" visible=\"false\"");
 		}
 	}
 
-	private void printTags(OsmEntity entity)
+	private void printTags(StringBuilder buf, OsmEntity entity)
 	{
 		for (int i = 0; i < entity.getNumberOfTags(); i++) {
 			OsmTag tag = entity.getTag(i);
@@ -186,7 +204,8 @@ public class OsmXmlOutputStream implements OsmOutputStream
 			String value = tag.getValue();
 			key = escaper.translate(key);
 			value = escaper.translate(value);
-			out.println("    <tag k=\"" + key + "\" v=\"" + value + "\"/>");
+			buf.append("    <tag k=\"" + key + "\" v=\"" + value + "\"/>");
+			buf.append(newline);
 		}
 	}
 
