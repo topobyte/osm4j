@@ -173,14 +173,12 @@ public class OsmXmlOutputStream implements OsmOutputStream
 				EntityType type = member.getType();
 				String t = type == EntityType.Node ? "node"
 						: type == EntityType.Way ? "way" : "relation";
-				String role = member.getRole();
-				role = escaper.translate(role);
 				buf.append("    <member type=\"");
 				buf.append(t);
 				buf.append("\" ref=\"");
 				buf.append(member.getId());
 				buf.append("\" role=\"");
-				buf.append(role);
+				escape(buf, member.getRole());
 				buf.append("\"/>");
 				buf.append(newline);
 			}
@@ -207,11 +205,8 @@ public class OsmXmlOutputStream implements OsmOutputStream
 			buf.append(metadata.getUid());
 			buf.append("\"");
 			String user = metadata.getUser();
-			if (user != null) {
-				user = escaper.translate(user);
-			}
 			buf.append(" user=\"");
-			buf.append(user);
+			escape(buf, user);
 			buf.append("\"");
 		}
 		buf.append(" changeset=\"");
@@ -226,14 +221,30 @@ public class OsmXmlOutputStream implements OsmOutputStream
 	{
 		for (int i = 0; i < entity.getNumberOfTags(); i++) {
 			OsmTag tag = entity.getTag(i);
-			String key = tag.getKey();
-			String value = tag.getValue();
 			buf.append("    <tag k=\"");
-			buf.append(escaper.translate(key));
+			escape(buf, tag.getKey());
 			buf.append("\" v=\"");
-			buf.append(escaper.translate(value));
+			escape(buf, tag.getValue());
 			buf.append("\"/>");
 			buf.append(newline);
 		}
 	}
+
+	/**
+	 * This optimizes the performance by avoiding the construction of a
+	 * {@link java.io.StringWriter} in
+	 * {@link CharSequenceTranslator#translate(CharSequence)}. The StringWriter
+	 * uses a {@link StringBuffer} internally, which we want to avoid too,
+	 * because we have the superior {@link StringBuilder} in use anyway.
+	 */
+	private void escape(BuilderWriter buf, String string)
+	{
+		try {
+			escaper.translate(string, buf);
+		} catch (IOException e) {
+			// This should really not happen
+			throw new RuntimeException(e);
+		}
+	}
+
 }
