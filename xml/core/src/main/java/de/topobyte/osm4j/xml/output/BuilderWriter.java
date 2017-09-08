@@ -54,4 +54,14 @@ class BuilderWriter extends Writer
 		return buf.toString();
 	}
 
+	public void append(int i)
+	{
+		buf.append(i);
+	}
+
+	public void append(long l)
+	{
+		buf.append(l);
+	}
+
 }

@@ -93,9 +93,15 @@ public class OsmXmlOutputStream implements OsmOutputStream
 	public void write(OsmNode node)
 	{
 		BuilderWriter buf = new BuilderWriter();
-		buf.append("  <node id=\"" + node.getId() + "\"");
-		buf.append(" lat=\"" + f.format(node.getLatitude()) + "\"");
-		buf.append(" lon=\"" + f.format(node.getLongitude()) + "\"");
+		buf.append("  <node id=\"");
+		buf.append(node.getId());
+		buf.append("\"");
+		buf.append(" lat=\"");
+		buf.append(f.format(node.getLatitude()));
+		buf.append("\"");
+		buf.append(" lon=\"");
+		buf.append(f.format(node.getLongitude()));
+		buf.append("\"");
 		if (printMetadata) {
 			OsmMetadata metadata = node.getMetadata();
 			printMetadata(buf, metadata);
@@ -117,7 +123,9 @@ public class OsmXmlOutputStream implements OsmOutputStream
 	public void write(OsmWay way)
 	{
 		BuilderWriter buf = new BuilderWriter();
-		buf.append("  <way id=\"" + way.getId() + "\"");
+		buf.append("  <way id=\"");
+		buf.append(way.getId());
+		buf.append("\"");
 		if (printMetadata) {
 			OsmMetadata metadata = way.getMetadata();
 			printMetadata(buf, metadata);
@@ -130,7 +138,9 @@ public class OsmXmlOutputStream implements OsmOutputStream
 			buf.append(newline);
 			for (int i = 0; i < way.getNumberOfNodes(); i++) {
 				long nodeId = way.getNodeId(i);
-				buf.append("    <nd ref=\"" + nodeId + "\"/>");
+				buf.append("    <nd ref=\"");
+				buf.append(nodeId);
+				buf.append("\"/>");
 				buf.append(newline);
 			}
 			printTags(buf, way);
@@ -144,7 +154,9 @@ public class OsmXmlOutputStream implements OsmOutputStream
 	public void write(OsmRelation relation)
 	{
 		BuilderWriter buf = new BuilderWriter();
-		buf.append("  <relation id=\"" + relation.getId() + "\"");
+		buf.append("  <relation id=\"");
+		buf.append(relation.getId());
+		buf.append("\"");
 		if (printMetadata) {
 			OsmMetadata metadata = relation.getMetadata();
 			printMetadata(buf, metadata);
@@ -163,8 +175,13 @@ public class OsmXmlOutputStream implements OsmOutputStream
 						: type == EntityType.Way ? "way" : "relation";
 				String role = member.getRole();
 				role = escaper.translate(role);
-				buf.append("    <member type=\"" + t + "\" ref=\""
-						+ member.getId() + "\" role=\"" + role + "\"/>");
+				buf.append("    <member type=\"");
+				buf.append(t);
+				buf.append("\" ref=\"");
+				buf.append(member.getId());
+				buf.append("\" role=\"");
+				buf.append(role);
+				buf.append("\"/>");
 				buf.append(newline);
 			}
 			printTags(buf, relation);
@@ -179,18 +196,27 @@ public class OsmXmlOutputStream implements OsmOutputStream
 		if (metadata == null) {
 			return;
 		}
-		buf.append(" version=\"" + metadata.getVersion() + "\"");
-		buf.append(" timestamp=\"" + formatter.print(metadata.getTimestamp())
-				+ "\"");
+		buf.append(" version=\"");
+		buf.append(metadata.getVersion());
+		buf.append("\"");
+		buf.append(" timestamp=\"");
+		buf.append(formatter.print(metadata.getTimestamp()));
+		buf.append("\"");
 		if (metadata.getUid() >= 0) {
-			buf.append(" uid=\"" + metadata.getUid() + "\"");
+			buf.append(" uid=\"");
+			buf.append(metadata.getUid());
+			buf.append("\"");
 			String user = metadata.getUser();
 			if (user != null) {
 				user = escaper.translate(user);
 			}
-			buf.append(" user=\"" + user + "\"");
+			buf.append(" user=\"");
+			buf.append(user);
+			buf.append("\"");
 		}
-		buf.append(" changeset=\"" + metadata.getChangeset() + "\"");
+		buf.append(" changeset=\"");
+		buf.append(metadata.getChangeset());
+		buf.append("\"");
 		if (!metadata.isVisible()) {
 			buf.append(" visible=\"false\"");
 		}
@@ -202,11 +228,12 @@ public class OsmXmlOutputStream implements OsmOutputStream
 			OsmTag tag = entity.getTag(i);
 			String key = tag.getKey();
 			String value = tag.getValue();
-			key = escaper.translate(key);
-			value = escaper.translate(value);
-			buf.append("    <tag k=\"" + key + "\" v=\"" + value + "\"/>");
+			buf.append("    <tag k=\"");
+			buf.append(escaper.translate(key));
+			buf.append("\" v=\"");
+			buf.append(escaper.translate(value));
+			buf.append("\"/>");
 			buf.append(newline);
 		}
 	}
-
 }
