@@ -24,8 +24,8 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
 
-import org.apache.commons.lang3.StringEscapeUtils;
-import org.apache.commons.lang3.text.translate.CharSequenceTranslator;
+import org.apache.commons.text.StringEscapeUtils;
+import org.apache.commons.text.translate.CharSequenceTranslator;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
@@ -77,10 +77,7 @@ public class OsmXmlOutputStream implements OsmOutputStream
 	private DateTimeFormatter formatter = DateTimeFormat
 			.forPattern("yyyy-MM-dd'T'HH:mm:ss'Z'");
 
-	// private CharSequenceTranslator escaper = new LookupTranslator(
-	// EntityArrays.BASIC_ESCAPE());
-
-	private CharSequenceTranslator escaper = StringEscapeUtils.ESCAPE_XML;
+	private CharSequenceTranslator escaper = StringEscapeUtils.ESCAPE_XML11;
 
 	private String templateBounds = "  <bounds minlon=\"%f\" minlat=\"%f\" maxlon=\"%f\" maxlat=\"%f\"/>";
 
@@ -150,7 +147,7 @@ public class OsmXmlOutputStream implements OsmOutputStream
 				String t = type == EntityType.Node ? "node"
 						: type == EntityType.Way ? "way" : "relation";
 				String role = member.getRole();
-				role = StringEscapeUtils.escapeXml(role);
+				role = escaper.translate(role);
 				out.println("    <member type=\"" + t + "\" ref=\""
 						+ member.getId() + "\" role=\"" + role + "\"/>");
 			}

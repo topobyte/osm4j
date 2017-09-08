@@ -7,7 +7,7 @@ dependencies {
     compile 'de.topobyte:osm4j-core:0.1.0'
     compile 'de.topobyte:dynsax:0.0.1'
 
-    compile 'org.apache.commons:commons-lang3:3.3.2'
+    compile 'org.apache.commons:commons-text:1.1'
     compile 'joda-time:joda-time:2.9.7'
     compile 'org.slf4j:slf4j-api:1.6.1'
 
