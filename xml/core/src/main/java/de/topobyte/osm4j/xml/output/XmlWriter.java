@@ -40,10 +40,14 @@ import de.topobyte.osm4j.core.model.iface.OsmWay;
 class XmlWriter
 {
 
+	private final String indent1;
+	private final String indent2;
 	private final boolean printMetadata;
 
-	public XmlWriter(boolean printMetadata)
+	public XmlWriter(String indent1, String indent2, boolean printMetadata)
 	{
+		this.indent1 = indent1;
+		this.indent2 = indent2;
 		this.printMetadata = printMetadata;
 	}
 
@@ -56,10 +60,11 @@ class XmlWriter
 	private CharSequenceTranslator escaper = StringEscapeUtils.ESCAPE_XML11;
 	private String newline = "\n";
 
-	private String templateBounds = "  <bounds minlon=\"%f\" minlat=\"%f\" maxlon=\"%f\" maxlat=\"%f\"/>";
+	private String templateBounds = "<bounds minlon=\"%f\" minlat=\"%f\" maxlon=\"%f\" maxlat=\"%f\"/>";
 
 	public void write(BuilderWriter buf, OsmBounds bounds)
 	{
+		buf.append(indent1);
 		buf.append(String.format(templateBounds, bounds.getLeft(),
 				bounds.getBottom(), bounds.getRight(), bounds.getTop()));
 		buf.append(newline);
@@ -67,7 +72,8 @@ class XmlWriter
 
 	public void write(BuilderWriter buf, OsmNode node)
 	{
-		buf.append("  <node id=\"");
+		buf.append(indent1);
+		buf.append("<node id=\"");
 		buf.append(node.getId());
 		buf.append("\"");
 		buf.append(" lat=\"");
@@ -87,14 +93,16 @@ class XmlWriter
 			buf.append(">");
 			buf.append(newline);
 			printTags(buf, node);
-			buf.append("  </node>");
+			buf.append(indent1);
+			buf.append("</node>");
 			buf.append(newline);
 		}
 	}
 
 	public void write(BuilderWriter buf, OsmWay way)
 	{
-		buf.append("  <way id=\"");
+		buf.append(indent1);
+		buf.append("<way id=\"");
 		buf.append(way.getId());
 		buf.append("\"");
 		if (printMetadata) {
@@ -109,20 +117,23 @@ class XmlWriter
 			buf.append(newline);
 			for (int i = 0; i < way.getNumberOfNodes(); i++) {
 				long nodeId = way.getNodeId(i);
-				buf.append("    <nd ref=\"");
+				buf.append(indent2);
+				buf.append("<nd ref=\"");
 				buf.append(nodeId);
 				buf.append("\"/>");
 				buf.append(newline);
 			}
 			printTags(buf, way);
-			buf.append("  </way>");
+			buf.append(indent1);
+			buf.append("</way>");
 			buf.append(newline);
 		}
 	}
 
 	public void write(BuilderWriter buf, OsmRelation relation)
 	{
-		buf.append("  <relation id=\"");
+		buf.append(indent1);
+		buf.append("<relation id=\"");
 		buf.append(relation.getId());
 		buf.append("\"");
 		if (printMetadata) {
@@ -141,7 +152,8 @@ class XmlWriter
 				EntityType type = member.getType();
 				String t = type == EntityType.Node ? "node"
 						: type == EntityType.Way ? "way" : "relation";
-				buf.append("    <member type=\"");
+				buf.append(indent2);
+				buf.append("<member type=\"");
 				buf.append(t);
 				buf.append("\" ref=\"");
 				buf.append(member.getId());
@@ -151,7 +163,8 @@ class XmlWriter
 				buf.append(newline);
 			}
 			printTags(buf, relation);
-			buf.append("  </relation>");
+			buf.append(indent1);
+			buf.append("</relation>");
 			buf.append(newline);
 		}
 	}
@@ -188,7 +201,8 @@ class XmlWriter
 	{
 		for (int i = 0; i < entity.getNumberOfTags(); i++) {
 			OsmTag tag = entity.getTag(i);
-			buf.append("    <tag k=\"");
+			buf.append(indent2);
+			buf.append("<tag k=\"");
 			escape(buf, tag.getKey());
 			buf.append("\" v=\"");
 			escape(buf, tag.getValue());

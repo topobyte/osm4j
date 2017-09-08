@@ -36,7 +36,7 @@ public class OsmXmlOutputStream implements OsmOutputStream
 	public OsmXmlOutputStream(PrintWriter out, boolean printMetadata)
 	{
 		this.out = out;
-		this.writer = new XmlWriter(printMetadata);
+		this.writer = new XmlWriter("  ", "    ", printMetadata);
 		writeHeader();
 	}
 
