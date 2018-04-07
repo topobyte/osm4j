@@ -7,5 +7,5 @@ See LGPL.md and GPL.md for details.
 
 ## About
 
-See the [project homepage](http://www.topobyte.de/projects/osm4j/) for
+See the [project homepage](http://www.jaryard.com/projects/osm4j/index.html) for
 information about the library.
