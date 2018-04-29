@@ -17,10 +17,43 @@ import de.topobyte.osm4j.core.model.iface.OsmRelation;
 import de.topobyte.osm4j.core.model.iface.OsmWay;
 import de.topobyte.osm4j.pbf.seq.PbfIterator;
 import de.topobyte.osm4j.pbf.seq.PbfParser;
+import de.topobyte.osm4j.pbf.seq.PbfReader;
 import de.topobyte.osm4j.pbf.seq.PbfWriter;
+import de.topobyte.osm4j.xml.dynsax.OsmXmlIterator;
 
 public class Util
 {
+
+	public static OsmIterator iterator(String resource, boolean fetchMetadata)
+			throws IOException
+	{
+		InputStream input = Thread.currentThread().getContextClassLoader()
+				.getResourceAsStream(resource);
+
+		OsmIterator iterator = new PbfIterator(input, fetchMetadata);
+
+		return iterator;
+	}
+
+	public static OsmIterator xmlIterator(String resource,
+			boolean fetchMetadata) throws IOException
+	{
+		InputStream input = Thread.currentThread().getContextClassLoader()
+				.getResourceAsStream(resource);
+
+		OsmIterator iterator = new OsmXmlIterator(input, fetchMetadata);
+
+		return iterator;
+	}
+
+	public static PbfReader reader(String resource, boolean fetchMetadata)
+	{
+		InputStream input = Thread.currentThread().getContextClassLoader()
+				.getResourceAsStream(resource);
+
+		PbfReader parser = new PbfReader(input, fetchMetadata);
+		return parser;
+	}
 
 	public static void iterate(String resource, boolean fetchMetadata)
 			throws IOException
