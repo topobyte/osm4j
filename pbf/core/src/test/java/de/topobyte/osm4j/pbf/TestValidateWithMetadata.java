@@ -18,6 +18,7 @@
 package de.topobyte.osm4j.pbf;
 
 import java.io.IOException;
+import java.util.Date;
 
 import org.junit.Test;
 
@@ -58,8 +59,13 @@ public class TestValidateWithMetadata extends TestValidateData
 		TestMetadata m1 = xmlData.getNodes().get(0).getMetadata();
 		TestMetadata m2 = pbfData.getNodes().get(0).getMetadata();
 
-		System.out.println(m1.getTimestamp());
-		System.out.println(m2.getTimestamp());
+		// It seems we're not handling timestamps correctly in the PBF layer
+		System.out.println("node id: " + xmlData.getNodes().get(0).getId());
+		System.out.println("xml date: " + new Date(m1.getTimestamp()));
+		System.out.println("pbf date: " + new Date(m2.getTimestamp()));
+		long diff = m1.getTimestamp() - m2.getTimestamp();
+		System.out.println("millisecond diff: " + diff);
+		System.out.println("hour diff: " + diff / 1000 / 60 / 60);
 	}
 
 }
