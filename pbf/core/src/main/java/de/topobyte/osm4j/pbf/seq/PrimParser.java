@@ -143,8 +143,16 @@ public class PrimParser
 	public OsmNode convert(Osmformat.Node n)
 	{
 		long id = n.getId();
-		double lat = parseLat(n.getLat());
-		double lon = parseLon(n.getLon());
+		double lat = Double.NaN;
+		double lon = Double.NaN;
+
+		if (n.getLat() != Integer.MAX_VALUE) {
+			lat = parseLat(n.getLat());
+		}
+
+		if (n.getLon() != Integer.MAX_VALUE) {
+			lon = parseLon(n.getLon());
+		}
 
 		List<OsmTag> tags = new ArrayList<>();
 		for (int j = 0; j < n.getKeysCount(); j++) {
@@ -266,7 +274,16 @@ public class PrimParser
 			lat += nodes.getLat(i);
 			lon += nodes.getLon(i);
 
-			double latf = parseLat(lat), lonf = parseLon(lon);
+			double latf = Double.NaN, lonf = Double.NaN;
+
+			if (lat != Integer.MAX_VALUE) {
+				latf = parseLat(lat);
+			}
+
+			if (lon != Integer.MAX_VALUE) {
+				lonf = parseLon(lon);
+			}
+
 			List<OsmTag> tags = new ArrayList<>();
 
 			OsmMetadata metadata = null;
@@ -323,7 +340,16 @@ public class PrimParser
 			lat += nodes.getLat(i);
 			lon += nodes.getLon(i);
 
-			double latf = parseLat(lat), lonf = parseLon(lon);
+			double latf = Double.NaN, lonf = Double.NaN;
+
+			if (lat != Integer.MAX_VALUE) {
+				latf = parseLat(lat);
+			}
+
+			if (lon != Integer.MAX_VALUE) {
+				lonf = parseLon(lon);
+			}
+
 			List<OsmTag> tags = new ArrayList<>();
 
 			OsmMetadata metadata = null;
