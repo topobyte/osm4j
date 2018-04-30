@@ -21,7 +21,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.apache.commons.io.IOUtils;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -38,18 +37,11 @@ public class TestRewriteNoMeta
 		String filenameWithMeta = "node-240109189.osm";
 		String filenameWithoutMeta = "node-240109189-nometa.osm";
 
-		ClassLoader classloader = TestRewriteNoMeta.class.getClassLoader();
-
-		// Read expected output to a string
-
-		InputStream input = classloader
-				.getResourceAsStream(filenameWithoutMeta);
-		String text = IOUtils.toString(input);
-		input.close();
+		String text = Util.read(filenameWithoutMeta);
 
 		// Parse the input and rewrite to XML
 
-		input = classloader.getResourceAsStream(filenameWithMeta);
+		InputStream input = Util.stream(filenameWithMeta);
 
 		OsmXmlIterator iterator = new OsmXmlIterator(input, true);
 		OsmNode node = (OsmNode) iterator.next().getEntity();

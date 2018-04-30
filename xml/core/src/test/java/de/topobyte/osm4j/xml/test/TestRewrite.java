@@ -37,17 +37,11 @@ public class TestRewrite
 	{
 		String filename = "node-240109189.osm";
 
-		ClassLoader classloader = TestRewriteNoMeta.class.getClassLoader();
-
-		// Read the input to a string
-
-		InputStream input = classloader.getResourceAsStream(filename);
-		String text = IOUtils.toString(input);
-		input.close();
+		String text = Util.read(filename);
 
 		// Parse the input and rewrite to XML
 
-		input = IOUtils.toInputStream(text, "UTF-8");
+		InputStream input = IOUtils.toInputStream(text, "UTF-8");
 
 		OsmXmlIterator iterator = new OsmXmlIterator(input, true);
 		OsmNode node = (OsmNode) iterator.next().getEntity();
