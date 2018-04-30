@@ -32,7 +32,7 @@ class DateParser
 	static {
 		PARSERS = new DateTimeFormatter[PATTERNS.length];
 		for (int i = 0; i < PATTERNS.length; i++) {
-			PARSERS[i] = DateTimeFormat.forPattern(PATTERNS[i]);
+			PARSERS[i] = DateTimeFormat.forPattern(PATTERNS[i]).withZoneUTC();
 		}
 	}
 

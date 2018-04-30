@@ -58,7 +58,7 @@ class XmlWriter
 			new DecimalFormatSymbols(Locale.US));
 
 	private DateTimeFormatter formatter = DateTimeFormat
-			.forPattern("yyyy-MM-dd'T'HH:mm:ss'Z'");
+			.forPattern("yyyy-MM-dd'T'HH:mm:ss'Z'").withZoneUTC();
 
 	private CharSequenceTranslator escaper = StringEscapeUtils.ESCAPE_XML11;
 
