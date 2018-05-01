@@ -5,13 +5,13 @@ if (project.hasProperty("topobyte")) {
 
 dependencies {
     compile 'de.topobyte:osm4j-core:0.1.0'
-    compile 'de.topobyte:osm4j-xml:0.1.0'
-    compile 'de.topobyte:osm4j-pbf:0.1.0'
+    compile 'de.topobyte:osm4j-xml:0.1.2'
+    compile 'de.topobyte:osm4j-pbf:0.1.1'
     compile 'de.topobyte:osm4j-tbo:0.1.0'
     compile 'de.topobyte:osm4j-geometry:0.1.0'
     compile 'de.topobyte:large-scale-file-io:0.0.1'
-    compile 'de.topobyte:adt-geo:0.0.3'
-    compile 'de.topobyte:commons-cli-helper:0.0.5'
+    compile 'de.topobyte:adt-geo:0.0.4'
+    compile 'de.topobyte:commons-cli-helper:0.0.6'
     compile 'de.topobyte:melon-io:0.0.1'
 
     compile 'com.slimjars.trove4j:trove4j-int-hash-set:1.0.1'
