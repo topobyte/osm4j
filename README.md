@@ -18,3 +18,8 @@ There are a number of repositories concerning osm4j:
 * [project-docs/osm4j](https://github.com/project-docs/osm4j)
 * [osm4j-examples](https://github.com/topobyte/osm4j-examples)
 * [osm4j-doc](https://github.com/topobyte/osm4j-doc)
+
+## Projects using the library
+
+* [mojodna/osm2orc](https://github.com/mojodna/osm2orc)
+* [FutureCitiesCatapult/TomboloDigitalConnector](https://github.com/FutureCitiesCatapult/TomboloDigitalConnector)
