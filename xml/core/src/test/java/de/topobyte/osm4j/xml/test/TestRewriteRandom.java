@@ -29,6 +29,7 @@ import de.topobyte.osm4j.testing.DataSetGenerator;
 import de.topobyte.osm4j.testing.DataSetHelper;
 import de.topobyte.osm4j.testing.EntityGenerator;
 import de.topobyte.osm4j.testing.TestDataSet;
+import de.topobyte.osm4j.testing.model.TestBounds;
 import de.topobyte.osm4j.xml.dynsax.OsmXmlIterator;
 import de.topobyte.osm4j.xml.output.OsmXmlOutputStream;
 
@@ -49,11 +50,13 @@ public class TestRewriteRandom
 
 		TestDataSet data = dataSetGenerator.generate(numNodes, numWays,
 				numRelations);
+		data.setBounds(new TestBounds(12, 13, 52, 50));
 
 		// Write the data set to XML
 
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		OsmXmlOutputStream output = new OsmXmlOutputStream(baos, true);
+		output.write(data.getBounds());
 		DataSetHelper.write(data, output);
 		output.complete();
 
