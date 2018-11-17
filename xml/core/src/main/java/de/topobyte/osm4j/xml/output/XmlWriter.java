@@ -67,7 +67,7 @@ class XmlWriter
 	public void write(BuilderWriter buf, OsmBounds bounds)
 	{
 		buf.append(indent1);
-		buf.append(String.format(templateBounds, bounds.getLeft(),
+		buf.append(String.format(Locale.US, templateBounds, bounds.getLeft(),
 				bounds.getBottom(), bounds.getRight(), bounds.getTop()));
 	}
 
