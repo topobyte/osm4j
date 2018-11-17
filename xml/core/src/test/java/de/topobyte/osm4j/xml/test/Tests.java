@@ -17,35 +17,17 @@
 
 package de.topobyte.osm4j.xml.test;
 
-import java.io.IOException;
-import java.io.InputStream;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Locale;
 
-import org.junit.Assert;
-import org.junit.Test;
-
-import de.topobyte.osm4j.core.model.iface.OsmNode;
-import de.topobyte.osm4j.xml.dynsax.OsmXmlIterator;
-
-public class TestReadNoMeta extends LocaleTest
+public class Tests
 {
 
-	public TestReadNoMeta(Locale locale)
+	public static Collection<?> locales()
 	{
-		super(locale);
-	}
-
-	@Test
-	public void testIterator() throws IOException
-	{
-		String filename = "node-240109189.osm";
-
-		InputStream input = Util.stream(filename);
-
-		OsmXmlIterator iterator = new OsmXmlIterator(input, false);
-		OsmNode node = (OsmNode) iterator.next().getEntity();
-
-		Assert.assertNull("Metadata should be null", node.getMetadata());
+		return Arrays.asList(
+				new Object[] { Locale.US, Locale.GERMANY, Locale.FRANCE });
 	}
 
 }

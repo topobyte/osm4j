@@ -20,6 +20,7 @@ package de.topobyte.osm4j.xml.test;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Locale;
 
 import org.apache.commons.io.IOUtils;
 import org.junit.Assert;
@@ -29,8 +30,13 @@ import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.osm4j.xml.dynsax.OsmXmlIterator;
 import de.topobyte.osm4j.xml.output.OsmXmlOutputStream;
 
-public class TestRewrite
+public class TestRewrite extends LocaleTest
 {
+
+	public TestRewrite(Locale locale)
+	{
+		super(locale);
+	}
 
 	@Test
 	public void test() throws IOException

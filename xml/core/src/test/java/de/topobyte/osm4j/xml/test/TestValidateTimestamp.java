@@ -19,6 +19,7 @@ package de.topobyte.osm4j.xml.test;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Locale;
 
 import org.apache.commons.io.IOUtils;
 import org.joda.time.format.DateTimeFormat;
@@ -29,8 +30,13 @@ import org.junit.Test;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.osm4j.xml.dynsax.OsmXmlIterator;
 
-public class TestValidateTimestamp
+public class TestValidateTimestamp extends LocaleTest
 {
+
+	public TestValidateTimestamp(Locale locale)
+	{
+		super(locale);
+	}
 
 	@Test
 	public void test() throws IOException
