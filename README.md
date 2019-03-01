@@ -6,6 +6,7 @@ There are a number of repositories concerning osm4j:
 * [osm4j-xml](https://github.com/topobyte/osm4j-xml)
 * [osm4j-pbf](https://github.com/topobyte/osm4j-pbf)
 * [osm4j-tbo](https://github.com/topobyte/osm4j-tbo)
+* [osm4j-osc](https://github.com/topobyte/osm4j-osc)
 * [osm4j-geometry](https://github.com/topobyte/osm4j-geometry)
 * [osm4j-utils](https://github.com/topobyte/osm4j-utils)
 * [osm4j-extra](https://github.com/topobyte/osm4j-extra)
