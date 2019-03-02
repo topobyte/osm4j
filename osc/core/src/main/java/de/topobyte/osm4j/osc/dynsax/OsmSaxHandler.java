@@ -30,7 +30,6 @@ import de.topobyte.osm4j.core.model.iface.EntityType;
 import de.topobyte.osm4j.core.model.iface.OsmMetadata;
 import de.topobyte.osm4j.core.model.iface.OsmRelationMember;
 import de.topobyte.osm4j.core.model.iface.OsmTag;
-import de.topobyte.osm4j.core.model.impl.Bounds;
 import de.topobyte.osm4j.core.model.impl.Entity;
 import de.topobyte.osm4j.core.model.impl.Metadata;
 import de.topobyte.osm4j.core.model.impl.Node;
@@ -78,23 +77,15 @@ class OsmSaxHandler extends DynamicSaxHandler
 		this.handler = handler;
 	}
 
-	private Element root, bounds, bound, node, way, relation;
+	private Element root, node, way, relation;
 
 	private static final String NAME_OSM_CHANGE = "osmChange";
-	private static final String NAME_BOUNDS = "bounds";
-	private static final String NAME_BOUND = "bound";
 	private static final String NAME_NODE = "node";
 	private static final String NAME_WAY = "way";
 	private static final String NAME_RELATION = "relation";
 	private static final String NAME_TAG = "tag";
 	private static final String NAME_ND = "nd";
 	private static final String NAME_MEMBER = "member";
-
-	private static final String ATTR_MIN_LAT = "minlat";
-	private static final String ATTR_MAX_LAT = "maxlat";
-	private static final String ATTR_MIN_LON = "minlon";
-	private static final String ATTR_MAX_LON = "maxlon";
-	private static final String ATTR_BOX = "box";
 
 	private static final String ATTR_ID = "id";
 	private static final String ATTR_K = "k";
@@ -116,19 +107,6 @@ class OsmSaxHandler extends DynamicSaxHandler
 	{
 		root = new Element(NAME_OSM_CHANGE, false);
 
-		// the bounds elements
-
-		bounds = new Element(NAME_BOUNDS, false);
-		bounds.addAttribute(ATTR_MIN_LON);
-		bounds.addAttribute(ATTR_MAX_LON);
-		bounds.addAttribute(ATTR_MIN_LAT);
-		bounds.addAttribute(ATTR_MAX_LAT);
-
-		// the bound element
-
-		bound = new Element(NAME_BOUND, false);
-		bound.addAttribute(ATTR_BOX);
-
 		// the 3 basic types
 
 		node = new Element(NAME_NODE, false);
@@ -149,8 +127,6 @@ class OsmSaxHandler extends DynamicSaxHandler
 
 		// add to root element
 
-		root.addChild(new Child(bounds, ChildType.IGNORE, true));
-		root.addChild(new Child(bound, ChildType.IGNORE, true));
 		root.addChild(new Child(node, ChildType.IGNORE, true));
 		root.addChild(new Child(way, ChildType.IGNORE, true));
 		root.addChild(new Child(relation, ChildType.IGNORE, true));
@@ -197,38 +173,6 @@ class OsmSaxHandler extends DynamicSaxHandler
 	@Override
 	public void emit(Data data) throws ParsingException
 	{
-		if (data.getElement() == bounds) {
-			String aMinLon = data.getAttribute(ATTR_MIN_LON);
-			String aMaxLon = data.getAttribute(ATTR_MAX_LON);
-			String aMinLat = data.getAttribute(ATTR_MIN_LAT);
-			String aMaxLat = data.getAttribute(ATTR_MAX_LAT);
-			double minLon = Double.parseDouble(aMinLon);
-			double minLat = Double.parseDouble(aMinLat);
-			double maxLon = Double.parseDouble(aMaxLon);
-			double maxLat = Double.parseDouble(aMaxLat);
-			try {
-				handler.handle(new Bounds(minLon, maxLon, maxLat, minLat));
-			} catch (IOException e) {
-				throw new ParsingException("while handling bounds", e);
-			}
-		}
-
-		if (data.getElement() == bound) {
-			String aBox = data.getAttribute(ATTR_BOX);
-			String[] parts = aBox.split(",");
-			if (parts.length == 4) {
-				double minLat = Double.parseDouble(parts[0]);
-				double minLon = Double.parseDouble(parts[1]);
-				double maxLat = Double.parseDouble(parts[2]);
-				double maxLon = Double.parseDouble(parts[3]);
-				try {
-					handler.handle(new Bounds(minLon, maxLon, maxLat, minLat));
-				} catch (IOException e) {
-					throw new ParsingException("while handling bounds", e);
-				}
-			}
-		}
-
 		OsmMetadata metadata = null;
 		if (parseMetadata) {
 			String aVersion = data.getAttribute(ATTR_VERSION);
