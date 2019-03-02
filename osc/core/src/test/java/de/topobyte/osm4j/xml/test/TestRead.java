@@ -23,15 +23,12 @@ import java.io.InputStream;
 import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
 import org.junit.Test;
 
-import de.topobyte.osm4j.core.access.OsmHandler;
 import de.topobyte.osm4j.core.access.OsmInputException;
-import de.topobyte.osm4j.core.model.iface.OsmBounds;
-import de.topobyte.osm4j.core.model.iface.OsmNode;
-import de.topobyte.osm4j.core.model.iface.OsmRelation;
-import de.topobyte.osm4j.core.model.iface.OsmWay;
+import de.topobyte.osm4j.osc.OsmChange;
+import de.topobyte.osm4j.osc.dynsax.OsmChangeHandler;
 import de.topobyte.osm4j.osc.dynsax.OsmOscReader;
 
-public class TestRead implements OsmHandler
+public class TestRead implements OsmChangeHandler
 {
 
 	@Test
@@ -48,27 +45,10 @@ public class TestRead implements OsmHandler
 	}
 
 	@Override
-	public void handle(OsmBounds bounds) throws IOException
+	public void handle(OsmChange change) throws IOException
 	{
-		System.out.println("bounds");
-	}
-
-	@Override
-	public void handle(OsmNode node) throws IOException
-	{
-		System.out.println("node " + node.getId());
-	}
-
-	@Override
-	public void handle(OsmWay way) throws IOException
-	{
-		System.out.println("way " + way.getId());
-	}
-
-	@Override
-	public void handle(OsmRelation relation) throws IOException
-	{
-		System.out.println("relation " + relation.getId());
+		System.out.println("change: " + change.getType() + " "
+				+ change.getElements().size());
 	}
 
 	@Override

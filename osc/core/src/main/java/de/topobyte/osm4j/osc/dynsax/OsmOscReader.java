@@ -27,19 +27,17 @@ import java.io.InputStream;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
-import de.topobyte.osm4j.core.access.OsmHandler;
 import de.topobyte.osm4j.core.access.OsmInputException;
-import de.topobyte.osm4j.core.access.OsmReader;
 
 /**
  * This is a SAX-based parser for OSM OSC data.
  * 
  * @author Sebastian Kuerten (sebastian@topobyte.de)
  */
-public class OsmOscReader implements OsmReader
+public class OsmOscReader
 {
 
-	private OsmHandler handler;
+	private OsmChangeHandler handler;
 
 	private boolean parseMetadata;
 	private InputStream inputStream;
@@ -64,13 +62,11 @@ public class OsmOscReader implements OsmReader
 		this(new File(pathname), parseMetadata);
 	}
 
-	@Override
-	public void setHandler(OsmHandler handler)
+	public void setHandler(OsmChangeHandler handler)
 	{
 		this.handler = handler;
 	}
 
-	@Override
 	public void read() throws OsmInputException
 	{
 		SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();

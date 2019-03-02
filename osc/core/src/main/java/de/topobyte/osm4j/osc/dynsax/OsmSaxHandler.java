@@ -19,13 +19,13 @@ package de.topobyte.osm4j.osc.dynsax;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.joda.time.DateTime;
 
 import com.slimjars.dist.gnu.trove.list.array.TLongArrayList;
 
-import de.topobyte.osm4j.core.access.OsmHandler;
 import de.topobyte.osm4j.core.model.iface.EntityType;
 import de.topobyte.osm4j.core.model.iface.OsmMetadata;
 import de.topobyte.osm4j.core.model.iface.OsmRelationMember;
@@ -37,6 +37,8 @@ import de.topobyte.osm4j.core.model.impl.Relation;
 import de.topobyte.osm4j.core.model.impl.RelationMember;
 import de.topobyte.osm4j.core.model.impl.Tag;
 import de.topobyte.osm4j.core.model.impl.Way;
+import de.topobyte.osm4j.osc.ChangeType;
+import de.topobyte.osm4j.osc.OsmChange;
 import de.topobyte.xml.dynsax.Child;
 import de.topobyte.xml.dynsax.ChildType;
 import de.topobyte.xml.dynsax.Data;
@@ -52,17 +54,17 @@ class OsmSaxHandler extends DynamicSaxHandler
 		return new OsmSaxHandler(null, parseMetadata);
 	}
 
-	static OsmSaxHandler createInstance(OsmHandler handler,
+	static OsmSaxHandler createInstance(OsmChangeHandler handler,
 			boolean parseMetadata)
 	{
 		return new OsmSaxHandler(handler, parseMetadata);
 	}
 
-	private OsmHandler handler;
+	private OsmChangeHandler handler;
 	private boolean parseMetadata;
 	private DateParser dateParser;
 
-	private OsmSaxHandler(OsmHandler handler, boolean parseMetadata)
+	private OsmSaxHandler(OsmChangeHandler handler, boolean parseMetadata)
 	{
 		this.handler = handler;
 		this.parseMetadata = parseMetadata;
@@ -72,14 +74,17 @@ class OsmSaxHandler extends DynamicSaxHandler
 		setRoot(createRoot(), true);
 	}
 
-	void setHandler(OsmHandler handler)
+	void setHandler(OsmChangeHandler handler)
 	{
 		this.handler = handler;
 	}
 
-	private Element root, node, way, relation;
+	private Element root, create, modify, delete, node, way, relation;
 
 	private static final String NAME_OSM_CHANGE = "osmChange";
+	private static final String NAME_CREATE = "create";
+	private static final String NAME_MODIFY = "modify";
+	private static final String NAME_DELETE = "delete";
 	private static final String NAME_NODE = "node";
 	private static final String NAME_WAY = "way";
 	private static final String NAME_RELATION = "relation";
@@ -107,6 +112,12 @@ class OsmSaxHandler extends DynamicSaxHandler
 	{
 		root = new Element(NAME_OSM_CHANGE, false);
 
+		// the 3 change types
+
+		create = new Element(NAME_CREATE, false);
+		modify = new Element(NAME_MODIFY, false);
+		delete = new Element(NAME_DELETE, false);
+
 		// the 3 basic types
 
 		node = new Element(NAME_NODE, false);
@@ -120,6 +131,8 @@ class OsmSaxHandler extends DynamicSaxHandler
 		relation = new Element(NAME_RELATION, false);
 		relation.addAttribute(ATTR_ID);
 
+		List<Element> elements = Arrays.asList(create, modify, delete);
+
 		List<Element> entities = new ArrayList<>();
 		entities.add(node);
 		entities.add(way);
@@ -127,9 +140,17 @@ class OsmSaxHandler extends DynamicSaxHandler
 
 		// add to root element
 
-		root.addChild(new Child(node, ChildType.IGNORE, true));
-		root.addChild(new Child(way, ChildType.IGNORE, true));
-		root.addChild(new Child(relation, ChildType.IGNORE, true));
+		root.addChild(new Child(create, ChildType.IGNORE, true));
+		root.addChild(new Child(modify, ChildType.IGNORE, true));
+		root.addChild(new Child(delete, ChildType.IGNORE, true));
+
+		// add entities
+
+		for (Element element : elements) {
+			element.addChild(new Child(node, ChildType.LIST, false));
+			element.addChild(new Child(way, ChildType.LIST, false));
+			element.addChild(new Child(relation, ChildType.LIST, false));
+		}
 
 		// tag for each type
 
@@ -218,83 +239,129 @@ class OsmSaxHandler extends DynamicSaxHandler
 					visible);
 		}
 
-		if (data.getElement() == node) {
-			String aId = data.getAttribute(ATTR_ID);
-			String aLon = data.getAttribute(ATTR_LON);
-			String aLat = data.getAttribute(ATTR_LAT);
-
-			long id = Long.parseLong(aId);
-			double lon = Double.parseDouble(aLon);
-			double lat = Double.parseDouble(aLat);
-
-			Node node = new Node(id, lon, lat, metadata);
-			fillTags(node, data);
+		if (data.getElement() == create) {
+			OsmChange create = new OsmChange(ChangeType.CREATE);
+			fillEntities(create, data);
 
 			try {
-				handler.handle(node);
+				handler.handle(create);
 			} catch (IOException e) {
-				throw new ParsingException("while handling node", e);
+				throw new ParsingException("while handling create", e);
 			}
-		} else if (data.getElement() == way) {
-			String aId = data.getAttribute(ATTR_ID);
-			long id = Long.parseLong(aId);
-
-			TLongArrayList nodes = new TLongArrayList();
-			List<Data> nds = data.getList(NAME_ND);
-			if (nds != null) {
-				for (Data nd : nds) {
-					String aRef = nd.getAttribute(ATTR_REF);
-					long ref = Long.parseLong(aRef);
-					nodes.add(ref);
-				}
-			}
-
-			Way way = new Way(id, nodes, metadata);
-			fillTags(way, data);
+		} else if (data.getElement() == modify) {
+			OsmChange modify = new OsmChange(ChangeType.MODIFY);
+			fillEntities(modify, data);
 
 			try {
-				handler.handle(way);
+				handler.handle(modify);
 			} catch (IOException e) {
-				throw new ParsingException("while handling way", e);
+				throw new ParsingException("while handling modify", e);
 			}
-		} else if (data.getElement() == relation) {
-			String aId = data.getAttribute(ATTR_ID);
-			long id = Long.parseLong(aId);
-
-			List<OsmRelationMember> members = new ArrayList<>();
-
-			List<Data> memberDs = data.getList(NAME_MEMBER);
-			if (memberDs != null) {
-				for (Data memberD : memberDs) {
-					String aType = memberD.getAttribute(ATTR_TYPE);
-					String aRef = memberD.getAttribute(ATTR_REF);
-					String role = memberD.getAttribute(ATTR_ROLE);
-
-					long ref = Long.parseLong(aRef);
-
-					EntityType type = null;
-					if (aType.equals("node")) {
-						type = EntityType.Node;
-					} else if (aType.equals("way")) {
-						type = EntityType.Way;
-					} else if (aType.equals("relation")) {
-						type = EntityType.Relation;
-					}
-
-					RelationMember member = new RelationMember(ref, type, role);
-					members.add(member);
-				}
-			}
-
-			Relation relation = new Relation(id, members, metadata);
-			fillTags(relation, data);
+		} else if (data.getElement() == delete) {
+			OsmChange delete = new OsmChange(ChangeType.DELETE);
+			fillEntities(delete, data);
 
 			try {
-				handler.handle(relation);
+				handler.handle(delete);
 			} catch (IOException e) {
-				throw new ParsingException("while handling relation", e);
+				throw new ParsingException("while handling delete", e);
 			}
 		}
+	}
+
+	private void fillEntities(OsmChange change, Data data)
+	{
+		List<Data> nodes = data.getList(NAME_NODE);
+		List<Data> ways = data.getList(NAME_WAY);
+		List<Data> relations = data.getList(NAME_RELATION);
+
+		if (nodes != null) {
+			for (Data child : nodes) {
+				change.getElements().add(node(child));
+			}
+		}
+
+		if (ways != null) {
+			for (Data child : ways) {
+				change.getElements().add(way(child));
+			}
+		}
+
+		if (relations != null) {
+			for (Data child : relations) {
+				change.getElements().add(relation(child));
+			}
+		}
+	}
+
+	private Node node(Data data)
+	{
+		String aId = data.getAttribute(ATTR_ID);
+		String aLon = data.getAttribute(ATTR_LON);
+		String aLat = data.getAttribute(ATTR_LAT);
+
+		long id = Long.parseLong(aId);
+		double lon = Double.parseDouble(aLon);
+		double lat = Double.parseDouble(aLat);
+
+		Node node = new Node(id, lon, lat, (OsmMetadata) null);
+		fillTags(node, data);
+		return node;
+	}
+
+	private Way way(Data data)
+	{
+		String aId = data.getAttribute(ATTR_ID);
+		long id = Long.parseLong(aId);
+
+		TLongArrayList nodes = new TLongArrayList();
+		List<Data> nds = data.getList(NAME_ND);
+		if (nds != null) {
+			for (Data nd : nds) {
+				String aRef = nd.getAttribute(ATTR_REF);
+				long ref = Long.parseLong(aRef);
+				nodes.add(ref);
+			}
+		}
+
+		Way way = new Way(id, nodes, (OsmMetadata) null);
+		fillTags(way, data);
+		return way;
+	}
+
+	private Relation relation(Data data)
+	{
+		String aId = data.getAttribute(ATTR_ID);
+		long id = Long.parseLong(aId);
+
+		List<OsmRelationMember> members = new ArrayList<>();
+
+		List<Data> memberDs = data.getList(NAME_MEMBER);
+		if (memberDs != null) {
+			for (Data memberD : memberDs) {
+				String aType = memberD.getAttribute(ATTR_TYPE);
+				String aRef = memberD.getAttribute(ATTR_REF);
+				String role = memberD.getAttribute(ATTR_ROLE);
+
+				long ref = Long.parseLong(aRef);
+
+				EntityType type = null;
+				if (aType.equals("node")) {
+					type = EntityType.Node;
+				} else if (aType.equals("way")) {
+					type = EntityType.Way;
+				} else if (aType.equals("relation")) {
+					type = EntityType.Relation;
+				}
+
+				RelationMember member = new RelationMember(ref, type, role);
+				members.add(member);
+			}
+		}
+
+		Relation relation = new Relation(id, members, (OsmMetadata) null);
+		fillTags(relation, data);
+		return relation;
 	}
 
 	private void fillTags(Entity entity, Data data)
