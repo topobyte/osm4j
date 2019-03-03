@@ -277,19 +277,19 @@ class OsmSaxHandler extends DynamicSaxHandler
 
 		if (nodes != null) {
 			for (Data child : nodes) {
-				change.getElements().add(node(child));
+				change.getElements().getNodes().add(node(child));
 			}
 		}
 
 		if (ways != null) {
 			for (Data child : ways) {
-				change.getElements().add(way(child));
+				change.getElements().getWays().add(way(child));
 			}
 		}
 
 		if (relations != null) {
 			for (Data child : relations) {
-				change.getElements().add(relation(child));
+				change.getElements().getRelations().add(relation(child));
 			}
 		}
 	}

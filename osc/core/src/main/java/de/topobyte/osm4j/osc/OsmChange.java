@@ -17,16 +17,13 @@
 
 package de.topobyte.osm4j.osc;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import de.topobyte.osm4j.core.model.iface.OsmEntity;
+import de.topobyte.osm4j.core.dataset.InMemoryListDataSet;
 
 public class OsmChange
 {
 
 	private ChangeType type;
-	private List<OsmEntity> elements = new ArrayList<>();
+	private InMemoryListDataSet elements = new InMemoryListDataSet();
 
 	public OsmChange(ChangeType type)
 	{
@@ -38,7 +35,7 @@ public class OsmChange
 		return type;
 	}
 
-	public List<OsmEntity> getElements()
+	public InMemoryListDataSet getElements()
 	{
 		return elements;
 	}

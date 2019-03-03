@@ -28,6 +28,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
 
 import de.topobyte.osm4j.core.access.OsmInputException;
+import de.topobyte.osm4j.core.dataset.InMemoryListDataSet;
 import de.topobyte.osm4j.osc.OsmChange;
 import de.topobyte.osm4j.osc.dynsax.OsmChangeHandler;
 import de.topobyte.osm4j.osc.dynsax.OsmOscReader;
@@ -67,8 +68,11 @@ public class TestReadCallback implements OsmChangeHandler
 	@Override
 	public void handle(OsmChange change) throws IOException
 	{
-		System.out.println("change: " + change.getType() + " "
-				+ change.getElements().size());
+		InMemoryListDataSet data = change.getElements();
+		System.out.println(
+				String.format("change: %s, %d nodes, %d ways, %d relations",
+						change.getType(), data.getNodes().size(),
+						data.getWays().size(), data.getRelations().size()));
 	}
 
 }
