@@ -17,28 +17,26 @@
 
 package de.topobyte.osm4j.osc.test;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import javax.xml.parsers.ParserConfigurationException;
 
-import de.topobyte.osm4j.core.access.OsmHandler;
+import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
+
 import de.topobyte.osm4j.core.access.OsmInputException;
-import de.topobyte.osm4j.core.access.OsmReader;
-import de.topobyte.osm4j.core.model.iface.OsmBounds;
-import de.topobyte.osm4j.core.model.iface.OsmEntity;
-import de.topobyte.osm4j.core.model.iface.OsmNode;
-import de.topobyte.osm4j.core.model.iface.OsmRelation;
-import de.topobyte.osm4j.core.model.iface.OsmRelationMember;
-import de.topobyte.osm4j.core.model.iface.OsmWay;
-import de.topobyte.osm4j.core.model.util.OsmModelUtil;
+import de.topobyte.osm4j.osc.OsmChange;
+import de.topobyte.osm4j.osc.dynsax.OsmChangeHandler;
 import de.topobyte.osm4j.osc.dynsax.OsmOscReader;
 
-public class TestReadCallback implements OsmHandler
+public class TestReadCallback implements OsmChangeHandler
 {
 
-	public static void main(String[] args) throws ParserConfigurationException,
-			OsmInputException, FileNotFoundException
+	public static void main(String[] args)
+			throws ParserConfigurationException, OsmInputException, IOException
 	{
 		if (args.length != 1) {
 			System.out
@@ -49,63 +47,28 @@ public class TestReadCallback implements OsmHandler
 
 		String pathInput = args[0];
 
+		Path path = Paths.get(pathInput);
+		InputStream cinput = Files.newInputStream(path);
+		InputStream input = new GzipCompressorInputStream(cinput);
+
 		TestReadCallback test = new TestReadCallback();
-		OsmReader reader = new OsmOscReader(pathInput, false);
+		OsmOscReader reader = new OsmOscReader(input, false);
 
 		reader.setHandler(test);
 		reader.read();
 	}
 
 	@Override
-	public void handle(OsmBounds bounds) throws IOException
-	{
-		System.out.println("bounds: " + bounds);
-	}
-
-	@Override
-	public void handle(OsmNode node)
-	{
-		System.out.println("node " + node.getId() + ", lon: "
-				+ node.getLongitude() + ", lat: " + node.getLatitude());
-		printTags(node);
-
-	}
-
-	@Override
-	public void handle(OsmWay way)
-	{
-		System.out.println("way " + way.getId());
-		for (int i = 0; i < way.getNumberOfNodes(); i++) {
-			long ref = way.getNodeId(i);
-			System.out.println("member: " + ref);
-		}
-		printTags(way);
-	}
-
-	@Override
-	public void handle(OsmRelation relation)
-	{
-		System.out.println("relation " + relation.getId());
-		for (int i = 0; i < relation.getNumberOfMembers(); i++) {
-			OsmRelationMember member = relation.getMember(i);
-			System.out.println("member " + member.getId() + ", type: "
-					+ member.getType() + ", role: " + member.getRole());
-		}
-		printTags(relation);
-	}
-
-	private void printTags(OsmEntity entity)
-	{
-		if (entity.getNumberOfTags() == 0) {
-			return;
-		}
-		System.out.println(OsmModelUtil.getTagsAsMap(entity));
-	}
-
-	@Override
 	public void complete() throws IOException
 	{
 		System.out.println("complete");
+	}
+
+	@Override
+	public void handle(OsmChange change) throws IOException
+	{
+		System.out.println("change: " + change.getType() + " "
+				+ change.getElements().size());
 	}
 
 }
