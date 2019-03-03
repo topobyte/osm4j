@@ -20,13 +20,18 @@ package de.topobyte.osm4j.osc;
 import java.io.IOException;
 import java.util.List;
 
+import com.slimjars.dist.gnu.trove.iterator.TLongIterator;
+import com.slimjars.dist.gnu.trove.list.TLongList;
 import com.slimjars.dist.gnu.trove.set.TLongSet;
 import com.slimjars.dist.gnu.trove.set.hash.TLongHashSet;
 
 import de.topobyte.osm4j.core.dataset.InMemoryListDataSet;
+import de.topobyte.osm4j.core.model.iface.EntityType;
 import de.topobyte.osm4j.core.model.iface.OsmEntity;
 import de.topobyte.osm4j.core.model.iface.OsmRelation;
+import de.topobyte.osm4j.core.model.iface.OsmRelationMember;
 import de.topobyte.osm4j.core.model.iface.OsmWay;
+import de.topobyte.osm4j.core.model.util.OsmModelUtil;
 import de.topobyte.osm4j.osc.dynsax.OsmChangeHandler;
 
 public class CompletenessChecker implements OsmChangeHandler
@@ -58,6 +63,13 @@ public class CompletenessChecker implements OsmChangeHandler
 		}
 	}
 
+	private void add(List<? extends OsmEntity> objects, TLongSet set)
+	{
+		for (OsmEntity object : objects) {
+			set.add(object.getId());
+		}
+	}
+
 	private void checkWays(List<OsmWay> ways)
 	{
 		for (OsmWay way : ways) {
@@ -74,18 +86,39 @@ public class CompletenessChecker implements OsmChangeHandler
 
 	private void checkWay(OsmWay way)
 	{
-		// TODO Auto-generated method stub
+		TLongList ids = OsmModelUtil.nodesAsList(way);
+		TLongIterator iterator = ids.iterator();
+		while (iterator.hasNext()) {
+			long id = iterator.next();
+			if (!nodeIds.contains(id)) {
+				System.out.println("missing node: " + id);
+			}
+		}
 	}
 
 	private void checkRelation(OsmRelation relation)
 	{
-		// TODO Auto-generated method stub
+		List<OsmRelationMember> members = OsmModelUtil.membersAsList(relation);
+		for (OsmRelationMember member : members) {
+			EntityType type = member.getType();
+			TLongSet set = set(type);
+			if (!set.contains(member.getId())) {
+				System.out.println(String.format("missing member: %s %d", type,
+						member.getId()));
+			}
+		}
 	}
 
-	private void add(List<? extends OsmEntity> objects, TLongSet set)
+	private TLongSet set(EntityType type)
 	{
-		for (OsmEntity object : objects) {
-			set.add(object.getId());
+		switch (type) {
+		default:
+		case Node:
+			return nodeIds;
+		case Relation:
+			return wayIds;
+		case Way:
+			return relationIds;
 		}
 	}
 
