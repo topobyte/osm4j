@@ -20,37 +20,37 @@ package de.topobyte.osm4j.osc;
 public class ReplicationFiles
 {
 
-	public static String minute(int num)
+	public static String minute(long num)
 	{
 		return file("minute", num, "osc.gz");
 	}
 
-	public static String minuteState(int num)
+	public static String minuteState(long num)
 	{
 		return file("minute", num, "state.txt");
 	}
 
-	public static String hour(int num)
+	public static String hour(long num)
 	{
 		return file("hour", num, "osc.gz");
 	}
 
-	public static String hourState(int num)
+	public static String hourState(long num)
 	{
 		return file("hour", num, "state.txt");
 	}
 
-	public static String day(int num)
+	public static String day(long num)
 	{
 		return file("day", num, "osc.gz");
 	}
 
-	public static String dayState(int num)
+	public static String dayState(long num)
 	{
 		return file("day", num, "state.txt");
 	}
 
-	public static String changesets(int num)
+	public static String changesets(long num)
 	{
 		return file("changesets", num, "osm.gz");
 	}
@@ -60,11 +60,11 @@ public class ReplicationFiles
 		return file("changesets", num, "state.txt");
 	}
 
-	public static String file(String type, int num, String extension)
+	public static String file(String type, long num, String extension)
 	{
-		int p3 = num % 1000;
-		int p2 = (num / 1000) % 1000;
-		int p1 = num / 1000000;
+		long p3 = num % 1000;
+		long p2 = (num / 1000) % 1000;
+		long p1 = num / 1000000;
 		return String.format(
 				"https://planet.openstreetmap.org/replication/%s/%03d/%03d/%03d.%s",
 				type, p1, p2, p3, extension);
