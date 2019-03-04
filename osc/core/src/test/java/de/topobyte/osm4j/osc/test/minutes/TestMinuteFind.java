@@ -18,8 +18,12 @@
 package de.topobyte.osm4j.osc.test.minutes;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 
-import org.joda.time.LocalDateTime;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+import org.joda.time.Minutes;
+import org.junit.Assert;
 import org.junit.Test;
 
 import de.topobyte.osm4j.core.access.OsmInputException;
@@ -32,22 +36,50 @@ public class TestMinuteFind
 	@Test
 	public void test() throws IOException, OsmInputException
 	{
-		ReplicationInfo last = ReplicationUtil.getMinuteInfo();
-		ReplicationInfo first = ReplicationUtil.getMinuteInfo(1);
 
-		LocalDateTime needle = new LocalDateTime(2015, 9, 17, 14, 36, 13);
-		find(last, first, needle);
-
+		test(new DateTime(2015, 9, 17, 12, 36, 13, DateTimeZone.UTC), 1575907);
+		test(new DateTime(2015, 9, 17, 18, 2, 1, DateTimeZone.UTC), 1576233);
+		test(new DateTime(2017, 8, 13, 15, 44, 02, DateTimeZone.UTC), 2576233);
 	}
 
-	private void find(ReplicationInfo high, ReplicationInfo low,
-			LocalDateTime needle)
+	private void test(DateTime needle, long expectedSequenceNumber)
+			throws MalformedURLException, IOException
+	{
+		ReplicationInfo last = ReplicationUtil.getMinuteInfo();
+		ReplicationInfo first = ReplicationUtil.getMinuteInfo(1);
+		ReplicationInfo found = find(last, first, needle);
+		Assert.assertEquals(expectedSequenceNumber, found.getSequenceNumber());
+	}
+
+	private ReplicationInfo find(ReplicationInfo high, ReplicationInfo low,
+			DateTime needle) throws MalformedURLException, IOException
 	{
 		System.out.println("Searching: " + needle);
 		System.out.println("Searching between:");
 		print(high);
 		print(low);
-		// TODO: implement binary search
+
+		Minutes minutes = Minutes.minutesBetween(low.getTime(), high.getTime());
+		System.out.println(minutes.getMinutes());
+
+		while (true) {
+			long midNum = (high.getSequenceNumber() + low.getSequenceNumber())
+					/ 2;
+			ReplicationInfo mid = ReplicationUtil.getMinuteInfo(midNum);
+
+			if (needle.isBefore(mid.getTime())) {
+				high = mid;
+			} else {
+				low = mid;
+			}
+			print(high);
+			print(low);
+			if (high.getSequenceNumber() - low.getSequenceNumber() < 2) {
+				break;
+			}
+		}
+
+		return low;
 	}
 
 	private void print(ReplicationInfo info)
