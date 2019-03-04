@@ -194,51 +194,6 @@ class OsmSaxHandler extends DynamicSaxHandler
 	@Override
 	public void emit(Data data) throws ParsingException
 	{
-		OsmMetadata metadata = null;
-		if (parseMetadata) {
-			String aVersion = data.getAttribute(ATTR_VERSION);
-			String aTimestamp = data.getAttribute(ATTR_TIMESTAMP);
-			String aUid = data.getAttribute(ATTR_UID);
-			String user = data.getAttribute(ATTR_USER);
-			String aChangeset = data.getAttribute(ATTR_CHANGESET);
-			String aVisible = data.getAttribute(ATTR_VISIBLE);
-
-			long uid = -1;
-			if (aUid != null) {
-				uid = Long.parseLong(aUid);
-			}
-
-			if (user == null) {
-				user = "";
-			}
-
-			int version = -1;
-			if (aVersion != null) {
-				version = Integer.parseInt(aVersion);
-			}
-
-			long changeset = -1;
-			if (aChangeset != null) {
-				changeset = Long.parseLong(aChangeset);
-			}
-
-			long timestamp = -1;
-			if (aTimestamp != null) {
-				DateTime date = dateParser.parse(aTimestamp);
-				timestamp = date.getMillis();
-			}
-
-			boolean visible = true;
-			if (aVisible != null) {
-				if (aVisible.equals("false")) {
-					visible = false;
-				}
-			}
-
-			metadata = new Metadata(version, timestamp, uid, user, changeset,
-					visible);
-		}
-
 		if (data.getElement() == create) {
 			OsmChange create = new OsmChange(ChangeType.CREATE);
 			fillEntities(create, data);
@@ -306,6 +261,9 @@ class OsmSaxHandler extends DynamicSaxHandler
 
 		Node node = new Node(id, lon, lat, (OsmMetadata) null);
 		fillTags(node, data);
+		if (parseMetadata) {
+			fillMetadata(node, data);
+		}
 		return node;
 	}
 
@@ -326,6 +284,9 @@ class OsmSaxHandler extends DynamicSaxHandler
 
 		Way way = new Way(id, nodes, (OsmMetadata) null);
 		fillTags(way, data);
+		if (parseMetadata) {
+			fillMetadata(way, data);
+		}
 		return way;
 	}
 
@@ -361,6 +322,9 @@ class OsmSaxHandler extends DynamicSaxHandler
 
 		Relation relation = new Relation(id, members, (OsmMetadata) null);
 		fillTags(relation, data);
+		if (parseMetadata) {
+			fillMetadata(relation, data);
+		}
 		return relation;
 	}
 
@@ -378,6 +342,53 @@ class OsmSaxHandler extends DynamicSaxHandler
 			tags.add(new Tag(k, v));
 		}
 		entity.setTags(tags);
+	}
+
+	private void fillMetadata(Entity entity, Data data)
+	{
+		String aVersion = data.getAttribute(ATTR_VERSION);
+		String aTimestamp = data.getAttribute(ATTR_TIMESTAMP);
+		String aUid = data.getAttribute(ATTR_UID);
+		String user = data.getAttribute(ATTR_USER);
+		String aChangeset = data.getAttribute(ATTR_CHANGESET);
+		String aVisible = data.getAttribute(ATTR_VISIBLE);
+
+		long uid = -1;
+		if (aUid != null) {
+			uid = Long.parseLong(aUid);
+		}
+
+		if (user == null) {
+			user = "";
+		}
+
+		int version = -1;
+		if (aVersion != null) {
+			version = Integer.parseInt(aVersion);
+		}
+
+		long changeset = -1;
+		if (aChangeset != null) {
+			changeset = Long.parseLong(aChangeset);
+		}
+
+		long timestamp = -1;
+		if (aTimestamp != null) {
+			DateTime date = dateParser.parse(aTimestamp);
+			timestamp = date.getMillis();
+		}
+
+		boolean visible = true;
+		if (aVisible != null) {
+			if (aVisible.equals("false")) {
+				visible = false;
+			}
+		}
+
+		OsmMetadata metadata = new Metadata(version, timestamp, uid, user,
+				changeset, visible);
+
+		entity.setMetadata(metadata);
 	}
 
 }
