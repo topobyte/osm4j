@@ -46,25 +46,25 @@ import de.topobyte.xml.dynsax.DynamicSaxHandler;
 import de.topobyte.xml.dynsax.Element;
 import de.topobyte.xml.dynsax.ParsingException;
 
-class OsmSaxHandler extends DynamicSaxHandler
+class OsmOscSaxHandler extends DynamicSaxHandler
 {
 
-	static OsmSaxHandler createInstance(boolean parseMetadata)
+	static OsmOscSaxHandler createInstance(boolean parseMetadata)
 	{
-		return new OsmSaxHandler(null, parseMetadata);
+		return new OsmOscSaxHandler(null, parseMetadata);
 	}
 
-	static OsmSaxHandler createInstance(OsmChangeHandler handler,
+	static OsmOscSaxHandler createInstance(OsmChangeHandler handler,
 			boolean parseMetadata)
 	{
-		return new OsmSaxHandler(handler, parseMetadata);
+		return new OsmOscSaxHandler(handler, parseMetadata);
 	}
 
 	private OsmChangeHandler handler;
 	private boolean parseMetadata;
 	private DateParser dateParser;
 
-	private OsmSaxHandler(OsmChangeHandler handler, boolean parseMetadata)
+	private OsmOscSaxHandler(OsmChangeHandler handler, boolean parseMetadata)
 	{
 		this.handler = handler;
 		this.parseMetadata = parseMetadata;

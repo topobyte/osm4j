@@ -77,7 +77,7 @@ public class OsmOscReader
 			throw new OsmInputException("error while creating xml parser", e);
 		}
 
-		OsmSaxHandler saxHandler = OsmSaxHandler.createInstance(handler,
+		OsmOscSaxHandler saxHandler = OsmOscSaxHandler.createInstance(handler,
 				parseMetadata);
 
 		try {
