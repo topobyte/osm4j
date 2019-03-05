@@ -22,7 +22,6 @@ import java.net.MalformedURLException;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
-import org.joda.time.Minutes;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -45,47 +44,8 @@ public class TestMinuteFind
 	private void test(DateTime needle, long expectedSequenceNumber)
 			throws MalformedURLException, IOException
 	{
-		ReplicationInfo last = ReplicationUtil.getMinuteInfo();
-		ReplicationInfo first = ReplicationUtil.getMinuteInfo(1);
-		ReplicationInfo found = find(last, first, needle);
+		ReplicationInfo found = ReplicationUtil.findMinute(needle);
 		Assert.assertEquals(expectedSequenceNumber, found.getSequenceNumber());
-	}
-
-	private ReplicationInfo find(ReplicationInfo high, ReplicationInfo low,
-			DateTime needle) throws MalformedURLException, IOException
-	{
-		System.out.println("Searching: " + needle);
-		System.out.println("Searching between:");
-		print(high);
-		print(low);
-
-		Minutes minutes = Minutes.minutesBetween(low.getTime(), high.getTime());
-		System.out.println(minutes.getMinutes());
-
-		while (true) {
-			long midNum = (high.getSequenceNumber() + low.getSequenceNumber())
-					/ 2;
-			ReplicationInfo mid = ReplicationUtil.getMinuteInfo(midNum);
-
-			if (needle.isBefore(mid.getTime())) {
-				high = mid;
-			} else {
-				low = mid;
-			}
-			print(high);
-			print(low);
-			if (high.getSequenceNumber() - low.getSequenceNumber() < 2) {
-				break;
-			}
-		}
-
-		return low;
-	}
-
-	private void print(ReplicationInfo info)
-	{
-		System.out.println(String.format("%s: %d", info.getTime(),
-				info.getSequenceNumber()));
 	}
 
 }

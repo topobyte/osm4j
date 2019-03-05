@@ -23,9 +23,15 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.apache.commons.io.IOUtils;
+import org.joda.time.DateTime;
+import org.joda.time.Minutes;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ReplicationUtil
 {
+
+	final static Logger logger = LoggerFactory.getLogger(ReplicationUtil.class);
 
 	public static ReplicationInfo getMinuteInfo()
 			throws MalformedURLException, IOException
@@ -51,6 +57,52 @@ public class ReplicationUtil
 		ReplicationInfo info = ReplicationState.parse(text);
 
 		return info;
+	}
+
+	public static ReplicationInfo findMinute(DateTime needle)
+			throws MalformedURLException, IOException
+	{
+		ReplicationInfo last = getMinuteInfo();
+		ReplicationInfo first = getMinuteInfo(1);
+		return findMinute(last, first, needle);
+	}
+
+	public static ReplicationInfo findMinute(ReplicationInfo high,
+			ReplicationInfo low, DateTime needle)
+			throws MalformedURLException, IOException
+	{
+		logger.debug("Searching: " + needle);
+		logger.debug("Searching between:");
+		log(high);
+		log(low);
+
+		Minutes minutes = Minutes.minutesBetween(low.getTime(), high.getTime());
+		logger.debug("minutes in between: " + minutes.getMinutes());
+
+		while (true) {
+			long midNum = (high.getSequenceNumber() + low.getSequenceNumber())
+					/ 2;
+			ReplicationInfo mid = getMinuteInfo(midNum);
+
+			if (needle.isBefore(mid.getTime())) {
+				high = mid;
+			} else {
+				low = mid;
+			}
+			log(high);
+			log(low);
+			if (high.getSequenceNumber() - low.getSequenceNumber() < 2) {
+				break;
+			}
+		}
+
+		return low;
+	}
+
+	private static void log(ReplicationInfo info)
+	{
+		logger.debug(String.format("%s: %d", info.getTime(),
+				info.getSequenceNumber()));
 	}
 
 }
