@@ -38,7 +38,7 @@ public class TestPrintFromOsmApi
 	public static void main(String[] args) throws IOException,
 			ParserConfigurationException, SAXException
 	{
-		String url = "http://api.openstreetmap.org/api/0.6/node/240109189";
+		String url = "https://api.openstreetmap.org/api/0.6/node/240109189";
 		InputStream input = new URL(url).openStream();
 
 		OsmIterator iterator = new OsmXmlIterator(input, true);

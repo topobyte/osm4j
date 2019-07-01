@@ -38,7 +38,7 @@ public class TestPrintFromOverpass
 	public static void main(String[] args) throws IOException,
 			ParserConfigurationException, SAXException
 	{
-		String url = "http://www.overpass-api.de/api/xapi?map?bbox="
+		String url = "https://www.overpass-api.de/api/xapi?map?bbox="
 				+ "13.465661,52.504055,13.469817,52.506204";
 		InputStream input = new URL(url).openStream();
 
