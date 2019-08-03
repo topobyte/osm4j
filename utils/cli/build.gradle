@@ -1,3 +1,50 @@
+buildscript {
+    repositories {
+        maven { url 'http://mvn.topobyte.de' }
+    }
+    dependencies {
+        classpath 'de.topobyte:gradle-launch-and-install-plugin:0.0.1'
+    }
+}
+
+apply plugin: 'application'
+apply plugin: 'de.topobyte.launch-and-install-gradle-plugin'
+
+startScripts.enabled = false
+
+scripts {
+    installationPath = 'topobyte/osm4j-utils'
+    makeselfLabel = 'Osm4j Utils'
+    createScript(project, 'de.topobyte.osm4j.utils.executables.OsmBboxFilter', 'OsmBboxFilter')
+    createScript(project, 'de.topobyte.osm4j.utils.executables.OsmCalculateBbox', 'OsmCalculateBbox')
+    createScript(project, 'de.topobyte.osm4j.utils.executables.OsmCat', 'OsmCat')
+    createScript(project, 'de.topobyte.osm4j.utils.executables.OsmCheckSorted', 'OsmCheckSorted')
+    createScript(project, 'de.topobyte.osm4j.utils.executables.OsmCollectNodes', 'OsmCollectNodes')
+    createScript(project, 'de.topobyte.osm4j.utils.executables.OsmCollectRelations', 'OsmCollectRelations')
+    createScript(project, 'de.topobyte.osm4j.utils.executables.OsmCollectWays', 'OsmCollectWays')
+    createScript(project, 'de.topobyte.osm4j.utils.executables.OsmContributorHistogram', 'OsmContributorHistogram')
+    createScript(project, 'de.topobyte.osm4j.utils.executables.OsmCount', 'OsmCount')
+    createScript(project, 'de.topobyte.osm4j.utils.executables.OsmCountCallback', 'OsmCountCallback')
+    createScript(project, 'de.topobyte.osm4j.utils.executables.OsmDropMetadata', 'OsmDropMetadata')
+    createScript(project, 'de.topobyte.osm4j.utils.executables.OsmDropTags', 'OsmDropTags')
+    createScript(project, 'de.topobyte.osm4j.utils.executables.OsmEntitySplit', 'OsmEntitySplit')
+    createScript(project, 'de.topobyte.osm4j.utils.executables.OsmFindMostRecentTimestamp', 'OsmFindMostRecentTimestamp')
+    createScript(project, 'de.topobyte.osm4j.utils.executables.OsmIdFilter', 'OsmIdFilter')
+    createScript(project, 'de.topobyte.osm4j.utils.executables.OsmKeyFilter', 'OsmKeyFilter')
+    createScript(project, 'de.topobyte.osm4j.utils.executables.OsmMerge', 'OsmMerge')
+    createScript(project, 'de.topobyte.osm4j.utils.executables.OsmReferenceStats', 'OsmReferenceStats')
+    createScript(project, 'de.topobyte.osm4j.utils.executables.OsmRegionFilter', 'OsmRegionFilter')
+    createScript(project, 'de.topobyte.osm4j.utils.executables.OsmSort', 'OsmSort')
+    createScript(project, 'de.topobyte.osm4j.utils.executables.OsmTagFilter', 'OsmTagFilter')
+    createScript(project, 'de.topobyte.osm4j.utils.executables.OsmTagFilterRegex', 'OsmTagFilterRegex')
+}
+
+distributions {
+    main {
+        baseName = 'osm4j-utils'
+    }
+}
+
 dependencies {
     compile project(':osm4j-utils')
 
