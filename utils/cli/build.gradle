@@ -3,7 +3,7 @@ buildscript {
         maven { url 'http://mvn.topobyte.de' }
     }
     dependencies {
-        classpath 'de.topobyte:gradle-launch-and-install-plugin:0.0.1'
+        classpath 'de.topobyte:gradle-launch-and-install-plugin:0.0.2'
     }
 }
 
@@ -12,7 +12,7 @@ apply plugin: 'de.topobyte.launch-and-install-gradle-plugin'
 
 startScripts.enabled = false
 
-scripts {
+launchAndInstall {
     installationPath = 'topobyte/osm4j-utils'
     makeselfLabel = 'Osm4j Utils'
     createScript(project, 'de.topobyte.osm4j.utils.executables.OsmBboxFilter', 'OsmBboxFilter')
