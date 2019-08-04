@@ -1,3 +1,65 @@
+buildscript {
+    repositories {
+        maven { url 'http://mvn.topobyte.de' }
+    }
+    dependencies {
+        classpath 'de.topobyte:gradle-launch-and-install-plugin:0.0.2'
+    }
+}
+
+apply plugin: 'application'
+apply plugin: 'de.topobyte.launch-and-install-gradle-plugin'
+
+startScripts.enabled = false
+
+launchAndInstall {
+    installationPath = 'topobyte/osm4j-extra'
+    makeselfLabel = 'Osm4j Extra'
+	createScript(project, 'de.topobyte.osm4j.extra.executables.BuildExtractionFiles', 'OsmExtraBuildExtractionFiles')
+	createScript(project, 'de.topobyte.osm4j.extra.executables.ComplexRelationsInfo', 'OsmExtraComplexRelationsInfo')
+	createScript(project, 'de.topobyte.osm4j.extra.executables.CreateBatchDirGeometry', 'OsmExtraCreateBatchDirGeometry')
+	createScript(project, 'de.topobyte.osm4j.extra.executables.CreateDataTreeBoxGeometry', 'OsmExtraCreateDataTreeBoxGeometry')
+	createScript(project, 'de.topobyte.osm4j.extra.executables.CreateEmptyDataTreeFromOther', 'OsmExtraCreateEmptyDataTreeFromOther')
+	createScript(project, 'de.topobyte.osm4j.extra.executables.CreateIdBboxListGeometry', 'OsmExtraCreateIdBboxListGeometry')
+	createScript(project, 'de.topobyte.osm4j.extra.executables.CreateNodeArray', 'OsmExtraCreateNodeArray')
+	createScript(project, 'de.topobyte.osm4j.extra.executables.CreateNodeTree', 'OsmExtraCreateNodeTree')
+	createScript(project, 'de.topobyte.osm4j.extra.executables.CreateNodeTreeMaxNodes', 'OsmExtraCreateNodeTreeMaxNodes')
+	createScript(project, 'de.topobyte.osm4j.extra.executables.CreateNodeTreeSplitDepth', 'OsmExtraCreateNodeTreeSplitDepth')
+	createScript(project, 'de.topobyte.osm4j.extra.executables.DistributeComplexRelations', 'OsmExtraDistributeComplexRelations')
+	createScript(project, 'de.topobyte.osm4j.extra.executables.DistributeRelations', 'OsmExtraDistributeRelations')
+	createScript(project, 'de.topobyte.osm4j.extra.executables.DistributeSimpleRelations', 'OsmExtraDistributeSimpleRelations')
+	createScript(project, 'de.topobyte.osm4j.extra.executables.DistributeWays', 'OsmExtraDistributeWays')
+	createScript(project, 'de.topobyte.osm4j.extra.executables.ExtractEntities', 'OsmExtraExtractEntities')
+	createScript(project, 'de.topobyte.osm4j.extra.executables.ExtractMemberIds', 'OsmExtraExtractMemberIds')
+	createScript(project, 'de.topobyte.osm4j.extra.executables.ExtractMissingWayNodes', 'OsmExtraExtractMissingWayNodes')
+	createScript(project, 'de.topobyte.osm4j.extra.executables.ExtractWayMemberNodeIds', 'OsmExtraExtractWayMemberNodeIds')
+	createScript(project, 'de.topobyte.osm4j.extra.executables.FindMissingWayNodes', 'OsmExtraFindMissingWayNodes')
+	createScript(project, 'de.topobyte.osm4j.extra.executables.MapWaysToTree', 'OsmExtraMapWaysToTree')
+	createScript(project, 'de.topobyte.osm4j.extra.executables.MapWaysToTreeUsingArray', 'OsmExtraMapWaysToTreeUsingArray')
+	createScript(project, 'de.topobyte.osm4j.extra.executables.MergeTreeFiles', 'OsmExtraMergeTreeFiles')
+	createScript(project, 'de.topobyte.osm4j.extra.executables.NodeArrayInfo', 'OsmExtraNodeArrayInfo')
+	createScript(project, 'de.topobyte.osm4j.extra.executables.NodeArrayShow', 'OsmExtraNodeArrayShow')
+	createScript(project, 'de.topobyte.osm4j.extra.executables.QueryBbox', 'OsmExtraQueryBbox')
+	createScript(project, 'de.topobyte.osm4j.extra.executables.QueryRegion', 'OsmExtraQueryRegion')
+	createScript(project, 'de.topobyte.osm4j.extra.executables.RelationGraphInfo', 'OsmExtraRelationGraphInfo')
+	createScript(project, 'de.topobyte.osm4j.extra.executables.RenameFiles', 'OsmExtraRenameFiles')
+	createScript(project, 'de.topobyte.osm4j.extra.executables.SeparateRelations', 'OsmExtraSeparateRelations')
+	createScript(project, 'de.topobyte.osm4j.extra.executables.SortComplexRelations', 'OsmExtraSortComplexRelations')
+	createScript(project, 'de.topobyte.osm4j.extra.executables.SortComplexRelationsAndCollectMembers', 'OsmExtraSortComplexRelationsAndCollectMembers')
+	createScript(project, 'de.topobyte.osm4j.extra.executables.SortSimpleRelations', 'OsmExtraSortSimpleRelations')
+	createScript(project, 'de.topobyte.osm4j.extra.executables.SortWaysByFirstNodeId', 'OsmExtraSortWaysByFirstNodeId')
+	createScript(project, 'de.topobyte.osm4j.extra.executables.SplitComplexRelations', 'OsmExtraSplitComplexRelations')
+	createScript(project, 'de.topobyte.osm4j.extra.executables.SplitNonTreeRelations', 'OsmExtraSplitNonTreeRelations')
+	createScript(project, 'de.topobyte.osm4j.extra.executables.SplitRelationsAndCollectMembers', 'OsmExtraSplitRelationsAndCollectMembers')
+	createScript(project, 'de.topobyte.osm4j.extra.executables.SplitSimpleRelations', 'OsmExtraSplitSimpleRelations')
+}
+
+distributions {
+    main {
+        baseName = 'osm4j-extra'
+    }
+}
+
 dependencies {
     compile project(':osm4j-extra')
 
