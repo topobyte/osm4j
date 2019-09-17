@@ -22,6 +22,9 @@ subprojects {
         mavenCentral()
     }
 
+    sourceCompatibility = 1.7
+    targetCompatibility = 1.7
+
     task sourcesJar(type: Jar, dependsOn: classes) {
         classifier = 'sources'
         from sourceSets.main.allSource
