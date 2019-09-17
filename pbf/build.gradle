@@ -24,6 +24,9 @@ subprojects {
 
     sourceCompatibility = 1.7
     targetCompatibility = 1.7
+}
+
+configure([project(':osm4j-pbf'), project(':osm4j-pbf-full-runtime')]) {
 
     task sourcesJar(type: Jar, dependsOn: classes) {
         classifier = 'sources'
@@ -32,5 +35,36 @@ subprojects {
 
     artifacts {
         archives sourcesJar
+    }
+
+    def global = new File('info.pom');
+    def local = new File(project.projectDir, 'info.pom');
+
+    def pomInfo = new XmlSlurper().parse(global);
+    if (local.exists()) {
+        def pomInfoL = new XmlSlurper().parse(local);
+        pomInfo.name = pomInfoL.name
+        pomInfo.description = pomInfoL.description
+    }
+
+    afterEvaluate { project ->
+        uploadArchives {
+            repositories {
+                mavenDeployer {
+                    pom.project {
+                        name pomInfo.name
+                        description pomInfo.description
+                        url pomInfo.url
+                        licenses {
+                            license {
+                                name pomInfo.licenseName
+                                url pomInfo.licenseUrl
+                                distribution pomInfo.licenseDistribution
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 }
