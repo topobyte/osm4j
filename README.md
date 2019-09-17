@@ -24,3 +24,4 @@ There are a number of repositories concerning osm4j:
 
 * [mojodna/osm2orc](https://github.com/mojodna/osm2orc)
 * [FutureCitiesCatapult/TomboloDigitalConnector](https://github.com/FutureCitiesCatapult/TomboloDigitalConnector)
+* [tordanik/OSM2World](https://github.com/tordanik/OSM2World)
