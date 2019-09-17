@@ -1,5 +1,5 @@
 rootProject.name = pName
-include 'core', 'lite', 'testing'
+include 'core', 'full', 'testing'
 project(':core').name = 'osm4j-pbf'
-project(':lite').name = 'osm4j-pbf-lite'
+project(':full').name = 'osm4j-pbf-full-runtime'
 project(':testing').name = 'osm4j-pbf-testing'

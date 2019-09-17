@@ -16,7 +16,7 @@ dependencies {
 
     compile 'com.slimjars.trove4j:trove4j-object-int-hash-map:1.0.1'
 
-    compile 'com.google.protobuf:protobuf-java:3.9.1'
+    compile 'com.google.protobuf:protobuf-javalite:3.9.1'
 
     compile 'net.jpountz.lz4:lz4:1.3.0'
 

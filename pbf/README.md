@@ -21,5 +21,5 @@ Which is released under the LGPL.
 
 ## Generating the protocol buffers source
 
-    protoc --java_out core/src/gen/java res/proto/*
-    protoc --java_out lite:lite/src/gen/java res/proto/*
+    protoc --java_out lite:core/src/gen/java res/proto/*
+    protoc --java_out full/src/gen/java res/proto/*
