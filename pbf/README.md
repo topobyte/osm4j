@@ -23,3 +23,19 @@ Which is released under the LGPL.
 
     protoc --java_out lite:core/src/gen/java res/proto/*
     protoc --java_out full/src/gen/java res/proto/*
+
+# Download
+
+We provide access to the artifacts via our own Maven repository:
+
+<https://mvn.topobyte.de>
+
+The packages are available at these coordinates:
+
+    de.topobyte:osm4j-pbf:0.2.0
+    de.topobyte:osm4j-pbf-full-runtime:0.2.0
+
+You can also browse the repository online:
+
+* <https://mvn.topobyte.de/de/topobyte/osm4j-pbf/>
+* <https://mvn.topobyte.de/de/topobyte/osm4j-pbf-full-runtime/>
