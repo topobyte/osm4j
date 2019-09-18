@@ -27,3 +27,12 @@ The packages are available at these coordinates:
 You can also browse the repository online:
 
 * <https://mvn.topobyte.de/de/topobyte/osm4j-utils/>
+
+# Installation
+
+To install the CLI tools, run this:
+
+    ./install.sh
+
+This command will build the tools and install them into your `~/bin`
+directory.
