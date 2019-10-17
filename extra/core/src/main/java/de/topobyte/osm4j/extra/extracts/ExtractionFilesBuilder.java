@@ -352,6 +352,11 @@ public class ExtractionFilesBuilder
 
 	private void splitEntities() throws IOException
 	{
+		if (Files.exists(pathNodes) || Files.exists(pathWays)
+				|| Files.exists(pathRelations)) {
+			return;
+		}
+
 		// Split entities
 		t.start(KEY_SPLIT);
 
