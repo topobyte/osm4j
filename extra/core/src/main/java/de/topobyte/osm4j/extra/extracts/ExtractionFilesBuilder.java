@@ -172,11 +172,14 @@ public class ExtractionFilesBuilder
 	private OsmOutputConfig outputConfigRelations;
 	private OsmOutputConfig outputConfigTreeFinal;
 
+	private boolean continuePreviousBuild;
+
 	public ExtractionFilesBuilder(Path pathInput, FileFormat inputFormat,
 			Path pathOutput, FileFormat outputFormat,
 			ExtractionFileNames fileNames, int maxNodes,
 			boolean includeMetadata, int maxMembersSimple,
-			int maxMembersComplex, boolean computeBbox)
+			int maxMembersComplex, boolean computeBbox,
+			boolean continuePreviousBuild)
 	{
 		this.pathInput = pathInput;
 		this.inputFormat = inputFormat;
@@ -188,6 +191,7 @@ public class ExtractionFilesBuilder
 		this.maxMembersSimple = maxMembersSimple;
 		this.maxMembersComplex = maxMembersComplex;
 		this.computeBbox = computeBbox;
+		this.continuePreviousBuild = continuePreviousBuild;
 	}
 
 	public void execute() throws IOException, OsmInputException
@@ -199,8 +203,13 @@ public class ExtractionFilesBuilder
 			System.exit(1);
 		}
 		if (pathOutput.toFile().listFiles().length != 0) {
-			System.out.println("Output directory is not empty");
-			System.exit(1);
+			if (continuePreviousBuild) {
+				System.out.println(
+						"Output directory is not empty, but continuing anyway");
+			} else {
+				System.out.println("Output directory is not empty");
+				System.exit(1);
+			}
 		}
 
 		extension = OsmIoUtils.extension(outputFormat);

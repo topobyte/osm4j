@@ -51,6 +51,7 @@ public class BuildExtractionFiles extends AbstractExecutableInput
 	private static final String OPTION_KEEP_RELATION_BATCHES = "keep-relation-batches";
 	private static final String OPTION_KEEP_NONTREE_RELATIONS = "keep-nontree-relations";
 	private static final String OPTION_KEEP_UNSORTED_RELATIONS = "keep-unsorted-relations";
+	private static final String OPTION_CONTINUE_PREVIOUS_BUILD = "continue-previous-build";
 
 	@Override
 	protected String getHelpMessage()
@@ -89,6 +90,8 @@ public class BuildExtractionFiles extends AbstractExecutableInput
 	private boolean keepNonTreeRelations = false;
 	private boolean keepUnsortedRelations = false;
 
+	private boolean continuePreviousBuild = false;
+
 	public BuildExtractionFiles()
 	{
 		// @formatter:off
@@ -109,6 +112,7 @@ public class BuildExtractionFiles extends AbstractExecutableInput
 		OptionHelper.addL(options, OPTION_KEEP_RELATION_BATCHES, false, false, "keep the directories with relation batches");
 		OptionHelper.addL(options, OPTION_KEEP_NONTREE_RELATIONS, false, false, "keep the files containing nontree relations");
 		OptionHelper.addL(options, OPTION_KEEP_UNSORTED_RELATIONS, false, false, "keep the files containing unsorted complex relation groups");
+		OptionHelper.addL(options, OPTION_CONTINUE_PREVIOUS_BUILD, false, false, "continue from a previous, aborted or otherwise incomplete run");
 		// @formatter:on
 	}
 
@@ -167,6 +171,8 @@ public class BuildExtractionFiles extends AbstractExecutableInput
 		keepNonTreeRelations = line.hasOption(OPTION_KEEP_NONTREE_RELATIONS);
 		keepUnsortedRelations = line.hasOption(OPTION_KEEP_UNSORTED_RELATIONS);
 
+		continuePreviousBuild = line.hasOption(OPTION_CONTINUE_PREVIOUS_BUILD);
+
 		if (keepAll || keepSplitted) {
 			keepSplittedNodes = true;
 			keepSplittedWays = true;
@@ -186,7 +192,8 @@ public class BuildExtractionFiles extends AbstractExecutableInput
 		ExtractionFilesBuilder builder = new ExtractionFilesBuilder(
 				Paths.get(pathInput), inputFormat, Paths.get(pathOutput),
 				outputFormat, fileNames, maxNodes, includeMetadata,
-				maxMembersSimple, maxMembersComplex, computeBbox);
+				maxMembersSimple, maxMembersComplex, computeBbox,
+				continuePreviousBuild);
 
 		builder.setKeepSplittedNodes(keepSplittedNodes);
 		builder.setKeepSplittedWays(keepSplittedWays);
