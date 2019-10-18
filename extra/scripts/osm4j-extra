@@ -15,4 +15,4 @@ fi
 
 CLASSPATH="$LIBS/*"
 
-exec java -cp "$CLASSPATH" "$@"
+exec java -Xmx6g -cp "$CLASSPATH" "$@"
