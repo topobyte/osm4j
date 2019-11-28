@@ -25,6 +25,7 @@ launchAndInstall {
     createScript(project, 'de.topobyte.osm4j.utils.executables.OsmContributorHistogram', 'OsmContributorHistogram')
     createScript(project, 'de.topobyte.osm4j.utils.executables.OsmCount', 'OsmCount')
     createScript(project, 'de.topobyte.osm4j.utils.executables.OsmCountCallback', 'OsmCountCallback')
+    createScript(project, 'de.topobyte.osm4j.utils.executables.OsmDownloadRegionGeometry', 'OsmDownloadRegionGeometry')
     createScript(project, 'de.topobyte.osm4j.utils.executables.OsmDropMetadata', 'OsmDropMetadata')
     createScript(project, 'de.topobyte.osm4j.utils.executables.OsmDropTags', 'OsmDropTags')
     createScript(project, 'de.topobyte.osm4j.utils.executables.OsmEntitySplit', 'OsmEntitySplit')
