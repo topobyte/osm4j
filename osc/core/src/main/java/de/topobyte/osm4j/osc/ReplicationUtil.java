@@ -18,11 +18,15 @@
 package de.topobyte.osm4j.osc;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.MalformedURLException;
-import java.net.URL;
 
-import org.apache.commons.io.IOUtils;
+import org.apache.http.HttpEntity;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
 import org.joda.time.DateTime;
 import org.joda.time.Minutes;
 import org.slf4j.Logger;
@@ -33,33 +37,54 @@ public class ReplicationUtil
 
 	final static Logger logger = LoggerFactory.getLogger(ReplicationUtil.class);
 
-	public static ReplicationInfo getMinuteInfo()
+	private CloseableHttpClient httpclient;
+
+	public ReplicationUtil()
+	{
+		httpclient = HttpClients.createDefault();
+	}
+
+	public ReplicationUtil(CloseableHttpClient httpclient)
+	{
+		this.httpclient = httpclient;
+	}
+
+	public void closeHttpClient() throws IOException
+	{
+		httpclient.close();
+	}
+
+	public ReplicationInfo getMinuteInfo()
 			throws MalformedURLException, IOException
 	{
 		String url = ReplicationFiles.minuteState();
-
-		InputStream input = new URL(url).openConnection().getInputStream();
-		String text = IOUtils.toString(input);
+		String text = text(url);
 
 		ReplicationInfo info = ReplicationState.parse(text);
 
 		return info;
 	}
 
-	public static ReplicationInfo getMinuteInfo(long sequenceNumber)
+	public ReplicationInfo getMinuteInfo(long sequenceNumber)
 			throws MalformedURLException, IOException
 	{
 		String url = ReplicationFiles.minuteState(sequenceNumber);
-
-		InputStream input = new URL(url).openConnection().getInputStream();
-		String text = IOUtils.toString(input);
+		String text = text(url);
 
 		ReplicationInfo info = ReplicationState.parse(text);
 
 		return info;
 	}
 
-	public static ReplicationInfo findMinute(DateTime needle)
+	private String text(String url) throws ClientProtocolException, IOException
+	{
+		HttpGet get = new HttpGet(url);
+		CloseableHttpResponse response = httpclient.execute(get);
+		HttpEntity entity = response.getEntity();
+		return EntityUtils.toString(entity);
+	}
+
+	public ReplicationInfo findMinute(DateTime needle)
 			throws MalformedURLException, IOException
 	{
 		ReplicationInfo last = getMinuteInfo();
@@ -67,9 +92,8 @@ public class ReplicationUtil
 		return findMinute(last, first, needle);
 	}
 
-	public static ReplicationInfo findMinute(ReplicationInfo high,
-			ReplicationInfo low, DateTime needle)
-			throws MalformedURLException, IOException
+	public ReplicationInfo findMinute(ReplicationInfo high, ReplicationInfo low,
+			DateTime needle) throws MalformedURLException, IOException
 	{
 		logger.debug("Searching: " + needle);
 		logger.debug("Searching between:");
@@ -99,7 +123,7 @@ public class ReplicationUtil
 		return low;
 	}
 
-	private static void log(ReplicationInfo info)
+	private void log(ReplicationInfo info)
 	{
 		logger.debug(String.format("%s: %d", info.getTime(),
 				info.getSequenceNumber()));

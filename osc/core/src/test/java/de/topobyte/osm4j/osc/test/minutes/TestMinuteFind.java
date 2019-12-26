@@ -35,7 +35,6 @@ public class TestMinuteFind
 	@Test
 	public void test() throws IOException, OsmInputException
 	{
-
 		test(new DateTime(2015, 9, 17, 12, 36, 13, DateTimeZone.UTC), 1575907);
 		test(new DateTime(2015, 9, 17, 18, 2, 1, DateTimeZone.UTC), 1576233);
 		test(new DateTime(2017, 8, 13, 15, 44, 02, DateTimeZone.UTC), 2576233);
@@ -44,7 +43,9 @@ public class TestMinuteFind
 	private void test(DateTime needle, long expectedSequenceNumber)
 			throws MalformedURLException, IOException
 	{
-		ReplicationInfo found = ReplicationUtil.findMinute(needle);
+		ReplicationUtil util = new ReplicationUtil();
+		ReplicationInfo found = util.findMinute(needle);
+		util.closeHttpClient();
 		Assert.assertEquals(expectedSequenceNumber, found.getSequenceNumber());
 	}
 

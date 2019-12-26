@@ -19,10 +19,14 @@ package de.topobyte.osm4j.osc.test;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
 import java.util.Map;
 
 import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
+import org.apache.http.HttpEntity;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
 import org.junit.Test;
 
 import com.vividsolutions.jts.geom.Envelope;
@@ -47,11 +51,16 @@ public class TestBboxOnlineMany implements OsmChangeHandler
 	@Test
 	public void test() throws IOException, OsmInputException
 	{
+		CloseableHttpClient httpclient = HttpClients.createDefault();
+
 		long sn = 3392499;
 		for (int i = 0; i < 100; i++) {
 			String url = ReplicationFiles.minute(sn + i);
 
-			InputStream cinput = new URL(url).openConnection().getInputStream();
+			HttpGet get = new HttpGet(url);
+			CloseableHttpResponse response = httpclient.execute(get);
+			HttpEntity entity = response.getEntity();
+			InputStream cinput = entity.getContent();
 			InputStream input = new GzipCompressorInputStream(cinput);
 
 			OsmOscReader reader = new OsmOscReader(input, true);
