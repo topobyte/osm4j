@@ -1,2 +1,3 @@
 *.swp
 .gradle
+/core/src/test/resources/secure.properties

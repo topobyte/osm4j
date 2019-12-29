@@ -4,6 +4,11 @@ if (project.hasProperty("topobyte")) {
 }
 
 dependencies {
+    compile 'org.apache.httpcomponents:httpclient:4.5.5'
+    compile 'org.slf4j:slf4j-api:1.6.1'
+
+    testRuntime 'org.slf4j:slf4j-log4j12:1.6.1'
+    testRuntime 'log4j:log4j:1.2.16'
 }
 
 def pomInfo = new XmlSlurper().parse(new File(projectDir, 'info.pom'));
