@@ -21,3 +21,5 @@ afterEvaluate { project ->
         }
     }
 }
+
+eclipse.project.name = 'osm4j-edit'
