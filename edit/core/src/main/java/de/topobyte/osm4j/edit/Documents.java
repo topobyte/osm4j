@@ -53,7 +53,7 @@ public class Documents
 		Element eTag = document.createElement("tag");
 		eChangeset.appendChild(eTag);
 		eTag.setAttribute("k", "created_by");
-		eTag.setAttribute("v", "test 1.0");
+		eTag.setAttribute("v", "osm4j-edit 0.0.1");
 
 		return document;
 	}
