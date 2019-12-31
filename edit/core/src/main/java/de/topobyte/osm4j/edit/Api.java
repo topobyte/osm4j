@@ -31,7 +31,10 @@ import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
+import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.BasicCredentialsProvider;
@@ -66,7 +69,7 @@ public class Api
 	}
 
 	private CloseableHttpResponse executeForResponse(URIBuilder builder,
-			String payload)
+			Method method, String payload)
 			throws URISyntaxException, ClientProtocolException, IOException
 	{
 		CredentialsProvider provider = new BasicCredentialsProvider();
@@ -77,26 +80,54 @@ public class Api
 		CloseableHttpClient client = HttpClientBuilder.create()
 				.setDefaultCredentialsProvider(provider).build();
 
-		HttpPut request = new HttpPut(builder.build());
-		request.setEntity(new StringEntity(payload));
+		HttpUriRequest request = null;
+		switch (method) {
+		default:
+		case GET: {
+			request = new HttpGet(builder.build());
+			break;
+		}
+		case POST: {
+			HttpPost post = new HttpPost(builder.build());
+			post.setEntity(new StringEntity(payload));
+			request = post;
+			break;
+		}
+		case PUT: {
+			HttpPut put = new HttpPut(builder.build());
+			put.setEntity(new StringEntity(payload));
+			request = put;
+			break;
+		}
+		case DELETE: {
+			HttpDeleteWithBody delete = new HttpDeleteWithBody(builder.build());
+			delete.setEntity(new StringEntity(payload));
+			request = delete;
+			break;
+		}
+		}
 
 		CloseableHttpResponse response = client.execute(request);
 		return response;
 	}
 
-	private String executeForString(URIBuilder builder, String payload)
+	private String executeForString(URIBuilder builder, Method method,
+			String payload)
 			throws URISyntaxException, ClientProtocolException, IOException
 	{
-		CloseableHttpResponse response = executeForResponse(builder, payload);
+		CloseableHttpResponse response = executeForResponse(builder, method,
+				payload);
 		HttpEntity entity = response.getEntity();
 		String responseText = EntityUtils.toString(entity);
 		return responseText;
 	}
 
-	private StatusLine executeForStatus(URIBuilder builder, String payload)
+	private StatusLine executeForStatus(URIBuilder builder, Method method,
+			String payload)
 			throws URISyntaxException, ClientProtocolException, IOException
 	{
-		CloseableHttpResponse response = executeForResponse(builder, payload);
+		CloseableHttpResponse response = executeForResponse(builder, method,
+				payload);
 		return response.getStatusLine();
 	}
 
@@ -109,7 +140,7 @@ public class Api
 		URIBuilder builder = builder();
 		builder.setPath("/api/0.6/changeset/create");
 
-		String responseText = executeForString(builder, payload);
+		String responseText = executeForString(builder, Method.PUT, payload);
 
 		long id = Long.parseLong(responseText);
 		return new Changeset(id);
@@ -126,7 +157,7 @@ public class Api
 		builder.setPath(String.format("/api/0.6/changeset/%d/close",
 				changeset.getId()));
 
-		StatusLine status = executeForStatus(builder, payload);
+		StatusLine status = executeForStatus(builder, Method.PUT, payload);
 		return status.getStatusCode() == HttpStatus.SC_OK;
 	}
 
@@ -140,10 +171,30 @@ public class Api
 		URIBuilder builder = builder();
 		builder.setPath("/api/0.6/node/create");
 
-		String responseText = executeForString(builder, payload);
+		String responseText = executeForString(builder, Method.PUT, payload);
 
 		long id = Long.parseLong(responseText);
 		return id;
+	}
+
+	public RequestResult deleteNode(Changeset changeset, long id, int version,
+			double lon, double lat)
+			throws ParserConfigurationException, IOException, URISyntaxException
+	{
+		Document document = Documents.deleteNode(changeset, id, version, lon,
+				lat);
+		String payload = Documents.toString(document);
+
+		URIBuilder builder = builder();
+		builder.setPath(String.format("/api/0.6/node/%d", id));
+
+		CloseableHttpResponse response = executeForResponse(builder,
+				Method.DELETE, payload);
+		HttpEntity entity = response.getEntity();
+		String responseText = EntityUtils.toString(entity);
+		StatusLine status = response.getStatusLine();
+		return new RequestResult(status.getStatusCode(), responseText,
+				status.getStatusCode() == HttpStatus.SC_OK);
 	}
 
 }

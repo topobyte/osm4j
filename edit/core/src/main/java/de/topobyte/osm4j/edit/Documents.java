@@ -84,6 +84,24 @@ public class Documents
 		return document;
 	}
 
+	public static Document deleteNode(Changeset changeset, long id, int version,
+			double lon, double lat) throws ParserConfigurationException
+	{
+		Document document = document();
+
+		Element eOsm = document.createElement("osm");
+		document.appendChild(eOsm);
+		Element eNode = document.createElement("node");
+		eOsm.appendChild(eNode);
+		eNode.setAttribute("id", Long.toString(id));
+		eNode.setAttribute("version", Integer.toString(version));
+		eNode.setAttribute("changeset", Long.toString(changeset.getId()));
+		eNode.setAttribute("lon", Double.toString(lon));
+		eNode.setAttribute("lat", Double.toString(lat));
+
+		return document;
+	}
+
 	public static String toString(Document document) throws IOException
 	{
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
