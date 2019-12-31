@@ -18,17 +18,25 @@
 package de.topobyte.osm4j.edit;
 
 import java.io.IOException;
-import java.net.URISyntaxException;
+import java.io.InputStream;
+import java.util.Properties;
 
-public class TestCreateNode
+public class TestUtil
 {
 
-	public static void main(String[] args)
-			throws IOException, URISyntaxException
+	public static Api createApi() throws IOException
 	{
-		Api api = TestUtil.createApi();
-		Changeset changeset = api.createChangeset();
-		System.out.println(changeset.getId());
+		Properties properties = new Properties();
+		try (InputStream input = Thread.currentThread().getContextClassLoader()
+				.getResourceAsStream("secure.properties")) {
+			properties.load(input);
+		}
+
+		String user = (String) properties.get("user");
+		String pass = (String) properties.get("pass");
+
+		Api api = new Api(user, pass);
+		return api;
 	}
 
 }
