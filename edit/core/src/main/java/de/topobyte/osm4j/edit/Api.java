@@ -19,10 +19,13 @@ package de.topobyte.osm4j.edit;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.List;
 
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.http.HttpEntity;
+import org.apache.http.HttpStatus;
+import org.apache.http.StatusLine;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.ClientProtocolException;
@@ -36,6 +39,8 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 import org.w3c.dom.Document;
+
+import de.topobyte.osm4j.core.model.iface.OsmTag;
 
 public class Api
 {
@@ -60,15 +65,10 @@ public class Api
 		return uriBuilder;
 	}
 
-	public Changeset createChangeset() throws URISyntaxException,
-			ClientProtocolException, IOException, ParserConfigurationException
+	private CloseableHttpResponse executeForResponse(URIBuilder builder,
+			String payload)
+			throws URISyntaxException, ClientProtocolException, IOException
 	{
-		Document document = Documents.createChangeset();
-		String payload = Documents.toString(document);
-
-		URIBuilder builder = builder();
-		builder.setPath("/api/0.6/changeset/create");
-
 		CredentialsProvider provider = new BasicCredentialsProvider();
 		UsernamePasswordCredentials credentials = new UsernamePasswordCredentials(
 				user, pass);
@@ -81,11 +81,69 @@ public class Api
 		request.setEntity(new StringEntity(payload));
 
 		CloseableHttpResponse response = client.execute(request);
+		return response;
+	}
+
+	private String executeForString(URIBuilder builder, String payload)
+			throws URISyntaxException, ClientProtocolException, IOException
+	{
+		CloseableHttpResponse response = executeForResponse(builder, payload);
 		HttpEntity entity = response.getEntity();
 		String responseText = EntityUtils.toString(entity);
+		return responseText;
+	}
+
+	private StatusLine executeForStatus(URIBuilder builder, String payload)
+			throws URISyntaxException, ClientProtocolException, IOException
+	{
+		CloseableHttpResponse response = executeForResponse(builder, payload);
+		return response.getStatusLine();
+	}
+
+	public Changeset createChangeset() throws URISyntaxException,
+			ClientProtocolException, IOException, ParserConfigurationException
+	{
+		Document document = Documents.createChangeset();
+		String payload = Documents.toString(document);
+
+		URIBuilder builder = builder();
+		builder.setPath("/api/0.6/changeset/create");
+
+		String responseText = executeForString(builder, payload);
 
 		long id = Long.parseLong(responseText);
 		return new Changeset(id);
+	}
+
+	public boolean closeChangeset(Changeset changeset)
+			throws URISyntaxException, ClientProtocolException, IOException,
+			ParserConfigurationException
+	{
+		Document document = Documents.createChangeset();
+		String payload = Documents.toString(document);
+
+		URIBuilder builder = builder();
+		builder.setPath(String.format("/api/0.6/changeset/%d/close",
+				changeset.getId()));
+
+		StatusLine status = executeForStatus(builder, payload);
+		return status.getStatusCode() == HttpStatus.SC_OK;
+	}
+
+	public long createNode(Changeset changeset, double lon, double lat,
+			List<? extends OsmTag> tags)
+			throws ParserConfigurationException, IOException, URISyntaxException
+	{
+		Document document = Documents.createNode(changeset, lon, lat, tags);
+		String payload = Documents.toString(document);
+
+		URIBuilder builder = builder();
+		builder.setPath("/api/0.6/node/create");
+
+		String responseText = executeForString(builder, payload);
+
+		long id = Long.parseLong(responseText);
+		return id;
 	}
 
 }

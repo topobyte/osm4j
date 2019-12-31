@@ -4,6 +4,7 @@ if (project.hasProperty("topobyte")) {
 }
 
 dependencies {
+    compile 'de.topobyte:osm4j-core:0.1.0'
     compile 'de.topobyte:xml4jah-dom:0.0.5'
     compile 'org.apache.httpcomponents:httpclient:4.5.5'
     compile 'org.slf4j:slf4j-api:1.6.1'

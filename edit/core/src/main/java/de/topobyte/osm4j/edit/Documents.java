@@ -19,6 +19,7 @@ package de.topobyte.osm4j.edit;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -27,26 +28,58 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import de.topobyte.osm4j.core.model.iface.OsmTag;
 import de.topobyte.xml4jah.core.DocumentWriterConfig;
 import de.topobyte.xml4jah.dom.DocumentWriter;
 
 public class Documents
 {
 
-	public static Document createChangeset() throws ParserConfigurationException
+	private static Document document() throws ParserConfigurationException
 	{
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder docBuilder = factory.newDocumentBuilder();
-		Document document = docBuilder.newDocument();
+		return docBuilder.newDocument();
+	}
 
-		Element osm = document.createElement("osm");
-		document.appendChild(osm);
-		Element changeset = document.createElement("changeset");
-		osm.appendChild(changeset);
-		Element tag = document.createElement("tag");
-		changeset.appendChild(tag);
-		tag.setAttribute("k", "created_by");
-		tag.setAttribute("v", "test 1.0");
+	public static Document createChangeset() throws ParserConfigurationException
+	{
+		Document document = document();
+
+		Element eOsm = document.createElement("osm");
+		document.appendChild(eOsm);
+		Element eChangeset = document.createElement("changeset");
+		eOsm.appendChild(eChangeset);
+		Element eTag = document.createElement("tag");
+		eChangeset.appendChild(eTag);
+		eTag.setAttribute("k", "created_by");
+		eTag.setAttribute("v", "test 1.0");
+
+		return document;
+	}
+
+	public static Document createNode(Changeset changeset, double lon,
+			double lat, List<? extends OsmTag> tags)
+			throws ParserConfigurationException
+	{
+		Document document = document();
+
+		Element eOsm = document.createElement("osm");
+		document.appendChild(eOsm);
+		Element eNode = document.createElement("node");
+		eOsm.appendChild(eNode);
+		eNode.setAttribute("changeset", Long.toString(changeset.getId()));
+		eNode.setAttribute("lon", Double.toString(lon));
+		eNode.setAttribute("lat", Double.toString(lat));
+
+		if (tags != null) {
+			for (OsmTag tag : tags) {
+				Element eTag = document.createElement("tag");
+				eNode.appendChild(eTag);
+				eTag.setAttribute("k", tag.getKey());
+				eTag.setAttribute("v", tag.getValue());
+			}
+		}
 
 		return document;
 	}

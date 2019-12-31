@@ -22,7 +22,7 @@ import java.net.URISyntaxException;
 
 import javax.xml.parsers.ParserConfigurationException;
 
-public class TestCreateNode
+public class TestCreateChangeset
 {
 
 	public static void main(String[] args)
@@ -31,10 +31,6 @@ public class TestCreateNode
 		Api api = TestUtil.createApi();
 		Changeset changeset = api.createChangeset();
 		System.out.println("created changeset " + changeset.getId());
-		long id = api.createNode(changeset, 10.1, 50.2, null);
-		System.out.println("created node " + id);
-		boolean success = api.closeChangeset(changeset);
-		System.out.println("closed? " + success);
 	}
 
 }
