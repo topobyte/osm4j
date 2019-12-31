@@ -20,6 +20,8 @@ package de.topobyte.osm4j.edit;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
+import javax.xml.parsers.ParserConfigurationException;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
@@ -33,6 +35,7 @@ import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
+import org.w3c.dom.Document;
 
 public class Api
 {
@@ -57,10 +60,11 @@ public class Api
 		return uriBuilder;
 	}
 
-	public Changeset createChangeset()
-			throws URISyntaxException, ClientProtocolException, IOException
+	public Changeset createChangeset() throws URISyntaxException,
+			ClientProtocolException, IOException, ParserConfigurationException
 	{
-		String payload = "<osm><changeset><tag k=\"created_by\" v=\"test 1.0\"/></changeset></osm>";
+		Document document = Documents.createChangeset();
+		String payload = Documents.toString(document);
 
 		URIBuilder builder = builder();
 		builder.setPath("/api/0.6/changeset/create");

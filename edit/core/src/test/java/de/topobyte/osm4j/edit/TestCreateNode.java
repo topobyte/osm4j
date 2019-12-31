@@ -20,11 +20,13 @@ package de.topobyte.osm4j.edit;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
+import javax.xml.parsers.ParserConfigurationException;
+
 public class TestCreateNode
 {
 
 	public static void main(String[] args)
-			throws IOException, URISyntaxException
+			throws IOException, URISyntaxException, ParserConfigurationException
 	{
 		Api api = TestUtil.createApi();
 		Changeset changeset = api.createChangeset();
