@@ -20,4 +20,16 @@ package de.topobyte.osm4j.edit;
 public class Changeset
 {
 
+	private long id;
+
+	public Changeset(long id)
+	{
+		this.id = id;
+	}
+
+	public long getId()
+	{
+		return id;
+	}
+
 }
