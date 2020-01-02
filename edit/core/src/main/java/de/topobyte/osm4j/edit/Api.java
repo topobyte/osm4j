@@ -43,7 +43,10 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 import org.w3c.dom.Document;
 
+import de.topobyte.osm4j.core.model.iface.OsmNode;
+import de.topobyte.osm4j.core.model.iface.OsmRelation;
 import de.topobyte.osm4j.core.model.iface.OsmTag;
+import de.topobyte.osm4j.core.model.iface.OsmWay;
 
 public class Api
 {
@@ -172,9 +175,40 @@ public class Api
 		builder.setPath("/api/0.6/node/create");
 
 		String responseText = executeForString(builder, Method.PUT, payload);
+		return Long.parseLong(responseText);
+	}
 
-		long id = Long.parseLong(responseText);
-		return id;
+	public long createNode(Changeset changeset, OsmNode node)
+			throws ParserConfigurationException, IOException, URISyntaxException
+	{
+		Document document = Documents.createNode(changeset, node);
+		return createEntity("node", document);
+	}
+
+	public long createWay(Changeset changeset, OsmWay way)
+			throws ParserConfigurationException, IOException, URISyntaxException
+	{
+		Document document = Documents.createWay(changeset, way);
+		return createEntity("way", document);
+	}
+
+	public long createRelation(Changeset changeset, OsmRelation relation)
+			throws ParserConfigurationException, IOException, URISyntaxException
+	{
+		Document document = Documents.createRelation(changeset, relation);
+		return createEntity("relation", document);
+	}
+
+	private long createEntity(String type, Document document)
+			throws IOException, URISyntaxException
+	{
+		String payload = Documents.toString(document);
+
+		URIBuilder builder = builder();
+		builder.setPath(String.format("/api/0.6/%s/create", type));
+
+		String responseText = executeForString(builder, Method.PUT, payload);
+		return Long.parseLong(responseText);
 	}
 
 	public RequestResult deleteNode(Changeset changeset, long id, int version,
@@ -183,10 +217,31 @@ public class Api
 	{
 		Document document = Documents.deleteNode(changeset, id, version, lon,
 				lat);
+		return deleteEntity("node", id, document);
+	}
+
+	public RequestResult deleteWay(Changeset changeset, long id, int version)
+			throws ParserConfigurationException, IOException, URISyntaxException
+	{
+		Document document = Documents.deleteWay(changeset, id, version);
+		return deleteEntity("way", id, document);
+	}
+
+	public RequestResult deleteRelation(Changeset changeset, long id,
+			int version)
+			throws ParserConfigurationException, IOException, URISyntaxException
+	{
+		Document document = Documents.deleteRelation(changeset, id, version);
+		return deleteEntity("relation", id, document);
+	}
+
+	public RequestResult deleteEntity(String type, long id, Document document)
+			throws ParserConfigurationException, IOException, URISyntaxException
+	{
 		String payload = Documents.toString(document);
 
 		URIBuilder builder = builder();
-		builder.setPath(String.format("/api/0.6/node/%d", id));
+		builder.setPath(String.format("/api/0.6/%s/%d", type, id));
 
 		CloseableHttpResponse response = executeForResponse(builder,
 				Method.DELETE, payload);

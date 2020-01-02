@@ -28,7 +28,16 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import com.slimjars.dist.gnu.trove.list.TLongList;
+
+import de.topobyte.osm4j.core.model.iface.EntityType;
+import de.topobyte.osm4j.core.model.iface.OsmEntity;
+import de.topobyte.osm4j.core.model.iface.OsmNode;
+import de.topobyte.osm4j.core.model.iface.OsmRelation;
+import de.topobyte.osm4j.core.model.iface.OsmRelationMember;
 import de.topobyte.osm4j.core.model.iface.OsmTag;
+import de.topobyte.osm4j.core.model.iface.OsmWay;
+import de.topobyte.osm4j.core.model.util.OsmModelUtil;
 import de.topobyte.xml4jah.core.DocumentWriterConfig;
 import de.topobyte.xml4jah.dom.DocumentWriter;
 
@@ -73,33 +82,139 @@ public class Documents
 		eNode.setAttribute("lat", Double.toString(lat));
 
 		if (tags != null) {
-			for (OsmTag tag : tags) {
-				Element eTag = document.createElement("tag");
-				eNode.appendChild(eTag);
-				eTag.setAttribute("k", tag.getKey());
-				eTag.setAttribute("v", tag.getValue());
+			addTags(document, eNode, tags);
+		}
+
+		return document;
+	}
+
+	public static Document createNode(Changeset changeset, OsmNode node)
+			throws ParserConfigurationException
+	{
+		List<? extends OsmTag> tags = OsmModelUtil.getTagsAsList(node);
+		return createNode(changeset, node.getLongitude(), node.getLatitude(),
+				tags);
+	}
+
+	public static Document createWay(Changeset changeset, OsmWay way)
+			throws ParserConfigurationException
+	{
+		Document document = document();
+
+		Element eOsm = document.createElement("osm");
+		document.appendChild(eOsm);
+		Element eWay = document.createElement("way");
+		eOsm.appendChild(eWay);
+		eWay.setAttribute("changeset", Long.toString(changeset.getId()));
+
+		addTags(document, eWay, way);
+
+		TLongList nodes = OsmModelUtil.nodesAsList(way);
+		for (long id : nodes.toArray()) {
+			Element eNd = document.createElement("nd");
+			eWay.appendChild(eNd);
+			eNd.setAttribute("ref", Long.toString(id));
+		}
+
+		return document;
+	}
+
+	public static Document createRelation(Changeset changeset,
+			OsmRelation relation) throws ParserConfigurationException
+	{
+		Document document = document();
+
+		Element eOsm = document.createElement("osm");
+		document.appendChild(eOsm);
+		Element eRelation = document.createElement("relation");
+		eOsm.appendChild(eRelation);
+		eRelation.setAttribute("changeset", Long.toString(changeset.getId()));
+
+		addTags(document, eRelation, relation);
+
+		List<OsmRelationMember> members = OsmModelUtil.membersAsList(relation);
+		for (OsmRelationMember member : members) {
+			Element eMember = document.createElement("member");
+			eRelation.appendChild(eMember);
+			eMember.setAttribute("type", typename(member.getType()));
+			eMember.setAttribute("ref", Long.toString(member.getId()));
+			if (member.getRole() != null) {
+				eMember.setAttribute("role", member.getRole());
 			}
 		}
 
 		return document;
 	}
 
+	private static String typename(EntityType type)
+	{
+		switch (type) {
+		case Node:
+			return "node";
+		case Way:
+			return "way";
+		case Relation:
+			return "relation";
+		default:
+			return null;
+		}
+	}
+
+	private static void addTags(Document document, Element eEntity,
+			OsmEntity entity)
+	{
+		List<? extends OsmTag> tags = OsmModelUtil.getTagsAsList(entity);
+		addTags(document, eEntity, tags);
+	}
+
+	private static void addTags(Document document, Element eEntity,
+			List<? extends OsmTag> tags)
+	{
+		for (OsmTag tag : tags) {
+			Element eTag = document.createElement("tag");
+			eEntity.appendChild(eTag);
+			eTag.setAttribute("k", tag.getKey());
+			eTag.setAttribute("v", tag.getValue());
+		}
+	}
+
 	public static Document deleteNode(Changeset changeset, long id, int version,
 			double lon, double lat) throws ParserConfigurationException
 	{
 		Document document = document();
-
-		Element eOsm = document.createElement("osm");
-		document.appendChild(eOsm);
-		Element eNode = document.createElement("node");
-		eOsm.appendChild(eNode);
-		eNode.setAttribute("id", Long.toString(id));
-		eNode.setAttribute("version", Integer.toString(version));
-		eNode.setAttribute("changeset", Long.toString(changeset.getId()));
+		Element eNode = deleteEntity(document, changeset, "node", id, version);
 		eNode.setAttribute("lon", Double.toString(lon));
 		eNode.setAttribute("lat", Double.toString(lat));
-
 		return document;
+	}
+
+	public static Document deleteWay(Changeset changeset, long id, int version)
+			throws ParserConfigurationException
+	{
+		Document document = document();
+		deleteEntity(document, changeset, "way", id, version);
+		return document;
+	}
+
+	public static Document deleteRelation(Changeset changeset, long id,
+			int version) throws ParserConfigurationException
+	{
+		Document document = document();
+		deleteEntity(document, changeset, "relation", id, version);
+		return document;
+	}
+
+	private static Element deleteEntity(Document document, Changeset changeset,
+			String type, long id, int version)
+	{
+		Element eOsm = document.createElement("osm");
+		document.appendChild(eOsm);
+		Element eEntity = document.createElement(type);
+		eOsm.appendChild(eEntity);
+		eEntity.setAttribute("id", Long.toString(id));
+		eEntity.setAttribute("version", Integer.toString(version));
+		eEntity.setAttribute("changeset", Long.toString(changeset.getId()));
+		return eEntity;
 	}
 
 	public static String toString(Document document) throws IOException
