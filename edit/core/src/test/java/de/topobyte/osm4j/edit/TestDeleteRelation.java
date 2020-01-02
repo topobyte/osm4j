@@ -28,6 +28,7 @@ public class TestDeleteRelation
 	public static void main(String[] args)
 			throws IOException, URISyntaxException, ParserConfigurationException
 	{
+		System.out.println("trying to delete a relation");
 		Api api = TestUtil.createApi();
 		Changeset changeset = api.createChangeset();
 		System.out.println("created changeset " + changeset.getId());

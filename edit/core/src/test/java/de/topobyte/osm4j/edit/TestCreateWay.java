@@ -37,6 +37,7 @@ public class TestCreateWay
 	public static void main(String[] args)
 			throws IOException, URISyntaxException, ParserConfigurationException
 	{
+		System.out.println("trying to create a way");
 		Api api = TestUtil.createApi();
 		Changeset changeset = api.createChangeset();
 		System.out.println("created changeset " + changeset.getId());
