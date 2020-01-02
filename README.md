@@ -10,6 +10,7 @@ There are a number of repositories concerning osm4j:
 * [osm4j-geometry](https://github.com/topobyte/osm4j-geometry)
 * [osm4j-utils](https://github.com/topobyte/osm4j-utils)
 * [osm4j-extra](https://github.com/topobyte/osm4j-extra)
+* [osm4j-edit](https://github.com/topobyte/osm4j-edit)
 * [osm4j-testing](https://github.com/topobyte/osm4j-testing)
 * [osm4j-incubating](https://github.com/topobyte/osm4j-incubating)
 
