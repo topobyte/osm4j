@@ -19,7 +19,7 @@ package de.topobyte.osm4j.utils.merge;
 
 import java.util.Collection;
 
-import com.vividsolutions.jts.geom.Envelope;
+import org.locationtech.jts.geom.Envelope;
 
 import de.topobyte.osm4j.core.access.OsmIdIterator;
 import de.topobyte.osm4j.core.model.iface.OsmBounds;
@@ -53,8 +53,9 @@ public class AbstractIdMerge
 				envelope.expandToInclude(e);
 			}
 		}
-		bounds = !hasBounds ? null : new Bounds(envelope.getMinX(),
-				envelope.getMaxX(), envelope.getMaxY(), envelope.getMinY());
+		bounds = !hasBounds ? null
+				: new Bounds(envelope.getMinX(), envelope.getMaxX(),
+						envelope.getMaxY(), envelope.getMinY());
 	}
 
 }

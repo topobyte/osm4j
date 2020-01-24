@@ -17,7 +17,7 @@
 
 package de.topobyte.osm4j.utils.bbox;
 
-import com.vividsolutions.jts.geom.Envelope;
+import org.locationtech.jts.geom.Envelope;
 
 import de.topobyte.adt.geo.BBox;
 import de.topobyte.osm4j.core.access.OsmIterator;

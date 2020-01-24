@@ -20,8 +20,9 @@ package de.topobyte.osm4j.utils.areafilter;
 import java.io.IOException;
 import java.util.Iterator;
 
+import org.locationtech.jts.geom.Coordinate;
+
 import com.slimjars.dist.gnu.trove.set.hash.TLongHashSet;
-import com.vividsolutions.jts.geom.Coordinate;
 
 import de.topobyte.jts.utils.predicate.PredicateEvaluator;
 import de.topobyte.osm4j.core.access.OsmIterator;
