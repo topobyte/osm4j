@@ -41,7 +41,7 @@ public class GeometryUtil
 	{
 		Coordinate[] coords = coordinates
 				.toArray(new Coordinate[coordinates.size()]);
-		return factory.createMultiPoint(coords);
+		return factory.createMultiPointFromCoords(coords);
 	}
 
 	public static MultiLineString createMultiLineString(
@@ -188,7 +188,7 @@ public class GeometryUtil
 		if (coordinates.size() == 1) {
 			return factory.createPoint(coordinates.get(0));
 		}
-		return factory.createMultiPoint(
+		return factory.createMultiPointFromCoords(
 				coordinates.toArray(new Coordinate[coordinates.size()]));
 	}
 
@@ -198,7 +198,7 @@ public class GeometryUtil
 		if (coordinates.length == 1) {
 			return factory.createPoint(coordinates[0]);
 		}
-		return factory.createMultiPoint(coordinates);
+		return factory.createMultiPointFromCoords(coordinates);
 	}
 
 	public static Geometry lines(List<LineString> lineStrings,
