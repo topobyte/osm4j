@@ -22,7 +22,7 @@ We provide access to the artifacts via our own Maven repository:
 
 The packages are available at these coordinates:
 
-    de.topobyte:osm4j-utils:0.1.3
+    de.topobyte:osm4j-utils:0.2.0
 
 You can also browse the repository online:
 
