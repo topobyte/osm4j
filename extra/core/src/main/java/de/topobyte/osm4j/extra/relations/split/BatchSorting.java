@@ -22,7 +22,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import com.vividsolutions.jts.geom.Envelope;
+import org.locationtech.jts.geom.Envelope;
 
 import de.topobyte.osm4j.extra.batch.BatchBuilder;
 import de.topobyte.osm4j.extra.idbboxlist.IdBboxEntry;

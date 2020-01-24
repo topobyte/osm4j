@@ -23,7 +23,7 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import com.vividsolutions.jts.geom.Envelope;
+import org.locationtech.jts.geom.Envelope;
 
 import de.topobyte.largescalefileio.ClosingFileOutputStreamFactory;
 import de.topobyte.largescalefileio.SimpleClosingFileOutputStreamFactory;

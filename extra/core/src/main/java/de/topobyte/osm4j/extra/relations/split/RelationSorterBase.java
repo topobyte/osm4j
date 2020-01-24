@@ -28,9 +28,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import org.locationtech.jts.geom.Envelope;
+
 import com.slimjars.dist.gnu.trove.map.TLongIntMap;
 import com.slimjars.dist.gnu.trove.map.hash.TLongIntHashMap;
-import com.vividsolutions.jts.geom.Envelope;
 
 import de.topobyte.largescalefileio.ClosingFileOutputStreamFactory;
 import de.topobyte.largescalefileio.SimpleClosingFileOutputStreamFactory;

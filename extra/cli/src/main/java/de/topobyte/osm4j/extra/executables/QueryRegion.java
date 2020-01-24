@@ -21,8 +21,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
 
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.io.WKTReader;
+import org.locationtech.jts.geom.Geometry;
+import org.locationtech.jts.io.WKTReader;
 
 import de.topobyte.jts.utils.predicate.PredicateEvaluatorPrepared;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;

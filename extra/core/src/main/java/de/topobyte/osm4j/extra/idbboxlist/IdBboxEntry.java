@@ -1,6 +1,6 @@
 package de.topobyte.osm4j.extra.idbboxlist;
 
-import com.vividsolutions.jts.geom.Envelope;
+import org.locationtech.jts.geom.Envelope;
 
 public class IdBboxEntry
 {

@@ -21,8 +21,8 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
-import com.vividsolutions.jts.geom.GeometryCollection;
-import com.vividsolutions.jts.io.WKTWriter;
+import org.locationtech.jts.geom.GeometryCollection;
+import org.locationtech.jts.io.WKTWriter;
 
 public class DataTreeBoxGeometryCreator
 {

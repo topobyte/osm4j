@@ -20,12 +20,13 @@ package de.topobyte.osm4j.extra.extracts.query;
 import java.io.IOException;
 import java.nio.file.Path;
 
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.GeometryFactory;
+
 import com.slimjars.dist.gnu.trove.map.TLongObjectMap;
 import com.slimjars.dist.gnu.trove.map.hash.TLongObjectHashMap;
 import com.slimjars.dist.gnu.trove.set.TLongSet;
 import com.slimjars.dist.gnu.trove.set.hash.TLongHashSet;
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.GeometryFactory;
 
 import de.topobyte.jts.utils.GeometryGroup;
 import de.topobyte.jts.utils.predicate.PredicateEvaluator;
@@ -55,8 +56,7 @@ public class LeafQuery extends AbstractQuery
 	private boolean fastRelationTests;
 
 	public LeafQuery(PredicateEvaluator test, DataTreeFiles filesTreeNodes,
-			DataTreeFiles filesTreeWays,
-			DataTreeFiles filesTreeSimpleRelations,
+			DataTreeFiles filesTreeWays, DataTreeFiles filesTreeSimpleRelations,
 			DataTreeFiles filesTreeComplexRelations, FileFormat inputFormat,
 			OsmOutputConfig outputConfigIntermediate,
 			OsmOutputConfig outputConfig, boolean fastRelationsTests)
@@ -180,8 +180,8 @@ public class LeafQuery extends AbstractQuery
 	private void queryNodes() throws IOException
 	{
 		for (OsmNode node : dataNodes.getNodes()) {
-			if (test.contains(new Coordinate(node.getLongitude(), node
-					.getLatitude()))) {
+			if (test.contains(
+					new Coordinate(node.getLongitude(), node.getLatitude()))) {
 				nodeIds.add(node.getId());
 				outNodes.getOsmOutput().write(node);
 			}
@@ -211,8 +211,8 @@ public class LeafQuery extends AbstractQuery
 			try {
 				QueryUtil.putNodes(way, additionalNodes, dataNodes, nodeIds);
 			} catch (EntityNotFoundException e) {
-				System.out.println("Unable to find all nodes for way: "
-						+ way.getId());
+				System.out.println(
+						"Unable to find all nodes for way: " + way.getId());
 			}
 		}
 	}

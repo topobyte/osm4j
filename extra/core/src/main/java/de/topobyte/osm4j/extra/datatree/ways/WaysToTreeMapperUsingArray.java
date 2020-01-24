@@ -25,7 +25,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.vividsolutions.jts.geom.Envelope;
+import org.locationtech.jts.geom.Envelope;
 
 import de.topobyte.largescalefileio.ClosingFileOutputStreamFactory;
 import de.topobyte.largescalefileio.SimpleClosingFileOutputStreamFactory;

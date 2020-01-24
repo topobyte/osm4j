@@ -28,10 +28,11 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import org.locationtech.jts.geom.Envelope;
+
 import com.slimjars.dist.gnu.trove.map.TLongLongMap;
 import com.slimjars.dist.gnu.trove.map.TObjectLongMap;
 import com.slimjars.dist.gnu.trove.map.hash.TObjectLongHashMap;
-import com.vividsolutions.jts.geom.Envelope;
 
 import de.topobyte.adt.geo.BBox;
 import de.topobyte.adt.geo.BBoxString;

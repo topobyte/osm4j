@@ -24,7 +24,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.vividsolutions.jts.geom.Envelope;
+import org.locationtech.jts.geom.Envelope;
 
 import de.topobyte.melon.io.StreamUtil;
 import de.topobyte.osm4j.core.access.OsmIterator;

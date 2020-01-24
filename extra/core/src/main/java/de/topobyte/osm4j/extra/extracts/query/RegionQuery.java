@@ -19,7 +19,7 @@ package de.topobyte.osm4j.extra.extracts.query;
 
 import java.nio.file.Path;
 
-import com.vividsolutions.jts.geom.Geometry;
+import org.locationtech.jts.geom.Geometry;
 
 import de.topobyte.jts.utils.predicate.PredicateEvaluatorPrepared;
 import de.topobyte.osm4j.extra.extracts.BatchFileNames;

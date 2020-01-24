@@ -25,12 +25,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.Envelope;
+import org.locationtech.jts.geom.Geometry;
+import org.locationtech.jts.geom.GeometryFactory;
 
 import com.slimjars.dist.gnu.trove.set.TLongSet;
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.Envelope;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.GeometryFactory;
 
 import de.topobyte.jts.utils.predicate.PredicateEvaluator;
 import de.topobyte.osm4j.core.access.OsmIterator;
@@ -198,17 +198,17 @@ public class Query extends AbstractQuery
 
 		System.out.println(String.format("Total number of nodes: %d", nNodes));
 		System.out.println(String.format("Total number of ways: %d", nWays));
-		System.out.println(String.format(
-				"Total number of simple relations: %d", nSimpleRelations));
+		System.out.println(String.format("Total number of simple relations: %d",
+				nSimpleRelations));
 		System.out.println(String.format(
 				"Total number of complex relations: %d", nComplexRelations));
 
 		// Query relations
 
-		List<IdBboxEntry> entriesSimple = IdBboxUtil.read(paths
-				.getSimpleRelationsBboxes());
-		List<IdBboxEntry> entriesComplex = IdBboxUtil.read(paths
-				.getComplexRelationsBboxes());
+		List<IdBboxEntry> entriesSimple = IdBboxUtil
+				.read(paths.getSimpleRelationsBboxes());
+		List<IdBboxEntry> entriesComplex = IdBboxUtil
+				.read(paths.getComplexRelationsBboxes());
 
 		for (IdBboxEntry entry : entriesSimple) {
 			long id = entry.getId();
@@ -222,12 +222,12 @@ public class Query extends AbstractQuery
 				String tmpFilenames = filename(tmpIndexSimple);
 				System.out.println("Writing to files: " + tmpFilenames);
 
-				Path pathDir = paths.getSimpleRelations().resolve(
-						Long.toString(entry.getId()));
+				Path pathDir = paths.getSimpleRelations()
+						.resolve(Long.toString(entry.getId()));
 				Path pathNodes = pathDir.resolve(relationNames.getNodes());
 				Path pathWays = pathDir.resolve(relationNames.getWays());
-				Path pathRelations = pathDir.resolve(relationNames
-						.getRelations());
+				Path pathRelations = pathDir
+						.resolve(relationNames.getRelations());
 
 				Path pathOutNodes = pathTmpSimpleNodes.resolve(tmpFilenames);
 				Path pathOutWays = pathTmpSimpleWays.resolve(tmpFilenames);
@@ -252,12 +252,12 @@ public class Query extends AbstractQuery
 				String tmpFilenames = filename(tmpIndexComplex);
 				System.out.println("Writing to files: " + tmpFilenames);
 
-				Path pathDir = paths.getComplexRelations().resolve(
-						Long.toString(entry.getId()));
+				Path pathDir = paths.getComplexRelations()
+						.resolve(Long.toString(entry.getId()));
 				Path pathNodes = pathDir.resolve(relationNames.getNodes());
 				Path pathWays = pathDir.resolve(relationNames.getWays());
-				Path pathRelations = pathDir.resolve(relationNames
-						.getRelations());
+				Path pathRelations = pathDir
+						.resolve(relationNames.getRelations());
 
 				Path pathOutNodes = pathTmpComplexNodes.resolve(tmpFilenames);
 				Path pathOutWays = pathTmpComplexWays.resolve(tmpFilenames);
@@ -320,13 +320,13 @@ public class Query extends AbstractQuery
 		System.out.println("Temporary directory: " + pathTmp);
 		Files.createDirectories(pathTmp);
 		if (!Files.isDirectory(pathTmp)) {
-			System.out
-					.println("Unable to create temporary directory for intermediate files");
+			System.out.println(
+					"Unable to create temporary directory for intermediate files");
 			System.exit(1);
 		}
 		if (pathTmp.toFile().listFiles().length != 0) {
-			System.out
-					.println("Temporary directory for intermediate files is not empty");
+			System.out.println(
+					"Temporary directory for intermediate files is not empty");
 			System.exit(1);
 		}
 		System.out.println("Storing intermediate files here: " + pathTmp);
@@ -404,10 +404,10 @@ public class Query extends AbstractQuery
 
 	private void addIntersectingLeaf(Node leaf) throws IOException
 	{
-		LeafQuery leafQuery = new LeafQuery(test, filesTreeNodes,
-				filesTreeWays, filesTreeSimpleRelations,
-				filesTreeComplexRelations, inputFormat,
-				outputConfigIntermediate, outputConfig, fastRelationTests);
+		LeafQuery leafQuery = new LeafQuery(test, filesTreeNodes, filesTreeWays,
+				filesTreeSimpleRelations, filesTreeComplexRelations,
+				inputFormat, outputConfigIntermediate, outputConfig,
+				fastRelationTests);
 
 		tmpIndexTree++;
 
@@ -423,8 +423,8 @@ public class Query extends AbstractQuery
 		Path pathOutAdditionalWays = pathTmpTreeAdditionalWays
 				.resolve(tmpFilenames);
 
-		QueryResult results = leafQuery.execute(leaf, pathOutNodes,
-				pathOutWays, pathOutSimpleRelations, pathOutComplexRelations,
+		QueryResult results = leafQuery.execute(leaf, pathOutNodes, pathOutWays,
+				pathOutSimpleRelations, pathOutComplexRelations,
 				pathOutAdditionalNodes, pathOutAdditionalWays);
 
 		nNodes += results.getNumNodes();
@@ -439,8 +439,8 @@ public class Query extends AbstractQuery
 		filesSimpleRelations.add(intermediate(pathOutSimpleRelations));
 		filesComplexRelations.add(intermediate(pathOutComplexRelations));
 
-		System.out.println(String.format("Found %d nodes",
-				results.getNumNodes()));
+		System.out.println(
+				String.format("Found %d nodes", results.getNumNodes()));
 		System.out
 				.println(String.format("Found %d ways", results.getNumWays()));
 		System.out.println(String.format("Found %d simple relations",
@@ -476,8 +476,8 @@ public class Query extends AbstractQuery
 			selectedRelations.sort();
 
 			System.out.println(String.format("selected %d of %d relations",
-					selectedRelations.getRelations().size(), dataRelations
-							.getRelations().size()));
+					selectedRelations.getRelations().size(),
+					dataRelations.getRelations().size()));
 		}
 
 		if (selectedRelations.getRelations().isEmpty()) {
@@ -528,8 +528,8 @@ public class Query extends AbstractQuery
 			throws IOException
 	{
 		for (OsmNode node : dataNodes.getNodes()) {
-			if (test.contains(new Coordinate(node.getLongitude(), node
-					.getLatitude()))) {
+			if (test.contains(
+					new Coordinate(node.getLongitude(), node.getLatitude()))) {
 				nodeIds.add(node.getId());
 			}
 		}

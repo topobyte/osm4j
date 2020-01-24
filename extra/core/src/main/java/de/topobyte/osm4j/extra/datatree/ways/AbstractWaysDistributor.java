@@ -33,11 +33,12 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
+import org.locationtech.jts.geom.GeometryFactory;
+import org.locationtech.jts.geom.LinearRing;
+import org.locationtech.jts.geom.Polygon;
+
 import com.slimjars.dist.gnu.trove.map.TLongObjectMap;
 import com.slimjars.dist.gnu.trove.map.hash.TLongObjectHashMap;
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.LinearRing;
-import com.vividsolutions.jts.geom.Polygon;
 
 import de.topobyte.jts.utils.GeometryGroup;
 import de.topobyte.largescalefileio.ClosingFileOutputStreamFactory;
@@ -134,7 +135,8 @@ public abstract class AbstractWaysDistributor implements WaysDistributor
 		for (Node leaf : leafs) {
 			OsmStreamOutput outputWays = createOutput(filesWays.getFile(leaf));
 			outputsWays.put(leaf, outputWays);
-			OsmStreamOutput outputNodes = createOutput(filesNodes.getFile(leaf));
+			OsmStreamOutput outputNodes = createOutput(
+					filesNodes.getFile(leaf));
 			outputsNodes.put(leaf, outputNodes);
 		}
 	}
@@ -169,16 +171,18 @@ public abstract class AbstractWaysDistributor implements WaysDistributor
 
 	protected void distribute() throws IOException
 	{
-		DataTreeFiles filesNodes1 = new DataTreeFiles(pathTree, fileNamesNodes1);
-		DataTreeFiles filesNodes2 = new DataTreeFiles(pathTree, fileNamesNodes2);
+		DataTreeFiles filesNodes1 = new DataTreeFiles(pathTree,
+				fileNamesNodes1);
+		DataTreeFiles filesNodes2 = new DataTreeFiles(pathTree,
+				fileNamesNodes2);
 		DataTreeFiles filesWays = new DataTreeFiles(pathTree, fileNamesWays);
 
 		int i = 0;
 		Iterator<Node> iterator = leafs.iterator();
 		while (!stopped && iterator.hasNext()) {
 			Node leaf = iterator.next();
-			System.out.println(String.format("Processing leaf %d/%d", ++i,
-					leafs.size()));
+			System.out.println(
+					String.format("Processing leaf %d/%d", ++i, leafs.size()));
 
 			File fileNodes1 = filesNodes1.getFile(leaf);
 			File fileNodes2 = filesNodes2.getFile(leaf);
@@ -191,31 +195,34 @@ public abstract class AbstractWaysDistributor implements WaysDistributor
 			InputStream inputWays = StreamUtil.bufferedInputStream(fileWays);
 
 			long nodesSize1 = fileNodes1.length();
-			System.out.println(String.format(
-					"Loading nodes file of size: %.3fMB",
-					nodesSize1 / 1024. / 1024.));
+			System.out
+					.println(String.format("Loading nodes file of size: %.3fMB",
+							nodesSize1 / 1024. / 1024.));
 
-			InMemoryListDataSet dataNodes1 = ListDataSetLoader.read(OsmIoUtils
-					.setupOsmIterator(inputNodes1, inputFormatNodes,
-							outputConfig.isWriteMetadata()), true, true, true);
+			InMemoryListDataSet dataNodes1 = ListDataSetLoader.read(
+					OsmIoUtils.setupOsmIterator(inputNodes1, inputFormatNodes,
+							outputConfig.isWriteMetadata()),
+					true, true, true);
 
 			long nodesSize2 = fileNodes2.length();
-			System.out.println(String.format(
-					"Loading nodes file of size: %.3fMB",
-					nodesSize2 / 1024. / 1024.));
+			System.out
+					.println(String.format("Loading nodes file of size: %.3fMB",
+							nodesSize2 / 1024. / 1024.));
 
-			InMemoryListDataSet dataNodes2 = ListDataSetLoader.read(OsmIoUtils
-					.setupOsmIterator(inputNodes2, inputFormatNodes,
-							outputConfig.isWriteMetadata()), true, true, true);
+			InMemoryListDataSet dataNodes2 = ListDataSetLoader.read(
+					OsmIoUtils.setupOsmIterator(inputNodes2, inputFormatNodes,
+							outputConfig.isWriteMetadata()),
+					true, true, true);
 
 			long waysSize = fileWays.length();
-			System.out.println(String.format(
-					"Loading ways file of size: %.3fMB",
-					waysSize / 1024. / 1024.));
+			System.out
+					.println(String.format("Loading ways file of size: %.3fMB",
+							waysSize / 1024. / 1024.));
 
-			InMemoryListDataSet dataWays = ListDataSetLoader.read(OsmIoUtils
-					.setupOsmIterator(inputWays, inputFormatWays,
-							outputConfig.isWriteMetadata()), true, true, true);
+			InMemoryListDataSet dataWays = ListDataSetLoader.read(
+					OsmIoUtils.setupOsmIterator(inputWays, inputFormatWays,
+							outputConfig.isWriteMetadata()),
+					true, true, true);
 
 			inputNodes1.close();
 			inputNodes2.close();
@@ -229,8 +236,8 @@ public abstract class AbstractWaysDistributor implements WaysDistributor
 		}
 	}
 
-	protected void build(Node leaf, OsmWay way, OsmEntityProvider entityProvider)
-			throws IOException
+	protected void build(Node leaf, OsmWay way,
+			OsmEntityProvider entityProvider) throws IOException
 	{
 		TLongObjectMap<OsmNode> nodes = new TLongObjectHashMap<>();
 		List<Node> leafs;
@@ -244,8 +251,8 @@ public abstract class AbstractWaysDistributor implements WaysDistributor
 				leafs = buildClosedWay(way, nodes, entityProvider);
 			}
 		} catch (EntityNotFoundException e) {
-			System.out.println("Entity not found while building way: "
-					+ way.getId());
+			System.out.println(
+					"Entity not found while building way: " + way.getId());
 			return;
 		}
 
@@ -287,9 +294,8 @@ public abstract class AbstractWaysDistributor implements WaysDistributor
 		return tree.query(group);
 	}
 
-	private List<Node> buildClosedWay(OsmWay way,
-			TLongObjectMap<OsmNode> nodes, OsmEntityProvider entityProvider)
-			throws EntityNotFoundException
+	private List<Node> buildClosedWay(OsmWay way, TLongObjectMap<OsmNode> nodes,
+			OsmEntityProvider entityProvider) throws EntityNotFoundException
 	{
 		WayBuilderResult build = wb.build(way, entityProvider);
 		GeometryGroup group = build.toGeometryGroup(f);
@@ -305,11 +311,9 @@ public abstract class AbstractWaysDistributor implements WaysDistributor
 		} else {
 			List<Node> merged = merge(leafs1, leafs2);
 			if (merged.size() > leafs1.size()) {
-				System.out
-						.println(String
-								.format("found way that contains leafs. outline: %d polygon: %d merged: %d",
-										leafs1.size(), leafs2.size(),
-										merged.size()));
+				System.out.println(String.format(
+						"found way that contains leafs. outline: %d polygon: %d merged: %d",
+						leafs1.size(), leafs2.size(), merged.size()));
 			}
 			return merged;
 		}
@@ -342,8 +346,8 @@ public abstract class AbstractWaysDistributor implements WaysDistributor
 		long past = now - start;
 		long estimate = Math.round((past / (double) leafsDone) * leafs.size());
 		System.out.println(String.format("Past: %.2f", past / 1000 / 60.));
-		System.out.println(String.format("Estimate: %.2f",
-				estimate / 1000 / 60.));
+		System.out.println(
+				String.format("Estimate: %.2f", estimate / 1000 / 60.));
 	}
 
 }

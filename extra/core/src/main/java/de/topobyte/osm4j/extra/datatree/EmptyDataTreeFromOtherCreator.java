@@ -20,7 +20,7 @@ package de.topobyte.osm4j.extra.datatree;
 import java.io.File;
 import java.io.IOException;
 
-import com.vividsolutions.jts.geom.Envelope;
+import org.locationtech.jts.geom.Envelope;
 
 import de.topobyte.adt.geo.BBox;
 
