@@ -26,12 +26,12 @@ import java.net.URL;
 
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.locationtech.jts.geom.Geometry;
+import org.locationtech.jts.io.WKTWriter;
 import org.xml.sax.SAXException;
 
 import com.slimjars.dist.gnu.trove.iterator.TLongObjectIterator;
 import com.slimjars.dist.gnu.trove.map.TLongObjectMap;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.io.WKTWriter;
 
 import de.topobyte.osm4j.core.access.OsmIterator;
 import de.topobyte.osm4j.core.dataset.InMemoryMapDataSet;

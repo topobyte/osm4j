@@ -5,8 +5,8 @@ if (project.hasProperty("topobyte")) {
 
 dependencies {
     compile 'de.topobyte:osm4j-core:0.1.0'
-    compile 'de.topobyte:jts-utils:0.1.2'
-    compile 'de.topobyte:jts-medical-kit:0.1.0'
+    compile 'de.topobyte:jts-utils:0.2.0'
+    compile 'de.topobyte:jts-medical-kit:0.2.0'
 
     compile 'com.slimjars.trove4j:trove4j-long-array-stack:1.0.1'
 

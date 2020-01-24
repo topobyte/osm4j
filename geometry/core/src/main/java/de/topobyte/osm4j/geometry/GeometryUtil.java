@@ -21,14 +21,14 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.GeometryCollection;
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.LineString;
-import com.vividsolutions.jts.geom.MultiLineString;
-import com.vividsolutions.jts.geom.MultiPoint;
-import com.vividsolutions.jts.geom.Point;
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.Geometry;
+import org.locationtech.jts.geom.GeometryCollection;
+import org.locationtech.jts.geom.GeometryFactory;
+import org.locationtech.jts.geom.LineString;
+import org.locationtech.jts.geom.MultiLineString;
+import org.locationtech.jts.geom.MultiPoint;
+import org.locationtech.jts.geom.Point;
 
 import de.topobyte.jts.utils.GeometryGroup;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
@@ -39,16 +39,16 @@ public class GeometryUtil
 	public static MultiPoint createMultiPoint(List<Coordinate> coordinates,
 			GeometryFactory factory)
 	{
-		Coordinate[] coords = coordinates.toArray(new Coordinate[coordinates
-				.size()]);
+		Coordinate[] coords = coordinates
+				.toArray(new Coordinate[coordinates.size()]);
 		return factory.createMultiPoint(coords);
 	}
 
 	public static MultiLineString createMultiLineString(
 			List<LineString> lineStrings, GeometryFactory factory)
 	{
-		LineString[] strings = lineStrings.toArray(new LineString[lineStrings
-				.size()]);
+		LineString[] strings = lineStrings
+				.toArray(new LineString[lineStrings.size()]);
 		return factory.createMultiLineString(strings);
 	}
 
@@ -164,11 +164,11 @@ public class GeometryUtil
 		if (numPoints == 0 && numLines == 0) {
 			return new GeometryGroup(factory, geometry);
 		} else if (numPoints == 0) {
-			return new GeometryGroup(factory, geometry, lines(lineStrings,
-					factory));
+			return new GeometryGroup(factory, geometry,
+					lines(lineStrings, factory));
 		} else if (numLines == 0) {
-			return new GeometryGroup(factory, geometry, points(coordinates,
-					factory));
+			return new GeometryGroup(factory, geometry,
+					points(coordinates, factory));
 		} else {
 			Geometry points = points(coordinates, factory);
 			Geometry lines = lines(lineStrings, factory);
@@ -188,8 +188,8 @@ public class GeometryUtil
 		if (coordinates.size() == 1) {
 			return factory.createPoint(coordinates.get(0));
 		}
-		return factory.createMultiPoint(coordinates
-				.toArray(new Coordinate[coordinates.size()]));
+		return factory.createMultiPoint(
+				coordinates.toArray(new Coordinate[coordinates.size()]));
 	}
 
 	public static Geometry points(Coordinate[] coordinates,
@@ -207,8 +207,8 @@ public class GeometryUtil
 		if (lineStrings.size() == 1) {
 			return lineStrings.get(0);
 		}
-		return factory.createMultiLineString(lineStrings
-				.toArray(new LineString[lineStrings.size()]));
+		return factory.createMultiLineString(
+				lineStrings.toArray(new LineString[lineStrings.size()]));
 	}
 
 	public static Geometry lines(LineString[] lineStrings,

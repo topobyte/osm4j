@@ -19,7 +19,7 @@ package de.topobyte.osm4j.geometry;
 
 import java.util.Collection;
 
-import com.vividsolutions.jts.geom.Envelope;
+import org.locationtech.jts.geom.Envelope;
 
 import de.topobyte.osm4j.core.model.iface.OsmNode;
 

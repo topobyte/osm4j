@@ -19,9 +19,9 @@ package de.topobyte.osm4j.geometry;
 
 import java.util.Map;
 
-import com.vividsolutions.jts.geom.LineString;
-import com.vividsolutions.jts.geom.MultiPolygon;
-import com.vividsolutions.jts.geom.Point;
+import org.locationtech.jts.geom.LineString;
+import org.locationtech.jts.geom.MultiPolygon;
+import org.locationtech.jts.geom.Point;
 
 public interface OsmGeometryHandler
 {

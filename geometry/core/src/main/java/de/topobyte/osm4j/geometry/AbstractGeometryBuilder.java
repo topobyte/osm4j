@@ -17,7 +17,7 @@
 
 package de.topobyte.osm4j.geometry;
 
-import com.vividsolutions.jts.geom.GeometryFactory;
+import org.locationtech.jts.geom.GeometryFactory;
 
 public class AbstractGeometryBuilder
 {
