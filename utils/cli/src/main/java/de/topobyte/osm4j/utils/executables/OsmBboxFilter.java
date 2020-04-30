@@ -19,10 +19,15 @@ package de.topobyte.osm4j.utils.executables;
 
 import java.io.IOException;
 
+import org.locationtech.jts.geom.Envelope;
+
 import de.topobyte.adt.geo.BBox;
 import de.topobyte.adt.geo.BBoxString;
 import de.topobyte.osm4j.core.access.OsmIterator;
+import de.topobyte.osm4j.core.model.iface.OsmBounds;
+import de.topobyte.osm4j.core.model.impl.Bounds;
 import de.topobyte.osm4j.utils.AbstractAreaFilter;
+import de.topobyte.osm4j.utils.OsmBoundsUtil;
 import de.topobyte.osm4j.utils.areafilter.BboxFilter;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
@@ -78,6 +83,15 @@ public class OsmBboxFilter extends AbstractAreaFilter
 	protected void run() throws IOException
 	{
 		OsmIterator iterator = createIterator();
+
+		OsmBounds oldBounds = iterator.getBounds();
+		BBox oldBbox = OsmBoundsUtil.toBbox(oldBounds);
+		Envelope intersectionEnvelope = oldBbox.toEnvelope()
+				.intersection(bbox.toEnvelope());
+		BBox newBbox = new BBox(intersectionEnvelope);
+		Bounds newBounds = OsmBoundsUtil.toBounds(newBbox);
+
+		osmOutputStream.write(newBounds);
 
 		BboxFilter filter = new BboxFilter(osmOutputStream, iterator, bbox,
 				onlyNodes);
