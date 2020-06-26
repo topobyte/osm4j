@@ -27,6 +27,9 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
+
 import org.apache.commons.cli.HelpFormatter;
 import org.locationtech.jts.geom.Geometry;
 import org.locationtech.jts.io.OutputStreamOutStream;
@@ -37,10 +40,14 @@ import de.topobyte.osm4j.core.access.OsmIterator;
 import de.topobyte.osm4j.core.dataset.InMemoryMapDataSet;
 import de.topobyte.osm4j.core.dataset.MapDataSetLoader;
 import de.topobyte.osm4j.core.model.iface.OsmRelation;
+import de.topobyte.osm4j.core.model.iface.OsmTag;
+import de.topobyte.osm4j.core.model.util.OsmModelUtil;
 import de.topobyte.osm4j.core.resolve.EntityNotFoundException;
 import de.topobyte.osm4j.geometry.GeometryBuilder;
 import de.topobyte.osm4j.utils.AbstractExecutable;
 import de.topobyte.osm4j.xml.dynsax.OsmXmlIterator;
+import de.topobyte.simplemapfile.core.EntityFile;
+import de.topobyte.simplemapfile.xml.SmxFileWriter;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
 public class OsmDownloadRegionGeometry extends AbstractExecutable
@@ -56,7 +63,8 @@ public class OsmDownloadRegionGeometry extends AbstractExecutable
 	}
 
 	public static void main(String[] args)
-			throws IOException, EntityNotFoundException
+			throws IOException, EntityNotFoundException, TransformerException,
+			ParserConfigurationException
 	{
 		OsmDownloadRegionGeometry task = new OsmDownloadRegionGeometry();
 
@@ -98,7 +106,8 @@ public class OsmDownloadRegionGeometry extends AbstractExecutable
 		}
 	}
 
-	private void run() throws IOException, EntityNotFoundException
+	private void run() throws IOException, EntityNotFoundException,
+			TransformerException, ParserConfigurationException
 	{
 		List<String> args = line.getArgList();
 		if (args.size() != 2) {
@@ -137,7 +146,12 @@ public class OsmDownloadRegionGeometry extends AbstractExecutable
 			new WKBWriter().write(buffer, osos);
 			output.close();
 		} else if (format == Format.SMX) {
-			// TODO: write simple mapfile format
+			EntityFile entity = new EntityFile();
+			entity.setGeometry(buffer);
+			for (OsmTag tag : OsmModelUtil.getTagsAsList(relation)) {
+				entity.addTag(tag.getKey(), tag.getValue());
+			}
+			SmxFileWriter.write(entity, pathOutput);
 		}
 	}
 
