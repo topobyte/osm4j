@@ -69,7 +69,7 @@ public class OsmDownloadRegionGeometry extends AbstractExecutable
 	{
 		List<String> args = line.getArgList();
 		if (args.size() != 2) {
-			System.out.println("Please specify exaclty two arguments");
+			System.out.println("Please specify exactly two arguments");
 			new HelpFormatter().printHelp(getHelpMessage(), options);
 			System.exit(1);
 		}
