@@ -20,6 +20,7 @@ package de.topobyte.osm4j.utils.executables;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -28,6 +29,8 @@ import java.util.List;
 
 import org.apache.commons.cli.HelpFormatter;
 import org.locationtech.jts.geom.Geometry;
+import org.locationtech.jts.io.OutputStreamOutStream;
+import org.locationtech.jts.io.WKBWriter;
 import org.locationtech.jts.io.WKTWriter;
 
 import de.topobyte.osm4j.core.access.OsmIterator;
@@ -38,9 +41,12 @@ import de.topobyte.osm4j.core.resolve.EntityNotFoundException;
 import de.topobyte.osm4j.geometry.GeometryBuilder;
 import de.topobyte.osm4j.utils.AbstractExecutable;
 import de.topobyte.osm4j.xml.dynsax.OsmXmlIterator;
+import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
 public class OsmDownloadRegionGeometry extends AbstractExecutable
 {
+
+	private static final String OPTION_FORMAT = "format";
 
 	@Override
 	protected String getHelpMessage()
@@ -59,10 +65,37 @@ public class OsmDownloadRegionGeometry extends AbstractExecutable
 		task.run();
 	}
 
+	// TODO: use common code with Jeography
+	// (tools/src/main/java/de/topobyte/jeography/geometry/io)
+
+	private enum Format {
+		WKT,
+		WKB,
+		SMX
+	}
+
+	private Format format = Format.WKT;
+
+	public OsmDownloadRegionGeometry()
+	{
+		// @formatter:off
+		OptionHelper.addL(options, OPTION_FORMAT, true, true, "file format (any of wkt, wkb or smx)");
+		// @formatter:on
+	}
+
 	@Override
 	protected void setup(String[] args)
 	{
 		super.setup(args);
+
+		String argFormat = line.getOptionValue(OPTION_FORMAT);
+		if (argFormat.equals("wkt")) {
+			format = Format.WKT;
+		} else if (argFormat.equals("wkb")) {
+			format = Format.WKB;
+		} else if (argFormat.equals("smx")) {
+			format = Format.SMX;
+		}
 	}
 
 	private void run() throws IOException, EntityNotFoundException
@@ -94,9 +127,18 @@ public class OsmDownloadRegionGeometry extends AbstractExecutable
 
 		Geometry buffer = geometry.buffer(0);
 
-		BufferedWriter writer = Files.newBufferedWriter(pathOutput);
-		new WKTWriter().write(buffer, writer);
-		writer.close();
+		if (format == Format.WKT) {
+			BufferedWriter writer = Files.newBufferedWriter(pathOutput);
+			new WKTWriter().write(buffer, writer);
+			writer.close();
+		} else if (format == Format.WKB) {
+			OutputStream output = Files.newOutputStream(pathOutput);
+			OutputStreamOutStream osos = new OutputStreamOutStream(output);
+			new WKBWriter().write(buffer, osos);
+			output.close();
+		} else if (format == Format.SMX) {
+			// TODO: write simple mapfile format
+		}
 	}
 
 }
