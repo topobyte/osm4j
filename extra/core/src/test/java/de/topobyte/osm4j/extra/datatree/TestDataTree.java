@@ -38,7 +38,7 @@ public class TestDataTree
 	{
 		DataTree tree = new DataTree(box);
 		tree.getRoot().split(splitDepth);
-		tree.print();
+		tree.print(System.out::println);
 
 		File fileOutput = File.createTempFile("tree", ".wkt");
 

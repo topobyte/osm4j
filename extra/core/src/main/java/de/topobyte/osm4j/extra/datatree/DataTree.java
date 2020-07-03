@@ -19,6 +19,7 @@ package de.topobyte.osm4j.extra.datatree;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.Envelope;
@@ -95,19 +96,19 @@ public class DataTree
 		getInner(node.getRight(), inner);
 	}
 
-	public void print()
+	public void print(Consumer<String> printer)
 	{
-		print(root);
+		print(root, printer);
 	}
 
-	private void print(Node node)
+	private void print(Node node, Consumer<String> printer)
 	{
 		if (node.isLeaf()) {
-			System.out.println(Long.toHexString(node.getPath()) + ": "
+			printer.accept(Long.toHexString(node.getPath()) + ": "
 					+ node.getEnvelope());
 		} else {
-			print(node.getLeft());
-			print(node.getRight());
+			print(node.getLeft(), printer);
+			print(node.getRight(), printer);
 		}
 	}
 

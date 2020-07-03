@@ -341,9 +341,10 @@ public class ExtractionFilesBuilder
 		OsmIteratorInput inputBounds = fileInput.createIterator(false, false);
 
 		if (!inputBounds.getIterator().hasBounds() && !computeBbox) {
-			logger.info("Input does not provide bounds"
-					+ " and no flag has been set to compute the bounding box");
-			System.exit(1);
+			String error = "Input does not provide bounds"
+					+ " and no flag has been set to compute the bounding box";
+			logger.error(error);
+			throw new IOException(error);
 		}
 
 		if (inputBounds.getIterator().hasBounds()) {

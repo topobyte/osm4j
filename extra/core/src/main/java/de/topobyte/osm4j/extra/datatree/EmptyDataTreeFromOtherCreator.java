@@ -21,11 +21,16 @@ import java.io.File;
 import java.io.IOException;
 
 import org.locationtech.jts.geom.Envelope;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.topobyte.adt.geo.BBox;
 
 public class EmptyDataTreeFromOtherCreator
 {
+
+	final static Logger logger = LoggerFactory
+			.getLogger(EmptyDataTreeFromOtherCreator.class);
 
 	private File dirInputTree;
 	private File dirOutputTree;
@@ -38,22 +43,24 @@ public class EmptyDataTreeFromOtherCreator
 
 	public void execute() throws IOException
 	{
-		System.out.println("Opening data tree: " + dirInputTree);
+		logger.info("Opening data tree: " + dirInputTree);
 
 		DataTree tree = DataTreeOpener.open(dirInputTree);
 
-		System.out.println("Creating new data tree: " + dirOutputTree);
+		logger.info("Creating new data tree: " + dirOutputTree);
 
 		dirOutputTree.mkdirs();
 
 		if (!dirOutputTree.isDirectory()) {
-			System.out.println("Unable to create output directory");
-			System.exit(1);
+			String error = "Unable to create output directory";
+			logger.error(error);
+			throw new IOException(error);
 		}
 
 		if (dirOutputTree.listFiles().length != 0) {
-			System.out.println("Output directory not empty");
-			System.exit(1);
+			String error = "Output directory not empty";
+			logger.error(error);
+			throw new IOException(error);
 		}
 
 		Envelope envelope = tree.getRoot().getEnvelope();

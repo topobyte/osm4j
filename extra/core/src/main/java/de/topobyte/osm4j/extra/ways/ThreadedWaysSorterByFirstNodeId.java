@@ -131,7 +131,7 @@ public class ThreadedWaysSorterByFirstNodeId implements WaysSorterByFirstNodeId
 		double seconds = past / 1000;
 		long perSecond = Math.round(wayCount / seconds);
 
-		System.out.println(String.format(
+		logger.info(String.format(
 				"Processed: %s ways, time passed: %.2f per second: %s",
 				format.format(wayCount), past / 1000 / 60.,
 				format.format(perSecond)));

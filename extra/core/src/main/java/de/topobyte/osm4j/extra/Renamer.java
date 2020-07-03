@@ -27,8 +27,13 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class Renamer
 {
+
+	final static Logger logger = LoggerFactory.getLogger(Renamer.class);
 
 	private Path path;
 	private String from;
@@ -48,13 +53,13 @@ public class Renamer
 		List<Path> paths = find(from);
 		int i = 0;
 		for (Path source : paths) {
-			System.out.println(String.format("%d / %d: %s", ++i, paths.size(),
-					source));
+			logger.info(
+					String.format("%d / %d: %s", ++i, paths.size(), source));
 			Path target = source.resolveSibling(to);
-			System.out.println(source + " -> " + target);
+			logger.info(source + " -> " + target);
 
 			if (Files.exists(target)) {
-				System.out.println("target exists");
+				logger.info("target exists");
 			}
 			if (dry) {
 				continue;

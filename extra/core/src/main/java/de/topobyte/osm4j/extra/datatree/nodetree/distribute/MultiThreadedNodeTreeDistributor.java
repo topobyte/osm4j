@@ -21,6 +21,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import de.topobyte.osm4j.core.access.OsmIterator;
 import de.topobyte.osm4j.core.access.OsmStreamOutput;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
@@ -35,9 +38,12 @@ import de.topobyte.osm4j.extra.threading.write.WriterRunner;
 import de.topobyte.osm4j.utils.buffer.OsmBuffer;
 import de.topobyte.osm4j.utils.buffer.ParallelExecutor;
 
-public class MultiThreadedNodeTreeDistributor extends
-		AbstractNodeTreeDistributor
+public class MultiThreadedNodeTreeDistributor
+		extends AbstractNodeTreeDistributor
 {
+
+	final static Logger logger = LoggerFactory
+			.getLogger(MultiThreadedNodeTreeDistributor.class);
 
 	private int numOutputThreads;
 	private List<DataTreeOutputFactory> outputFactories;
@@ -103,7 +109,7 @@ public class MultiThreadedNodeTreeDistributor extends
 			b.append(", ");
 			b.append(obuffer.getSize());
 		}
-		System.out.println(b.toString());
+		logger.info(b.toString());
 	}
 
 	private void run() throws IOException

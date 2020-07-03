@@ -26,9 +26,14 @@ import org.locationtech.jts.geom.Geometry;
 import org.locationtech.jts.geom.GeometryCollection;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.io.WKTWriter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class IdBboxListGeometryCreator
 {
+
+	final static Logger logger = LoggerFactory
+			.getLogger(IdBboxListGeometryCreator.class);
 
 	private File fileInput;
 	private File fileOutput;
@@ -41,14 +46,14 @@ public class IdBboxListGeometryCreator
 
 	public void execute() throws IOException
 	{
-		System.out.println("Opening file: " + fileInput);
+		logger.info("Opening file: " + fileInput);
 
 		List<Geometry> boxList = IdBboxUtil.readBoxes(fileInput);
 
 		GeometryCollection geometry = new GeometryFactory()
 				.createGeometryCollection(boxList.toArray(new Geometry[0]));
 
-		System.out.println("Writing output to: " + fileOutput);
+		logger.info("Writing output to: " + fileOutput);
 
 		FileWriter writer = new FileWriter(fileOutput);
 		new WKTWriter().write(geometry, writer);

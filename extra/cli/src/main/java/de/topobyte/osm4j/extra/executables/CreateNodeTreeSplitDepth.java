@@ -100,7 +100,7 @@ public class CreateNodeTreeSplitDepth extends CreateNodeTreeBase
 		DataTree tree = DataTreeUtil.initNewTree(pathTree, bounds);
 
 		tree.getRoot().split(splitDepth);
-		tree.print();
+		tree.print(System.out::println);
 
 		DataTreeFiles treeFiles = new DataTreeFiles(pathTree, fileNames);
 		DataTreeOutputFactory dataTreeOutputFactory = new ClosingDataTreeOutputFactory(

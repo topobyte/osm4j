@@ -92,12 +92,14 @@ public class RelationSorterBase
 			Files.createDirectories(pathOutput);
 		}
 		if (!Files.isDirectory(pathOutput)) {
-			logger.error("Output path is not a directory");
-			System.exit(1);
+			String error = "Output path is not a directory";
+			logger.error(error);
+			throw new IOException(error);
 		}
 		if (pathOutput.toFile().list().length != 0) {
-			logger.error("Output directory is not empty");
-			System.exit(1);
+			String error = "Output directory is not empty";
+			logger.error(error);
+			throw new IOException(error);
 		}
 	}
 
