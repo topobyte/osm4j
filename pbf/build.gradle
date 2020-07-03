@@ -1,0 +1,70 @@
+wrapper {
+    gradleVersion = '5.2.1'
+}
+
+allprojects {
+    group = pGroup
+    version = pVersion
+}
+
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'eclipse'
+    apply plugin: 'maven'
+
+    repositories {
+        maven {
+            url 'http://mvn.topobyte.de'
+        }
+        maven {
+            url 'http://mvn.slimjars.com'
+        }
+        mavenCentral()
+    }
+
+    sourceCompatibility = 1.7
+    targetCompatibility = 1.7
+}
+
+configure([project(':osm4j-pbf'), project(':osm4j-pbf-full-runtime')]) {
+
+    task sourcesJar(type: Jar, dependsOn: classes) {
+        classifier = 'sources'
+        from sourceSets.main.allSource
+    }
+
+    artifacts {
+        archives sourcesJar
+    }
+
+    def global = new File('info.pom');
+    def local = new File(project.projectDir, 'info.pom');
+
+    def pomInfo = new XmlSlurper().parse(global);
+    if (local.exists()) {
+        def pomInfoL = new XmlSlurper().parse(local);
+        pomInfo.name = pomInfoL.name
+        pomInfo.description = pomInfoL.description
+    }
+
+    afterEvaluate { project ->
+        uploadArchives {
+            repositories {
+                mavenDeployer {
+                    pom.project {
+                        name pomInfo.name
+                        description pomInfo.description
+                        url pomInfo.url
+                        licenses {
+                            license {
+                                name pomInfo.licenseName
+                                url pomInfo.licenseUrl
+                                distribution pomInfo.licenseDistribution
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

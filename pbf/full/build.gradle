@@ -1,0 +1,40 @@
+if (project.hasProperty("topobyte")) {
+    apply from: 'file:///' + System.getProperty("user.home") \
+        + '/.gradle/topobyte.gradle'
+}
+
+sourceSets {
+    main {
+        java {
+            srcDir 'src/gen/java'
+            srcDir '../core/src/main/java'
+        }
+    }
+    test {
+        java {
+            srcDir '../core/src/test/java'
+        }
+        resources {
+            srcDir '../core/src/test/resources'
+        }
+    }
+}
+
+dependencies {
+    compile 'de.topobyte:osm4j-core:0.1.0'
+
+    compile 'com.slimjars.trove4j:trove4j-object-int-hash-map:1.0.1'
+
+    compile 'com.google.protobuf:protobuf-java:3.9.1'
+
+    compile 'net.jpountz.lz4:lz4:1.3.0'
+
+    compile 'org.slf4j:slf4j-api:1.6.1'
+
+    testCompile 'junit:junit:4.12'
+    testCompile 'de.topobyte:osm4j-xml:0.1.2'
+    testCompile 'de.topobyte:osm4j-testing:0.1.0'
+
+    testRuntime 'org.slf4j:slf4j-log4j12:1.6.1'
+    testRuntime 'log4j:log4j:1.2.16'
+}
