@@ -1,0 +1,32 @@
+if (project.hasProperty("topobyte")) {
+    apply from: 'file:///' + System.getProperty("user.home") \
+        + '/.gradle/topobyte.gradle'
+}
+
+dependencies {
+    compile 'de.topobyte:osm4j-core:0.1.0'
+    compile 'de.topobyte:xml4jah-dom:0.0.5'
+    compile 'org.apache.httpcomponents:httpclient:4.5.5'
+    compile 'org.slf4j:slf4j-api:1.6.1'
+
+    testRuntime 'org.slf4j:slf4j-log4j12:1.6.1'
+    testRuntime 'log4j:log4j:1.2.16'
+}
+
+def pomInfo = new XmlSlurper().parse(new File(projectDir, 'info.pom'));
+
+afterEvaluate { project ->
+    uploadArchives {
+        repositories {
+            mavenDeployer {
+                pom.project {
+                    name pomInfo.name
+                    description pomInfo.description
+                    url pomInfo.url
+                }
+            }
+        }
+    }
+}
+
+eclipse.project.name = 'osm4j-edit'

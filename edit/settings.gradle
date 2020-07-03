@@ -1,0 +1,2 @@
+include 'core'
+project(':core').name = 'osm4j-edit'
