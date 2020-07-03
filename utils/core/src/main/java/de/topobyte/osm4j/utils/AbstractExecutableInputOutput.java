@@ -17,6 +17,7 @@
 
 package de.topobyte.osm4j.utils;
 
+import de.topobyte.osm4j.utils.config.ConfigurationException;
 import de.topobyte.osm4j.utils.config.PbfConfig;
 import de.topobyte.osm4j.utils.config.PbfOptions;
 import de.topobyte.osm4j.utils.config.TboConfig;
@@ -72,8 +73,20 @@ public abstract class AbstractExecutableInputOutput extends AbstractExecutable
 			System.exit(1);
 		}
 
-		pbfConfig = PbfOptions.parse(line);
-		tboConfig = TboOptions.parse(line);
+		try {
+			pbfConfig = PbfOptions.parse(line);
+		} catch (ConfigurationException e) {
+			System.out.println(
+					"Error while parsing PBF options: " + e.getMessage());
+			System.exit(1);
+		}
+		try {
+			tboConfig = TboOptions.parse(line);
+		} catch (ConfigurationException e) {
+			System.out.println(
+					"Error while parsing TBO options: " + e.getMessage());
+			System.exit(1);
+		}
 	}
 
 }

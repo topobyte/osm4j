@@ -42,6 +42,7 @@ public class PbfOptions
 	}
 
 	public static PbfConfig parse(CommandLine line)
+			throws ConfigurationException
 	{
 		PbfConfig config = new PbfConfig();
 		if (line.hasOption(OPTION_PBF_COMPRESSION)) {
@@ -53,10 +54,9 @@ public class PbfOptions
 			} else if (compressionArg.equals("lz4")) {
 				config.setCompression(Compression.LZ4);
 			} else {
-				System.out.println("invalid compression value");
-				System.out.println("please specify one of: "
-						+ POSSIBLE_COMPRESSION_ARGUMENTS);
-				System.exit(1);
+				throw new ConfigurationException(
+						"Invalid compression value: Please specify one of: "
+								+ POSSIBLE_COMPRESSION_ARGUMENTS);
 			}
 		}
 		if (line.hasOption(OPTION_PBF_NONE_DENSE)) {

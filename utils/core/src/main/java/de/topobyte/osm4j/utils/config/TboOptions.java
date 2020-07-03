@@ -57,6 +57,7 @@ public class TboOptions
 	}
 
 	public static TboConfig parse(CommandLine line)
+			throws ConfigurationException
 	{
 		TboConfig config = new TboConfig();
 		if (line.hasOption(OPTION_TBO_COMPRESSION)) {
@@ -68,10 +69,9 @@ public class TboOptions
 			} else if (compressionArg.equals("lz4")) {
 				config.setCompression(Compression.LZ4);
 			} else {
-				System.out.println("invalid compression value");
-				System.out.println("please specify one of: "
-						+ POSSIBLE_COMPRESSION_ARGUMENTS);
-				System.exit(1);
+				throw new ConfigurationException(
+						"Invalid compression value. Please specify one of: "
+								+ POSSIBLE_COMPRESSION_ARGUMENTS);
 			}
 		}
 
@@ -90,37 +90,36 @@ public class TboOptions
 					OPTION_TBO_MAX_RELATION_MEMBERS_PER_BLOCK);
 
 			if (maxElementsPerBlock.hasValue()) {
-				config.setLimitNodes(new ElementCountLimit(maxElementsPerBlock
-						.getValue()));
-				config.setLimitWays(new ElementCountLimit(maxElementsPerBlock
-						.getValue()));
-				config.setLimitRelations(new ElementCountLimit(
-						maxElementsPerBlock.getValue()));
+				config.setLimitNodes(
+						new ElementCountLimit(maxElementsPerBlock.getValue()));
+				config.setLimitWays(
+						new ElementCountLimit(maxElementsPerBlock.getValue()));
+				config.setLimitRelations(
+						new ElementCountLimit(maxElementsPerBlock.getValue()));
 			}
 			if (maxNodesPerBlock.hasValue()) {
-				config.setLimitNodes(new ElementCountLimit(maxNodesPerBlock
-						.getValue()));
+				config.setLimitNodes(
+						new ElementCountLimit(maxNodesPerBlock.getValue()));
 			}
 			if (maxWaysPerBlock.hasValue()) {
-				config.setLimitWays(new ElementCountLimit(maxWaysPerBlock
-						.getValue()));
+				config.setLimitWays(
+						new ElementCountLimit(maxWaysPerBlock.getValue()));
 			}
 			if (maxRelationsPerBlock.hasValue()) {
-				config.setLimitRelations(new ElementCountLimit(
-						maxRelationsPerBlock.getValue()));
+				config.setLimitRelations(
+						new ElementCountLimit(maxRelationsPerBlock.getValue()));
 			}
 			if (maxWayNodesPerBlock.hasValue()) {
-				config.setLimitWays(new WayNodeLimit(maxWayNodesPerBlock
-						.getValue()));
+				config.setLimitWays(
+						new WayNodeLimit(maxWayNodesPerBlock.getValue()));
 			}
 			if (maxRelationMembersPerBlock.hasValue()) {
 				config.setLimitRelations(new RelationMemberLimit(
 						maxRelationMembersPerBlock.getValue()));
 			}
 		} catch (ArgumentParseException e) {
-			System.out
-					.println("Error while parsing options: " + e.getMessage());
-			System.exit(1);
+			throw new ConfigurationException(
+					"Error while parsing options: " + e.getMessage(), e);
 		}
 
 		return config;
@@ -133,13 +132,13 @@ public class TboOptions
 		try {
 			integer = ArgumentHelper.getInteger(line, option);
 		} catch (ArgumentParseException e) {
-			throw new ArgumentParseException(String.format(
-					"Unable to parse option '%s'", option));
+			throw new ArgumentParseException(
+					String.format("Unable to parse option '%s'", option));
 		}
 		if (integer.hasValue()) {
 			if (integer.getValue() < 1) {
-				throw new ArgumentParseException(String.format(
-						"Option '%s' must be >= 1", option));
+				throw new ArgumentParseException(
+						String.format("Option '%s' must be >= 1", option));
 			}
 		}
 		return integer;
