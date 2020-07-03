@@ -1,4 +1,0 @@
-rootProject.name = pName
-include 'core', 'testing'
-project(':core').name = 'osm4j-core'
-project(':testing').name = 'osm4j-core-testing'

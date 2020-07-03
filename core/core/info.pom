@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+  <name>osm4j-core</name>
+  <description>osm4j module with basic data structures</description>
+</project>

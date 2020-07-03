@@ -1,3 +1,0 @@
-include 'core', 'cli'
-project(':core').name = 'osm4j-extra'
-project(':cli').name = 'osm4j-extra-cli'

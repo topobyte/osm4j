@@ -1,8 +1,3 @@
-if (project.hasProperty("topobyte")) {
-    apply from: 'file:///' + System.getProperty("user.home") \
-        + '/.gradle/topobyte.gradle'
-}
-
 dependencies {
     compile 'de.topobyte:osm4j-core:0.1.0'
     compile 'de.topobyte:dynsax:0.0.1'

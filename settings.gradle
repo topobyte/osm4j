@@ -1,0 +1,41 @@
+include 'core/core', 'core/testing'
+include 'xml/core', 'xml/testing'
+include 'pbf/core', 'pbf/full', 'pbf/testing'
+include 'tbo/core', 'tbo/testing'
+include 'geometry/core', 'geometry/testing'
+include 'utils/core', 'utils/cli'
+include 'extra/core', 'extra/cli'
+include 'edit/core'
+include 'osc/core', 'osc/testing'
+include 'testing'
+include 'incubating'
+
+project(':core/core').name = 'osm4j-core'
+project(':core/testing').name = 'osm4j-core-testing'
+
+project(':xml/core').name = 'osm4j-xml'
+project(':xml/testing').name = 'osm4j-xml-testing'
+
+project(':pbf/core').name = 'osm4j-pbf'
+project(':pbf/full').name = 'osm4j-pbf-full-runtime'
+project(':pbf/testing').name = 'osm4j-pbf-testing'
+
+project(':tbo/core').name = 'osm4j-tbo'
+project(':tbo/testing').name = 'osm4j-tbo-testing'
+
+project(':geometry/core').name = 'osm4j-geometry'
+project(':geometry/testing').name = 'osm4j-geometry-testing'
+
+project(':utils/core').name = 'osm4j-utils'
+project(':utils/cli').name = 'osm4j-utils-cli'
+
+project(':extra/core').name = 'osm4j-extra'
+project(':extra/cli').name = 'osm4j-extra-cli'
+
+project(':edit/core').name = 'osm4j-edit'
+
+project(':osc/core').name = 'osm4j-osc'
+project(':osc/testing').name = 'osm4j-osc-testing'
+
+project(':testing').name = 'osm4j-testing'
+project(':incubating').name = 'osm4j-incubating'
