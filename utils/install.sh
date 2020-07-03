@@ -3,9 +3,10 @@
 set -e
 
 DIR=$(dirname $0)
+ROOT="$DIR/../"
 
-pushd "$DIR" > /dev/null
-./gradlew clean installDist setupScripts
+pushd "$ROOT" > /dev/null
+./gradlew osm4j-utils-cli:clean osm4j-utils-cli:installDist osm4j-utils-cli:setupScripts
 popd
 
 "$DIR"/cli/build/setup/install.sh
