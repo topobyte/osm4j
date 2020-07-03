@@ -39,6 +39,7 @@ import com.slimjars.dist.gnu.trove.map.hash.TObjectLongHashMap;
 import de.topobyte.adt.geo.BBox;
 import de.topobyte.adt.geo.BBoxString;
 import de.topobyte.osm4j.core.model.iface.OsmBounds;
+import de.topobyte.osm4j.extra.OutputUtil;
 
 public class DataTreeUtil
 {
@@ -81,16 +82,7 @@ public class DataTreeUtil
 	public static DataTree initNewTree(Path dirOutput, BBox bbox)
 			throws IOException
 	{
-		if (!Files.exists(dirOutput)) {
-			logger.info("Creating output directory");
-			Files.createDirectories(dirOutput);
-		}
-		if (!Files.isDirectory(dirOutput)) {
-			throw new IOException("Output path is not a directory");
-		}
-		if (dirOutput.toFile().list().length != 0) {
-			throw new IOException("Output directory is not empty");
-		}
+		OutputUtil.ensureOutputDirectory(dirOutput);
 
 		DataTreeUtil.writeTreeInfo(dirOutput.toFile(), bbox);
 

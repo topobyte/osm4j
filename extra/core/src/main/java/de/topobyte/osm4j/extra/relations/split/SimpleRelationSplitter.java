@@ -34,6 +34,7 @@ import de.topobyte.osm4j.core.access.OsmIteratorInputFactory;
 import de.topobyte.osm4j.core.access.OsmOutputStream;
 import de.topobyte.osm4j.core.model.iface.OsmRelation;
 import de.topobyte.osm4j.core.util.RelationIterator;
+import de.topobyte.osm4j.extra.OutputUtil;
 import de.topobyte.osm4j.utils.OsmIoUtils;
 import de.topobyte.osm4j.utils.OsmOutputConfig;
 
@@ -63,20 +64,7 @@ public class SimpleRelationSplitter
 
 	public void execute() throws IOException
 	{
-		if (!Files.exists(pathOutput)) {
-			logger.info("Creating output directory");
-			Files.createDirectories(pathOutput);
-		}
-		if (!Files.isDirectory(pathOutput)) {
-			String error = "Output path is not a directory";
-			logger.error(error);
-			throw new IOException(error);
-		}
-		if (pathOutput.toFile().list().length != 0) {
-			String error = "Output directory is not empty";
-			logger.error(error);
-			throw new IOException(error);
-		}
+		OutputUtil.ensureOutputDirectory(pathOutput);
 
 		RelationBatch batch = new RelationBatch(maxMembers);
 

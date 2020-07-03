@@ -41,6 +41,7 @@ import de.topobyte.osm4j.core.access.OsmIteratorInputFactory;
 import de.topobyte.osm4j.core.access.OsmOutputStream;
 import de.topobyte.osm4j.core.dataset.InMemoryMapDataSet;
 import de.topobyte.osm4j.core.model.iface.OsmRelation;
+import de.topobyte.osm4j.extra.OutputUtil;
 import de.topobyte.osm4j.extra.relations.Group;
 import de.topobyte.osm4j.extra.relations.RelationGroupUtil;
 import de.topobyte.osm4j.utils.OsmIoUtils;
@@ -75,20 +76,7 @@ public class ComplexRelationSplitter
 
 	public void execute() throws IOException
 	{
-		if (!Files.exists(pathOutput)) {
-			logger.info("Creating output directory");
-			Files.createDirectories(pathOutput);
-		}
-		if (!Files.isDirectory(pathOutput)) {
-			String error = "Output path is not a directory";
-			logger.error(error);
-			throw new IOException(error);
-		}
-		if (pathOutput.toFile().list().length != 0) {
-			String error = "Output directory is not empty";
-			logger.error(error);
-			throw new IOException(error);
-		}
+		OutputUtil.ensureOutputDirectory(pathOutput);
 
 		ComplexRelationGrouper grouper = new ComplexRelationGrouper(
 				iteratorFactory, false, true);
@@ -175,8 +163,7 @@ public class ComplexRelationSplitter
 	private void process(GroupBatch batch) throws IOException
 	{
 		logger.info(String.format("groups: %d, members: %d",
-				batch
-				.getElements().size(), batch.getSize()));
+				batch.getElements().size(), batch.getSize()));
 
 		List<Group> groups = batch.getElements();
 

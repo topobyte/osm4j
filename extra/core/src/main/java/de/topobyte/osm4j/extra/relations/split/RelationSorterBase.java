@@ -43,6 +43,7 @@ import de.topobyte.osm4j.core.access.OsmOutputStream;
 import de.topobyte.osm4j.core.access.OsmOutputStreamStreamOutput;
 import de.topobyte.osm4j.core.access.OsmStreamOutput;
 import de.topobyte.osm4j.core.model.impl.Bounds;
+import de.topobyte.osm4j.extra.OutputUtil;
 import de.topobyte.osm4j.extra.idbboxlist.IdBboxEntry;
 import de.topobyte.osm4j.extra.idbboxlist.IdBboxListOutputStream;
 import de.topobyte.osm4j.extra.idbboxlist.IdBboxUtil;
@@ -87,20 +88,7 @@ public class RelationSorterBase
 
 	protected void ensureOutputDirectory() throws IOException
 	{
-		if (!Files.exists(pathOutput)) {
-			logger.info("Creating output directory");
-			Files.createDirectories(pathOutput);
-		}
-		if (!Files.isDirectory(pathOutput)) {
-			String error = "Output path is not a directory";
-			logger.error(error);
-			throw new IOException(error);
-		}
-		if (pathOutput.toFile().list().length != 0) {
-			String error = "Output directory is not empty";
-			logger.error(error);
-			throw new IOException(error);
-		}
+		OutputUtil.ensureOutputDirectory(pathOutput);
 	}
 
 	protected void createBboxOutput() throws IOException

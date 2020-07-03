@@ -18,17 +18,17 @@
 package de.topobyte.osm4j.extra.executables;
 
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import de.topobyte.osm4j.extra.OutputUtil;
 import de.topobyte.osm4j.extra.relations.split.ComplexRelationSplitter;
 import de.topobyte.osm4j.utils.AbstractExecutableSingleInputFileOutput;
 import de.topobyte.osm4j.utils.OsmOutputConfig;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
-public class SplitComplexRelations extends
-		AbstractExecutableSingleInputFileOutput
+public class SplitComplexRelations
+		extends AbstractExecutableSingleInputFileOutput
 {
 
 	private static final String OPTION_OUTPUT = "output";
@@ -77,19 +77,7 @@ public class SplitComplexRelations extends
 	protected void init() throws IOException
 	{
 		dirOutput = Paths.get(pathOutput);
-
-		if (!Files.exists(dirOutput)) {
-			System.out.println("Creating output directory");
-			Files.createDirectories(dirOutput);
-		}
-		if (!Files.isDirectory(dirOutput)) {
-			System.out.println("Output path is not a directory");
-			System.exit(1);
-		}
-		if (dirOutput.toFile().list().length != 0) {
-			System.out.println("Output directory is not empty");
-			System.exit(1);
-		}
+		OutputUtil.ensureOutputDirectory(dirOutput);
 	}
 
 	private void execute() throws IOException

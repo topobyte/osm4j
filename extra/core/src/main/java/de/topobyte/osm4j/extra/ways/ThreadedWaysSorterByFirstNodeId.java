@@ -20,7 +20,6 @@ package de.topobyte.osm4j.extra.ways;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -35,6 +34,7 @@ import de.topobyte.melon.io.StreamUtil;
 import de.topobyte.osm4j.core.access.OsmIterator;
 import de.topobyte.osm4j.core.access.OsmOutputStream;
 import de.topobyte.osm4j.core.model.iface.OsmWay;
+import de.topobyte.osm4j.extra.OutputUtil;
 import de.topobyte.osm4j.extra.threading.Buffer;
 import de.topobyte.osm4j.utils.OsmIoUtils;
 import de.topobyte.osm4j.utils.OsmOutputConfig;
@@ -64,7 +64,7 @@ public class ThreadedWaysSorterByFirstNodeId implements WaysSorterByFirstNodeId
 	@Override
 	public void execute() throws IOException
 	{
-		init();
+		OutputUtil.ensureOutputDirectory(dirOutput);
 
 		RunnableWayBatchBuilder batchBuilder = new RunnableWayBatchBuilder(
 				input, 800 * 1000, 10 * 1000 * 1000, buffer);
@@ -75,24 +75,6 @@ public class ThreadedWaysSorterByFirstNodeId implements WaysSorterByFirstNodeId
 
 		ParallelExecutor executor = new ParallelExecutor(tasks);
 		executor.execute();
-	}
-
-	private void init() throws IOException
-	{
-		if (!Files.exists(dirOutput)) {
-			logger.info("Creating output directory");
-			Files.createDirectories(dirOutput);
-		}
-		if (!Files.isDirectory(dirOutput)) {
-			String error = "Output path is not a directory";
-			logger.error(error);
-			throw new IOException(error);
-		}
-		if (dirOutput.toFile().list().length != 0) {
-			String error = "Output directory is not empty";
-			logger.error(error);
-			throw new IOException(error);
-		}
 	}
 
 	Runnable sorterWriter = new Runnable() {
