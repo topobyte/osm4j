@@ -1,0 +1,7 @@
+#!/bin/bash
+
+DIR=$(dirname $0)
+CMD="$DIR/osm4j-osc-testing.sh"
+CLASS="de.topobyte.osm4j.osc.test.TestReadCallback"
+
+exec "$CMD" "$CLASS" "$@"
