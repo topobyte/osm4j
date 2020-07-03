@@ -1,0 +1,7 @@
+#!/bin/bash
+
+DIR=$(dirname $0)
+CMD="$DIR/osm4j-xml-testing.sh"
+CLASS="de.topobyte.osm4j.xml.dynsax.test.TestReadIterator"
+
+exec "$CMD" "$CLASS" "$@"
