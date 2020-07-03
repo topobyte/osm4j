@@ -26,6 +26,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.locationtech.jts.geom.Envelope;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.topobyte.largescalefileio.ClosingFileOutputStreamFactory;
 import de.topobyte.largescalefileio.SimpleClosingFileOutputStreamFactory;
@@ -50,6 +52,9 @@ import de.topobyte.osm4j.utils.OsmOutputConfig;
 
 public class WaysToTreeMapperUsingArray
 {
+
+	final static Logger logger = LoggerFactory
+			.getLogger(WaysToTreeMapperUsingArray.class);
 
 	private OsmIterator wayIterator;
 
@@ -84,8 +89,8 @@ public class WaysToTreeMapperUsingArray
 		// within the world bounds
 
 		Path pathNonMatched = pathTree.resolve("non-matched-ways.tbo");
-		OutputStream bosNone = StreamUtil.bufferedOutputStream(pathNonMatched
-				.toFile());
+		OutputStream bosNone = StreamUtil
+				.bufferedOutputStream(pathNonMatched.toFile());
 		OsmOutputStream osmOutputNone = OsmIoUtils.setupOsmOutput(bosNone,
 				outputConfig);
 		OsmStreamOutput outputNone = new OsmOutputStreamStreamOutput(bosNone,
@@ -111,8 +116,8 @@ public class WaysToTreeMapperUsingArray
 			outputs.put(leaf, output);
 
 			Envelope box = leaf.getEnvelope();
-			osmOutput.write(new Bounds(box.getMinX(), box.getMaxX(), box
-					.getMaxY(), box.getMinY()));
+			osmOutput.write(new Bounds(box.getMinX(), box.getMaxX(),
+					box.getMaxY(), box.getMinY()));
 		}
 
 		// Process ways
@@ -163,8 +168,8 @@ public class WaysToTreeMapperUsingArray
 
 		progress.stop();
 
-		System.out.println("none: " + nNone);
-		System.out.println("multiple: " + nMultiple);
+		logger.info("none: " + nNone);
+		logger.info("multiple: " + nMultiple);
 
 		array.close();
 

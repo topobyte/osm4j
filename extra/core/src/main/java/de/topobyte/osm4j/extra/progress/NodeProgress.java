@@ -20,8 +20,13 @@ package de.topobyte.osm4j.extra.progress;
 import java.text.NumberFormat;
 import java.util.Locale;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class NodeProgress
 {
+
+	final static Logger logger = LoggerFactory.getLogger(NodeProgress.class);
 
 	private long num = 0;
 
@@ -47,8 +52,8 @@ public class NodeProgress
 		long perSecond = Math.round(num / seconds);
 		NumberFormat format = NumberFormat.getInstance(Locale.US);
 		format.setGroupingUsed(true);
-		System.out.println(String.format("%ds: processed: %s per second: %s",
-				rSeconds, format.format(num), format.format(perSecond)));
+		logger.info(String.format("%ds: processed: %s per second: %s", rSeconds,
+				format.format(num), format.format(perSecond)));
 	}
 
 	private long start;

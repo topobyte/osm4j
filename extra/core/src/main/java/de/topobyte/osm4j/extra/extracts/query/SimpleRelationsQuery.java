@@ -19,6 +19,9 @@ package de.topobyte.osm4j.extra.extracts.query;
 
 import java.io.IOException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import de.topobyte.jts.utils.predicate.PredicateEvaluator;
 import de.topobyte.osm4j.core.dataset.InMemoryListDataSet;
 import de.topobyte.osm4j.core.model.iface.OsmRelation;
@@ -30,6 +33,9 @@ import de.topobyte.osm4j.extra.QueryUtil;
 
 public class SimpleRelationsQuery extends AbstractRelationsQuery
 {
+
+	final static Logger logger = LoggerFactory
+			.getLogger(SimpleRelationsQuery.class);
 
 	public SimpleRelationsQuery(InMemoryListDataSet dataNodes,
 			InMemoryListDataSet dataWays, InMemoryListDataSet dataRelations,
@@ -54,15 +60,13 @@ public class SimpleRelationsQuery extends AbstractRelationsQuery
 			MissingEntityCounter counter = new MissingEntityCounter();
 			QueryUtil.putNodes(relation, queryBag.additionalNodes, dataNodes,
 					queryBag.nodeIds, counter);
-			QueryUtil
-					.putWaysAndWayNodes(relation, queryBag.additionalNodes,
-							queryBag.additionalWays, provider, queryBag.wayIds,
-							counter);
+			QueryUtil.putWaysAndWayNodes(relation, queryBag.additionalNodes,
+					queryBag.additionalWays, provider, queryBag.wayIds,
+					counter);
 
 			if (counter.nonZero()) {
-				System.out.println(String.format(
-						"relation %d: unable to find %s", relation.getId(),
-						counter.toMessage()));
+				logger.warn(String.format("relation %d: unable to find %s",
+						relation.getId(), counter.toMessage()));
 			}
 		}
 	}

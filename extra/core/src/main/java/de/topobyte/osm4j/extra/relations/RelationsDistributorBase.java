@@ -32,6 +32,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.locationtech.jts.geom.Envelope;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.topobyte.largescalefileio.ClosingFileOutputStreamFactory;
 import de.topobyte.largescalefileio.SimpleClosingFileOutputStreamFactory;
@@ -54,6 +56,9 @@ import de.topobyte.osm4j.utils.OsmOutputConfig;
 
 public abstract class RelationsDistributorBase
 {
+
+	final static Logger logger = LoggerFactory
+			.getLogger(RelationsDistributorBase.class);
 
 	protected Path pathTree;
 	protected Path pathData;
@@ -103,8 +108,9 @@ public abstract class RelationsDistributorBase
 	protected void init() throws IOException
 	{
 		if (!Files.isDirectory(pathData)) {
-			System.out.println("Input path is not a directory");
-			System.exit(1);
+			String error = "Input path is not a directory";
+			logger.error(error);
+			throw new IOException(error);
 		}
 
 		tree = DataTreeOpener.open(pathTree.toFile());
@@ -195,10 +201,10 @@ public abstract class RelationsDistributorBase
 	{
 		int i = 0;
 		for (Path path : subdirs) {
-			System.out.println(String.format("Processing directory %d of %d",
+			logger.info(String.format("Processing directory %d of %d",
 					++i, subdirs.size()));
 			build(path);
-			System.out.println(String.format(
+			logger.info(String.format(
 					"empty: %d, tree: %d, remaining: %d", nWrittenEmpty,
 					nWrittenToTree, nRemaining));
 		}

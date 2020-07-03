@@ -19,6 +19,9 @@ package de.topobyte.osm4j.extra.ways;
 
 import java.io.IOException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import de.topobyte.osm4j.core.access.OsmIterator;
 import de.topobyte.osm4j.core.model.iface.EntityContainer;
 import de.topobyte.osm4j.core.model.iface.OsmWay;
@@ -27,6 +30,9 @@ import de.topobyte.osm4j.utils.buffer.StoppableRunnable;
 
 public class RunnableWayBatchBuilder implements StoppableRunnable
 {
+
+	final static Logger logger = LoggerFactory
+			.getLogger(RunnableWayBatchBuilder.class);
 
 	private int maxWays;
 	private int maxWayNodes;
@@ -68,9 +74,9 @@ public class RunnableWayBatchBuilder implements StoppableRunnable
 					if (batch.fits(way)) {
 						batch.add(way);
 					} else {
-						System.out.println("does not fit");
+						logger.info("does not fit");
 						output.write(batch);
-						System.out.println("write returned");
+						logger.info("write returned");
 						batch = new WayBatch(maxWays, maxWayNodes);
 						batch.add(way);
 					}

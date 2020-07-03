@@ -110,15 +110,13 @@ public class ComplexRelationsQuery extends AbstractRelationsQuery
 			MissingEntityCounter counter = new MissingEntityCounter();
 			QueryUtil.putNodes(relation, queryBag.additionalNodes, dataNodes,
 					queryBag.nodeIds, counter);
-			QueryUtil
-					.putWaysAndWayNodes(relation, queryBag.additionalNodes,
-							queryBag.additionalWays, provider, queryBag.wayIds,
-							counter);
+			QueryUtil.putWaysAndWayNodes(relation, queryBag.additionalNodes,
+					queryBag.additionalWays, provider, queryBag.wayIds,
+					counter);
 
 			if (counter.nonZero()) {
-				System.out.println(String.format(
-						"relation %d: unable to find %s", relation.getId(),
-						counter.toMessage()));
+				logger.warn(String.format("relation %d: unable to find %s",
+						relation.getId(), counter.toMessage()));
 			}
 		}
 	}
@@ -150,8 +148,8 @@ public class ComplexRelationsQuery extends AbstractRelationsQuery
 				List<OsmRelation> subRelations;
 				try {
 					start = dataRelations.getRelation(subGroup.getStart());
-					subRelations = finder.findRelations(subGroup
-							.getRelationIds());
+					subRelations = finder
+							.findRelations(subGroup.getRelationIds());
 				} catch (EntityNotFoundException e) {
 					// Can't happen, using the IGNORE strategy
 					continue;
@@ -168,15 +166,13 @@ public class ComplexRelationsQuery extends AbstractRelationsQuery
 			MissingEntityCounter counter = new MissingEntityCounter();
 			QueryUtil.putNodes(relation, queryBag.additionalNodes, dataNodes,
 					queryBag.nodeIds, counter);
-			QueryUtil
-					.putWaysAndWayNodes(relation, queryBag.additionalNodes,
-							queryBag.additionalWays, provider, queryBag.wayIds,
-							counter);
+			QueryUtil.putWaysAndWayNodes(relation, queryBag.additionalNodes,
+					queryBag.additionalWays, provider, queryBag.wayIds,
+					counter);
 
 			if (counter.nonZero()) {
-				System.out.println(String.format(
-						"relation %d: unable to find %s", relation.getId(),
-						counter.toMessage()));
+				logger.warn(String.format("relation %d: unable to find %s",
+						relation.getId(), counter.toMessage()));
 			}
 		}
 	}

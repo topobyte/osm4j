@@ -32,12 +32,16 @@ import java.util.Map;
 import java.util.Set;
 
 import org.locationtech.jts.geom.Envelope;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.topobyte.adt.geo.BBox;
 import de.topobyte.adt.geo.BBoxString;
 
 public class DataTreeOpener
 {
+
+	final static Logger logger = LoggerFactory.getLogger(DataTreeOpener.class);
 
 	public static DataTree open(File dir) throws IOException
 	{
@@ -55,8 +59,8 @@ public class DataTreeOpener
 				break;
 			}
 			if (bbox == null && line.startsWith(DataTree.PROPERTY_BBOX + ":")) {
-				String data = line.substring(
-						DataTree.PROPERTY_BBOX.length() + 1).trim();
+				String data = line
+						.substring(DataTree.PROPERTY_BBOX.length() + 1).trim();
 				bbox = BBoxString.parse(data).toBbox();
 			}
 		}
@@ -82,7 +86,7 @@ public class DataTreeOpener
 				Long.parseLong(name, 16);
 				dataFiles.add(file);
 			} catch (NumberFormatException e) {
-				System.out.println("Warning: unknown directory: " + file);
+				logger.warn("Warning: unknown directory: " + file);
 			}
 		}
 

@@ -22,6 +22,8 @@ import java.nio.file.Path;
 
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.GeometryFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.slimjars.dist.gnu.trove.map.TLongObjectMap;
 import com.slimjars.dist.gnu.trove.map.hash.TLongObjectHashMap;
@@ -45,6 +47,8 @@ import de.topobyte.osm4j.utils.OsmOutputConfig;
 
 public class LeafQuery extends AbstractQuery
 {
+
+	final static Logger logger = LoggerFactory.getLogger(LeafQuery.class);
 
 	private PredicateEvaluator test;
 
@@ -109,18 +113,18 @@ public class LeafQuery extends AbstractQuery
 		this.pathOutAdditionalNodes = pathOutAdditionalNodes;
 		this.pathOutAdditionalWays = pathOutAdditionalWays;
 
-		System.out.println("loading data");
+		logger.info("loading data");
 		readData(leaf);
 
 		createOutputs();
 
-		System.out.println("querying nodes");
+		logger.info("querying nodes");
 		queryNodes();
 
-		System.out.println("querying ways");
+		logger.info("querying ways");
 		queryWays();
 
-		System.out.println("querying simple relations");
+		logger.info("querying simple relations");
 		RelationQueryBag queryBagSimple = new RelationQueryBag(
 				outSimpleRelations, additionalNodes, additionalWays, nodeIds,
 				wayIds);
@@ -130,7 +134,7 @@ public class LeafQuery extends AbstractQuery
 				fastRelationTests);
 		simpleRelationsQuery.execute(queryBagSimple);
 
-		System.out.println("querying complex relations");
+		logger.info("querying complex relations");
 		RelationQueryBag queryBagComplex = new RelationQueryBag(
 				outComplexRelations, additionalNodes, additionalWays, nodeIds,
 				wayIds);
@@ -140,13 +144,13 @@ public class LeafQuery extends AbstractQuery
 				fastRelationTests);
 		complexRelationsQuery.execute(queryBagComplex);
 
-		System.out.println("writing additional nodes");
+		logger.info("writing additional nodes");
 		writeAdditionalNodes();
 
-		System.out.println("writing additional ways");
+		logger.info("writing additional ways");
 		writeAdditionalWays();
 
-		System.out.println("closing output");
+		logger.info("closing output");
 		finishOutputs();
 
 		return new QueryResult(nodeIds.size(), wayIds.size(),
@@ -200,7 +204,7 @@ public class LeafQuery extends AbstractQuery
 						in = true;
 					}
 				} catch (EntityNotFoundException e) {
-					System.out.println("Unable to build way: " + way.getId());
+					logger.warn("Unable to build way: " + way.getId());
 				}
 			}
 			if (!in) {
@@ -211,8 +215,7 @@ public class LeafQuery extends AbstractQuery
 			try {
 				QueryUtil.putNodes(way, additionalNodes, dataNodes, nodeIds);
 			} catch (EntityNotFoundException e) {
-				System.out.println(
-						"Unable to find all nodes for way: " + way.getId());
+				logger.warn("Unable to find all nodes for way: " + way.getId());
 			}
 		}
 	}

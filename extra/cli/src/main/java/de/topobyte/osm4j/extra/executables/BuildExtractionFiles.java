@@ -65,7 +65,12 @@ public class BuildExtractionFiles extends AbstractExecutableInput
 
 		task.setup(args);
 
-		task.execute();
+		try {
+			task.execute();
+		} catch (IOException | OsmInputException e) {
+			System.out.println("Error while running task: " + e.getMessage());
+			System.exit(1);
+		}
 	}
 
 	private String pathInput;

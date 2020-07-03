@@ -29,6 +29,8 @@ import java.util.List;
 import java.util.Locale;
 
 import org.locationtech.jts.geom.Envelope;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.slimjars.dist.gnu.trove.map.TLongIntMap;
 import com.slimjars.dist.gnu.trove.map.hash.TLongIntHashMap;
@@ -49,6 +51,9 @@ import de.topobyte.osm4j.utils.OsmOutputConfig;
 
 public class RelationSorterBase
 {
+
+	final static Logger logger = LoggerFactory
+			.getLogger(RelationSorterBase.class);
 
 	private int maxMembers;
 
@@ -83,15 +88,15 @@ public class RelationSorterBase
 	protected void ensureOutputDirectory() throws IOException
 	{
 		if (!Files.exists(pathOutput)) {
-			System.out.println("Creating output directory");
+			logger.info("Creating output directory");
 			Files.createDirectories(pathOutput);
 		}
 		if (!Files.isDirectory(pathOutput)) {
-			System.out.println("Output path is not a directory");
+			logger.error("Output path is not a directory");
 			System.exit(1);
 		}
 		if (pathOutput.toFile().list().length != 0) {
-			System.out.println("Output directory is not empty");
+			logger.error("Output directory is not empty");
 			System.exit(1);
 		}
 	}
@@ -111,7 +116,7 @@ public class RelationSorterBase
 		inputBboxes.close();
 
 		batches = BatchSorting.sort(bboxes, maxMembers);
-		System.out.println("number of batches: " + batches.size());
+		logger.info("number of batches: " + batches.size());
 
 		idToBatch = new TLongIntHashMap();
 		int batchCounter = 0;

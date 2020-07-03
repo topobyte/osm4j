@@ -21,6 +21,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.slimjars.dist.gnu.trove.map.TLongObjectMap;
 import com.slimjars.dist.gnu.trove.map.hash.TLongObjectHashMap;
 import com.slimjars.dist.gnu.trove.set.TLongSet;
@@ -34,6 +37,9 @@ import de.topobyte.osm4j.extra.relations.RelationGraph;
 
 public class ComplexRelationGrouper
 {
+
+	final static Logger logger = LoggerFactory
+			.getLogger(ComplexRelationGrouper.class);
 
 	private OsmIteratorInputFactory iteratorFactory;
 
@@ -65,11 +71,11 @@ public class ComplexRelationGrouper
 		relationGraph.build(iteratorInput.getIterator());
 		iteratorInput.close();
 
-		System.out.println("Number of relations without relation members: "
+		logger.info("Number of relations without relation members: "
 				+ relationGraph.getNumNoChildren());
-		System.out.println("Number of relations with relation members: "
+		logger.info("Number of relations with relation members: "
 				+ relationGraph.getIdsHasChildRelations().size());
-		System.out.println("Number of child relations: "
+		logger.info("Number of child relations: "
 				+ relationGraph.getIdsIsChildRelation().size());
 
 		groups = relationGraph.buildGroups();

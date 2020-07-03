@@ -25,6 +25,9 @@ import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import de.topobyte.osm4j.core.access.OsmInputAccessFactory;
 import de.topobyte.osm4j.core.access.OsmIteratorInput;
 import de.topobyte.osm4j.extra.datatree.DataTree;
@@ -41,6 +44,9 @@ import de.topobyte.osm4j.utils.OsmOutputConfig;
 
 public class NodeTreeCreatorMaxNodes
 {
+
+	final static Logger logger = LoggerFactory
+			.getLogger(NodeTreeCreatorMaxNodes.class);
 
 	private OsmInputAccessFactory inputFactory;
 	private DataTreeOutputFactory outputFactory;
@@ -61,9 +67,9 @@ public class NodeTreeCreatorMaxNodes
 
 	public NodeTreeCreatorMaxNodes(DataTree tree,
 			OsmInputAccessFactory inputFactory,
-			DataTreeOutputFactory outputFactory, int maxNodes,
-			int splitInitial, int splitIteration, Path dirOutput,
-			String fileNames, OsmOutputConfig outputConfig,
+			DataTreeOutputFactory outputFactory, int maxNodes, int splitInitial,
+			int splitIteration, Path dirOutput, String fileNames,
+			OsmOutputConfig outputConfig,
 			NodeTreeLeafCounterFactory counterFactory,
 			NodeTreeDistributorFactory distributorFactory)
 	{
@@ -94,7 +100,7 @@ public class NodeTreeCreatorMaxNodes
 
 		while (!check.isEmpty()) {
 			iteration++;
-			System.out.println(String.format("Iteration %d", iteration));
+			logger.info(String.format("Iteration %d", iteration));
 
 			List<Node> largeNodes = new ArrayList<>();
 			for (NodeTreeLeafCounter counter : check) {
@@ -103,21 +109,19 @@ public class NodeTreeCreatorMaxNodes
 					if (count <= maxNodes) {
 						continue;
 					}
-					System.out.println(String.format(
-							"Node %s has too many nodes: %d",
+					logger.info(String.format("Node %s has too many nodes: %d",
 							Long.toHexString(node.getPath()), count));
 					largeNodes.add(node);
 				}
 			}
 			check.clear();
 
-			System.out.println(String.format(
-					"Iteration %d: there are %d large nodes", iteration,
-					largeNodes.size()));
+			logger.info(String.format("Iteration %d: there are %d large nodes",
+					iteration, largeNodes.size()));
 
 			for (Node node : largeNodes) {
 				Path path = treeFiles.getPath(node);
-				System.out.println(String.format("Splitting again: node %s",
+				logger.info(String.format("Splitting again: node %s",
 						Long.toHexString(node.getPath())));
 				node.split(splitIteration);
 

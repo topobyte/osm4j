@@ -24,6 +24,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.slimjars.dist.gnu.trove.map.TLongObjectMap;
 import com.slimjars.dist.gnu.trove.set.TLongSet;
 
@@ -40,6 +43,9 @@ import de.topobyte.osm4j.utils.sort.MemorySort;
 
 public class ComplexRelationSorter extends RelationSorterBase
 {
+
+	final static Logger logger = LoggerFactory
+			.getLogger(ComplexRelationSorter.class);
 
 	private String fileNamesRelationsSorted;
 	private boolean keepUnsortedRelations;
@@ -76,7 +82,7 @@ public class ComplexRelationSorter extends RelationSorterBase
 		for (Group group : groups) {
 			long representative = group.getStart();
 			if (!idToBatch.containsKey(representative)) {
-				System.out.println("not available: " + representative);
+				logger.info("not available: " + representative);
 			}
 			int batchNum = idToBatch.get(representative);
 			OsmStreamOutput osmOutput = outputs.get(batchNum);
@@ -85,7 +91,7 @@ public class ComplexRelationSorter extends RelationSorterBase
 			for (long id : ids.toArray()) {
 				OsmRelation relation = groupRelations.get(id);
 				if (relation == null) {
-					System.out.println("relation not found: " + id);
+					logger.info("relation not found: " + id);
 					continue;
 				}
 				osmOutput.getOsmOutput().write(relation);
@@ -95,14 +101,14 @@ public class ComplexRelationSorter extends RelationSorterBase
 
 		closeOutputs();
 
-		System.out.println(String.format("Wrote %s relations in %d batches",
+		logger.info(String.format("Wrote %s relations in %d batches",
 				format.format(relationCount), batches.size()));
 
 		boolean useMetadata = outputConfig.isWriteMetadata();
 
 		for (int i = 0; i < batches.size(); i++) {
 			int id = i + 1;
-			System.out.println("sorting " + id);
+			logger.info("sorting " + id);
 			Path pathUnsorted = batchFile(id, fileNamesRelations);
 			Path pathSorted = batchFile(id, fileNamesRelationsSorted);
 

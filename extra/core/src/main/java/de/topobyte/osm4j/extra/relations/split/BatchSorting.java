@@ -23,12 +23,16 @@ import java.util.Comparator;
 import java.util.List;
 
 import org.locationtech.jts.geom.Envelope;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.topobyte.osm4j.extra.batch.BatchBuilder;
 import de.topobyte.osm4j.extra.idbboxlist.IdBboxEntry;
 
 public class BatchSorting
 {
+
+	final static Logger logger = LoggerFactory.getLogger(BatchSorting.class);
 
 	public static List<List<IdBboxEntry>> sort(List<IdBboxEntry> bboxes,
 			int maxMembers)
@@ -39,11 +43,11 @@ public class BatchSorting
 		for (IdBboxEntry entry : bboxes) {
 			size += entry.getSize();
 		}
-		System.out.println("num boxes: " + bboxes.size());
-		System.out.println("total size: " + size);
+		logger.info("num boxes: " + bboxes.size());
+		logger.info("total size: " + size);
 
 		int maxSlice = (int) Math.ceil(Math.sqrt(size * maxMembers));
-		System.out.println("max nodes per slice: " + maxSlice);
+		logger.info("max nodes per slice: " + maxSlice);
 
 		sortX(bboxes);
 

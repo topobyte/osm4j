@@ -36,6 +36,8 @@ import java.util.Set;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.LinearRing;
 import org.locationtech.jts.geom.Polygon;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.slimjars.dist.gnu.trove.map.TLongObjectMap;
 import com.slimjars.dist.gnu.trove.map.hash.TLongObjectHashMap;
@@ -67,6 +69,9 @@ import de.topobyte.osm4j.utils.OsmOutputConfig;
 
 public abstract class AbstractWaysDistributor implements WaysDistributor
 {
+
+	final static Logger logger = LoggerFactory
+			.getLogger(AbstractWaysDistributor.class);
 
 	private Path pathTree;
 
@@ -181,7 +186,7 @@ public abstract class AbstractWaysDistributor implements WaysDistributor
 		Iterator<Node> iterator = leafs.iterator();
 		while (!stopped && iterator.hasNext()) {
 			Node leaf = iterator.next();
-			System.out.println(
+			logger.info(
 					String.format("Processing leaf %d/%d", ++i, leafs.size()));
 
 			File fileNodes1 = filesNodes1.getFile(leaf);
@@ -195,9 +200,8 @@ public abstract class AbstractWaysDistributor implements WaysDistributor
 			InputStream inputWays = StreamUtil.bufferedInputStream(fileWays);
 
 			long nodesSize1 = fileNodes1.length();
-			System.out
-					.println(String.format("Loading nodes file of size: %.3fMB",
-							nodesSize1 / 1024. / 1024.));
+			logger.info(String.format("Loading nodes file of size: %.3fMB",
+					nodesSize1 / 1024. / 1024.));
 
 			InMemoryListDataSet dataNodes1 = ListDataSetLoader.read(
 					OsmIoUtils.setupOsmIterator(inputNodes1, inputFormatNodes,
@@ -205,9 +209,8 @@ public abstract class AbstractWaysDistributor implements WaysDistributor
 					true, true, true);
 
 			long nodesSize2 = fileNodes2.length();
-			System.out
-					.println(String.format("Loading nodes file of size: %.3fMB",
-							nodesSize2 / 1024. / 1024.));
+			logger.info(String.format("Loading nodes file of size: %.3fMB",
+					nodesSize2 / 1024. / 1024.));
 
 			InMemoryListDataSet dataNodes2 = ListDataSetLoader.read(
 					OsmIoUtils.setupOsmIterator(inputNodes2, inputFormatNodes,
@@ -215,9 +218,8 @@ public abstract class AbstractWaysDistributor implements WaysDistributor
 					true, true, true);
 
 			long waysSize = fileWays.length();
-			System.out
-					.println(String.format("Loading ways file of size: %.3fMB",
-							waysSize / 1024. / 1024.));
+			logger.info(String.format("Loading ways file of size: %.3fMB",
+					waysSize / 1024. / 1024.));
 
 			InMemoryListDataSet dataWays = ListDataSetLoader.read(
 					OsmIoUtils.setupOsmIterator(inputWays, inputFormatWays,
@@ -228,7 +230,7 @@ public abstract class AbstractWaysDistributor implements WaysDistributor
 			inputNodes2.close();
 			inputWays.close();
 
-			System.out.println("Number of ways: " + dataWays.getWays().size());
+			logger.info("Number of ways: " + dataWays.getWays().size());
 
 			leafData(new LeafData(leaf, dataWays, dataNodes1, dataNodes2));
 
@@ -251,8 +253,7 @@ public abstract class AbstractWaysDistributor implements WaysDistributor
 				leafs = buildClosedWay(way, nodes, entityProvider);
 			}
 		} catch (EntityNotFoundException e) {
-			System.out.println(
-					"Entity not found while building way: " + way.getId());
+			logger.info("Entity not found while building way: " + way.getId());
 			return;
 		}
 
@@ -264,7 +265,7 @@ public abstract class AbstractWaysDistributor implements WaysDistributor
 		}
 
 		if (leafs.size() == 0) {
-			System.out.println("No leaf found for way: " + way.getId());
+			logger.info("No leaf found for way: " + way.getId());
 		}
 
 		counter++;
@@ -311,7 +312,7 @@ public abstract class AbstractWaysDistributor implements WaysDistributor
 		} else {
 			List<Node> merged = merge(leafs1, leafs2);
 			if (merged.size() > leafs1.size()) {
-				System.out.println(String.format(
+				logger.info(String.format(
 						"found way that contains leafs. outline: %d polygon: %d merged: %d",
 						leafs1.size(), leafs2.size(), merged.size()));
 			}
@@ -337,7 +338,7 @@ public abstract class AbstractWaysDistributor implements WaysDistributor
 
 	private void stats(int leafsDone)
 	{
-		System.out.println(String.format(
+		logger.info(String.format(
 				"ways: %s, no leafs found: %s, unable to build: %s",
 				format.format(counter), format.format(noneFound),
 				format.format(unableToBuild)));
@@ -345,9 +346,8 @@ public abstract class AbstractWaysDistributor implements WaysDistributor
 		long now = System.currentTimeMillis();
 		long past = now - start;
 		long estimate = Math.round((past / (double) leafsDone) * leafs.size());
-		System.out.println(String.format("Past: %.2f", past / 1000 / 60.));
-		System.out.println(
-				String.format("Estimate: %.2f", estimate / 1000 / 60.));
+		logger.info(String.format("Past: %.2f", past / 1000 / 60.));
+		logger.info(String.format("Estimate: %.2f", estimate / 1000 / 60.));
 	}
 
 }

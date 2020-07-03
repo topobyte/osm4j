@@ -27,6 +27,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.slimjars.dist.gnu.trove.set.TLongSet;
 import com.slimjars.dist.gnu.trove.set.hash.TLongHashSet;
 
@@ -43,6 +46,9 @@ import de.topobyte.osm4j.utils.OsmIoUtils;
 
 public class MemberIdsExtractor
 {
+
+	final static Logger logger = LoggerFactory
+			.getLogger(MemberIdsExtractor.class);
 
 	private Path[] dirsData;
 
@@ -71,8 +77,8 @@ public class MemberIdsExtractor
 
 		int i = 0;
 		for (Path path : subdirs) {
-			System.out.println(String.format("Processing directory %d of %d",
-					++i, subdirs.size()));
+			logger.info(String.format("Processing directory %d of %d", ++i,
+					subdirs.size()));
 			extract(path);
 		}
 	}
@@ -81,8 +87,9 @@ public class MemberIdsExtractor
 	{
 		for (Path dirData : dirsData) {
 			if (!Files.isDirectory(dirData)) {
-				System.out.println("Data path is not a directory: " + dirData);
-				System.exit(1);
+				String error = "Data path is not a directory: " + dirData;
+				logger.error(error);
+				throw new IOException(error);
 			}
 		}
 
@@ -109,8 +116,8 @@ public class MemberIdsExtractor
 		Path pathNodeIds = path.resolve(fileNamesNodeIds);
 		Path pathWayIds = path.resolve(fileNamesWayIds);
 
-		InputStream input = StreamUtil.bufferedInputStream(pathRelations
-				.toFile());
+		InputStream input = StreamUtil
+				.bufferedInputStream(pathRelations.toFile());
 		OsmIterator osmIterator = OsmIoUtils.setupOsmIterator(input,
 				inputFormat, false);
 
@@ -146,9 +153,10 @@ public class MemberIdsExtractor
 		}
 		idOutputNodeIds.close();
 
-		OutputStream outputWayIds = StreamUtil.bufferedOutputStream(pathWayIds
-				.toFile());
-		IdListOutputStream idOutputWayIds = new IdListOutputStream(outputWayIds);
+		OutputStream outputWayIds = StreamUtil
+				.bufferedOutputStream(pathWayIds.toFile());
+		IdListOutputStream idOutputWayIds = new IdListOutputStream(
+				outputWayIds);
 
 		long[] wayIds = wayIdsSet.toArray();
 		Arrays.sort(wayIds);

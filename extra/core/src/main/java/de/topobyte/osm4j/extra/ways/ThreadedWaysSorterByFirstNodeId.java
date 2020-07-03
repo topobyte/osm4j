@@ -28,6 +28,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import de.topobyte.melon.io.StreamUtil;
 import de.topobyte.osm4j.core.access.OsmIterator;
 import de.topobyte.osm4j.core.access.OsmOutputStream;
@@ -39,6 +42,9 @@ import de.topobyte.osm4j.utils.buffer.ParallelExecutor;
 
 public class ThreadedWaysSorterByFirstNodeId implements WaysSorterByFirstNodeId
 {
+
+	final static Logger logger = LoggerFactory
+			.getLogger(ThreadedWaysSorterByFirstNodeId.class);
 
 	private OsmIterator input;
 	private Path dirOutput;
@@ -74,16 +80,18 @@ public class ThreadedWaysSorterByFirstNodeId implements WaysSorterByFirstNodeId
 	private void init() throws IOException
 	{
 		if (!Files.exists(dirOutput)) {
-			System.out.println("Creating output directory");
+			logger.info("Creating output directory");
 			Files.createDirectories(dirOutput);
 		}
 		if (!Files.isDirectory(dirOutput)) {
-			System.out.println("Output path is not a directory");
-			System.exit(1);
+			String error = "Output path is not a directory";
+			logger.error(error);
+			throw new IOException(error);
 		}
 		if (dirOutput.toFile().list().length != 0) {
-			System.out.println("Output directory is not empty");
-			System.exit(1);
+			String error = "Output directory is not empty";
+			logger.error(error);
+			throw new IOException(error);
 		}
 	}
 

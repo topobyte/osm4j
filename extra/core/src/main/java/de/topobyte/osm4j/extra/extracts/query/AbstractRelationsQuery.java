@@ -24,6 +24,8 @@ import java.util.Set;
 
 import org.locationtech.jts.geom.Envelope;
 import org.locationtech.jts.geom.GeometryFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.topobyte.jts.utils.GeometryGroup;
 import de.topobyte.jts.utils.predicate.PredicateEvaluator;
@@ -44,6 +46,9 @@ import de.topobyte.osm4j.geometry.RegionBuilderResult;
 
 public abstract class AbstractRelationsQuery
 {
+
+	final static Logger logger = LoggerFactory
+			.getLogger(AbstractRelationsQuery.class);
 
 	protected InMemoryListDataSet dataNodes;
 	protected InMemoryListDataSet dataWays;
@@ -72,14 +77,14 @@ public abstract class AbstractRelationsQuery
 		provider = new CompositeOsmEntityProvider(dataNodes, dataWays,
 				dataRelations);
 
-		lineworkBuilder
-				.setMissingEntitiesStrategy(MissingEntitiesStrategy.BUILD_PARTIAL);
-		lineworkBuilder
-				.setMissingWayNodeStrategy(MissingWayNodeStrategy.SPLIT_POLYLINE);
-		regionBuilder
-				.setMissingEntitiesStrategy(MissingEntitiesStrategy.BUILD_PARTIAL);
-		regionBuilder
-				.setMissingWayNodeStrategy(MissingWayNodeStrategy.OMIT_VERTEX_FROM_POLYLINE);
+		lineworkBuilder.setMissingEntitiesStrategy(
+				MissingEntitiesStrategy.BUILD_PARTIAL);
+		lineworkBuilder.setMissingWayNodeStrategy(
+				MissingWayNodeStrategy.SPLIT_POLYLINE);
+		regionBuilder.setMissingEntitiesStrategy(
+				MissingEntitiesStrategy.BUILD_PARTIAL);
+		regionBuilder.setMissingWayNodeStrategy(
+				MissingWayNodeStrategy.OMIT_VERTEX_FROM_POLYLINE);
 	}
 
 	protected boolean intersects(OsmRelation relation,
@@ -114,26 +119,25 @@ public abstract class AbstractRelationsQuery
 				return true;
 			}
 		} catch (EntityNotFoundException e) {
-			System.out.println("Unable to build relation: " + relation.getId());
+			logger.warn("Unable to build relation: " + relation.getId());
 		}
 
 		try {
-			RegionBuilderResult result = regionBuilder
-					.build(relation, provider);
+			RegionBuilderResult result = regionBuilder.build(relation,
+					provider);
 			GeometryGroup group = result.toGeometryGroup(factory);
 			if (test.intersects(group)) {
 				return true;
 			}
 		} catch (EntityNotFoundException e) {
-			System.out.println("Unable to build relation: " + relation.getId());
+			logger.warn("Unable to build relation: " + relation.getId());
 		}
 
 		return false;
 	}
 
-	protected boolean intersects(OsmRelation start,
-			List<OsmRelation> relations, RelationQueryBag queryBag,
-			EntityFinder finder) throws IOException
+	protected boolean intersects(OsmRelation start, List<OsmRelation> relations,
+			RelationQueryBag queryBag, EntityFinder finder) throws IOException
 	{
 		if (QueryUtil.anyMemberContainedIn(relations, queryBag.nodeIds,
 				queryBag.wayIds)) {
@@ -164,7 +168,7 @@ public abstract class AbstractRelationsQuery
 				return true;
 			}
 		} catch (EntityNotFoundException e) {
-			System.out.println("Unable to build relation group");
+			logger.warn("Unable to build relation group");
 		}
 
 		try {
@@ -174,7 +178,7 @@ public abstract class AbstractRelationsQuery
 				return true;
 			}
 		} catch (EntityNotFoundException e) {
-			System.out.println("Unable to build relation group");
+			logger.warn("Unable to build relation group");
 		}
 
 		return false;

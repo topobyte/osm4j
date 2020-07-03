@@ -24,6 +24,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.topobyte.adt.geo.BBox;
 import de.topobyte.adt.geo.BBoxString;
@@ -73,6 +75,9 @@ import de.topobyte.osm4j.utils.split.ThreadedEntitySplitter;
 
 public class ExtractionFilesBuilder
 {
+
+	final static Logger logger = LoggerFactory
+			.getLogger(ExtractionFilesBuilder.class);
 
 	private static final String KEY_TOTAL = "total";
 	private static final String KEY_SPLIT = "split";
@@ -196,19 +201,21 @@ public class ExtractionFilesBuilder
 
 	public void execute() throws IOException, OsmInputException
 	{
-		System.out.println("Output directory: " + pathOutput);
+		logger.info("Output directory: " + pathOutput);
 		Files.createDirectories(pathOutput);
 		if (!Files.isDirectory(pathOutput)) {
-			System.out.println("Unable to create output directory");
-			System.exit(1);
+			String error = "Unable to create output directory";
+			logger.error(error);
+			throw new IOException(error);
 		}
 		if (pathOutput.toFile().listFiles().length != 0) {
 			if (continuePreviousBuild) {
-				System.out.println(
+				logger.info(
 						"Output directory is not empty, but continuing anyway");
 			} else {
-				System.out.println("Output directory is not empty");
-				System.exit(1);
+				String error = "Output directory is not empty";
+				logger.error(error);
+				throw new IOException(error);
 			}
 		}
 
@@ -334,7 +341,7 @@ public class ExtractionFilesBuilder
 		OsmIteratorInput inputBounds = fileInput.createIterator(false, false);
 
 		if (!inputBounds.getIterator().hasBounds() && !computeBbox) {
-			System.out.println("Input does not provide bounds"
+			logger.info("Input does not provide bounds"
 					+ " and no flag has been set to compute the bounding box");
 			System.exit(1);
 		}
@@ -344,7 +351,7 @@ public class ExtractionFilesBuilder
 			bbox = new BBox(bounds.getLeft(), bounds.getBottom(),
 					bounds.getRight(), bounds.getTop());
 
-			System.out.println("bounds from file: " + BBoxString.create(bbox));
+			logger.info("bounds from file: " + BBoxString.create(bbox));
 		}
 
 		inputBounds.close();
@@ -381,7 +388,7 @@ public class ExtractionFilesBuilder
 		if (computeBbox) {
 			bbox = OsmUtils.computeBBox(fileInputNodes);
 
-			System.out.println("computed bounds: " + BBoxString.create(bbox));
+			logger.info("computed bounds: " + BBoxString.create(bbox));
 		}
 		t.stop(KEY_COMPUTE_BBOX);
 	}
@@ -709,7 +716,7 @@ public class ExtractionFilesBuilder
 				KEY_SORT_RELATIONS, KEY_CLEAN_UP, KEY_CREATE_GEOMETRIES };
 
 		for (String key : keys) {
-			System.out.println(String.format("%s: %s", key, t.htime(key)));
+			logger.info(String.format("%s: %s", key, t.htime(key)));
 		}
 	}
 

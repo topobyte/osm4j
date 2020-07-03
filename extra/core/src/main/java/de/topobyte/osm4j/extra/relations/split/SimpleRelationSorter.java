@@ -20,6 +20,9 @@ package de.topobyte.osm4j.extra.relations.split;
 import java.io.IOException;
 import java.nio.file.Path;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import de.topobyte.osm4j.core.access.OsmIteratorInput;
 import de.topobyte.osm4j.core.access.OsmIteratorInputFactory;
 import de.topobyte.osm4j.core.access.OsmStreamOutput;
@@ -29,6 +32,9 @@ import de.topobyte.osm4j.utils.OsmOutputConfig;
 
 public class SimpleRelationSorter extends RelationSorterBase
 {
+
+	final static Logger logger = LoggerFactory
+			.getLogger(SimpleRelationSorter.class);
 
 	public SimpleRelationSorter(Path pathInputBboxes, Path pathOutput,
 			String fileNamesRelations, OsmIteratorInputFactory iteratorFactory,
@@ -54,7 +60,7 @@ public class SimpleRelationSorter extends RelationSorterBase
 		int relationCount = 0;
 		for (OsmRelation relation : relations) {
 			if (!idToBatch.containsKey(relation.getId())) {
-				System.out.println("not available: " + relation.getId());
+				logger.info("not available: " + relation.getId());
 			}
 			int batchNum = idToBatch.get(relation.getId());
 			OsmStreamOutput osmOutput = outputs.get(batchNum);
@@ -65,7 +71,7 @@ public class SimpleRelationSorter extends RelationSorterBase
 		iteratorInput.close();
 		closeOutputs();
 
-		System.out.println(String.format("Wrote %s relations in %d batches",
+		logger.info(String.format("Wrote %s relations in %d batches",
 				format.format(relationCount), batches.size()));
 	}
 

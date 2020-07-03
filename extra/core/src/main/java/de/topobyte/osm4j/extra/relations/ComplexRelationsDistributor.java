@@ -28,6 +28,8 @@ import java.util.List;
 import java.util.Set;
 
 import org.locationtech.jts.geom.Envelope;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.topobyte.melon.io.StreamUtil;
 import de.topobyte.osm4j.core.access.OsmBridge;
@@ -58,6 +60,9 @@ import de.topobyte.osm4j.utils.OsmOutputConfig;
 
 public class ComplexRelationsDistributor extends RelationsDistributorBase
 {
+
+	final static Logger logger = LoggerFactory
+			.getLogger(ComplexRelationsDistributor.class);
 
 	public ComplexRelationsDistributor(Path pathTree, Path pathData,
 			Path pathOutputEmpty, Path pathOutputNonTree,
@@ -98,15 +103,15 @@ public class ComplexRelationsDistributor extends RelationsDistributorBase
 
 		InMemoryMapDataSet dataRelations = read(pathRelations, true, true);
 
-		System.out.println("Number of relations without relation members: "
+		logger.info("Number of relations without relation members: "
 				+ relationGraph.getNumNoChildren());
-		System.out.println("Number of relations with relation members: "
+		logger.info("Number of relations with relation members: "
 				+ relationGraph.getIdsHasChildRelations().size());
-		System.out.println("Number of child relations: "
+		logger.info("Number of child relations: "
 				+ relationGraph.getIdsIsChildRelation().size());
 
 		List<Group> groups = relationGraph.buildGroups();
-		System.out.println("number of groups: " + groups.size());
+		logger.info("number of groups: " + groups.size());
 
 		List<RelationGroup> relationGroups = new ArrayList<>();
 
@@ -128,7 +133,7 @@ public class ComplexRelationsDistributor extends RelationsDistributorBase
 							.getStart(), subGroupRelations));
 				}
 			} catch (EntityNotFoundException e) {
-				System.out.println("unable to build relation group");
+				logger.warn("unable to build relation group");
 			}
 		}
 

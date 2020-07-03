@@ -24,12 +24,17 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import de.topobyte.osm4j.extra.datatree.Node;
 import de.topobyte.osm4j.utils.FileFormat;
 
-public class ThreadedMissingWayNodesFinder extends
-		AbstractMissingWayNodesFinder
+public class ThreadedMissingWayNodesFinder extends AbstractMissingWayNodesFinder
 {
+
+	final static Logger logger = LoggerFactory
+			.getLogger(ThreadedMissingWayNodesFinder.class);
 
 	public ThreadedMissingWayNodesFinder(Path pathNodeTree, Path pathWayTree,
 			Path pathOutputTree, String fileNamesNodes, String fileNamesWays,
@@ -57,8 +62,8 @@ public class ThreadedMissingWayNodesFinder extends
 
 		int i = 0;
 		for (final Node leaf : leafs) {
-			System.out.println(String.format("Processing leaf %d/%d", ++i,
-					leafs.size()));
+			logger.info(
+					String.format("Processing leaf %d/%d", ++i, leafs.size()));
 
 			final MissingWayNodesFinderTask task = creatTask(leaf);
 

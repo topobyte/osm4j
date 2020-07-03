@@ -24,6 +24,9 @@ import java.text.NumberFormat;
 import java.util.List;
 import java.util.Locale;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import de.topobyte.osm4j.extra.datatree.DataTree;
 import de.topobyte.osm4j.extra.datatree.DataTreeFiles;
 import de.topobyte.osm4j.extra.datatree.DataTreeOpener;
@@ -31,9 +34,12 @@ import de.topobyte.osm4j.extra.datatree.Node;
 import de.topobyte.osm4j.utils.FileFormat;
 import de.topobyte.osm4j.utils.OsmFile;
 
-public abstract class AbstractMissingWayNodesFinder implements
-		MissingWayNodesFinder
+public abstract class AbstractMissingWayNodesFinder
+		implements MissingWayNodesFinder
 {
+
+	final static Logger logger = LoggerFactory
+			.getLogger(AbstractMissingWayNodesFinder.class);
 
 	private Path pathNodeTree;
 	private Path pathWayTree;
@@ -93,8 +99,8 @@ public abstract class AbstractMissingWayNodesFinder implements
 		File fileOutput = filesOutput.getFile(leaf);
 
 		MissingWayNodesFinderTask task = new MissingWayNodesFinderTask(
-				new OsmFile(fileNodes, inputFormatNodes), new OsmFile(fileWays,
-						inputFormatWays), fileOutput, false);
+				new OsmFile(fileNodes, inputFormatNodes),
+				new OsmFile(fileWays, inputFormatWays), fileOutput, false);
 
 		return task;
 	}
@@ -107,7 +113,7 @@ public abstract class AbstractMissingWayNodesFinder implements
 		notFound += t.getNotFound();
 
 		double ratio = notFound / (double) (found + notFound);
-		System.out.println(String.format(
+		logger.info(String.format(
 				"ways: %s, found ids: %s, missing ids: %s, ratio: %f",
 				format.format(counter), format.format(found),
 				format.format(notFound), ratio));
@@ -115,9 +121,8 @@ public abstract class AbstractMissingWayNodesFinder implements
 		long now = System.currentTimeMillis();
 		long past = now - start;
 		long estimate = Math.round((past / (double) leafsDone) * leafs.size());
-		System.out.println(String.format("Past: %.2f", past / 1000 / 60.));
-		System.out.println(String.format("Estimate: %.2f",
-				estimate / 1000 / 60.));
+		logger.info(String.format("Past: %.2f", past / 1000 / 60.));
+		logger.info(String.format("Estimate: %.2f", estimate / 1000 / 60.));
 	}
 
 }

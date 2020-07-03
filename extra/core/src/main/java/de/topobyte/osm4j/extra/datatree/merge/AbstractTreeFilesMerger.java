@@ -25,6 +25,9 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import de.topobyte.melon.io.StreamUtil;
 import de.topobyte.osm4j.core.access.OsmIterator;
 import de.topobyte.osm4j.core.access.OsmOutputStream;
@@ -40,6 +43,9 @@ import de.topobyte.osm4j.utils.sort.MemorySortIterator;
 
 public abstract class AbstractTreeFilesMerger implements TreeFilesMerger
 {
+
+	final static Logger logger = LoggerFactory
+			.getLogger(AbstractTreeFilesMerger.class);
 
 	private Path pathTree;
 
@@ -139,9 +145,8 @@ public abstract class AbstractTreeFilesMerger implements TreeFilesMerger
 		long now = System.currentTimeMillis();
 		long past = now - start;
 		long estimate = Math.round((past / (double) leafsDone) * leafs.size());
-		System.out.println(String.format("Past: %.2f", past / 1000 / 60.));
-		System.out.println(String.format("Estimate: %.2f",
-				estimate / 1000 / 60.));
+		logger.info(String.format("Past: %.2f", past / 1000 / 60.));
+		logger.info(String.format("Estimate: %.2f", estimate / 1000 / 60.));
 	}
 
 }

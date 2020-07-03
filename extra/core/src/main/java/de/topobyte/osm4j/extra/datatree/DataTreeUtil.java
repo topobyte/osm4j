@@ -29,6 +29,8 @@ import java.util.Comparator;
 import java.util.List;
 
 import org.locationtech.jts.geom.Envelope;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.slimjars.dist.gnu.trove.map.TLongLongMap;
 import com.slimjars.dist.gnu.trove.map.TObjectLongMap;
@@ -40,6 +42,8 @@ import de.topobyte.osm4j.core.model.iface.OsmBounds;
 
 public class DataTreeUtil
 {
+
+	final static Logger logger = LoggerFactory.getLogger(DataTreeUtil.class);
 
 	public static void writeTreeInfo(File dir, BBox bbox)
 			throws FileNotFoundException
@@ -78,7 +82,7 @@ public class DataTreeUtil
 			throws IOException
 	{
 		if (!Files.exists(dirOutput)) {
-			System.out.println("Creating output directory");
+			logger.info("Creating output directory");
 			Files.createDirectories(dirOutput);
 		}
 		if (!Files.isDirectory(dirOutput)) {
@@ -99,9 +103,9 @@ public class DataTreeUtil
 		List<Node> inner = tree.getInner(head);
 		List<Node> leafs = tree.getLeafs(head);
 
-		System.out.println("Before merging underfilled siblings:");
-		System.out.println("inner nodes: " + inner.size());
-		System.out.println("leafs: " + leafs.size());
+		logger.debug("Before merging underfilled siblings:");
+		logger.debug("inner nodes: " + inner.size());
+		logger.debug("leafs: " + leafs.size());
 
 		TObjectLongMap<Node> counts = new TObjectLongHashMap<>();
 		for (Node leaf : leafs) {
@@ -129,9 +133,9 @@ public class DataTreeUtil
 			}
 		}
 
-		System.out.println("After:");
-		System.out.println("inner nodes: " + tree.getInner(head).size());
-		System.out.println("leafs: " + tree.getLeafs(head).size());
+		logger.debug("After:");
+		logger.debug("inner nodes: " + tree.getInner(head).size());
+		logger.debug("leafs: " + tree.getLeafs(head).size());
 	}
 
 }

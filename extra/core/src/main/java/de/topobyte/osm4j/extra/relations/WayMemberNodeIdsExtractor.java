@@ -27,6 +27,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.slimjars.dist.gnu.trove.set.TLongSet;
 import com.slimjars.dist.gnu.trove.set.hash.TLongHashSet;
 
@@ -42,6 +45,9 @@ import de.topobyte.osm4j.utils.OsmIoUtils;
 
 public class WayMemberNodeIdsExtractor
 {
+
+	final static Logger logger = LoggerFactory
+			.getLogger(WayMemberNodeIdsExtractor.class);
 
 	private Path[] dirsData;
 
@@ -67,7 +73,7 @@ public class WayMemberNodeIdsExtractor
 
 		int i = 0;
 		for (Path path : subdirs) {
-			System.out.println(String.format("Processing directory %d of %d",
+			logger.info(String.format("Processing directory %d of %d",
 					++i, subdirs.size()));
 			extract(path);
 		}
@@ -77,8 +83,9 @@ public class WayMemberNodeIdsExtractor
 	{
 		for (Path dirData : dirsData) {
 			if (!Files.isDirectory(dirData)) {
-				System.out.println("Data path is not a directory: " + dirData);
-				System.exit(1);
+				String error = "Data path is not a directory: " + dirData;
+				logger.error(error);
+				throw new IOException(error);
 			}
 		}
 

@@ -21,6 +21,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.slimjars.dist.gnu.trove.iterator.TLongIterator;
 import com.slimjars.dist.gnu.trove.iterator.TLongObjectIterator;
 import com.slimjars.dist.gnu.trove.list.TLongList;
@@ -44,6 +47,9 @@ import de.topobyte.osm4j.utils.OsmFileInput;
 
 public class MissingWayNodesFinderTask implements Task
 {
+
+	final static Logger logger = LoggerFactory
+			.getLogger(MissingWayNodesFinderTask.class);
 
 	private long counter = 0;
 	private long found = 0;
@@ -83,8 +89,7 @@ public class MissingWayNodesFinderTask implements Task
 	{
 		if (verbose) {
 			long nodesSize = fileNodes.getPath().toFile().length();
-			System.out.println(String.format(
-					"Loading nodes file of size: %.3fMB",
+			logger.info(String.format("Loading nodes file of size: %.3fMB",
 					nodesSize / 1024. / 1024.));
 		}
 
@@ -94,13 +99,12 @@ public class MissingWayNodesFinderTask implements Task
 
 		if (verbose) {
 			long waysSize = fileWays.getPath().toFile().length();
-			System.out.println(String.format(
-					"Loading ways file of size: %.3fMB",
+			logger.info(String.format("Loading ways file of size: %.3fMB",
 					waysSize / 1024. / 1024.));
 		}
 
-		OsmIteratorInput wayInput = new OsmFileInput(fileWays).createIterator(
-				false, false);
+		OsmIteratorInput wayInput = new OsmFileInput(fileWays)
+				.createIterator(false, false);
 		InMemoryMapDataSet dataWays = MapDataSetLoader.read(wayInput, true,
 				true, true);
 
@@ -108,7 +112,7 @@ public class MissingWayNodesFinderTask implements Task
 		wayInput.close();
 
 		if (verbose) {
-			System.out.println("Number of ways: " + dataWays.getWays().size());
+			logger.info("Number of ways: " + dataWays.getWays().size());
 		}
 
 		TLongSet missingIds = new TLongHashSet();
@@ -121,14 +125,14 @@ public class MissingWayNodesFinderTask implements Task
 		}
 
 		if (verbose) {
-			System.out.println("Sorting id list of size: " + missingIds.size());
+			logger.info("Sorting id list of size: " + missingIds.size());
 		}
 
 		TLongList missingIdList = new TLongArrayList(missingIds);
 		missingIdList.sort();
 
 		if (verbose) {
-			System.out.println("Writing missing ids");
+			logger.info("Writing missing ids");
 		}
 		OutputStream bos = StreamUtil.bufferedOutputStream(fileOutput);
 		IdListOutputStream idOutput = new IdListOutputStream(bos);

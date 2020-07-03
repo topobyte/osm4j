@@ -23,9 +23,14 @@ import java.io.IOException;
 
 import org.locationtech.jts.geom.GeometryCollection;
 import org.locationtech.jts.io.WKTWriter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class DataTreeBoxGeometryCreator
 {
+
+	final static Logger logger = LoggerFactory
+			.getLogger(DataTreeBoxGeometryCreator.class);
 
 	private File dirTree;
 	private File fileOutput;
@@ -38,13 +43,13 @@ public class DataTreeBoxGeometryCreator
 
 	public void execute() throws IOException
 	{
-		System.out.println("Opening data tree: " + dirTree);
+		logger.info("Opening data tree: " + dirTree);
 
 		DataTree tree = DataTreeOpener.open(dirTree);
 		GeometryCollection geometry = BoxUtil.createBoxesGeometry(tree,
 				BoxUtil.WORLD_BOUNDS);
 
-		System.out.println("Writing output to: " + fileOutput);
+		logger.info("Writing output to: " + fileOutput);
 
 		FileWriter writer = new FileWriter(fileOutput);
 		new WKTWriter().write(geometry, writer);

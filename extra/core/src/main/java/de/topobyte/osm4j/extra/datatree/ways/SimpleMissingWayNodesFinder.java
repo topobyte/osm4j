@@ -20,11 +20,17 @@ package de.topobyte.osm4j.extra.datatree.ways;
 import java.io.IOException;
 import java.nio.file.Path;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import de.topobyte.osm4j.extra.datatree.Node;
 import de.topobyte.osm4j.utils.FileFormat;
 
 public class SimpleMissingWayNodesFinder extends AbstractMissingWayNodesFinder
 {
+
+	final static Logger logger = LoggerFactory
+			.getLogger(SimpleMissingWayNodesFinder.class);
 
 	public SimpleMissingWayNodesFinder(Path pathNodeTree, Path pathWayTree,
 			Path pathOutputTree, String fileNamesNodes, String fileNamesWays,
@@ -47,8 +53,8 @@ public class SimpleMissingWayNodesFinder extends AbstractMissingWayNodesFinder
 	{
 		int i = 0;
 		for (final Node leaf : leafs) {
-			System.out.println(String.format("Processing leaf %d/%d", ++i,
-					leafs.size()));
+			logger.info(
+					String.format("Processing leaf %d/%d", ++i, leafs.size()));
 
 			MissingWayNodesFinderTask task = creatTask(leaf);
 

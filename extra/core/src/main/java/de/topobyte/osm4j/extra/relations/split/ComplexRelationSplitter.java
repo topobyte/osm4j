@@ -29,6 +29,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.slimjars.dist.gnu.trove.map.TLongObjectMap;
 import com.slimjars.dist.gnu.trove.set.TLongSet;
 import com.slimjars.dist.gnu.trove.set.hash.TLongHashSet;
@@ -45,6 +48,9 @@ import de.topobyte.osm4j.utils.OsmOutputConfig;
 
 public class ComplexRelationSplitter
 {
+
+	final static Logger logger = LoggerFactory
+			.getLogger(ComplexRelationSplitter.class);
 
 	private int maxMembers = 100 * 1000;
 
@@ -70,16 +76,18 @@ public class ComplexRelationSplitter
 	public void execute() throws IOException
 	{
 		if (!Files.exists(pathOutput)) {
-			System.out.println("Creating output directory");
+			logger.info("Creating output directory");
 			Files.createDirectories(pathOutput);
 		}
 		if (!Files.isDirectory(pathOutput)) {
-			System.out.println("Output path is not a directory");
-			System.exit(1);
+			String error = "Output path is not a directory";
+			logger.error(error);
+			throw new IOException(error);
 		}
 		if (pathOutput.toFile().list().length != 0) {
-			System.out.println("Output directory is not empty");
-			System.exit(1);
+			String error = "Output directory is not empty";
+			logger.error(error);
+			throw new IOException(error);
 		}
 
 		ComplexRelationGrouper grouper = new ComplexRelationGrouper(
@@ -158,7 +166,7 @@ public class ComplexRelationSplitter
 		double seconds = past / 1000;
 		long perSecond = Math.round(relationCount / seconds);
 
-		System.out.println(String.format(
+		logger.debug(String.format(
 				"Processed: %s relations, time passed: %.2f per second: %s",
 				format.format(relationCount), past / 1000 / 60.,
 				format.format(perSecond)));
@@ -166,7 +174,8 @@ public class ComplexRelationSplitter
 
 	private void process(GroupBatch batch) throws IOException
 	{
-		System.out.println(String.format("groups: %d, members: %d", batch
+		logger.info(String.format("groups: %d, members: %d",
+				batch
 				.getElements().size(), batch.getSize()));
 
 		List<Group> groups = batch.getElements();
@@ -180,7 +189,7 @@ public class ComplexRelationSplitter
 		for (long relationId : batchRelationIds.toArray()) {
 			OsmRelation relation = groupRelations.get(relationId);
 			if (relation == null) {
-				System.out.println("relation not found: " + relationId);
+				logger.info("relation not found: " + relationId);
 				continue;
 			}
 			relations.add(relation);

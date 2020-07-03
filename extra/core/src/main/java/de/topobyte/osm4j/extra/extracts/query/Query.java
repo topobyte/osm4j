@@ -29,6 +29,8 @@ import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.Envelope;
 import org.locationtech.jts.geom.Geometry;
 import org.locationtech.jts.geom.GeometryFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.slimjars.dist.gnu.trove.set.TLongSet;
 
@@ -56,6 +58,8 @@ import de.topobyte.osm4j.utils.merge.sorted.SortedMerge;
 
 public class Query extends AbstractQuery
 {
+
+	final static Logger logger = LoggerFactory.getLogger(Query.class);
 
 	private Envelope queryEnvelope;
 	private PredicateEvaluator test;
@@ -187,21 +191,21 @@ public class Query extends AbstractQuery
 			String leafName = Long.toHexString(leaf.getPath());
 
 			if (test.contains(leaf.getEnvelope())) {
-				System.out.println("Leaf is completely contained: " + leafName);
+				logger.info("Leaf is completely contained: " + leafName);
 				addCompletelyContainedLeaf(leaf);
 				continue;
 			}
 
-			System.out.println("Loading data from leaf: " + leafName);
+			logger.info("Loading data from leaf: " + leafName);
 			addIntersectingLeaf(leaf);
 		}
 
-		System.out.println(String.format("Total number of nodes: %d", nNodes));
-		System.out.println(String.format("Total number of ways: %d", nWays));
-		System.out.println(String.format("Total number of simple relations: %d",
+		logger.info(String.format("Total number of nodes: %d", nNodes));
+		logger.info(String.format("Total number of ways: %d", nWays));
+		logger.info(String.format("Total number of simple relations: %d",
 				nSimpleRelations));
-		System.out.println(String.format(
-				"Total number of complex relations: %d", nComplexRelations));
+		logger.info(String.format("Total number of complex relations: %d",
+				nComplexRelations));
 
 		// Query relations
 
@@ -213,14 +217,14 @@ public class Query extends AbstractQuery
 		for (IdBboxEntry entry : entriesSimple) {
 			long id = entry.getId();
 			if (test.contains(entry.getEnvelope())) {
-				System.out.println("Simple batch completely contained: " + id);
+				logger.info("Simple batch completely contained: " + id);
 				addCompletelyContainedBatch(paths.getSimpleRelations(), id,
 						filesSimpleRelations);
 			} else if (test.intersects(entry.getEnvelope())) {
-				System.out.println("Loading data from simple batch: " + id);
+				logger.info("Loading data from simple batch: " + id);
 				tmpIndexSimple++;
 				String tmpFilenames = filename(tmpIndexSimple);
-				System.out.println("Writing to files: " + tmpFilenames);
+				logger.info("Writing to files: " + tmpFilenames);
 
 				Path pathDir = paths.getSimpleRelations()
 						.resolve(Long.toString(entry.getId()));
@@ -243,14 +247,14 @@ public class Query extends AbstractQuery
 		for (IdBboxEntry entry : entriesComplex) {
 			long id = entry.getId();
 			if (test.contains(entry.getEnvelope())) {
-				System.out.println("Complex batch completely contained: " + id);
+				logger.info("Complex batch completely contained: " + id);
 				addCompletelyContainedBatch(paths.getComplexRelations(), id,
 						filesComplexRelations);
 			} else if (test.intersects(entry.getEnvelope())) {
-				System.out.println("Loading data from complex batch: " + id);
+				logger.info("Loading data from complex batch: " + id);
 				tmpIndexComplex++;
 				String tmpFilenames = filename(tmpIndexComplex);
-				System.out.println("Writing to files: " + tmpFilenames);
+				logger.info("Writing to files: " + tmpFilenames);
 
 				Path pathDir = paths.getComplexRelations()
 						.resolve(Long.toString(entry.getId()));
@@ -281,8 +285,7 @@ public class Query extends AbstractQuery
 		mergeFiles.addAll(filesSimpleRelations);
 		mergeFiles.addAll(filesComplexRelations);
 
-		System.out
-				.println(String.format("Merging %d files", mergeFiles.size()));
+		logger.info(String.format("Merging %d files", mergeFiles.size()));
 
 		List<OsmIteratorInput> mergeIteratorInputs = new ArrayList<>();
 		List<OsmIterator> mergeIterators = new ArrayList<>();
@@ -317,19 +320,19 @@ public class Query extends AbstractQuery
 		if (pathTmp == null) {
 			pathTmp = Files.createTempDirectory("extract");
 		}
-		System.out.println("Temporary directory: " + pathTmp);
+		logger.info("Temporary directory: " + pathTmp);
 		Files.createDirectories(pathTmp);
 		if (!Files.isDirectory(pathTmp)) {
-			System.out.println(
-					"Unable to create temporary directory for intermediate files");
-			System.exit(1);
+			String error = "Unable to create temporary directory for intermediate files";
+			logger.error(error);
+			throw new IOException(error);
 		}
 		if (pathTmp.toFile().listFiles().length != 0) {
-			System.out.println(
-					"Temporary directory for intermediate files is not empty");
-			System.exit(1);
+			String error = "Temporary directory for intermediate files is not empty";
+			logger.error(error);
+			throw new IOException(error);
 		}
-		System.out.println("Storing intermediate files here: " + pathTmp);
+		logger.info("Storing intermediate files here: " + pathTmp);
 
 		// Create sub-directories for intermediate files
 
@@ -439,13 +442,11 @@ public class Query extends AbstractQuery
 		filesSimpleRelations.add(intermediate(pathOutSimpleRelations));
 		filesComplexRelations.add(intermediate(pathOutComplexRelations));
 
-		System.out.println(
-				String.format("Found %d nodes", results.getNumNodes()));
-		System.out
-				.println(String.format("Found %d ways", results.getNumWays()));
-		System.out.println(String.format("Found %d simple relations",
+		logger.info(String.format("Found %d nodes", results.getNumNodes()));
+		logger.info(String.format("Found %d ways", results.getNumWays()));
+		logger.info(String.format("Found %d simple relations",
 				results.getNumSimpleRelations()));
-		System.out.println(String.format("Found %d complex relations",
+		logger.info(String.format("Found %d complex relations",
 				results.getNumComplexRelations()));
 	}
 
@@ -463,7 +464,7 @@ public class Query extends AbstractQuery
 			Path pathOutNodes, Path pathOutWays, Path pathOutRelations)
 			throws IOException
 	{
-		System.out.println("loading data");
+		logger.info("loading data");
 		InMemoryListDataSet dataRelations = read(pathRelations);
 
 		dataRelations.sort();
@@ -475,13 +476,13 @@ public class Query extends AbstractQuery
 					dataRelations);
 			selectedRelations.sort();
 
-			System.out.println(String.format("selected %d of %d relations",
+			logger.info(String.format("selected %d of %d relations",
 					selectedRelations.getRelations().size(),
 					dataRelations.getRelations().size()));
 		}
 
 		if (selectedRelations.getRelations().isEmpty()) {
-			System.out.println("nothing selected, skipping");
+			logger.info("nothing selected, skipping");
 			return;
 		}
 
@@ -491,7 +492,7 @@ public class Query extends AbstractQuery
 		OsmStreamOutput outRelations = createOutput(pathOutRelations);
 		RelationQueryBag queryBag = new RelationQueryBag(outRelations);
 
-		System.out.println("running query");
+		logger.info("running query");
 		queryNodes(dataNodes, queryBag.nodeIds);
 		queryWays(dataWays, queryBag.nodeIds, queryBag.wayIds);
 
@@ -509,7 +510,7 @@ public class Query extends AbstractQuery
 
 		finish(outRelations);
 
-		System.out.println("writing nodes and ways");
+		logger.info("writing nodes and ways");
 		OsmStreamOutput outputNodes = createOutput(pathOutNodes);
 		QueryUtil.writeNodes(queryBag.additionalNodes,
 				outputNodes.getOsmOutput());
