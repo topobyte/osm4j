@@ -29,15 +29,15 @@ import de.topobyte.osm4j.core.model.iface.OsmWay;
 public class RelationQueryBag
 {
 
-	OsmStreamOutput outRelations;
+	public OsmStreamOutput outRelations;
 
-	TLongSet nodeIds;
-	TLongSet wayIds;
-	int nSimple = 0;
-	int nComplex = 0;
+	public TLongSet nodeIds;
+	public TLongSet wayIds;
+	public int nSimple = 0;
+	public int nComplex = 0;
 
-	TLongObjectMap<OsmNode> additionalNodes = new TLongObjectHashMap<>();
-	TLongObjectMap<OsmWay> additionalWays = new TLongObjectHashMap<>();
+	public TLongObjectMap<OsmNode> additionalNodes = new TLongObjectHashMap<>();
+	public TLongObjectMap<OsmWay> additionalWays = new TLongObjectHashMap<>();
 
 	public RelationQueryBag(OsmStreamOutput outRelations)
 	{
