@@ -76,7 +76,7 @@ public class OsmFileSetInput implements OsmIteratorInputFactory
 
 		ClosingFileInputStreamFactory factory = new SimpleClosingFileInputStreamFactory();
 		for (OsmFile osmFile : osmFiles) {
-			InputStream input = factory.create(osmFile.getPath().toFile());
+			InputStream input = factory.create(osmFile.getPath());
 			OsmIterator iterator = OsmIoUtils.setupOsmIterator(input,
 					osmFile.getFileFormat(), readTags, readMetadata);
 			inputs.add(input);
@@ -95,7 +95,7 @@ public class OsmFileSetInput implements OsmIteratorInputFactory
 
 		ClosingFileInputStreamFactory factory = new SimpleClosingFileInputStreamFactory();
 		for (OsmFile osmFile : osmFiles) {
-			InputStream input = factory.create(osmFile.getPath().toFile());
+			InputStream input = factory.create(osmFile.getPath());
 			OsmIdIterator iterator = OsmIoUtils.setupOsmIdIterator(input,
 					osmFile.getFileFormat());
 			inputs.add(input);

@@ -148,7 +148,7 @@ public abstract class AbstractWaysDistributor implements WaysDistributor
 
 	private OsmStreamOutput createOutput(Path file) throws IOException
 	{
-		OutputStream output = factory.create(file.toFile());
+		OutputStream output = factory.create(file);
 		output = new BufferedOutputStream(output);
 		OsmOutputStream osmOutput = OsmIoUtils.setupOsmOutput(output,
 				outputConfig, true);

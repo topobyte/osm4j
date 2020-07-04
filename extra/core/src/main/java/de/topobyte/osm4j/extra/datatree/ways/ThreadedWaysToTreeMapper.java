@@ -128,7 +128,7 @@ public class ThreadedWaysToTreeMapper implements WaysToTreeMapper
 
 		for (Node leaf : leafs) {
 			Path fileOutput = filesOutput.getPath(leaf);
-			OutputStream output = factoryOut.create(fileOutput.toFile());
+			OutputStream output = factoryOut.create(fileOutput);
 			output = new BufferedOutputStream(output);
 			OsmOutputStream osmOutput = OsmIoUtils.setupOsmOutput(output,
 					outputConfig, true);

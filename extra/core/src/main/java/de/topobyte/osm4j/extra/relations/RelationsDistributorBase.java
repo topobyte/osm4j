@@ -181,8 +181,7 @@ public abstract class RelationsDistributorBase
 
 		for (Node leaf : tree.getLeafs()) {
 			Path file = treeFilesRelations.getPath(leaf);
-			OutputStream out = new BufferedOutputStream(
-					factory.create(file.toFile()));
+			OutputStream out = new BufferedOutputStream(factory.create(file));
 			OsmOutputStream osmOutput = OsmIoUtils.setupOsmOutput(out,
 					outputConfig, true);
 

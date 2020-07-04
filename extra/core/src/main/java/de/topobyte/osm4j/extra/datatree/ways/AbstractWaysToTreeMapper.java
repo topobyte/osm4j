@@ -88,7 +88,7 @@ public abstract class AbstractWaysToTreeMapper implements WaysToTreeMapper
 		try (DirectoryStream<Path> wayFiles = Files
 				.newDirectoryStream(pathWays)) {
 			for (Path file : wayFiles) {
-				InputStream inputWays = factoryIn.create(file.toFile());
+				InputStream inputWays = factoryIn.create(file);
 				inputWays = new BufferedInputStream(inputWays);
 				wayInputStreams.add(inputWays);
 				OsmIterator osmIterator = OsmIoUtils.setupOsmIterator(inputWays,

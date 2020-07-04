@@ -90,13 +90,13 @@ public abstract class AbstractExtractor implements Extractor
 			if (pathsIds.size() == 1) {
 				Path fileIds = pathsIds.get(0);
 
-				InputStream inputIds = factoryIn.create(fileIds.toFile());
+				InputStream inputIds = factoryIn.create(fileIds);
 				inputIds = new BufferedInputStream(inputIds);
 				idInput = new IdListInputStream(inputIds);
 			} else {
 				List<IdInput> idInputs = new ArrayList<>();
 				for (Path path : pathsIds) {
-					InputStream inputIds = factoryIn.create(path.toFile());
+					InputStream inputIds = factoryIn.create(path);
 					inputIds = new BufferedInputStream(inputIds);
 					idInputs.add(new IdListInputStream(inputIds));
 				}
@@ -105,7 +105,7 @@ public abstract class AbstractExtractor implements Extractor
 
 			// Output
 			Path fileOutput = configItem.getPathOutput();
-			OutputStream output = factoryOut.create(fileOutput.toFile());
+			OutputStream output = factoryOut.create(fileOutput);
 			output = new BufferedOutputStream(output);
 			OsmOutputStream osmOutput = OsmIoUtils.setupOsmOutput(output,
 					outputConfig, lowMemory);

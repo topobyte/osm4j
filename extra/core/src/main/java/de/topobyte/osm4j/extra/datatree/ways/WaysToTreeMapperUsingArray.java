@@ -89,8 +89,7 @@ public class WaysToTreeMapperUsingArray
 		// within the world bounds
 
 		Path pathNonMatched = pathTree.resolve("non-matched-ways.tbo");
-		OutputStream bosNone = StreamUtil
-				.bufferedOutputStream(pathNonMatched.toFile());
+		OutputStream bosNone = StreamUtil.bufferedOutputStream(pathNonMatched);
 		OsmOutputStream osmOutputNone = OsmIoUtils.setupOsmOutput(bosNone,
 				outputConfig);
 		OsmStreamOutput outputNone = new OsmOutputStreamStreamOutput(bosNone,
@@ -107,7 +106,7 @@ public class WaysToTreeMapperUsingArray
 			Path dir = pathTree.resolve(dirname);
 			Path file = dir.resolve(fileNames);
 
-			OutputStream os = outputStreamFactory.create(file.toFile());
+			OutputStream os = outputStreamFactory.create(file);
 			OutputStream bos = new BufferedOutputStream(os);
 			OsmOutputStream osmOutput = OsmIoUtils.setupOsmOutput(bos,
 					outputConfig);

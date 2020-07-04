@@ -11,7 +11,7 @@ dependencies {
     compile 'de.topobyte:adt-graph:0.0.6'
     compile 'de.topobyte:osm4j-utils:0.2.0'
     compile 'de.topobyte:jts-utils:0.2.0'
-    compile 'de.topobyte:large-scale-file-io:0.0.1'
+    compile 'de.topobyte:large-scale-file-io:0.1.0'
     compile 'de.topobyte:commons-cli-helper:0.1.0'
 
     compile 'com.slimjars.trove4j:trove4j-long-long-hash-map:1.0.1'

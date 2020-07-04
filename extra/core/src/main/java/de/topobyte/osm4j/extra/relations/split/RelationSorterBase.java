@@ -131,7 +131,7 @@ public class RelationSorterBase
 			Path path = batchFile(id, fileNamesRelations);
 
 			OutputStream output = new BufferedOutputStream(
-					factory.create(path.toFile()));
+					factory.create(path));
 			OsmOutputStream osmOutput = OsmIoUtils.setupOsmOutput(output,
 					outputConfig);
 			outputs.add(new OsmOutputStreamStreamOutput(output, osmOutput));

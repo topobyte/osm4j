@@ -60,16 +60,17 @@ public class ClosingDataTreeOutputFactory implements DataTreeOutputFactory
 		Path dir = treeFiles.getSubdirPath(leaf);
 		Files.createDirectories(dir);
 
-		OutputStream os = outputStreamFactory.create(file.toFile());
+		OutputStream os = outputStreamFactory.create(file);
 		OutputStream bos = new BufferedOutputStream(os);
-		OsmOutputStream osmOutput = OsmIoUtils.setupOsmOutput(bos,
-				outputConfig, true);
-		OsmStreamOutput output = new OsmOutputStreamStreamOutput(bos, osmOutput);
+		OsmOutputStream osmOutput = OsmIoUtils.setupOsmOutput(bos, outputConfig,
+				true);
+		OsmStreamOutput output = new OsmOutputStreamStreamOutput(bos,
+				osmOutput);
 
 		if (writeBounds) {
 			Envelope box = leaf.getEnvelope();
-			osmOutput.write(new Bounds(box.getMinX(), box.getMaxX(), box
-					.getMaxY(), box.getMinY()));
+			osmOutput.write(new Bounds(box.getMinX(), box.getMaxX(),
+					box.getMaxY(), box.getMinY()));
 		}
 
 		return output;
