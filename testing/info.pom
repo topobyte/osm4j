@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+  <name>osm4j-testing</name>
+  <description>osm4j module with utilities that help testing osm4j and related software</description>
+</project>
