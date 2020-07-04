@@ -33,6 +33,7 @@ launchAndInstall {
     createScript(project, 'de.topobyte.osm4j.utils.executables.OsmIdFilter', 'OsmIdFilter')
     createScript(project, 'de.topobyte.osm4j.utils.executables.OsmKeyFilter', 'OsmKeyFilter')
     createScript(project, 'de.topobyte.osm4j.utils.executables.OsmMerge', 'OsmMerge')
+    createScript(project, 'de.topobyte.osm4j.utils.executables.OsmMergeMany', 'OsmMergeMany')
     createScript(project, 'de.topobyte.osm4j.utils.executables.OsmReferenceStats', 'OsmReferenceStats')
     createScript(project, 'de.topobyte.osm4j.utils.executables.OsmRegionFilter', 'OsmRegionFilter')
     createScript(project, 'de.topobyte.osm4j.utils.executables.OsmShowBounds', 'OsmShowBounds')
