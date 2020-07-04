@@ -70,3 +70,21 @@ subprojects {
         }
     }
 }
+
+subprojects {
+    task showInterModuleDependencies {
+        doLast {
+            println "module '$project.name'"
+            project.configurations.compile.resolvedConfiguration.resolvedArtifacts.each {
+                if (it.id instanceof org.gradle.internal.component.local.model.PublishArtifactLocalArtifactMetadata) {
+                    def component = it.id.componentIdentifier
+                    if (component instanceof org.gradle.api.internal.artifacts.DefaultProjectComponentIdentifier) {
+                        def path = component.projectPath
+                        def name = path.substring(path.lastIndexOf(':') + 1)
+                        println "     → '$name'"
+                    }
+                }
+            }
+        }
+    }
+}
