@@ -17,14 +17,16 @@
 
 package de.topobyte.osm4j.extra.datatree;
 
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 import org.locationtech.jts.geom.Envelope;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.topobyte.adt.geo.BBox;
+import de.topobyte.osm4j.extra.OutputUtil;
 
 public class EmptyDataTreeFromOtherCreator
 {
@@ -32,10 +34,10 @@ public class EmptyDataTreeFromOtherCreator
 	final static Logger logger = LoggerFactory
 			.getLogger(EmptyDataTreeFromOtherCreator.class);
 
-	private File dirInputTree;
-	private File dirOutputTree;
+	private Path dirInputTree;
+	private Path dirOutputTree;
 
-	public EmptyDataTreeFromOtherCreator(File dirInputTree, File dirOutputTree)
+	public EmptyDataTreeFromOtherCreator(Path dirInputTree, Path dirOutputTree)
 	{
 		this.dirInputTree = dirInputTree;
 		this.dirOutputTree = dirOutputTree;
@@ -49,19 +51,7 @@ public class EmptyDataTreeFromOtherCreator
 
 		logger.info("Creating new data tree: " + dirOutputTree);
 
-		dirOutputTree.mkdirs();
-
-		if (!dirOutputTree.isDirectory()) {
-			String error = "Unable to create output directory";
-			logger.error(error);
-			throw new IOException(error);
-		}
-
-		if (dirOutputTree.listFiles().length != 0) {
-			String error = "Output directory not empty";
-			logger.error(error);
-			throw new IOException(error);
-		}
+		OutputUtil.ensureOutputDirectory(dirOutputTree);
 
 		Envelope envelope = tree.getRoot().getEnvelope();
 		BBox bbox = new BBox(envelope);
@@ -69,8 +59,8 @@ public class EmptyDataTreeFromOtherCreator
 
 		for (Node leaf : tree.getLeafs()) {
 			String subdirName = Long.toHexString(leaf.getPath());
-			File subdir = new File(dirOutputTree, subdirName);
-			subdir.mkdir();
+			Path subdir = dirOutputTree.resolve(subdirName);
+			Files.createDirectories(subdir);
 		}
 	}
 

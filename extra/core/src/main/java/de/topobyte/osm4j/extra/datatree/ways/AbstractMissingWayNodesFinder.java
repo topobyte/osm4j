@@ -17,7 +17,6 @@
 
 package de.topobyte.osm4j.extra.datatree.ways;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.text.NumberFormat;
@@ -83,7 +82,7 @@ public abstract class AbstractMissingWayNodesFinder
 
 	protected void prepare() throws IOException
 	{
-		DataTree tree = DataTreeOpener.open(pathNodeTree.toFile());
+		DataTree tree = DataTreeOpener.open(pathNodeTree);
 
 		filesNodes = new DataTreeFiles(pathNodeTree, fileNamesNodes);
 		filesWays = new DataTreeFiles(pathWayTree, fileNamesWays);
@@ -96,7 +95,7 @@ public abstract class AbstractMissingWayNodesFinder
 	{
 		Path fileNodes = filesNodes.getPath(leaf);
 		Path fileWays = filesWays.getPath(leaf);
-		File fileOutput = filesOutput.getFile(leaf);
+		Path fileOutput = filesOutput.getPath(leaf);
 
 		MissingWayNodesFinderTask task = new MissingWayNodesFinderTask(
 				new OsmFile(fileNodes, inputFormatNodes),

@@ -18,7 +18,6 @@
 package de.topobyte.osm4j.extra.idbboxlist;
 
 import java.io.EOFException;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
@@ -51,22 +50,13 @@ public class IdBboxUtil
 
 	public static List<IdBboxEntry> read(Path path) throws IOException
 	{
-		InputStream input = StreamUtil.bufferedInputStream(path);
-		List<IdBboxEntry> entries = read(input);
-		input.close();
-		return entries;
+		try (InputStream input = StreamUtil.bufferedInputStream(path)) {
+			List<IdBboxEntry> entries = read(input);
+			return entries;
+		}
 	}
 
-	public static List<IdBboxEntry> read(File file) throws IOException
-	{
-		InputStream input = StreamUtil.bufferedInputStream(file);
-		List<IdBboxEntry> entries = read(input);
-		input.close();
-		return entries;
-	}
-
-	public static List<Geometry> readBoxes(InputStream input)
-			throws IOException
+	public static List<Geometry> readBoxes(InputStream input) throws IOException
 	{
 		GeometryFactory factory = new GeometryFactory();
 		List<Geometry> boxList = new ArrayList<>();
@@ -75,8 +65,8 @@ public class IdBboxUtil
 		while (true) {
 			try {
 				IdBboxEntry entry = bboxes.next();
-				Envelope e = entry.getEnvelope().intersection(
-						BoxUtil.WORLD_BOUNDS);
+				Envelope e = entry.getEnvelope()
+						.intersection(BoxUtil.WORLD_BOUNDS);
 				boxList.add(factory.toGeometry(e));
 			} catch (EOFException e) {
 				break;
@@ -87,18 +77,10 @@ public class IdBboxUtil
 
 	public static List<Geometry> readBoxes(Path path) throws IOException
 	{
-		InputStream input = StreamUtil.bufferedInputStream(path);
-		List<Geometry> entries = readBoxes(input);
-		input.close();
-		return entries;
-	}
-
-	public static List<Geometry> readBoxes(File file) throws IOException
-	{
-		InputStream input = StreamUtil.bufferedInputStream(file);
-		List<Geometry> entries = readBoxes(input);
-		input.close();
-		return entries;
+		try (InputStream input = StreamUtil.bufferedInputStream(path)) {
+			List<Geometry> entries = readBoxes(input);
+			return entries;
+		}
 	}
 
 }

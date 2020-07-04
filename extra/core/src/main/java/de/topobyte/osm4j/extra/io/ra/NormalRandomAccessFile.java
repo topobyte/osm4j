@@ -21,8 +21,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.RandomAccessFile;
 
-public class NormalRandomAccessFile extends RandomAccessFile implements
-		RandomAccess
+public class NormalRandomAccessFile extends RandomAccessFile
+		implements RandomAccess
 {
 
 	public NormalRandomAccessFile(File file) throws FileNotFoundException

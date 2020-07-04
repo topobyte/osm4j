@@ -17,10 +17,10 @@
 
 package de.topobyte.osm4j.extra.relations;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -73,8 +73,8 @@ public class WayMemberNodeIdsExtractor
 
 		int i = 0;
 		for (Path path : subdirs) {
-			logger.info(String.format("Processing directory %d of %d",
-					++i, subdirs.size()));
+			logger.info(String.format("Processing directory %d of %d", ++i,
+					subdirs.size()));
 			extract(path);
 		}
 	}
@@ -91,17 +91,18 @@ public class WayMemberNodeIdsExtractor
 
 		subdirs = new ArrayList<>();
 		for (Path dirData : dirsData) {
-			File[] subs = dirData.toFile().listFiles();
-			for (File sub : subs) {
-				if (!sub.isDirectory()) {
-					continue;
+			try (DirectoryStream<Path> subs = Files
+					.newDirectoryStream(dirData)) {
+				for (Path sub : subs) {
+					if (!Files.isDirectory(sub)) {
+						continue;
+					}
+					Path ways = sub.resolve(fileNamesWays);
+					if (!Files.exists(ways)) {
+						continue;
+					}
+					subdirs.add(sub);
 				}
-				Path subPath = sub.toPath();
-				Path ways = subPath.resolve(fileNamesWays);
-				if (!Files.exists(ways)) {
-					continue;
-				}
-				subdirs.add(subPath);
 			}
 		}
 	}

@@ -17,7 +17,6 @@
 
 package de.topobyte.osm4j.extra.ways;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Path;
@@ -129,8 +128,7 @@ public class ThreadedWaysSorterByFirstNodeId implements WaysSorterByFirstNodeId
 
 		String filename = String.format("%d%s", batchCount,
 				OsmIoUtils.extension(outputConfig.getFileFormat()));
-		Path path = dirOutput.resolve(filename);
-		File file = path.toFile();
+		Path file = dirOutput.resolve(filename);
 		OutputStream output = StreamUtil.bufferedOutputStream(file);
 		OsmOutputStream osmOutput = OsmIoUtils.setupOsmOutput(output,
 				outputConfig);

@@ -20,7 +20,6 @@ package de.topobyte.osm4j.extra.idextract;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.EOFException;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -89,8 +88,9 @@ public abstract class AbstractExtractor implements Extractor
 			IdInput idInput;
 			List<Path> pathsIds = configItem.getPathsIds();
 			if (pathsIds.size() == 1) {
-				File fileIds = pathsIds.get(0).toFile();
-				InputStream inputIds = factoryIn.create(fileIds);
+				Path fileIds = pathsIds.get(0);
+
+				InputStream inputIds = factoryIn.create(fileIds.toFile());
 				inputIds = new BufferedInputStream(inputIds);
 				idInput = new IdListInputStream(inputIds);
 			} else {
@@ -104,8 +104,8 @@ public abstract class AbstractExtractor implements Extractor
 			}
 
 			// Output
-			File fileOutput = configItem.getPathOutput().toFile();
-			OutputStream output = factoryOut.create(fileOutput);
+			Path fileOutput = configItem.getPathOutput();
+			OutputStream output = factoryOut.create(fileOutput.toFile());
 			output = new BufferedOutputStream(output);
 			OsmOutputStream osmOutput = OsmIoUtils.setupOsmOutput(output,
 					outputConfig, lowMemory);

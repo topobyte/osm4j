@@ -17,8 +17,6 @@
 
 package de.topobyte.osm4j.extra.datatree;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Files;
@@ -46,12 +44,11 @@ public class DataTreeUtil
 
 	final static Logger logger = LoggerFactory.getLogger(DataTreeUtil.class);
 
-	public static void writeTreeInfo(File dir, BBox bbox)
-			throws FileNotFoundException
+	public static void writeTreeInfo(Path dir, BBox bbox) throws IOException
 	{
-		File file = new File(dir, DataTree.FILENAME_INFO);
+		Path file = dir.resolve(DataTree.FILENAME_INFO);
 
-		PrintWriter pw = new PrintWriter(file);
+		PrintWriter pw = new PrintWriter(Files.newBufferedWriter(file));
 		pw.println(DataTree.PROPERTY_BBOX + ": " + BBoxString.create(bbox));
 		pw.close();
 	}
@@ -65,7 +62,7 @@ public class DataTreeUtil
 			throw new IOException("Output path is not a directory");
 		}
 
-		return DataTreeOpener.open(dirOutput.toFile());
+		return DataTreeOpener.open(dirOutput);
 	}
 
 	public static DataTree initNewTree(Path dirOutput, OsmBounds bounds)
@@ -84,7 +81,7 @@ public class DataTreeUtil
 	{
 		OutputUtil.ensureOutputDirectory(dirOutput);
 
-		DataTreeUtil.writeTreeInfo(dirOutput.toFile(), bbox);
+		DataTreeUtil.writeTreeInfo(dirOutput, bbox);
 
 		return new DataTree(bbox.toEnvelope());
 	}

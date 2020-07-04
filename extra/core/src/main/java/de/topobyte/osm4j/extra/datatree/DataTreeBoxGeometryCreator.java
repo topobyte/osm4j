@@ -17,9 +17,10 @@
 
 package de.topobyte.osm4j.extra.datatree;
 
-import java.io.File;
-import java.io.FileWriter;
+import java.io.BufferedWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 import org.locationtech.jts.geom.GeometryCollection;
 import org.locationtech.jts.io.WKTWriter;
@@ -32,10 +33,10 @@ public class DataTreeBoxGeometryCreator
 	final static Logger logger = LoggerFactory
 			.getLogger(DataTreeBoxGeometryCreator.class);
 
-	private File dirTree;
-	private File fileOutput;
+	private Path dirTree;
+	private Path fileOutput;
 
-	public DataTreeBoxGeometryCreator(File dirTree, File fileOutput)
+	public DataTreeBoxGeometryCreator(Path dirTree, Path fileOutput)
 	{
 		this.dirTree = dirTree;
 		this.fileOutput = fileOutput;
@@ -51,9 +52,9 @@ public class DataTreeBoxGeometryCreator
 
 		logger.info("Writing output to: " + fileOutput);
 
-		FileWriter writer = new FileWriter(fileOutput);
-		new WKTWriter().write(geometry, writer);
-		writer.close();
+		try (BufferedWriter writer = Files.newBufferedWriter(fileOutput)) {
+			new WKTWriter().write(geometry, writer);
+		}
 	}
 
 }

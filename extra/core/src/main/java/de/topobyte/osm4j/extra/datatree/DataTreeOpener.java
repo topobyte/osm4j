@@ -18,10 +18,11 @@
 package de.topobyte.osm4j.extra.datatree;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -43,16 +44,16 @@ public class DataTreeOpener
 
 	final static Logger logger = LoggerFactory.getLogger(DataTreeOpener.class);
 
-	public static DataTree open(File dir) throws IOException
+	public static DataTree open(Path dir) throws IOException
 	{
-		File fileInfo = new File(dir, DataTree.FILENAME_INFO);
-		if (!fileInfo.exists()) {
+		Path fileInfo = dir.resolve(DataTree.FILENAME_INFO);
+		if (!Files.exists(fileInfo)) {
 			throw new FileNotFoundException("info file not found: " + fileInfo);
 		}
 
 		BBox bbox = null;
 
-		BufferedReader reader = new BufferedReader(new FileReader(fileInfo));
+		BufferedReader reader = Files.newBufferedReader(fileInfo);
 		while (true) {
 			String line = reader.readLine();
 			if (line == null) {
@@ -74,19 +75,20 @@ public class DataTreeOpener
 		DataTree tree = new DataTree(envelope);
 
 		// Find all data files by extension
-		List<File> dataFiles = new ArrayList<>();
+		List<Path> dataFiles = new ArrayList<>();
 
-		File[] files = dir.listFiles();
-		for (File file : files) {
-			if (!file.isDirectory()) {
-				continue;
-			}
-			String name = file.getName();
-			try {
-				Long.parseLong(name, 16);
-				dataFiles.add(file);
-			} catch (NumberFormatException e) {
-				logger.warn("Warning: unknown directory: " + file);
+		try (DirectoryStream<Path> files = Files.newDirectoryStream(dir)) {
+			for (Path file : files) {
+				if (!Files.isDirectory(file)) {
+					continue;
+				}
+				String name = file.getFileName().toString();
+				try {
+					Long.parseLong(name, 16);
+					dataFiles.add(file);
+				} catch (NumberFormatException e) {
+					logger.warn("Warning: unknown directory: " + file);
+				}
 			}
 		}
 
@@ -108,9 +110,9 @@ public class DataTreeOpener
 		// each level with at least one node on it.
 		Map<Integer, Set<Long>> layerMap = new HashMap<>();
 
-		for (File file : dataFiles) {
+		for (Path file : dataFiles) {
 			// Each directory represents a node
-			String name = file.getName();
+			String name = file.getFileName().toString();
 			// Decode the path
 			long path = Long.parseLong(name, 16);
 			// Determine the level from the path

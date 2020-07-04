@@ -17,10 +17,10 @@
 
 package de.topobyte.osm4j.extra.relations;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -95,17 +95,18 @@ public class MemberIdsExtractor
 
 		subdirs = new ArrayList<>();
 		for (Path dirData : dirsData) {
-			File[] subs = dirData.toFile().listFiles();
-			for (File sub : subs) {
-				if (!sub.isDirectory()) {
-					continue;
+			try (DirectoryStream<Path> subs = Files
+					.newDirectoryStream(dirData)) {
+				for (Path sub : subs) {
+					if (!Files.isDirectory(sub)) {
+						continue;
+					}
+					Path relations = sub.resolve(fileNamesRelations);
+					if (!Files.exists(relations)) {
+						continue;
+					}
+					subdirs.add(sub);
 				}
-				Path subPath = sub.toPath();
-				Path relations = subPath.resolve(fileNamesRelations);
-				if (!Files.exists(relations)) {
-					continue;
-				}
-				subdirs.add(subPath);
 			}
 		}
 	}

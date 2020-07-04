@@ -690,17 +690,17 @@ public class ExtractionFilesBuilder
 		t.start(KEY_CREATE_GEOMETRIES);
 
 		DataTreeBoxGeometryCreator dataTreeBoxGeometryCreator = new DataTreeBoxGeometryCreator(
-				pathTree.toFile(), pathTreeGeometry.toFile());
+				pathTree, pathTreeGeometry);
 		dataTreeBoxGeometryCreator.execute();
 
 		IdBboxListGeometryCreator idBboxListGeometryCreatorSimple = new IdBboxListGeometryCreator(
-				pathSimpleRelationsSortedBboxes.toFile(),
-				pathSimpleRelationsSortedGeometry.toFile());
+				pathSimpleRelationsSortedBboxes,
+				pathSimpleRelationsSortedGeometry);
 		idBboxListGeometryCreatorSimple.execute();
 
 		IdBboxListGeometryCreator idBboxListGeometryCreatorComplex = new IdBboxListGeometryCreator(
-				pathComplexRelationsSortedBboxes.toFile(),
-				pathComplexRelationsSortedGeometry.toFile());
+				pathComplexRelationsSortedBboxes,
+				pathComplexRelationsSortedGeometry);
 		idBboxListGeometryCreatorComplex.execute();
 
 		t.stop(KEY_CREATE_GEOMETRIES);

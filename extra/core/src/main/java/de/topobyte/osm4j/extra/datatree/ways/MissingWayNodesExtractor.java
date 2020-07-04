@@ -17,7 +17,6 @@
 
 package de.topobyte.osm4j.extra.datatree.ways;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -73,17 +72,16 @@ public class MissingWayNodesExtractor
 
 	private void prepare() throws IOException
 	{
-		DataTree tree = DataTreeOpener.open(pathIdTree.toFile());
+		DataTree tree = DataTreeOpener.open(pathIdTree);
 
 		DataTreeFiles filesIds = new DataTreeFiles(pathIdTree, fileNamesIds);
 		DataTreeFiles filesOutput = new DataTreeFiles(pathOutputTree,
 				fileNamesOutput);
 
 		for (Node leaf : tree.getLeafs()) {
-			File fileIds = filesIds.getFile(leaf);
-			File fileOutput = filesOutput.getFile(leaf);
-			ExtractionItem item = new ExtractionItem(fileIds.toPath(),
-					fileOutput.toPath());
+			Path fileIds = filesIds.getPath(leaf);
+			Path fileOutput = filesOutput.getPath(leaf);
+			ExtractionItem item = new ExtractionItem(fileIds, fileOutput);
 			extractionItems.add(item);
 		}
 

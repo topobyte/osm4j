@@ -17,8 +17,9 @@
 
 package de.topobyte.osm4j.extra.executables;
 
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -71,7 +72,7 @@ public class NodeArrayShow extends AbstractExecutable
 	private NodeArrayType type;
 	private long id;
 
-	private File file;
+	private Path file;
 	private NodeArray array;
 
 	public NodeArrayShow()
@@ -93,8 +94,8 @@ public class NodeArrayShow extends AbstractExecutable
 		String argType = line.getOptionValue(OPTION_TYPE);
 		type = typeMap.get(argType);
 		if (type == null) {
-			System.out.println("Please specify a valid type argument: "
-					+ POSSIBLE_TYPES);
+			System.out.println(
+					"Please specify a valid type argument: " + POSSIBLE_TYPES);
 			System.exit(1);
 		}
 
@@ -104,21 +105,21 @@ public class NodeArrayShow extends AbstractExecutable
 
 	private void init() throws IOException
 	{
-		file = new File(inputPath);
+		file = Paths.get(inputPath);
 
 		switch (type) {
 		default:
 		case DOUBLE:
-			array = new NodeArrayDouble(file);
+			array = new NodeArrayDouble(file.toFile());
 			break;
 		case FLOAT:
-			array = new NodeArrayFloat(file);
+			array = new NodeArrayFloat(file.toFile());
 			break;
 		case INTEGER:
-			array = new NodeArrayInteger(file);
+			array = new NodeArrayInteger(file.toFile());
 			break;
 		case SHORT:
-			array = new NodeArrayShort(file);
+			array = new NodeArrayShort(file.toFile());
 			break;
 		}
 	}

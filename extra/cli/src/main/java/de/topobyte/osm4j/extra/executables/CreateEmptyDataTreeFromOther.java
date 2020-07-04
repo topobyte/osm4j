@@ -17,8 +17,9 @@
 
 package de.topobyte.osm4j.extra.executables;
 
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.DefaultParser;
@@ -51,8 +52,8 @@ public class CreateEmptyDataTreeFromOther
 		try {
 			line = new DefaultParser().parse(options, args);
 		} catch (ParseException e) {
-			System.out.println("unable to parse command line: "
-					+ e.getMessage());
+			System.out
+					.println("unable to parse command line: " + e.getMessage());
 			new HelpFormatter().printHelp(HELP_MESSAGE, options);
 			System.exit(1);
 		}
@@ -60,8 +61,8 @@ public class CreateEmptyDataTreeFromOther
 		String pathInput = line.getOptionValue(OPTION_INPUT);
 		String pathOutput = line.getOptionValue(OPTION_OUTPUT);
 
-		File dirInputTree = new File(pathInput);
-		File dirOutputTree = new File(pathOutput);
+		Path dirInputTree = Paths.get(pathInput);
+		Path dirOutputTree = Paths.get(pathOutput);
 
 		EmptyDataTreeFromOtherCreator task = new EmptyDataTreeFromOtherCreator(
 				dirInputTree, dirOutputTree);

@@ -18,7 +18,6 @@
 package de.topobyte.osm4j.extra.datatree.ways;
 
 import java.io.BufferedOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Path;
@@ -117,9 +116,10 @@ public class ThreadedWaysToTreeMapper implements WaysToTreeMapper
 
 	private void prepare() throws IOException
 	{
-		tree = DataTreeOpener.open(pathTree.toFile());
+		tree = DataTreeOpener.open(pathTree);
 
-		DataTreeFiles filesOutput = new DataTreeFiles(pathTree, fileNamesOutput);
+		DataTreeFiles filesOutput = new DataTreeFiles(pathTree,
+				fileNamesOutput);
 
 		List<Node> leafs = tree.getLeafs();
 
@@ -127,8 +127,8 @@ public class ThreadedWaysToTreeMapper implements WaysToTreeMapper
 		ClosingFileOutputStreamFactory factoryOut = new SimpleClosingFileOutputStreamFactory();
 
 		for (Node leaf : leafs) {
-			File fileOutput = filesOutput.getFile(leaf);
-			OutputStream output = factoryOut.create(fileOutput);
+			Path fileOutput = filesOutput.getPath(leaf);
+			OutputStream output = factoryOut.create(fileOutput.toFile());
 			output = new BufferedOutputStream(output);
 			OsmOutputStream osmOutput = OsmIoUtils.setupOsmOutput(output,
 					outputConfig, true);

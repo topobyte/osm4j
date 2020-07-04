@@ -18,10 +18,10 @@
 package de.topobyte.osm4j.extra.datatree.ways;
 
 import java.io.BufferedOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -129,7 +129,7 @@ public abstract class AbstractWaysDistributor implements WaysDistributor
 
 	protected void prepare() throws IOException
 	{
-		tree = DataTreeOpener.open(pathTree.toFile());
+		tree = DataTreeOpener.open(pathTree);
 		leafs = tree.getLeafs();
 
 		DataTreeFiles filesWays = new DataTreeFiles(pathTree,
@@ -138,17 +138,17 @@ public abstract class AbstractWaysDistributor implements WaysDistributor
 				fileNamesOutputNodes);
 
 		for (Node leaf : leafs) {
-			OsmStreamOutput outputWays = createOutput(filesWays.getFile(leaf));
+			OsmStreamOutput outputWays = createOutput(filesWays.getPath(leaf));
 			outputsWays.put(leaf, outputWays);
 			OsmStreamOutput outputNodes = createOutput(
-					filesNodes.getFile(leaf));
+					filesNodes.getPath(leaf));
 			outputsNodes.put(leaf, outputNodes);
 		}
 	}
 
-	private OsmStreamOutput createOutput(File file) throws IOException
+	private OsmStreamOutput createOutput(Path file) throws IOException
 	{
-		OutputStream output = factory.create(file);
+		OutputStream output = factory.create(file.toFile());
 		output = new BufferedOutputStream(output);
 		OsmOutputStream osmOutput = OsmIoUtils.setupOsmOutput(output,
 				outputConfig, true);
@@ -189,9 +189,9 @@ public abstract class AbstractWaysDistributor implements WaysDistributor
 			logger.info(
 					String.format("Processing leaf %d/%d", ++i, leafs.size()));
 
-			File fileNodes1 = filesNodes1.getFile(leaf);
-			File fileNodes2 = filesNodes2.getFile(leaf);
-			File fileWays = filesWays.getFile(leaf);
+			Path fileNodes1 = filesNodes1.getPath(leaf);
+			Path fileNodes2 = filesNodes2.getPath(leaf);
+			Path fileWays = filesWays.getPath(leaf);
 
 			InputStream inputNodes1 = StreamUtil
 					.bufferedInputStream(fileNodes1);
@@ -199,7 +199,7 @@ public abstract class AbstractWaysDistributor implements WaysDistributor
 					.bufferedInputStream(fileNodes2);
 			InputStream inputWays = StreamUtil.bufferedInputStream(fileWays);
 
-			long nodesSize1 = fileNodes1.length();
+			long nodesSize1 = Files.size(fileNodes1);
 			logger.info(String.format("Loading nodes file of size: %.3fMB",
 					nodesSize1 / 1024. / 1024.));
 
@@ -208,7 +208,7 @@ public abstract class AbstractWaysDistributor implements WaysDistributor
 							outputConfig.isWriteMetadata()),
 					true, true, true);
 
-			long nodesSize2 = fileNodes2.length();
+			long nodesSize2 = Files.size(fileNodes2);
 			logger.info(String.format("Loading nodes file of size: %.3fMB",
 					nodesSize2 / 1024. / 1024.));
 
@@ -217,7 +217,7 @@ public abstract class AbstractWaysDistributor implements WaysDistributor
 							outputConfig.isWriteMetadata()),
 					true, true, true);
 
-			long waysSize = fileWays.length();
+			long waysSize = Files.size(fileWays);
 			logger.info(String.format("Loading ways file of size: %.3fMB",
 					waysSize / 1024. / 1024.));
 

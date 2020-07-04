@@ -74,7 +74,7 @@ public class TreeFileSorter
 
 	protected void prepare() throws IOException
 	{
-		tree = DataTreeOpener.open(pathTree.toFile());
+		tree = DataTreeOpener.open(pathTree);
 		leafs = tree.getLeafs();
 	}
 

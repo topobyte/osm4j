@@ -17,9 +17,10 @@
 
 package de.topobyte.osm4j.extra.idbboxlist;
 
-import java.io.File;
-import java.io.FileWriter;
+import java.io.BufferedWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 
 import org.locationtech.jts.geom.Geometry;
@@ -35,10 +36,10 @@ public class IdBboxListGeometryCreator
 	final static Logger logger = LoggerFactory
 			.getLogger(IdBboxListGeometryCreator.class);
 
-	private File fileInput;
-	private File fileOutput;
+	private Path fileInput;
+	private Path fileOutput;
 
-	public IdBboxListGeometryCreator(File fileInput, File fileOutput)
+	public IdBboxListGeometryCreator(Path fileInput, Path fileOutput)
 	{
 		this.fileInput = fileInput;
 		this.fileOutput = fileOutput;
@@ -55,9 +56,9 @@ public class IdBboxListGeometryCreator
 
 		logger.info("Writing output to: " + fileOutput);
 
-		FileWriter writer = new FileWriter(fileOutput);
-		new WKTWriter().write(geometry, writer);
-		writer.close();
+		try (BufferedWriter writer = Files.newBufferedWriter(fileOutput)) {
+			new WKTWriter().write(geometry, writer);
+		}
 	}
 
 }

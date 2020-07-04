@@ -83,7 +83,7 @@ public class WaysToTreeMapperUsingArray
 
 		NodeArray array = new NodeArrayInteger(pathNodeArray.toFile(), 1024,
 				4096);
-		DataTree tree = DataTreeOpener.open(pathTree.toFile());
+		DataTree tree = DataTreeOpener.open(pathTree);
 
 		// This is where we write ways to that do not contain any reference
 		// within the world bounds

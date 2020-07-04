@@ -18,9 +18,10 @@
 package de.topobyte.osm4j.extra.datatree.ways;
 
 import java.io.BufferedInputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
@@ -78,22 +79,23 @@ public abstract class AbstractWaysToTreeMapper implements WaysToTreeMapper
 
 	public void prepare() throws IOException
 	{
-		tree = DataTreeOpener.open(pathTree.toFile());
+		tree = DataTreeOpener.open(pathTree);
 
 		// Way inputs
 		ClosingFileInputStreamFactory factoryIn = new SimpleClosingFileInputStreamFactory();
 
 		List<OsmIterator> wayIterators = new ArrayList<>();
-		File[] wayFiles = pathWays.toFile().listFiles();
-		for (File file : wayFiles) {
-			InputStream inputWays = factoryIn.create(file);
-			inputWays = new BufferedInputStream(inputWays);
-			wayInputStreams.add(inputWays);
-			OsmIterator osmIterator = OsmIoUtils.setupOsmIterator(inputWays,
-					inputFormatWays, readMetadata);
-			wayIterators.add(osmIterator);
+		try (DirectoryStream<Path> wayFiles = Files
+				.newDirectoryStream(pathWays)) {
+			for (Path file : wayFiles) {
+				InputStream inputWays = factoryIn.create(file.toFile());
+				inputWays = new BufferedInputStream(inputWays);
+				wayInputStreams.add(inputWays);
+				OsmIterator osmIterator = OsmIoUtils.setupOsmIterator(inputWays,
+						inputFormatWays, readMetadata);
+				wayIterators.add(osmIterator);
+			}
 		}
-
 		wayIterator = new SortedMergeIterator(wayIterators, new IdComparator(),
 				new WayNodeIdComparator(), new IdComparator());
 	}

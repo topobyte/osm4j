@@ -376,7 +376,7 @@ public class Query extends AbstractQuery
 	private void openTree() throws IOException
 	{
 		Path pathTree = paths.getTree();
-		tree = DataTreeOpener.open(pathTree.toFile());
+		tree = DataTreeOpener.open(pathTree);
 
 		filesTreeNodes = new DataTreeFiles(pathTree, treeNames.getNodes());
 		filesTreeWays = new DataTreeFiles(pathTree, treeNames.getWays());

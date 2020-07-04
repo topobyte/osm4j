@@ -18,10 +18,10 @@
 package de.topobyte.osm4j.extra.relations;
 
 import java.io.BufferedOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -86,11 +86,10 @@ public abstract class RelationsDistributorBase
 	protected IdBboxListOutputStream outputBboxes;
 
 	public RelationsDistributorBase(Path pathTree, Path pathData,
-			Path pathOutputEmpty, Path pathOutputNonTree,
-			Path pathOutputBboxes, String fileNamesRelations,
-			String fileNamesWays, String fileNamesNodes,
-			String fileNamesTreeRelations, FileFormat inputFormat,
-			OsmOutputConfig outputConfig)
+			Path pathOutputEmpty, Path pathOutputNonTree, Path pathOutputBboxes,
+			String fileNamesRelations, String fileNamesWays,
+			String fileNamesNodes, String fileNamesTreeRelations,
+			FileFormat inputFormat, OsmOutputConfig outputConfig)
 	{
 		this.pathTree = pathTree;
 		this.pathData = pathData;
@@ -113,25 +112,26 @@ public abstract class RelationsDistributorBase
 			throw new IOException(error);
 		}
 
-		tree = DataTreeOpener.open(pathTree.toFile());
+		tree = DataTreeOpener.open(pathTree);
 
-		treeFilesRelations = new DataTreeFiles(pathTree, fileNamesTreeRelations);
+		treeFilesRelations = new DataTreeFiles(pathTree,
+				fileNamesTreeRelations);
 
 		subdirs = new ArrayList<>();
-		File[] subs = pathData.toFile().listFiles();
-		for (File sub : subs) {
-			if (!sub.isDirectory()) {
-				continue;
+		try (DirectoryStream<Path> subs = Files.newDirectoryStream(pathData)) {
+			for (Path sub : subs) {
+				if (!Files.isDirectory(sub)) {
+					continue;
+				}
+				Path relations = sub.resolve(fileNamesRelations);
+				Path ways = sub.resolve(fileNamesWays);
+				Path nodes = sub.resolve(fileNamesNodes);
+				if (!Files.exists(relations) || !Files.exists(ways)
+						|| !Files.exists(nodes)) {
+					continue;
+				}
+				subdirs.add(sub);
 			}
-			Path subPath = sub.toPath();
-			Path relations = subPath.resolve(fileNamesRelations);
-			Path ways = subPath.resolve(fileNamesWays);
-			Path nodes = subPath.resolve(fileNamesNodes);
-			if (!Files.exists(relations) || !Files.exists(ways)
-					|| !Files.exists(nodes)) {
-				continue;
-			}
-			subdirs.add(subPath);
 		}
 
 		Collections.sort(subdirs, new Comparator<Path>() {
@@ -164,8 +164,8 @@ public abstract class RelationsDistributorBase
 
 		OutputStream outNonTree = StreamUtil
 				.bufferedOutputStream(pathOutputNonTree);
-		OsmOutputStream osmOutputNonTree = OsmIoUtils.setupOsmOutput(
-				outNonTree, outputConfig);
+		OsmOutputStream osmOutputNonTree = OsmIoUtils.setupOsmOutput(outNonTree,
+				outputConfig);
 		outputNonTree = new OsmOutputStreamStreamOutput(outNonTree,
 				osmOutputNonTree);
 
@@ -180,16 +180,17 @@ public abstract class RelationsDistributorBase
 		ClosingFileOutputStreamFactory factory = new SimpleClosingFileOutputStreamFactory();
 
 		for (Node leaf : tree.getLeafs()) {
-			File file = treeFilesRelations.getFile(leaf);
-			OutputStream out = new BufferedOutputStream(factory.create(file));
+			Path file = treeFilesRelations.getPath(leaf);
+			OutputStream out = new BufferedOutputStream(
+					factory.create(file.toFile()));
 			OsmOutputStream osmOutput = OsmIoUtils.setupOsmOutput(out,
 					outputConfig, true);
 
 			outputs.put(leaf, new OsmOutputStreamStreamOutput(out, osmOutput));
 
 			Envelope box = leaf.getEnvelope();
-			osmOutput.write(new Bounds(box.getMinX(), box.getMaxX(), box
-					.getMaxY(), box.getMinY()));
+			osmOutput.write(new Bounds(box.getMinX(), box.getMaxX(),
+					box.getMaxY(), box.getMinY()));
 		}
 	}
 
@@ -201,12 +202,11 @@ public abstract class RelationsDistributorBase
 	{
 		int i = 0;
 		for (Path path : subdirs) {
-			logger.info(String.format("Processing directory %d of %d",
-					++i, subdirs.size()));
+			logger.info(String.format("Processing directory %d of %d", ++i,
+					subdirs.size()));
 			build(path);
-			logger.info(String.format(
-					"empty: %d, tree: %d, remaining: %d", nWrittenEmpty,
-					nWrittenToTree, nRemaining));
+			logger.info(String.format("empty: %d, tree: %d, remaining: %d",
+					nWrittenEmpty, nWrittenToTree, nRemaining));
 		}
 	}
 

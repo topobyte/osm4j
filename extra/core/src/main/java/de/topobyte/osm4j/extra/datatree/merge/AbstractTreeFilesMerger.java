@@ -17,10 +17,10 @@
 
 package de.topobyte.osm4j.extra.datatree.merge;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
@@ -79,7 +79,7 @@ public abstract class AbstractTreeFilesMerger implements TreeFilesMerger
 
 	protected void prepare() throws IOException
 	{
-		tree = DataTreeOpener.open(pathTree.toFile());
+		tree = DataTreeOpener.open(pathTree);
 		leafs = tree.getLeafs();
 	}
 
@@ -88,13 +88,13 @@ public abstract class AbstractTreeFilesMerger implements TreeFilesMerger
 		DataTreeFiles filesOutputNodes = new DataTreeFiles(pathTree,
 				fileNamesOutput);
 
-		List<File> inputFiles = new ArrayList<>();
+		List<Path> inputFiles = new ArrayList<>();
 		List<InputStream> inputs = new ArrayList<>();
 		List<OsmIterator> osmInputs = new ArrayList<>();
 
 		for (String fileName : fileNamesSorted) {
 			DataTreeFiles files = new DataTreeFiles(pathTree, fileName);
-			File file = files.getFile(leaf);
+			Path file = files.getPath(leaf);
 			inputFiles.add(file);
 
 			InputStream input = StreamUtil.bufferedInputStream(file);
@@ -107,7 +107,7 @@ public abstract class AbstractTreeFilesMerger implements TreeFilesMerger
 
 		for (String fileName : fileNamesUnsorted) {
 			DataTreeFiles files = new DataTreeFiles(pathTree, fileName);
-			File file = files.getFile(leaf);
+			Path file = files.getPath(leaf);
 			inputFiles.add(file);
 
 			InputStream input = StreamUtil.bufferedInputStream(file);
@@ -119,7 +119,7 @@ public abstract class AbstractTreeFilesMerger implements TreeFilesMerger
 			osmInputs.add(sorted);
 		}
 
-		File fileOutputNodes = filesOutputNodes.getFile(leaf);
+		Path fileOutputNodes = filesOutputNodes.getPath(leaf);
 
 		OutputStream output = StreamUtil.bufferedOutputStream(fileOutputNodes);
 		OsmOutputStream osmOutput = OsmIoUtils.setupOsmOutput(output,
@@ -134,8 +134,8 @@ public abstract class AbstractTreeFilesMerger implements TreeFilesMerger
 		output.close();
 
 		if (deleteInput) {
-			for (File file : inputFiles) {
-				file.delete();
+			for (Path file : inputFiles) {
+				Files.delete(file);
 			}
 		}
 	}

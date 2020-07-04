@@ -17,9 +17,9 @@
 
 package de.topobyte.osm4j.extra.datatree.ways;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.file.Path;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,11 +57,11 @@ public class MissingWayNodesFinderTask implements Task
 
 	private OsmFile fileNodes;
 	private OsmFile fileWays;
-	private File fileOutput;
+	private Path fileOutput;
 	private boolean verbose;
 
 	public MissingWayNodesFinderTask(OsmFile inputNodes, OsmFile inputWays,
-			File fileOutput, boolean verbose)
+			Path fileOutput, boolean verbose)
 	{
 		this.fileNodes = inputNodes;
 		this.fileWays = inputWays;

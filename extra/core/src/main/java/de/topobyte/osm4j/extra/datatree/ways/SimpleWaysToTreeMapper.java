@@ -18,7 +18,6 @@
 package de.topobyte.osm4j.extra.datatree.ways;
 
 import java.io.BufferedOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Path;
@@ -49,8 +48,8 @@ public class SimpleWaysToTreeMapper extends AbstractWaysToTreeMapper
 			Path pathWays, FileFormat inputFormatWays, String fileNamesOutput,
 			OsmOutputConfig outputConfig)
 	{
-		super(nodeIterator, pathTree, pathWays, inputFormatWays, outputConfig
-				.isWriteMetadata());
+		super(nodeIterator, pathTree, pathWays, inputFormatWays,
+				outputConfig.isWriteMetadata());
 		this.fileNamesOutput = fileNamesOutput;
 		this.outputConfig = outputConfig;
 	}
@@ -62,7 +61,8 @@ public class SimpleWaysToTreeMapper extends AbstractWaysToTreeMapper
 	{
 		super.prepare();
 
-		DataTreeFiles filesOutput = new DataTreeFiles(pathTree, fileNamesOutput);
+		DataTreeFiles filesOutput = new DataTreeFiles(pathTree,
+				fileNamesOutput);
 
 		List<Node> leafs = tree.getLeafs();
 
@@ -70,8 +70,8 @@ public class SimpleWaysToTreeMapper extends AbstractWaysToTreeMapper
 		ClosingFileOutputStreamFactory factoryOut = new SimpleClosingFileOutputStreamFactory();
 
 		for (Node leaf : leafs) {
-			File fileOutput = filesOutput.getFile(leaf);
-			OutputStream output = factoryOut.create(fileOutput);
+			Path fileOutput = filesOutput.getPath(leaf);
+			OutputStream output = factoryOut.create(fileOutput.toFile());
 			output = new BufferedOutputStream(output);
 			OsmOutputStream osmOutput = OsmIoUtils.setupOsmOutput(output,
 					outputConfig, true);
