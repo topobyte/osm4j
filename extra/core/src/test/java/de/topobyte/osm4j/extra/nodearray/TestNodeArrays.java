@@ -20,10 +20,10 @@ package de.topobyte.osm4j.extra.nodearray;
 import static org.junit.Assert.assertEquals;
 
 import java.io.DataOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -63,14 +63,14 @@ public class TestNodeArrays
 
 	private void test(Factory factory) throws IOException
 	{
-		File file = File.createTempFile("nodearray", ".dat");
+		Path file = Files.createTempFile("nodearray", ".dat");
 		test(file, factory);
-		file.delete();
+		Files.delete(file);
 	}
 
-	private void test(File file, Factory factory) throws IOException
+	private void test(Path file, Factory factory) throws IOException
 	{
-		OutputStream fos = new FileOutputStream(file);
+		OutputStream fos = Files.newOutputStream(file);
 		DataOutputStream out = new DataOutputStream(fos);
 		NodeArrayWriter writer = factory.createWriter(out);
 

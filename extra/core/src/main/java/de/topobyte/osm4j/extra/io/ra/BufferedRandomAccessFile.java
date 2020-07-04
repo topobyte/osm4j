@@ -18,16 +18,18 @@
 package de.topobyte.osm4j.extra.io.ra;
 
 import java.io.EOFException;
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.RandomAccessFile;
+import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.util.HashMap;
 
 public class BufferedRandomAccessFile implements RandomAccess
 {
 
-	private RandomAccessFile file;
+	private FileChannel channel;
 	private long fileSize;
 
 	private int pageSize;
@@ -36,20 +38,14 @@ public class BufferedRandomAccessFile implements RandomAccess
 
 	private HashMap<Long, Page> pages;
 
-	public BufferedRandomAccessFile(File file, int pageSize, int cacheSize)
-			throws FileNotFoundException, IOException
+	public BufferedRandomAccessFile(Path file, int pageSize, int cacheSize)
+			throws IOException
 	{
-		this(new RandomAccessFile(file, "r"), pageSize, cacheSize);
-	}
-
-	public BufferedRandomAccessFile(RandomAccessFile file, int pageSize,
-			int cacheSize) throws IOException
-	{
-		this.file = file;
+		channel = FileChannel.open(file, StandardOpenOption.READ);
 		this.pageSize = pageSize;
 		this.cacheSize = cacheSize;
 
-		fileSize = file.length();
+		fileSize = Files.size(file);
 		pages = new LruHashMap<>(cacheSize);
 	}
 
@@ -66,7 +62,7 @@ public class BufferedRandomAccessFile implements RandomAccess
 	@Override
 	public void close() throws IOException
 	{
-		file.close();
+		channel.close();
 	}
 
 	@Override
@@ -79,6 +75,16 @@ public class BufferedRandomAccessFile implements RandomAccess
 	public long getFilePointer()
 	{
 		return filePointer;
+	}
+
+	private void readFully(ByteBuffer buffer) throws IOException
+	{
+		while (buffer.hasRemaining()) {
+			int read = channel.read(buffer);
+			if (read < 0) {
+				break;
+			}
+		}
 	}
 
 	public byte readByte() throws IOException
@@ -109,8 +115,9 @@ public class BufferedRandomAccessFile implements RandomAccess
 		long pageOffset = pageNumber * pageSize;
 		int size = (int) Math.min(pageSize, fileSize - pageOffset);
 		byte[] buffer = new byte[size];
-		file.seek(pageOffset);
-		file.readFully(buffer);
+		channel.position(pageOffset);
+		ByteBuffer buf = ByteBuffer.wrap(buffer);
+		readFully(buf);
 		Page page = new Page(pageOffset, buffer);
 		return page;
 	}
@@ -118,26 +125,26 @@ public class BufferedRandomAccessFile implements RandomAccess
 	@Override
 	public short readShort() throws IOException
 	{
-		int b1 = ((int) readByte()) & 0xFF;
-		int b2 = ((int) readByte()) & 0xFF;
+		int b1 = (readByte()) & 0xFF;
+		int b2 = (readByte()) & 0xFF;
 		return (short) ((b1 << 8) | b2);
 	}
 
 	@Override
 	public int readInt() throws IOException
 	{
-		int b1 = ((int) readByte()) & 0xFF;
-		int b2 = ((int) readByte()) & 0xFF;
-		int b3 = ((int) readByte()) & 0xFF;
-		int b4 = ((int) readByte()) & 0xFF;
+		int b1 = (readByte()) & 0xFF;
+		int b2 = (readByte()) & 0xFF;
+		int b3 = (readByte()) & 0xFF;
+		int b4 = (readByte()) & 0xFF;
 		return (b1 << 24) | (b2 << 16) | (b3 << 8) | b4;
 	}
 
 	@Override
 	public long readLong() throws IOException
 	{
-		long i1 = ((long) readInt()) & 0xFFFFFFFFL;
-		long i2 = ((long) readInt()) & 0xFFFFFFFFL;
+		long i1 = (readInt()) & 0xFFFFFFFFL;
+		long i2 = (readInt()) & 0xFFFFFFFFL;
 		return (i1 << 32) | i2;
 	}
 

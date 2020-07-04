@@ -18,13 +18,13 @@
 package de.topobyte.osm4j.extra.nodearray;
 
 import java.io.DataOutputStream;
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 
 public interface Factory
 {
 
-	public NodeArray createNodeArray(File file) throws IOException;
+	public NodeArray createNodeArray(Path file) throws IOException;
 
 	public NodeArrayWriter createWriter(DataOutputStream out);
 

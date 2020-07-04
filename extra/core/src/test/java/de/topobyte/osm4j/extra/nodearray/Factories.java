@@ -18,8 +18,8 @@
 package de.topobyte.osm4j.extra.nodearray;
 
 import java.io.DataOutputStream;
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 
 import de.topobyte.osm4j.extra.nodearray.coding.ErrorDeltas;
 
@@ -35,7 +35,7 @@ public class Factories
 		}
 
 		@Override
-		public NodeArray createNodeArray(File file) throws IOException
+		public NodeArray createNodeArray(Path file) throws IOException
 		{
 			return new NodeArrayDouble(file);
 		}
@@ -69,7 +69,7 @@ public class Factories
 		}
 
 		@Override
-		public NodeArray createNodeArray(File file) throws IOException
+		public NodeArray createNodeArray(Path file) throws IOException
 		{
 			return new NodeArrayFloat(file);
 		}
@@ -103,7 +103,7 @@ public class Factories
 		}
 
 		@Override
-		public NodeArray createNodeArray(File file) throws IOException
+		public NodeArray createNodeArray(Path file) throws IOException
 		{
 			return new NodeArrayInteger(file);
 		}
@@ -137,7 +137,7 @@ public class Factories
 		}
 
 		@Override
-		public NodeArray createNodeArray(File file) throws IOException
+		public NodeArray createNodeArray(Path file) throws IOException
 		{
 			return new NodeArrayShort(file);
 		}

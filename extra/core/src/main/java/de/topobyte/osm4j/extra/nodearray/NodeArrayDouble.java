@@ -17,8 +17,8 @@
 
 package de.topobyte.osm4j.extra.nodearray;
 
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 
 import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.osm4j.core.model.impl.Node;
@@ -38,12 +38,12 @@ public class NodeArrayDouble implements NodeArray
 		this.f = f;
 	}
 
-	public NodeArrayDouble(File file) throws IOException
+	public NodeArrayDouble(Path file) throws IOException
 	{
 		f = new NormalRandomAccessFile(file);
 	}
 
-	public NodeArrayDouble(File file, int pageSize, int cacheSize)
+	public NodeArrayDouble(Path file, int pageSize, int cacheSize)
 			throws IOException
 	{
 		f = new BufferedRandomAccessFile(file, pageSize, cacheSize);

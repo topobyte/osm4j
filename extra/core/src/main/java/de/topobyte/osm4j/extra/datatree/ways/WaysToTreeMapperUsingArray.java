@@ -81,8 +81,7 @@ public class WaysToTreeMapperUsingArray
 		 * Tree, node array and way iterator
 		 */
 
-		NodeArray array = new NodeArrayInteger(pathNodeArray.toFile(), 1024,
-				4096);
+		NodeArray array = new NodeArrayInteger(pathNodeArray, 1024, 4096);
 		DataTree tree = DataTreeOpener.open(pathTree);
 
 		// This is where we write ways to that do not contain any reference

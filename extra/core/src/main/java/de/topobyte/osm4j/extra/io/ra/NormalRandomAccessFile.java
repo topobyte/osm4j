@@ -17,22 +17,116 @@
 
 package de.topobyte.osm4j.extra.io.ra;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.RandomAccessFile;
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 
-public class NormalRandomAccessFile extends RandomAccessFile
-		implements RandomAccess
+public class NormalRandomAccessFile implements RandomAccess
 {
 
-	public NormalRandomAccessFile(File file) throws FileNotFoundException
+	private FileChannel channel;
+
+	public NormalRandomAccessFile(Path file) throws IOException
 	{
-		super(file, "r");
+		channel = FileChannel.open(file, StandardOpenOption.READ);
 	}
 
-	public NormalRandomAccessFile(String name) throws FileNotFoundException
+	public NormalRandomAccessFile(String name) throws IOException
 	{
-		super(name, "r");
+		this(Paths.get(name));
+	}
+
+	@Override
+	public void close() throws IOException
+	{
+		channel.close();
+	}
+
+	@Override
+	public void seek(long pos) throws IOException
+	{
+		channel.position(pos);
+	}
+
+	@Override
+	public long getFilePointer() throws IOException
+	{
+		return channel.position();
+	}
+
+	private void readFully(ByteBuffer buffer) throws IOException
+	{
+		while (buffer.hasRemaining()) {
+			int read = channel.read(buffer);
+			if (read < 0) {
+				break;
+			}
+		}
+	}
+
+	@Override
+	public short readShort() throws IOException
+	{
+		ByteBuffer buffer = ByteBuffer.allocate(2);
+		readFully(buffer);
+		buffer.position(0);
+		return buffer.getShort();
+	}
+
+	@Override
+	public int readInt() throws IOException
+	{
+		ByteBuffer buffer = ByteBuffer.allocate(4);
+		readFully(buffer);
+		buffer.position(0);
+		return buffer.getInt();
+	}
+
+	@Override
+	public long readLong() throws IOException
+	{
+		ByteBuffer buffer = ByteBuffer.allocate(8);
+		readFully(buffer);
+		buffer.position(0);
+		return buffer.getLong();
+	}
+
+	@Override
+	public float readFloat() throws IOException
+	{
+		ByteBuffer buffer = ByteBuffer.allocate(4);
+		readFully(buffer);
+		buffer.position(0);
+		return buffer.getFloat();
+	}
+
+	@Override
+	public double readDouble() throws IOException
+	{
+		ByteBuffer buffer = ByteBuffer.allocate(8);
+		readFully(buffer);
+		buffer.position(0);
+		return buffer.getDouble();
+	}
+
+	@Override
+	public int read(byte[] b) throws IOException
+	{
+		ByteBuffer buffer = ByteBuffer.wrap(b);
+		return channel.read(buffer);
+	}
+
+	@Override
+	public int read(byte[] b, int off, int len) throws IOException
+	{
+		ByteBuffer buffer = ByteBuffer.allocate(len);
+		int read = channel.read(buffer);
+		buffer.position(0);
+		buffer.get(b, off, read);
+		return read;
 	}
 
 }

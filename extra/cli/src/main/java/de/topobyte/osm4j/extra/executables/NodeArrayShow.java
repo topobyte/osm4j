@@ -110,16 +110,16 @@ public class NodeArrayShow extends AbstractExecutable
 		switch (type) {
 		default:
 		case DOUBLE:
-			array = new NodeArrayDouble(file.toFile());
+			array = new NodeArrayDouble(file);
 			break;
 		case FLOAT:
-			array = new NodeArrayFloat(file.toFile());
+			array = new NodeArrayFloat(file);
 			break;
 		case INTEGER:
-			array = new NodeArrayInteger(file.toFile());
+			array = new NodeArrayInteger(file);
 			break;
 		case SHORT:
-			array = new NodeArrayShort(file.toFile());
+			array = new NodeArrayShort(file);
 			break;
 		}
 	}
