@@ -26,7 +26,7 @@ import de.topobyte.osm4j.core.access.OsmStreamOutput;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.osm4j.core.model.iface.OsmWay;
 
-class RelationQueryBag
+public class RelationQueryBag
 {
 
 	OsmStreamOutput outRelations;
