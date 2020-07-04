@@ -18,10 +18,12 @@
 package de.topobyte.osm4j.extra.executables;
 
 import java.io.IOException;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import de.topobyte.osm4j.core.access.OsmInputException;
 import de.topobyte.osm4j.extra.extracts.ExtractionFileNames;
+import de.topobyte.osm4j.extra.extracts.ExtractionFiles;
 import de.topobyte.osm4j.extra.extracts.ExtractionFilesBuilder;
 import de.topobyte.osm4j.extra.extracts.ExtractionFilesHelper;
 import de.topobyte.osm4j.extra.extracts.FileNameDefaults;
@@ -73,8 +75,8 @@ public class BuildExtractionFiles extends AbstractExecutableInput
 		}
 	}
 
-	private String pathInput;
-	private String pathOutput;
+	private Path pathInput;
+	private Path pathOutput;
 	private int maxNodes;
 	private boolean includeMetadata = true;
 	private int maxMembersSimple;
@@ -126,8 +128,8 @@ public class BuildExtractionFiles extends AbstractExecutableInput
 	{
 		super.setup(args);
 
-		pathInput = line.getOptionValue(OPTION_INPUT);
-		pathOutput = line.getOptionValue(OPTION_OUTPUT);
+		pathInput = Paths.get(line.getOptionValue(OPTION_INPUT));
+		pathOutput = Paths.get(line.getOptionValue(OPTION_OUTPUT));
 
 		String argMaxNodes = line.getOptionValue(OPTION_MAX_NODES);
 
@@ -194,11 +196,13 @@ public class BuildExtractionFiles extends AbstractExecutableInput
 
 	private void execute() throws IOException, OsmInputException
 	{
-		ExtractionFilesBuilder builder = new ExtractionFilesBuilder(
-				Paths.get(pathInput), inputFormat, Paths.get(pathOutput),
-				outputFormat, fileNames, maxNodes, includeMetadata,
-				maxMembersSimple, maxMembersComplex, computeBbox,
-				continuePreviousBuild);
+		ExtractionFiles files = new ExtractionFiles(pathOutput, fileNames);
+
+		ExtractionFilesBuilder builder = new ExtractionFilesBuilder(pathInput,
+				inputFormat, pathOutput, outputFormat, files,
+				fileNames.getTreeNames(), fileNames.getRelationNames(),
+				maxNodes, includeMetadata, maxMembersSimple, maxMembersComplex,
+				computeBbox, continuePreviousBuild);
 
 		builder.setKeepSplittedNodes(keepSplittedNodes);
 		builder.setKeepSplittedWays(keepSplittedWays);

@@ -105,20 +105,16 @@ public class ExtractionFilesBuilder
 	private FileFormat inputFormat;
 	private Path pathOutput;
 	private FileFormat outputFormat;
-	private ExtractionFileNames fileNames;
+	private ExtractionFiles files;
+	private TreeFileNames treeNames;
+	private BatchFileNames relationNames;
 	private int maxNodes;
 	private boolean includeMetadata;
 	private int maxMembersSimple;
 	private int maxMembersComplex;
 	private boolean computeBbox;
 
-	private Path pathTree;
-	private Path pathWaysByNodes;
-
 	private String extension;
-	private Path pathNodes;
-	private Path pathWays;
-	private Path pathRelations;
 
 	private Path pathSimpleRelations;
 	private Path pathComplexRelations;
@@ -128,12 +124,6 @@ public class ExtractionFilesBuilder
 	private Path pathComplexRelationsNonTree;
 	private Path pathSimpleRelationsNonTreeBboxes;
 	private Path pathComplexRelationsNonTreeBboxes;
-	private Path pathSimpleRelationsEmpty;
-	private Path pathComplexRelationsEmpty;
-	private Path pathSimpleRelationsSorted;
-	private Path pathComplexRelationsSorted;
-	private Path pathSimpleRelationsSortedBboxes;
-	private Path pathComplexRelationsSortedBboxes;
 
 	private Path pathTreeGeometry;
 	private Path pathSimpleRelationsSortedGeometry;
@@ -180,8 +170,8 @@ public class ExtractionFilesBuilder
 	private boolean continuePreviousBuild;
 
 	public ExtractionFilesBuilder(Path pathInput, FileFormat inputFormat,
-			Path pathOutput, FileFormat outputFormat,
-			ExtractionFileNames fileNames, int maxNodes,
+			Path pathOutput, FileFormat outputFormat, ExtractionFiles files,
+			TreeFileNames treeNames, BatchFileNames relationNames, int maxNodes,
 			boolean includeMetadata, int maxMembersSimple,
 			int maxMembersComplex, boolean computeBbox,
 			boolean continuePreviousBuild)
@@ -190,7 +180,9 @@ public class ExtractionFilesBuilder
 		this.inputFormat = inputFormat;
 		this.pathOutput = pathOutput;
 		this.outputFormat = outputFormat;
-		this.fileNames = fileNames;
+		this.files = files;
+		this.treeNames = treeNames;
+		this.relationNames = relationNames;
 		this.maxNodes = maxNodes;
 		this.includeMetadata = includeMetadata;
 		this.maxMembersSimple = maxMembersSimple;
@@ -221,13 +213,6 @@ public class ExtractionFilesBuilder
 
 		extension = OsmIoUtils.extension(outputFormat);
 
-		pathNodes = pathOutput.resolve(fileNames.getSplitNodes());
-		pathWays = pathOutput.resolve(fileNames.getSplitWays());
-		pathRelations = pathOutput.resolve(fileNames.getSplitRelations());
-
-		pathTree = pathOutput.resolve(fileNames.getTree());
-		pathWaysByNodes = pathOutput.resolve(fileNames.getWaysByNodes());
-
 		pathSimpleRelations = pathOutput
 				.resolve("relations.simple" + extension);
 		pathComplexRelations = pathOutput
@@ -243,18 +228,6 @@ public class ExtractionFilesBuilder
 				.resolve("relations.simple.nontree.bboxlist");
 		pathComplexRelationsNonTreeBboxes = pathOutput
 				.resolve("relations.complex.nontree.bboxlist");
-		pathSimpleRelationsEmpty = pathOutput
-				.resolve(fileNames.getSimpleRelationsEmpty());
-		pathComplexRelationsEmpty = pathOutput
-				.resolve(fileNames.getComplexRelationsEmpty());
-		pathSimpleRelationsSorted = pathOutput
-				.resolve(fileNames.getSimpleRelations());
-		pathComplexRelationsSorted = pathOutput
-				.resolve(fileNames.getComplexRelations());
-		pathSimpleRelationsSortedBboxes = pathOutput
-				.resolve(fileNames.getSimpleRelationsBboxes());
-		pathComplexRelationsSortedBboxes = pathOutput
-				.resolve(fileNames.getComplexRelationsBboxes());
 
 		pathTreeGeometry = pathOutput.resolve("tree.wkt");
 		pathSimpleRelationsSortedGeometry = pathOutput.resolve("simple.wkt");
@@ -262,11 +235,11 @@ public class ExtractionFilesBuilder
 
 		fileInput = new OsmFileInput(pathInput, inputFormat);
 
-		fileInputNodes = new OsmFileInput(pathNodes, outputFormat);
-		fileInputWays = new OsmFileInput(pathWays, outputFormat);
-		fileInputRelations = new OsmFileInput(pathRelations, outputFormat);
+		fileInputNodes = new OsmFileInput(files.getSplitNodes(), outputFormat);
+		fileInputWays = new OsmFileInput(files.getSplitWays(), outputFormat);
+		fileInputRelations = new OsmFileInput(files.getSplitRelations(),
+				outputFormat);
 
-		TreeFileNames treeNames = fileNames.getTreeNames();
 		fileNamesFinalNodes = treeNames.getNodes();
 		fileNamesFinalWays = treeNames.getWays();
 		fileNamesFinalRelationsSimple = treeNames.getSimpleRelations();
@@ -281,7 +254,6 @@ public class ExtractionFilesBuilder
 		fileNamesRelationsComplexUnsorted = "relations-complex-unsorted"
 				+ extension;
 
-		BatchFileNames relationNames = fileNames.getRelationNames();
 		fileNamesRelations = relationNames.getRelations();
 
 		outputConfigSplit = new OsmOutputConfig(outputFormat, includeMetadata);
@@ -360,8 +332,9 @@ public class ExtractionFilesBuilder
 
 	private void splitEntities() throws IOException
 	{
-		if (Files.exists(pathNodes) || Files.exists(pathWays)
-				|| Files.exists(pathRelations)) {
+		if (Files.exists(files.getSplitNodes())
+				|| Files.exists(files.getSplitWays())
+				|| Files.exists(files.getSplitRelations())) {
 			return;
 		}
 
@@ -372,7 +345,8 @@ public class ExtractionFilesBuilder
 				includeMetadata);
 
 		ThreadedEntitySplitter splitter = new ThreadedEntitySplitter(
-				input.getIterator(), pathNodes, pathWays, pathRelations,
+				input.getIterator(), files.getSplitNodes(),
+				files.getSplitWays(), files.getSplitRelations(),
 				outputConfigSplit, 10000, 200);
 		splitter.execute();
 
@@ -399,9 +373,9 @@ public class ExtractionFilesBuilder
 		// Create node tree
 		t.start(KEY_NODE_TREE);
 
-		DataTree tree = DataTreeUtil.initNewTree(pathTree, bbox);
+		DataTree tree = DataTreeUtil.initNewTree(files.getTree(), bbox);
 
-		DataTreeFiles treeFiles = new DataTreeFiles(pathTree,
+		DataTreeFiles treeFiles = new DataTreeFiles(files.getTree(),
 				fileNamesInitialNodes);
 		DataTreeOutputFactory dataTreeOutputFactory = new ClosingDataTreeOutputFactory(
 				treeFiles, outputConfigTree);
@@ -411,7 +385,7 @@ public class ExtractionFilesBuilder
 
 		NodeTreeCreatorMaxNodes creator = new NodeTreeCreatorMaxNodes(tree,
 				fileInputNodes, dataTreeOutputFactory, maxNodes, SPLIT_INITIAL,
-				SPLIT_ITERATION, pathTree, fileNamesInitialNodes,
+				SPLIT_ITERATION, files.getTree(), fileNamesInitialNodes,
 				outputConfigTree, counterFactory, distributorFactory);
 
 		creator.buildTree();
@@ -429,7 +403,8 @@ public class ExtractionFilesBuilder
 				includeMetadata);
 
 		WaysSorterByFirstNodeId waysSorter = new ThreadedWaysSorterByFirstNodeId(
-				inputWays.getIterator(), pathWaysByNodes, outputConfigWays);
+				inputWays.getIterator(), files.getWaysByNodes(),
+				outputConfigWays);
 		waysSorter.execute();
 
 		inputWays.close();
@@ -446,14 +421,15 @@ public class ExtractionFilesBuilder
 				includeMetadata);
 
 		WaysToTreeMapper waysMapper = new ThreadedWaysToTreeMapper(
-				inputNodes.getIterator(), pathTree, pathWaysByNodes,
-				outputFormat, fileNamesInitialWays, outputConfigTree);
+				inputNodes.getIterator(), files.getTree(),
+				files.getWaysByNodes(), outputFormat, fileNamesInitialWays,
+				outputConfigTree);
 		waysMapper.execute();
 
 		inputNodes.close();
 
 		if (!keepWaysByNodes) {
-			FileUtils.deleteDirectory(pathWaysByNodes.toFile());
+			FileUtils.deleteDirectory(files.getWaysByNodes().toFile());
 		}
 
 		t.stop(KEY_MAP_WAYS);
@@ -466,9 +442,9 @@ public class ExtractionFilesBuilder
 		t.start(KEY_FIND_MISSING_WAY_NODES);
 
 		MissingWayNodesFinder wayNodesFinder = new ThreadedMissingWayNodesFinder(
-				pathTree, pathTree, pathTree, fileNamesInitialNodes,
-				fileNamesInitialWays, fileNamesMissingWayNodeIds, outputFormat,
-				outputFormat);
+				files.getTree(), files.getTree(), files.getTree(),
+				fileNamesInitialNodes, fileNamesInitialWays,
+				fileNamesMissingWayNodeIds, outputFormat, outputFormat);
 		wayNodesFinder.execute();
 
 		t.stop(KEY_FIND_MISSING_WAY_NODES);
@@ -485,13 +461,14 @@ public class ExtractionFilesBuilder
 
 		boolean threaded = true;
 		MissingWayNodesExtractor wayNodesExtractor = new MissingWayNodesExtractor(
-				inputNodes.getIterator(), pathTree, fileNamesMissingWayNodeIds,
-				pathTree, fileNamesMissingNodes, outputConfigTree, threaded);
+				inputNodes.getIterator(), files.getTree(),
+				fileNamesMissingWayNodeIds, files.getTree(),
+				fileNamesMissingNodes, outputConfigTree, threaded);
 		wayNodesExtractor.execute();
 
 		inputNodes.close();
 
-		for (Path path : BatchFilesUtil.getPaths(pathTree,
+		for (Path path : BatchFilesUtil.getPaths(files.getTree(),
 				fileNamesMissingWayNodeIds)) {
 			Files.delete(path);
 		}
@@ -505,8 +482,8 @@ public class ExtractionFilesBuilder
 		// Distribute ways
 		t.start(KEY_DISTRIBUTE_WAYS);
 
-		WaysDistributor waysDistributor = new ThreadedWaysDistributor(pathTree,
-				fileNamesInitialNodes, fileNamesMissingNodes,
+		WaysDistributor waysDistributor = new ThreadedWaysDistributor(
+				files.getTree(), fileNamesInitialNodes, fileNamesMissingNodes,
 				fileNamesInitialWays, fileNamesDistributedWays,
 				fileNamesDistributedNodes, outputFormat, outputFormat,
 				outputConfigTree);
@@ -526,8 +503,8 @@ public class ExtractionFilesBuilder
 		fileNamesSortedNodes.add(fileNamesInitialNodes);
 		fileNamesSortedNodes.add(fileNamesMissingNodes);
 		fileNamesUnsortedNodes.add(fileNamesDistributedNodes);
-		TreeFilesMerger nodesMerger = new ThreadedTreeFilesMerger(pathTree,
-				fileNamesSortedNodes, fileNamesUnsortedNodes,
+		TreeFilesMerger nodesMerger = new ThreadedTreeFilesMerger(
+				files.getTree(), fileNamesSortedNodes, fileNamesUnsortedNodes,
 				fileNamesFinalNodes, outputFormat, outputConfigTreeFinal, true);
 		nodesMerger.execute();
 
@@ -544,9 +521,9 @@ public class ExtractionFilesBuilder
 		List<String> fileNamesUnsortedWays = new ArrayList<>();
 		fileNamesUnsortedWays.add(fileNamesInitialWays);
 		fileNamesUnsortedWays.add(fileNamesDistributedWays);
-		TreeFilesMerger waysMerger = new ThreadedTreeFilesMerger(pathTree,
-				fileNamesSortedWays, fileNamesUnsortedWays, fileNamesFinalWays,
-				outputFormat, outputConfigTreeFinal, true);
+		TreeFilesMerger waysMerger = new ThreadedTreeFilesMerger(
+				files.getTree(), fileNamesSortedWays, fileNamesUnsortedWays,
+				fileNamesFinalWays, outputFormat, outputConfigTreeFinal, true);
 		waysMerger.execute();
 
 		t.stop(KEY_MERGE_WAYS);
@@ -604,16 +581,18 @@ public class ExtractionFilesBuilder
 				+ extension;
 
 		SimpleRelationsDistributor simpleRelationsDistributor = new SimpleRelationsDistributor(
-				pathTree, pathSimpleRelationsDir, pathSimpleRelationsEmpty,
-				pathSimpleRelationsNonTree, pathSimpleRelationsNonTreeBboxes,
-				fileNamesRelations, fileNamesWays, fileNamesNodes,
-				fileNamesFinalRelationsSimple, outputFormat, outputConfigTree);
+				files.getTree(), pathSimpleRelationsDir,
+				files.getSimpleRelationsEmpty(), pathSimpleRelationsNonTree,
+				pathSimpleRelationsNonTreeBboxes, fileNamesRelations,
+				fileNamesWays, fileNamesNodes, fileNamesFinalRelationsSimple,
+				outputFormat, outputConfigTree);
 		simpleRelationsDistributor.execute();
 
 		ComplexRelationsDistributor complexRelationsDistributor = new ComplexRelationsDistributor(
-				pathTree, pathComplexRelationsDir, pathComplexRelationsEmpty,
-				pathComplexRelationsNonTree, pathComplexRelationsNonTreeBboxes,
-				fileNamesRelations, fileNamesWays, fileNamesNodes,
+				files.getTree(), pathComplexRelationsDir,
+				files.getComplexRelationsEmpty(), pathComplexRelationsNonTree,
+				pathComplexRelationsNonTreeBboxes, fileNamesRelations,
+				fileNamesWays, fileNamesNodes,
 				fileNamesRelationsComplexUnsorted, outputFormat,
 				outputConfigTree);
 		complexRelationsDistributor.execute();
@@ -627,7 +606,7 @@ public class ExtractionFilesBuilder
 		// Sort complex tree relations
 		t.start(KEY_SORT_COMPLEX_RELATIONS);
 
-		TreeFileSorter sorter = new TreeFileSorter(pathTree,
+		TreeFileSorter sorter = new TreeFileSorter(files.getTree(),
 				fileNamesRelationsComplexUnsorted,
 				fileNamesFinalRelationsComplex, outputFormat,
 				outputConfigRelations, keepUnsortedRelations);
@@ -645,10 +624,10 @@ public class ExtractionFilesBuilder
 				pathSimpleRelationsNonTree, pathComplexRelationsNonTree,
 				pathSimpleRelationsNonTreeBboxes,
 				pathComplexRelationsNonTreeBboxes, pathSimpleRelationsDir,
-				pathComplexRelationsDir, pathSimpleRelationsSorted,
-				pathComplexRelationsSorted, outputFormat, outputConfigRelations,
-				pathSimpleRelationsSortedBboxes,
-				pathComplexRelationsSortedBboxes, maxMembersSimple,
+				pathComplexRelationsDir, files.getSimpleRelations(),
+				files.getComplexRelations(), outputFormat,
+				outputConfigRelations, files.getSimpleRelationsBboxes(),
+				files.getComplexRelationsBboxes(), maxMembersSimple,
 				maxMembersComplex, keepUnsortedRelations);
 		nonTreeSplitter.execute();
 
@@ -673,13 +652,13 @@ public class ExtractionFilesBuilder
 		}
 
 		if (!keepSplittedNodes) {
-			Files.delete(pathNodes);
+			Files.delete(files.getSplitNodes());
 		}
 		if (!keepSplittedWays) {
-			Files.delete(pathWays);
+			Files.delete(files.getSplitWays());
 		}
 		if (!keepSplittedRelations) {
-			Files.delete(pathRelations);
+			Files.delete(files.getSplitRelations());
 		}
 
 		t.stop(KEY_CLEAN_UP);
@@ -690,16 +669,16 @@ public class ExtractionFilesBuilder
 		t.start(KEY_CREATE_GEOMETRIES);
 
 		DataTreeBoxGeometryCreator dataTreeBoxGeometryCreator = new DataTreeBoxGeometryCreator(
-				pathTree, pathTreeGeometry);
+				files.getTree(), pathTreeGeometry);
 		dataTreeBoxGeometryCreator.execute();
 
 		IdBboxListGeometryCreator idBboxListGeometryCreatorSimple = new IdBboxListGeometryCreator(
-				pathSimpleRelationsSortedBboxes,
+				files.getSimpleRelationsBboxes(),
 				pathSimpleRelationsSortedGeometry);
 		idBboxListGeometryCreatorSimple.execute();
 
 		IdBboxListGeometryCreator idBboxListGeometryCreatorComplex = new IdBboxListGeometryCreator(
-				pathComplexRelationsSortedBboxes,
+				files.getComplexRelationsBboxes(),
 				pathComplexRelationsSortedGeometry);
 		idBboxListGeometryCreatorComplex.execute();
 
