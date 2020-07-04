@@ -1,5 +1,6 @@
 dependencies {
-    compile 'de.topobyte:osm4j-core:0.1.0'
+    compile project(':osm4j-core')
+
     compile 'de.topobyte:dynsax:0.0.1'
 
     compile 'org.apache.commons:commons-text:1.1'
@@ -8,8 +9,9 @@ dependencies {
     compile 'org.apache.httpcomponents:httpclient:4.5.5'
     compile 'org.slf4j:slf4j-api:1.6.1'
 
+    testCompile project(':osm4j-testing')
+
     testCompile 'org.apache.commons:commons-compress:1.8'
-    testCompile 'de.topobyte:osm4j-testing:0.1.0'
     testCompile 'de.topobyte:adt-geo:0.1.0'
     testCompile 'junit:junit:4.12'
 

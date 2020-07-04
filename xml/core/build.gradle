@@ -4,7 +4,8 @@ if (project.hasProperty("topobyte")) {
 }
 
 dependencies {
-    compile 'de.topobyte:osm4j-core:0.1.0'
+    compile project(':osm4j-core')
+
     compile 'de.topobyte:dynsax:0.0.1'
 
     compile 'org.apache.commons:commons-text:1.1'

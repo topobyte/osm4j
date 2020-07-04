@@ -5,9 +5,7 @@ if (project.hasProperty("topobyte")) {
 
 dependencies {
     compile project(':osm4j-utils')
-    compile 'de.topobyte:osm4j-core:0.1.0'
-    compile 'de.topobyte:osm4j-geometry:0.2.0'
-    compile 'de.topobyte:osm4j-tbo:0.1.0'
+
     compile 'de.topobyte:adt-geo:0.1.0'
     compile 'de.topobyte:adt-graph:0.0.6'
     compile 'de.topobyte:jts-utils:0.2.0'
