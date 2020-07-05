@@ -31,9 +31,7 @@ import org.slf4j.LoggerFactory;
 
 import de.topobyte.jts.utils.predicate.PredicateEvaluator;
 import de.topobyte.osm4j.core.access.OsmStreamOutput;
-import de.topobyte.osm4j.core.dataset.InMemoryListDataSet;
 import de.topobyte.osm4j.core.model.iface.EntityType;
-import de.topobyte.osm4j.extra.QueryUtil;
 import de.topobyte.osm4j.extra.datatree.Node;
 import de.topobyte.osm4j.extra.extracts.BatchFileNames;
 import de.topobyte.osm4j.extra.extracts.ExtractionPaths;
@@ -54,10 +52,6 @@ public class Query extends BaseQuery
 
 	private Path pathOutput;
 	private Path pathTmp;
-
-	private boolean keepTmp;
-
-	private boolean fastRelationTests;
 
 	private RelationFilter relationFilter;
 
@@ -109,7 +103,8 @@ public class Query extends BaseQuery
 			boolean fastRelationTests, RelationFilter relationFilter)
 	{
 		super(paths, treeNames, relationNames, inputFormat,
-				outputConfigIntermediate, outputConfig);
+				outputConfigIntermediate, outputConfig, keepTmp,
+				fastRelationTests);
 
 		this.queryEnvelope = queryEnvelope;
 		this.test = test;
@@ -224,22 +219,23 @@ public class Query extends BaseQuery
 				.read(paths.getComplexRelationsBboxes());
 
 		queryRelationBatches(entriesSimple, true, "Simple",
-				paths.getSimpleRelations(), files.getFilesSimpleRelations(),
-				pathTmpRelations);
+				paths.getSimpleRelations(), pathTmpRelations);
 		queryRelationBatches(entriesComplex, false, "Complex",
-				paths.getComplexRelations(), files.getFilesComplexRelations(),
-				pathTmpRelations);
+				paths.getComplexRelations(), pathTmpRelations);
 	}
 
 	private void queryRelationBatches(List<IdBboxEntry> entries, boolean simple,
-			String type, Path pathRelationBatches,
-			List<OsmFileInput> filesRelations, Path pathOutput)
+			String type, Path pathRelationBatches, Path pathOutput)
 			throws IOException
 	{
 		int tmpIndex = 0;
 
 		String lowerType = type.toLowerCase();
 		String prefix = lowerType;
+
+		List<OsmFileInput> filesRelations = simple
+				? files.getFilesSimpleRelations()
+				: files.getFilesComplexRelations();
 
 		for (IdBboxEntry entry : entries) {
 			long id = entry.getId();
@@ -249,14 +245,15 @@ public class Query extends BaseQuery
 						filesRelations);
 			} else if (test.intersects(entry.getEnvelope())) {
 				logger.info("Loading data from " + lowerType + " batch: " + id);
-				tmpIndex++;
 
-				Path pathDir = pathRelationBatches
-						.resolve(Long.toString(entry.getId()));
-				Path pathNodes = pathDir.resolve(relationNames.getNodes());
-				Path pathWays = pathDir.resolve(relationNames.getWays());
-				Path pathRelations = pathDir
-						.resolve(relationNames.getRelations());
+				BatchDataSet data = new BatchDataSet();
+				boolean use = data.load(entry, pathRelationBatches,
+						relationFilter);
+				if (!use) {
+					continue;
+				}
+
+				tmpIndex++;
 
 				Path pathOutNodes = pathOutput
 						.resolve(filename(prefix, EntityType.Node, tmpIndex));
@@ -265,8 +262,8 @@ public class Query extends BaseQuery
 				Path pathOutRelations = pathOutput.resolve(
 						filename(prefix, EntityType.Relation, tmpIndex));
 
-				runRelationsQuery(simple, pathNodes, pathWays, pathRelations,
-						pathOutNodes, pathOutWays, pathOutRelations);
+				runRelationsQuery(files, test, simple, data, pathOutNodes,
+						pathOutWays, pathOutRelations);
 			}
 		}
 	}
@@ -323,78 +320,6 @@ public class Query extends BaseQuery
 				results.getNumSimpleRelations()));
 		logger.info(String.format("Found %d complex relations",
 				results.getNumComplexRelations()));
-	}
-
-	/*
-	 * This is run on each batch of relations
-	 */
-	private void runRelationsQuery(boolean simple, Path pathNodes,
-			Path pathWays, Path pathRelations, Path pathOutNodes,
-			Path pathOutWays, Path pathOutRelations) throws IOException
-	{
-		logger.info("loading data");
-		InMemoryListDataSet dataRelations = read(pathRelations);
-
-		dataRelations.sort();
-		InMemoryListDataSet selectedRelations;
-		if (relationFilter == null) {
-			selectedRelations = dataRelations;
-		} else {
-			selectedRelations = new RelationSelector().select(relationFilter,
-					dataRelations);
-			selectedRelations.sort();
-
-			logger.info(String.format("selected %d of %d relations",
-					selectedRelations.getRelations().size(),
-					dataRelations.getRelations().size()));
-		}
-
-		if (selectedRelations.getRelations().isEmpty()) {
-			logger.info("nothing selected, skipping");
-			return;
-		}
-
-		InMemoryListDataSet dataNodes = read(pathNodes);
-		InMemoryListDataSet dataWays = read(pathWays);
-
-		OsmStreamOutput outRelations = createOutput(pathOutRelations);
-		RelationQueryBag queryBag = new RelationQueryBag(outRelations);
-
-		logger.info("running query");
-		// First determine all nodes of this batch that are within the
-		// requested region for quick relation selection by member id
-		QueryUtil.queryNodes(test, dataNodes, queryBag.nodeIds);
-		// Also determine all ways that reference any of the nodes selected
-		// before, also for quick relation selection by member id
-		QueryUtil.queryWays(dataWays, queryBag.nodeIds, queryBag.wayIds);
-
-		if (simple) {
-			SimpleRelationsQuery simpleRelationsQuery = new SimpleRelationsQuery(
-					dataNodes, dataWays, selectedRelations, test,
-					fastRelationTests);
-			simpleRelationsQuery.execute(queryBag);
-		} else {
-			ComplexRelationsQuery complexRelationsQuery = new ComplexRelationsQuery(
-					dataNodes, dataWays, selectedRelations, test,
-					fastRelationTests);
-			complexRelationsQuery.execute(queryBag);
-		}
-
-		finish(outRelations);
-
-		logger.info("writing nodes and ways");
-		OsmStreamOutput outputNodes = createOutput(pathOutNodes);
-		QueryUtil.writeNodes(queryBag.additionalNodes,
-				outputNodes.getOsmOutput());
-		finish(outputNodes);
-
-		OsmStreamOutput outputWays = createOutput(pathOutWays);
-		QueryUtil.writeWays(queryBag.additionalWays, outputWays.getOsmOutput());
-		finish(outputWays);
-
-		files.getFilesNodes().add(intermediate(pathOutNodes));
-		files.getFilesWays().add(intermediate(pathOutWays));
-		files.getFilesSimpleRelations().add(intermediate(pathOutRelations));
 	}
 
 }
