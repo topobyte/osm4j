@@ -182,129 +182,17 @@ public class Query extends AbstractQuery
 
 		openTree();
 
-		Geometry box = factory.toGeometry(queryEnvelope);
-		List<Node> leafs = tree.query(box);
-
 		// Query data tree
 
-		for (Node leaf : leafs) {
-			String leafName = Long.toHexString(leaf.getPath());
-
-			if (test.contains(leaf.getEnvelope())) {
-				logger.info("Leaf is completely contained: " + leafName);
-				addCompletelyContainedLeaf(leaf);
-				continue;
-			}
-
-			logger.info("Loading data from leaf: " + leafName);
-			addIntersectingLeaf(leaf);
-		}
-
-		logger.info(String.format("Total number of nodes: %d", nNodes));
-		logger.info(String.format("Total number of ways: %d", nWays));
-		logger.info(String.format("Total number of simple relations: %d",
-				nSimpleRelations));
-		logger.info(String.format("Total number of complex relations: %d",
-				nComplexRelations));
+		queryTreeData();
 
 		// Query relations
 
-		List<IdBboxEntry> entriesSimple = IdBboxUtil
-				.read(paths.getSimpleRelationsBboxes());
-		List<IdBboxEntry> entriesComplex = IdBboxUtil
-				.read(paths.getComplexRelationsBboxes());
-
-		for (IdBboxEntry entry : entriesSimple) {
-			long id = entry.getId();
-			if (test.contains(entry.getEnvelope())) {
-				logger.info("Simple batch completely contained: " + id);
-				addCompletelyContainedBatch(paths.getSimpleRelations(), id,
-						filesSimpleRelations);
-			} else if (test.intersects(entry.getEnvelope())) {
-				logger.info("Loading data from simple batch: " + id);
-				tmpIndexSimple++;
-				String tmpFilenames = filename(tmpIndexSimple);
-				logger.info("Writing to files: " + tmpFilenames);
-
-				Path pathDir = paths.getSimpleRelations()
-						.resolve(Long.toString(entry.getId()));
-				Path pathNodes = pathDir.resolve(relationNames.getNodes());
-				Path pathWays = pathDir.resolve(relationNames.getWays());
-				Path pathRelations = pathDir
-						.resolve(relationNames.getRelations());
-
-				Path pathOutNodes = pathTmpSimpleNodes.resolve(tmpFilenames);
-				Path pathOutWays = pathTmpSimpleWays.resolve(tmpFilenames);
-				Path pathOutRelations = pathTmpSimpleRelations
-						.resolve(tmpFilenames);
-
-				runRelationsQuery(true, tmpFilenames, pathNodes, pathWays,
-						pathRelations, pathOutNodes, pathOutWays,
-						pathOutRelations);
-			}
-		}
-
-		for (IdBboxEntry entry : entriesComplex) {
-			long id = entry.getId();
-			if (test.contains(entry.getEnvelope())) {
-				logger.info("Complex batch completely contained: " + id);
-				addCompletelyContainedBatch(paths.getComplexRelations(), id,
-						filesComplexRelations);
-			} else if (test.intersects(entry.getEnvelope())) {
-				logger.info("Loading data from complex batch: " + id);
-				tmpIndexComplex++;
-				String tmpFilenames = filename(tmpIndexComplex);
-				logger.info("Writing to files: " + tmpFilenames);
-
-				Path pathDir = paths.getComplexRelations()
-						.resolve(Long.toString(entry.getId()));
-				Path pathNodes = pathDir.resolve(relationNames.getNodes());
-				Path pathWays = pathDir.resolve(relationNames.getWays());
-				Path pathRelations = pathDir
-						.resolve(relationNames.getRelations());
-
-				Path pathOutNodes = pathTmpComplexNodes.resolve(tmpFilenames);
-				Path pathOutWays = pathTmpComplexWays.resolve(tmpFilenames);
-				Path pathOutRelations = pathTmpComplexRelations
-						.resolve(tmpFilenames);
-
-				runRelationsQuery(false, tmpFilenames, pathNodes, pathWays,
-						pathRelations, pathOutNodes, pathOutWays,
-						pathOutRelations);
-			}
-		}
+		queryRelations();
 
 		// Merge intermediate files
 
-		OsmStreamOutput output = createFinalOutput(pathOutput);
-
-		List<OsmFileInput> mergeFiles = new ArrayList<>();
-
-		mergeFiles.addAll(filesNodes);
-		mergeFiles.addAll(filesWays);
-		mergeFiles.addAll(filesSimpleRelations);
-		mergeFiles.addAll(filesComplexRelations);
-
-		logger.info(String.format("Merging %d files", mergeFiles.size()));
-
-		List<OsmIteratorInput> mergeIteratorInputs = new ArrayList<>();
-		List<OsmIterator> mergeIterators = new ArrayList<>();
-		for (OsmFileInput input : mergeFiles) {
-			OsmIteratorInput iteratorInput = input.createIterator(true,
-					outputConfig.isWriteMetadata());
-			mergeIteratorInputs.add(iteratorInput);
-			mergeIterators.add(iteratorInput.getIterator());
-		}
-
-		SortedMerge merge = new SortedMerge(output.getOsmOutput(),
-				mergeIterators);
-		merge.run();
-
-		for (OsmIteratorInput input : mergeIteratorInputs) {
-			input.close();
-		}
-
-		output.close();
+		mergeFiles();
 
 		// Delete intermediate files
 
@@ -384,6 +272,133 @@ public class Query extends AbstractQuery
 				treeNames.getSimpleRelations());
 		filesTreeComplexRelations = new DataTreeFiles(pathTree,
 				treeNames.getComplexRelations());
+	}
+
+	private void queryTreeData() throws IOException
+	{
+		Geometry box = factory.toGeometry(queryEnvelope);
+		List<Node> leafs = tree.query(box);
+
+		for (Node leaf : leafs) {
+			String leafName = Long.toHexString(leaf.getPath());
+
+			if (test.contains(leaf.getEnvelope())) {
+				logger.info("Leaf is completely contained: " + leafName);
+				addCompletelyContainedLeaf(leaf);
+				continue;
+			}
+
+			logger.info("Loading data from leaf: " + leafName);
+			addIntersectingLeaf(leaf);
+		}
+
+		logger.info(String.format("Total number of nodes: %d", nNodes));
+		logger.info(String.format("Total number of ways: %d", nWays));
+		logger.info(String.format("Total number of simple relations: %d",
+				nSimpleRelations));
+		logger.info(String.format("Total number of complex relations: %d",
+				nComplexRelations));
+	}
+
+	private void queryRelations() throws IOException
+	{
+		List<IdBboxEntry> entriesSimple = IdBboxUtil
+				.read(paths.getSimpleRelationsBboxes());
+		List<IdBboxEntry> entriesComplex = IdBboxUtil
+				.read(paths.getComplexRelationsBboxes());
+
+		for (IdBboxEntry entry : entriesSimple) {
+			long id = entry.getId();
+			if (test.contains(entry.getEnvelope())) {
+				logger.info("Simple batch completely contained: " + id);
+				addCompletelyContainedBatch(paths.getSimpleRelations(), id,
+						filesSimpleRelations);
+			} else if (test.intersects(entry.getEnvelope())) {
+				logger.info("Loading data from simple batch: " + id);
+				tmpIndexSimple++;
+				String tmpFilenames = filename(tmpIndexSimple);
+				logger.info("Writing to files: " + tmpFilenames);
+
+				Path pathDir = paths.getSimpleRelations()
+						.resolve(Long.toString(entry.getId()));
+				Path pathNodes = pathDir.resolve(relationNames.getNodes());
+				Path pathWays = pathDir.resolve(relationNames.getWays());
+				Path pathRelations = pathDir
+						.resolve(relationNames.getRelations());
+
+				Path pathOutNodes = pathTmpSimpleNodes.resolve(tmpFilenames);
+				Path pathOutWays = pathTmpSimpleWays.resolve(tmpFilenames);
+				Path pathOutRelations = pathTmpSimpleRelations
+						.resolve(tmpFilenames);
+
+				runRelationsQuery(true, tmpFilenames, pathNodes, pathWays,
+						pathRelations, pathOutNodes, pathOutWays,
+						pathOutRelations);
+			}
+		}
+
+		for (IdBboxEntry entry : entriesComplex) {
+			long id = entry.getId();
+			if (test.contains(entry.getEnvelope())) {
+				logger.info("Complex batch completely contained: " + id);
+				addCompletelyContainedBatch(paths.getComplexRelations(), id,
+						filesComplexRelations);
+			} else if (test.intersects(entry.getEnvelope())) {
+				logger.info("Loading data from complex batch: " + id);
+				tmpIndexComplex++;
+				String tmpFilenames = filename(tmpIndexComplex);
+				logger.info("Writing to files: " + tmpFilenames);
+
+				Path pathDir = paths.getComplexRelations()
+						.resolve(Long.toString(entry.getId()));
+				Path pathNodes = pathDir.resolve(relationNames.getNodes());
+				Path pathWays = pathDir.resolve(relationNames.getWays());
+				Path pathRelations = pathDir
+						.resolve(relationNames.getRelations());
+
+				Path pathOutNodes = pathTmpComplexNodes.resolve(tmpFilenames);
+				Path pathOutWays = pathTmpComplexWays.resolve(tmpFilenames);
+				Path pathOutRelations = pathTmpComplexRelations
+						.resolve(tmpFilenames);
+
+				runRelationsQuery(false, tmpFilenames, pathNodes, pathWays,
+						pathRelations, pathOutNodes, pathOutWays,
+						pathOutRelations);
+			}
+		}
+	}
+
+	private void mergeFiles() throws IOException
+	{
+		OsmStreamOutput output = createFinalOutput(pathOutput);
+
+		List<OsmFileInput> mergeFiles = new ArrayList<>();
+
+		mergeFiles.addAll(filesNodes);
+		mergeFiles.addAll(filesWays);
+		mergeFiles.addAll(filesSimpleRelations);
+		mergeFiles.addAll(filesComplexRelations);
+
+		logger.info(String.format("Merging %d files", mergeFiles.size()));
+
+		List<OsmIteratorInput> mergeIteratorInputs = new ArrayList<>();
+		List<OsmIterator> mergeIterators = new ArrayList<>();
+		for (OsmFileInput input : mergeFiles) {
+			OsmIteratorInput iteratorInput = input.createIterator(true,
+					outputConfig.isWriteMetadata());
+			mergeIteratorInputs.add(iteratorInput);
+			mergeIterators.add(iteratorInput.getIterator());
+		}
+
+		SortedMerge merge = new SortedMerge(output.getOsmOutput(),
+				mergeIterators);
+		merge.run();
+
+		for (OsmIteratorInput input : mergeIteratorInputs) {
+			input.close();
+		}
+
+		output.close();
 	}
 
 	private OsmFileInput input(Path path)
