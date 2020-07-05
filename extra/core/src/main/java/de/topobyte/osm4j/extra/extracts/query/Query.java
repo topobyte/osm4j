@@ -458,6 +458,9 @@ public class Query extends AbstractQuery
 		filesRelations.add(input(path.resolve(relationNames.getRelations())));
 	}
 
+	/*
+	 * This is run on each batch of relations
+	 */
 	private void runRelationsQuery(boolean simple, String tmpFilenames,
 			Path pathNodes, Path pathWays, Path pathRelations,
 			Path pathOutNodes, Path pathOutWays, Path pathOutRelations)
@@ -492,7 +495,11 @@ public class Query extends AbstractQuery
 		RelationQueryBag queryBag = new RelationQueryBag(outRelations);
 
 		logger.info("running query");
+		// First determine all nodes of this batch that are within the
+		// requested region for quick relation selection by member id
 		queryNodes(dataNodes, queryBag.nodeIds);
+		// Also determine all ways that reference any of the nodes selected
+		// before, also for quick relation selection by member id
 		queryWays(dataWays, queryBag.nodeIds, queryBag.wayIds);
 
 		if (simple) {
