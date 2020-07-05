@@ -32,6 +32,7 @@ import org.slf4j.LoggerFactory;
 import de.topobyte.jts.utils.predicate.PredicateEvaluator;
 import de.topobyte.osm4j.core.access.OsmStreamOutput;
 import de.topobyte.osm4j.core.dataset.InMemoryListDataSet;
+import de.topobyte.osm4j.core.model.iface.EntityType;
 import de.topobyte.osm4j.extra.QueryUtil;
 import de.topobyte.osm4j.extra.datatree.Node;
 import de.topobyte.osm4j.extra.extracts.BatchFileNames;
@@ -119,18 +120,8 @@ public class Query extends BaseQuery
 		this.relationFilter = relationFilter;
 	}
 
-	private Path pathTmpTreeNodes;
-	private Path pathTmpTreeWays;
-	private Path pathTmpTreeSimpleRelations;
-	private Path pathTmpTreeComplexRelations;
-	private Path pathTmpTreeAdditionalNodes;
-	private Path pathTmpTreeAdditionalWays;
-	private Path pathTmpSimpleNodes;
-	private Path pathTmpSimpleWays;
-	private Path pathTmpSimpleRelations;
-	private Path pathTmpComplexNodes;
-	private Path pathTmpComplexWays;
-	private Path pathTmpComplexRelations;
+	private Path pathTmpTree;
+	private Path pathTmpRelations;
 
 	// Lists of files that need to be merged in the end
 	private IntermediateFiles files = new IntermediateFiles();
@@ -192,41 +183,11 @@ public class Query extends BaseQuery
 
 		// Create sub-directories for intermediate files
 
-		Path pathTmpTree = pathTmp.resolve("tree");
-		Path pathTmpSimple = pathTmp.resolve("simple-relations");
-		Path pathTmpComplex = pathTmp.resolve("complex-relations");
-
-		pathTmpTreeNodes = pathTmpTree.resolve("nodes");
-		pathTmpTreeWays = pathTmpTree.resolve("ways");
-		pathTmpTreeSimpleRelations = pathTmpTree.resolve("relations.simple");
-		pathTmpTreeComplexRelations = pathTmpTree.resolve("relations.complex");
-		pathTmpTreeAdditionalNodes = pathTmpTree.resolve("nodes-extra");
-		pathTmpTreeAdditionalWays = pathTmpTree.resolve("ways-extra");
-
-		pathTmpSimpleNodes = pathTmpSimple.resolve("nodes");
-		pathTmpSimpleWays = pathTmpSimple.resolve("ways");
-		pathTmpSimpleRelations = pathTmpSimple.resolve("relations");
-		pathTmpComplexNodes = pathTmpComplex.resolve("nodes");
-		pathTmpComplexWays = pathTmpComplex.resolve("ways");
-		pathTmpComplexRelations = pathTmpComplex.resolve("relations");
+		pathTmpTree = pathTmp.resolve("tree");
+		pathTmpRelations = pathTmp.resolve("relations");
 
 		Files.createDirectory(pathTmpTree);
-		Files.createDirectory(pathTmpSimple);
-		Files.createDirectory(pathTmpComplex);
-
-		Files.createDirectory(pathTmpTreeNodes);
-		Files.createDirectory(pathTmpTreeWays);
-		Files.createDirectory(pathTmpTreeSimpleRelations);
-		Files.createDirectory(pathTmpTreeComplexRelations);
-		Files.createDirectory(pathTmpTreeAdditionalNodes);
-		Files.createDirectory(pathTmpTreeAdditionalWays);
-
-		Files.createDirectory(pathTmpSimpleNodes);
-		Files.createDirectory(pathTmpSimpleWays);
-		Files.createDirectory(pathTmpSimpleRelations);
-		Files.createDirectory(pathTmpComplexNodes);
-		Files.createDirectory(pathTmpComplexWays);
-		Files.createDirectory(pathTmpComplexRelations);
+		Files.createDirectory(pathTmpRelations);
 	}
 
 	private void queryTreeData() throws IOException
@@ -264,21 +225,22 @@ public class Query extends BaseQuery
 
 		queryRelationBatches(entriesSimple, true, "Simple",
 				paths.getSimpleRelations(), files.getFilesSimpleRelations(),
-				pathTmpSimpleNodes, pathTmpSimpleWays, pathTmpSimpleRelations);
+				pathTmpRelations);
 		queryRelationBatches(entriesComplex, false, "Complex",
 				paths.getComplexRelations(), files.getFilesComplexRelations(),
-				pathTmpComplexNodes, pathTmpComplexWays,
-				pathTmpComplexRelations);
+				pathTmpRelations);
 	}
 
 	private void queryRelationBatches(List<IdBboxEntry> entries, boolean simple,
 			String type, Path pathRelationBatches,
-			List<OsmFileInput> filesRelations, Path pathTmpNodes,
-			Path pathTmpWays, Path pathTmpRelations) throws IOException
+			List<OsmFileInput> filesRelations, Path pathOutput)
+			throws IOException
 	{
 		int tmpIndex = 0;
 
 		String lowerType = type.toLowerCase();
+		String prefix = lowerType;
+
 		for (IdBboxEntry entry : entries) {
 			long id = entry.getId();
 			if (test.contains(entry.getEnvelope())) {
@@ -288,8 +250,6 @@ public class Query extends BaseQuery
 			} else if (test.intersects(entry.getEnvelope())) {
 				logger.info("Loading data from " + lowerType + " batch: " + id);
 				tmpIndex++;
-				String tmpFilenames = filename(tmpIndex);
-				logger.info("Writing to files: " + tmpFilenames);
 
 				Path pathDir = pathRelationBatches
 						.resolve(Long.toString(entry.getId()));
@@ -298,13 +258,15 @@ public class Query extends BaseQuery
 				Path pathRelations = pathDir
 						.resolve(relationNames.getRelations());
 
-				Path pathOutNodes = pathTmpNodes.resolve(tmpFilenames);
-				Path pathOutWays = pathTmpWays.resolve(tmpFilenames);
-				Path pathOutRelations = pathTmpRelations.resolve(tmpFilenames);
+				Path pathOutNodes = pathOutput
+						.resolve(filename(prefix, EntityType.Node, tmpIndex));
+				Path pathOutWays = pathOutput
+						.resolve(filename(prefix, EntityType.Way, tmpIndex));
+				Path pathOutRelations = pathOutput.resolve(
+						filename(prefix, EntityType.Relation, tmpIndex));
 
-				runRelationsQuery(simple, tmpFilenames, pathNodes, pathWays,
-						pathRelations, pathOutNodes, pathOutWays,
-						pathOutRelations);
+				runRelationsQuery(simple, pathNodes, pathWays, pathRelations,
+						pathOutNodes, pathOutWays, pathOutRelations);
 			}
 		}
 	}
@@ -324,17 +286,18 @@ public class Query extends BaseQuery
 
 		tmpIndexTree++;
 
-		String tmpFilenames = filename(tmpIndexTree);
-		Path pathOutNodes = pathTmpTreeNodes.resolve(tmpFilenames);
-		Path pathOutWays = pathTmpTreeWays.resolve(tmpFilenames);
-		Path pathOutSimpleRelations = pathTmpTreeSimpleRelations
-				.resolve(tmpFilenames);
-		Path pathOutComplexRelations = pathTmpTreeComplexRelations
-				.resolve(tmpFilenames);
-		Path pathOutAdditionalNodes = pathTmpTreeAdditionalNodes
-				.resolve(tmpFilenames);
-		Path pathOutAdditionalWays = pathTmpTreeAdditionalWays
-				.resolve(tmpFilenames);
+		Path pathOutNodes = pathTmpTree
+				.resolve(filename(EntityType.Node, tmpIndexTree));
+		Path pathOutWays = pathTmpTree
+				.resolve(filename(EntityType.Way, tmpIndexTree));
+		Path pathOutSimpleRelations = pathTmpTree
+				.resolve(filename("simple", tmpIndexTree));
+		Path pathOutComplexRelations = pathTmpTree
+				.resolve(filename("complex", tmpIndexTree));
+		Path pathOutAdditionalNodes = pathTmpTree
+				.resolve(filename("nodes-extra", tmpIndexTree));
+		Path pathOutAdditionalWays = pathTmpTree
+				.resolve(filename("ways-extra", tmpIndexTree));
 
 		QueryResult results = leafQuery.execute(leaf, pathOutNodes, pathOutWays,
 				pathOutSimpleRelations, pathOutComplexRelations,
@@ -365,10 +328,9 @@ public class Query extends BaseQuery
 	/*
 	 * This is run on each batch of relations
 	 */
-	private void runRelationsQuery(boolean simple, String tmpFilenames,
-			Path pathNodes, Path pathWays, Path pathRelations,
-			Path pathOutNodes, Path pathOutWays, Path pathOutRelations)
-			throws IOException
+	private void runRelationsQuery(boolean simple, Path pathNodes,
+			Path pathWays, Path pathRelations, Path pathOutNodes,
+			Path pathOutWays, Path pathOutRelations) throws IOException
 	{
 		logger.info("loading data");
 		InMemoryListDataSet dataRelations = read(pathRelations);

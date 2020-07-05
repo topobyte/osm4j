@@ -28,6 +28,7 @@ import de.topobyte.osm4j.core.access.OsmOutputStreamStreamOutput;
 import de.topobyte.osm4j.core.access.OsmStreamOutput;
 import de.topobyte.osm4j.core.dataset.InMemoryListDataSet;
 import de.topobyte.osm4j.core.dataset.ListDataSetLoader;
+import de.topobyte.osm4j.core.model.iface.EntityType;
 import de.topobyte.osm4j.utils.FileFormat;
 import de.topobyte.osm4j.utils.OsmFileInput;
 import de.topobyte.osm4j.utils.OsmIoUtils;
@@ -51,23 +52,43 @@ public abstract class AbstractQuery
 
 	protected String filename(int index)
 	{
-		return String.format("%d%s", index,
+		return String.format("%04d%s", index,
+				OsmIoUtils.extension(outputConfigIntermediate.getFileFormat()));
+	}
+
+	protected String filename(String prefix, int index)
+	{
+		return String.format("%s-%04d%s", prefix, index,
+				OsmIoUtils.extension(outputConfigIntermediate.getFileFormat()));
+	}
+
+	protected String filename(EntityType type, int index)
+	{
+		String typeName = type.name().toLowerCase() + "s";
+		return String.format("%s-%04d%s", typeName, index,
+				OsmIoUtils.extension(outputConfigIntermediate.getFileFormat()));
+	}
+
+	protected String filename(String prefix, EntityType type, int index)
+	{
+		String typeName = type.name().toLowerCase() + "s";
+		return String.format("%s-%s-%04d%s", prefix, typeName, index,
 				OsmIoUtils.extension(outputConfigIntermediate.getFileFormat()));
 	}
 
 	protected OsmStreamOutput createOutput(Path path) throws IOException
 	{
 		OutputStream outputStream = StreamUtil.bufferedOutputStream(path);
-		OsmOutputStream osmOutputStream = OsmIoUtils.setupOsmOutput(
-				outputStream, outputConfigIntermediate);
+		OsmOutputStream osmOutputStream = OsmIoUtils
+				.setupOsmOutput(outputStream, outputConfigIntermediate);
 		return new OsmOutputStreamStreamOutput(outputStream, osmOutputStream);
 	}
 
 	protected OsmStreamOutput createFinalOutput(Path path) throws IOException
 	{
 		OutputStream outputStream = StreamUtil.bufferedOutputStream(path);
-		OsmOutputStream osmOutputStream = OsmIoUtils.setupOsmOutput(
-				outputStream, outputConfig);
+		OsmOutputStream osmOutputStream = OsmIoUtils
+				.setupOsmOutput(outputStream, outputConfig);
 		return new OsmOutputStreamStreamOutput(outputStream, osmOutputStream);
 	}
 
