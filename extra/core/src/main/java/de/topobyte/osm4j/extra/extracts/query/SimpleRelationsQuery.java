@@ -44,6 +44,7 @@ public class SimpleRelationsQuery extends AbstractRelationsQuery
 		super(dataNodes, dataWays, dataRelations, test, fastRelationTests);
 	}
 
+	@Override
 	public void execute(RelationQueryBag queryBag) throws IOException
 	{
 		EntityFinder finder = EntityFinders.create(provider,

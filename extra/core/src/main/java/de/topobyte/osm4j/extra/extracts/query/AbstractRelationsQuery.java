@@ -27,6 +27,8 @@ import org.locationtech.jts.geom.GeometryFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.slimjars.dist.gnu.trove.map.TLongObjectMap;
+
 import de.topobyte.jts.utils.GeometryGroup;
 import de.topobyte.jts.utils.predicate.PredicateEvaluator;
 import de.topobyte.osm4j.core.dataset.InMemoryListDataSet;
@@ -64,6 +66,9 @@ public abstract class AbstractRelationsQuery
 	protected LineworkBuilder lineworkBuilder = new LineworkBuilder(factory);
 	protected RegionBuilder regionBuilder = new RegionBuilder(factory);
 
+	private TLongObjectMap<GeometryGroup> cacheLinework = null;
+	private TLongObjectMap<GeometryGroup> cacheRegion = null;
+
 	public AbstractRelationsQuery(InMemoryListDataSet dataNodes,
 			InMemoryListDataSet dataWays, InMemoryListDataSet dataRelations,
 			PredicateEvaluator test, boolean fastRelationTests)
@@ -85,6 +90,28 @@ public abstract class AbstractRelationsQuery
 				MissingEntitiesStrategy.BUILD_PARTIAL);
 		regionBuilder.setMissingWayNodeStrategy(
 				MissingWayNodeStrategy.OMIT_VERTEX_FROM_POLYLINE);
+	}
+
+	public abstract void execute(RelationQueryBag queryBag) throws IOException;
+
+	public TLongObjectMap<GeometryGroup> getCacheLinework()
+	{
+		return cacheLinework;
+	}
+
+	public void setCacheLinework(TLongObjectMap<GeometryGroup> cacheLinework)
+	{
+		this.cacheLinework = cacheLinework;
+	}
+
+	public TLongObjectMap<GeometryGroup> getCacheRegion()
+	{
+		return cacheRegion;
+	}
+
+	public void setCacheRegion(TLongObjectMap<GeometryGroup> cacheRegion)
+	{
+		this.cacheRegion = cacheRegion;
 	}
 
 	protected boolean intersects(OsmRelation relation,
@@ -111,11 +138,26 @@ public abstract class AbstractRelationsQuery
 			return false;
 		}
 
+		GeometryGroup linework = null;
+		if (cacheLinework != null) {
+			linework = cacheLinework.get(relation.getId());
+		}
+		GeometryGroup region = null;
+		if (cacheRegion != null) {
+			region = cacheRegion.get(relation.getId());
+		}
+
 		try {
-			LineworkBuilderResult result = lineworkBuilder.build(relation,
-					provider);
-			GeometryGroup group = result.toGeometryGroup(factory);
-			if (test.intersects(group)) {
+			if (linework == null) {
+				logger.debug("building linework: " + relation.getId());
+				LineworkBuilderResult result = lineworkBuilder.build(relation,
+						provider);
+				linework = result.toGeometryGroup(factory);
+				if (cacheLinework != null) {
+					cacheLinework.put(relation.getId(), linework);
+				}
+			}
+			if (test.intersects(linework)) {
 				return true;
 			}
 		} catch (EntityNotFoundException e) {
@@ -123,10 +165,16 @@ public abstract class AbstractRelationsQuery
 		}
 
 		try {
-			RegionBuilderResult result = regionBuilder.build(relation,
-					provider);
-			GeometryGroup group = result.toGeometryGroup(factory);
-			if (test.intersects(group)) {
+			if (region == null) {
+				logger.debug("building region: " + relation.getId());
+				RegionBuilderResult result = regionBuilder.build(relation,
+						provider);
+				region = result.toGeometryGroup(factory);
+				if (cacheRegion != null) {
+					cacheRegion.put(relation.getId(), region);
+				}
+			}
+			if (test.intersects(region)) {
 				return true;
 			}
 		} catch (EntityNotFoundException e) {
@@ -160,11 +208,26 @@ public abstract class AbstractRelationsQuery
 			return false;
 		}
 
+		GeometryGroup linework = null;
+		if (cacheLinework != null) {
+			linework = cacheLinework.get(start.getId());
+		}
+		GeometryGroup region = null;
+		if (cacheRegion != null) {
+			region = cacheRegion.get(start.getId());
+		}
+
 		try {
-			LineworkBuilderResult result = lineworkBuilder.build(relations,
-					provider);
-			GeometryGroup group = result.toGeometryGroup(factory);
-			if (test.intersects(group)) {
+			if (linework == null) {
+				logger.debug("building linework: " + start.getId());
+				LineworkBuilderResult result = lineworkBuilder.build(relations,
+						provider);
+				linework = result.toGeometryGroup(factory);
+				if (cacheLinework != null) {
+					cacheLinework.put(start.getId(), linework);
+				}
+			}
+			if (test.intersects(linework)) {
 				return true;
 			}
 		} catch (EntityNotFoundException e) {
@@ -172,9 +235,16 @@ public abstract class AbstractRelationsQuery
 		}
 
 		try {
-			RegionBuilderResult result = regionBuilder.build(start, provider);
-			GeometryGroup group = result.toGeometryGroup(factory);
-			if (test.intersects(group)) {
+			if (region == null) {
+				logger.debug("building region: " + start.getId());
+				RegionBuilderResult result = regionBuilder.build(start,
+						provider);
+				region = result.toGeometryGroup(factory);
+				if (cacheRegion != null) {
+					cacheRegion.put(start.getId(), region);
+				}
+			}
+			if (test.intersects(region)) {
 				return true;
 			}
 		} catch (EntityNotFoundException e) {

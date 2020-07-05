@@ -56,6 +56,7 @@ public class ComplexRelationsQuery extends AbstractRelationsQuery
 		super(dataNodes, dataWays, dataRelations, test, fastRelationTests);
 	}
 
+	@Override
 	public void execute(RelationQueryBag queryBag) throws IOException
 	{
 		RelationGraph relationGraph = new RelationGraph(true, true);

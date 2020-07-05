@@ -26,6 +26,9 @@ import org.locationtech.jts.geom.GeometryFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.slimjars.dist.gnu.trove.map.TLongObjectMap;
+
+import de.topobyte.jts.utils.GeometryGroup;
 import de.topobyte.jts.utils.predicate.PredicateEvaluator;
 import de.topobyte.osm4j.core.access.OsmStreamOutput;
 import de.topobyte.osm4j.core.dataset.InMemoryListDataSet;
@@ -174,6 +177,16 @@ public class BaseQuery extends AbstractQuery
 			Path pathOutNodes, Path pathOutWays, Path pathOutRelations)
 			throws IOException
 	{
+		runRelationsQuery(files, test, simple, data, pathOutNodes, pathOutWays,
+				pathOutRelations, null, null);
+	}
+
+	protected void runRelationsQuery(IntermediateFiles files,
+			PredicateEvaluator test, boolean simple, BatchDataSet data,
+			Path pathOutNodes, Path pathOutWays, Path pathOutRelations,
+			TLongObjectMap<GeometryGroup> cacheLinework,
+			TLongObjectMap<GeometryGroup> cacheRegion) throws IOException
+	{
 		OsmStreamOutput outRelations = createOutput(pathOutRelations);
 		RelationQueryBag queryBag = new RelationQueryBag(outRelations);
 
@@ -185,17 +198,17 @@ public class BaseQuery extends AbstractQuery
 		// before, also for quick relation selection by member id
 		QueryUtil.queryWays(data.dataWays, queryBag.nodeIds, queryBag.wayIds);
 
+		AbstractRelationsQuery query;
 		if (simple) {
-			SimpleRelationsQuery simpleRelationsQuery = new SimpleRelationsQuery(
-					data.dataNodes, data.dataWays, data.selectedRelations, test,
-					fastRelationTests);
-			simpleRelationsQuery.execute(queryBag);
+			query = new SimpleRelationsQuery(data.dataNodes, data.dataWays,
+					data.selectedRelations, test, fastRelationTests);
 		} else {
-			ComplexRelationsQuery complexRelationsQuery = new ComplexRelationsQuery(
-					data.dataNodes, data.dataWays, data.selectedRelations, test,
-					fastRelationTests);
-			complexRelationsQuery.execute(queryBag);
+			query = new ComplexRelationsQuery(data.dataNodes, data.dataWays,
+					data.selectedRelations, test, fastRelationTests);
 		}
+		query.setCacheLinework(cacheLinework);
+		query.setCacheRegion(cacheRegion);
+		query.execute(queryBag);
 
 		finish(outRelations);
 
