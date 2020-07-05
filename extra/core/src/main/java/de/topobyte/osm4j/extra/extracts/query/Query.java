@@ -171,8 +171,6 @@ public class Query extends AbstractQuery
 	private int nComplexRelations = 0;
 
 	private int tmpIndexTree = 0;
-	private int tmpIndexSimple = 0;
-	private int tmpIndexComplex = 0;
 
 	public void execute() throws IOException
 	{
@@ -307,61 +305,47 @@ public class Query extends AbstractQuery
 		List<IdBboxEntry> entriesComplex = IdBboxUtil
 				.read(paths.getComplexRelationsBboxes());
 
-		for (IdBboxEntry entry : entriesSimple) {
+		queryRelationBatches(entriesSimple, true, "Simple",
+				paths.getSimpleRelations(), filesSimpleRelations,
+				pathTmpSimpleNodes, pathTmpSimpleWays, pathTmpSimpleRelations);
+		queryRelationBatches(entriesComplex, false, "Complex",
+				paths.getComplexRelations(), filesComplexRelations,
+				pathTmpComplexNodes, pathTmpComplexWays,
+				pathTmpComplexRelations);
+	}
+
+	private void queryRelationBatches(List<IdBboxEntry> entries, boolean simple,
+			String type, Path pathRelationBatches,
+			List<OsmFileInput> filesRelations, Path pathTmpNodes,
+			Path pathTmpWays, Path pathTmpRelations) throws IOException
+	{
+		int tmpIndex = 0;
+
+		String lowerType = type.toLowerCase();
+		for (IdBboxEntry entry : entries) {
 			long id = entry.getId();
 			if (test.contains(entry.getEnvelope())) {
-				logger.info("Simple batch completely contained: " + id);
-				addCompletelyContainedBatch(paths.getSimpleRelations(), id,
-						filesSimpleRelations);
+				logger.info(type + " batch completely contained: " + id);
+				addCompletelyContainedBatch(pathRelationBatches, id,
+						filesRelations);
 			} else if (test.intersects(entry.getEnvelope())) {
-				logger.info("Loading data from simple batch: " + id);
-				tmpIndexSimple++;
-				String tmpFilenames = filename(tmpIndexSimple);
+				logger.info("Loading data from " + lowerType + " batch: " + id);
+				tmpIndex++;
+				String tmpFilenames = filename(tmpIndex);
 				logger.info("Writing to files: " + tmpFilenames);
 
-				Path pathDir = paths.getSimpleRelations()
+				Path pathDir = pathRelationBatches
 						.resolve(Long.toString(entry.getId()));
 				Path pathNodes = pathDir.resolve(relationNames.getNodes());
 				Path pathWays = pathDir.resolve(relationNames.getWays());
 				Path pathRelations = pathDir
 						.resolve(relationNames.getRelations());
 
-				Path pathOutNodes = pathTmpSimpleNodes.resolve(tmpFilenames);
-				Path pathOutWays = pathTmpSimpleWays.resolve(tmpFilenames);
-				Path pathOutRelations = pathTmpSimpleRelations
-						.resolve(tmpFilenames);
+				Path pathOutNodes = pathTmpNodes.resolve(tmpFilenames);
+				Path pathOutWays = pathTmpWays.resolve(tmpFilenames);
+				Path pathOutRelations = pathTmpRelations.resolve(tmpFilenames);
 
-				runRelationsQuery(true, tmpFilenames, pathNodes, pathWays,
-						pathRelations, pathOutNodes, pathOutWays,
-						pathOutRelations);
-			}
-		}
-
-		for (IdBboxEntry entry : entriesComplex) {
-			long id = entry.getId();
-			if (test.contains(entry.getEnvelope())) {
-				logger.info("Complex batch completely contained: " + id);
-				addCompletelyContainedBatch(paths.getComplexRelations(), id,
-						filesComplexRelations);
-			} else if (test.intersects(entry.getEnvelope())) {
-				logger.info("Loading data from complex batch: " + id);
-				tmpIndexComplex++;
-				String tmpFilenames = filename(tmpIndexComplex);
-				logger.info("Writing to files: " + tmpFilenames);
-
-				Path pathDir = paths.getComplexRelations()
-						.resolve(Long.toString(entry.getId()));
-				Path pathNodes = pathDir.resolve(relationNames.getNodes());
-				Path pathWays = pathDir.resolve(relationNames.getWays());
-				Path pathRelations = pathDir
-						.resolve(relationNames.getRelations());
-
-				Path pathOutNodes = pathTmpComplexNodes.resolve(tmpFilenames);
-				Path pathOutWays = pathTmpComplexWays.resolve(tmpFilenames);
-				Path pathOutRelations = pathTmpComplexRelations
-						.resolve(tmpFilenames);
-
-				runRelationsQuery(false, tmpFilenames, pathNodes, pathWays,
+				runRelationsQuery(simple, tmpFilenames, pathNodes, pathWays,
 						pathRelations, pathOutNodes, pathOutWays,
 						pathOutRelations);
 			}
