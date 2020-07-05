@@ -25,6 +25,7 @@ import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.Envelope;
 import org.locationtech.jts.geom.Geometry;
 import org.locationtech.jts.geom.GeometryFactory;
+import org.locationtech.jts.geom.prep.PreparedGeometry;
 
 public class DataTree
 {
@@ -143,6 +144,13 @@ public class DataTree
 	}
 
 	public List<Node> query(Geometry geometry)
+	{
+		results.clear();
+		root.query(results, geometry);
+		return results;
+	}
+
+	public List<Node> query(PreparedGeometry geometry)
 	{
 		results.clear();
 		root.query(results, geometry);

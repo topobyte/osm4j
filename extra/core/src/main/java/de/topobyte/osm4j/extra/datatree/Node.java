@@ -22,6 +22,7 @@ import java.util.List;
 import org.locationtech.jts.geom.Envelope;
 import org.locationtech.jts.geom.Geometry;
 import org.locationtech.jts.geom.GeometryFactory;
+import org.locationtech.jts.geom.prep.PreparedGeometry;
 
 public class Node
 {
@@ -206,6 +207,21 @@ public class Node
 	}
 
 	public void query(List<Node> nodes, Geometry geometry)
+	{
+		if (!geometry.intersects(box)) {
+			return;
+		}
+
+		if (isLeaf()) {
+			nodes.add(this);
+			return;
+		}
+
+		left.query(nodes, geometry);
+		right.query(nodes, geometry);
+	}
+
+	public void query(List<Node> nodes, PreparedGeometry geometry)
 	{
 		if (!geometry.intersects(box)) {
 			return;
