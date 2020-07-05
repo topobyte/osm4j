@@ -18,6 +18,7 @@
 package de.topobyte.osm4j.extra.extracts.query;
 
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 
@@ -197,6 +198,12 @@ public class BaseQuery extends AbstractQuery
 		}
 
 		finish(outRelations);
+
+		boolean empty = queryBag.nSimple == 0 && queryBag.nComplex == 0;
+		if (empty) {
+			Files.delete(pathOutRelations);
+			return;
+		}
 
 		logger.info("writing nodes and ways");
 		OsmStreamOutput outputNodes = createOutput(pathOutNodes);
