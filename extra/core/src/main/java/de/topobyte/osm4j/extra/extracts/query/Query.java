@@ -21,30 +21,18 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.FileAttribute;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
-import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.Envelope;
 import org.locationtech.jts.geom.Geometry;
-import org.locationtech.jts.geom.GeometryFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.slimjars.dist.gnu.trove.set.TLongSet;
-
 import de.topobyte.jts.utils.predicate.PredicateEvaluator;
-import de.topobyte.osm4j.core.access.OsmIterator;
-import de.topobyte.osm4j.core.access.OsmIteratorInput;
 import de.topobyte.osm4j.core.access.OsmStreamOutput;
 import de.topobyte.osm4j.core.dataset.InMemoryListDataSet;
-import de.topobyte.osm4j.core.model.iface.OsmNode;
-import de.topobyte.osm4j.core.model.iface.OsmWay;
 import de.topobyte.osm4j.extra.QueryUtil;
-import de.topobyte.osm4j.extra.datatree.DataTree;
-import de.topobyte.osm4j.extra.datatree.DataTreeFiles;
-import de.topobyte.osm4j.extra.datatree.DataTreeOpener;
 import de.topobyte.osm4j.extra.datatree.Node;
 import de.topobyte.osm4j.extra.extracts.BatchFileNames;
 import de.topobyte.osm4j.extra.extracts.ExtractionPaths;
@@ -54,9 +42,8 @@ import de.topobyte.osm4j.extra.idbboxlist.IdBboxUtil;
 import de.topobyte.osm4j.utils.FileFormat;
 import de.topobyte.osm4j.utils.OsmFileInput;
 import de.topobyte.osm4j.utils.OsmOutputConfig;
-import de.topobyte.osm4j.utils.merge.sorted.SortedMerge;
 
-public class Query extends AbstractQuery
+public class Query extends BaseQuery
 {
 
 	final static Logger logger = LoggerFactory.getLogger(Query.class);
@@ -66,10 +53,6 @@ public class Query extends AbstractQuery
 
 	private Path pathOutput;
 	private Path pathTmp;
-	private ExtractionPaths paths;
-
-	private TreeFileNames treeNames;
-	private BatchFileNames relationNames;
 
 	private boolean keepTmp;
 
@@ -124,15 +107,13 @@ public class Query extends AbstractQuery
 			OsmOutputConfig outputConfig, boolean keepTmp,
 			boolean fastRelationTests, RelationFilter relationFilter)
 	{
-		super(inputFormat, outputConfigIntermediate, outputConfig);
+		super(paths, treeNames, relationNames, inputFormat,
+				outputConfigIntermediate, outputConfig);
 
 		this.queryEnvelope = queryEnvelope;
 		this.test = test;
 		this.pathOutput = pathOutput;
 		this.pathTmp = pathTmp;
-		this.paths = paths;
-		this.treeNames = treeNames;
-		this.relationNames = relationNames;
 		this.keepTmp = keepTmp;
 		this.fastRelationTests = fastRelationTests;
 		this.relationFilter = relationFilter;
@@ -151,19 +132,8 @@ public class Query extends AbstractQuery
 	private Path pathTmpComplexWays;
 	private Path pathTmpComplexRelations;
 
-	private GeometryFactory factory = new GeometryFactory();
-
-	private DataTree tree;
-	private DataTreeFiles filesTreeNodes;
-	private DataTreeFiles filesTreeWays;
-	private DataTreeFiles filesTreeSimpleRelations;
-	private DataTreeFiles filesTreeComplexRelations;
-
 	// Lists of files that need to be merged in the end
-	private List<OsmFileInput> filesNodes = new ArrayList<>();
-	private List<OsmFileInput> filesWays = new ArrayList<>();
-	private List<OsmFileInput> filesSimpleRelations = new ArrayList<>();
-	private List<OsmFileInput> filesComplexRelations = new ArrayList<>();
+	private IntermediateFiles files = new IntermediateFiles();
 
 	private int nNodes = 0;
 	private int nWays = 0;
@@ -259,19 +229,6 @@ public class Query extends AbstractQuery
 		Files.createDirectory(pathTmpComplexRelations);
 	}
 
-	private void openTree() throws IOException
-	{
-		Path pathTree = paths.getTree();
-		tree = DataTreeOpener.open(pathTree);
-
-		filesTreeNodes = new DataTreeFiles(pathTree, treeNames.getNodes());
-		filesTreeWays = new DataTreeFiles(pathTree, treeNames.getWays());
-		filesTreeSimpleRelations = new DataTreeFiles(pathTree,
-				treeNames.getSimpleRelations());
-		filesTreeComplexRelations = new DataTreeFiles(pathTree,
-				treeNames.getComplexRelations());
-	}
-
 	private void queryTreeData() throws IOException
 	{
 		Geometry box = factory.toGeometry(queryEnvelope);
@@ -282,7 +239,7 @@ public class Query extends AbstractQuery
 
 			if (test.contains(leaf.getEnvelope())) {
 				logger.info("Leaf is completely contained: " + leafName);
-				addCompletelyContainedLeaf(leaf);
+				addCompletelyContainedLeaf(files, leaf);
 				continue;
 			}
 
@@ -306,10 +263,10 @@ public class Query extends AbstractQuery
 				.read(paths.getComplexRelationsBboxes());
 
 		queryRelationBatches(entriesSimple, true, "Simple",
-				paths.getSimpleRelations(), filesSimpleRelations,
+				paths.getSimpleRelations(), files.getFilesSimpleRelations(),
 				pathTmpSimpleNodes, pathTmpSimpleWays, pathTmpSimpleRelations);
 		queryRelationBatches(entriesComplex, false, "Complex",
-				paths.getComplexRelations(), filesComplexRelations,
+				paths.getComplexRelations(), files.getFilesComplexRelations(),
 				pathTmpComplexNodes, pathTmpComplexWays,
 				pathTmpComplexRelations);
 	}
@@ -326,7 +283,7 @@ public class Query extends AbstractQuery
 			long id = entry.getId();
 			if (test.contains(entry.getEnvelope())) {
 				logger.info(type + " batch completely contained: " + id);
-				addCompletelyContainedBatch(pathRelationBatches, id,
+				addCompletelyContainedBatch(files, pathRelationBatches, id,
 						filesRelations);
 			} else if (test.intersects(entry.getEnvelope())) {
 				logger.info("Loading data from " + lowerType + " batch: " + id);
@@ -355,53 +312,7 @@ public class Query extends AbstractQuery
 	private void mergeFiles() throws IOException
 	{
 		OsmStreamOutput output = createFinalOutput(pathOutput);
-
-		List<OsmFileInput> mergeFiles = new ArrayList<>();
-
-		mergeFiles.addAll(filesNodes);
-		mergeFiles.addAll(filesWays);
-		mergeFiles.addAll(filesSimpleRelations);
-		mergeFiles.addAll(filesComplexRelations);
-
-		logger.info(String.format("Merging %d files", mergeFiles.size()));
-
-		List<OsmIteratorInput> mergeIteratorInputs = new ArrayList<>();
-		List<OsmIterator> mergeIterators = new ArrayList<>();
-		for (OsmFileInput input : mergeFiles) {
-			OsmIteratorInput iteratorInput = input.createIterator(true,
-					outputConfig.isWriteMetadata());
-			mergeIteratorInputs.add(iteratorInput);
-			mergeIterators.add(iteratorInput.getIterator());
-		}
-
-		SortedMerge merge = new SortedMerge(output.getOsmOutput(),
-				mergeIterators);
-		merge.run();
-
-		for (OsmIteratorInput input : mergeIteratorInputs) {
-			input.close();
-		}
-
-		output.close();
-	}
-
-	private OsmFileInput input(Path path)
-	{
-		return new OsmFileInput(path, inputFormat);
-	}
-
-	private OsmFileInput intermediate(Path path)
-	{
-		return new OsmFileInput(path, outputConfigIntermediate.getFileFormat());
-	}
-
-	private void addCompletelyContainedLeaf(Node leaf)
-	{
-		filesNodes.add(input(filesTreeNodes.getPath(leaf)));
-		filesWays.add(input(filesTreeWays.getPath(leaf)));
-		filesSimpleRelations.add(input(filesTreeSimpleRelations.getPath(leaf)));
-		filesComplexRelations
-				.add(input(filesTreeComplexRelations.getPath(leaf)));
+		ExtractionUtil.merge(output, files, outputConfig);
 	}
 
 	private void addIntersectingLeaf(Node leaf) throws IOException
@@ -434,12 +345,14 @@ public class Query extends AbstractQuery
 		nSimpleRelations += results.getNumSimpleRelations();
 		nComplexRelations += results.getNumComplexRelations();
 
-		filesNodes.add(intermediate(pathOutNodes));
-		filesNodes.add(intermediate(pathOutAdditionalNodes));
-		filesWays.add(intermediate(pathOutWays));
-		filesWays.add(intermediate(pathOutAdditionalWays));
-		filesSimpleRelations.add(intermediate(pathOutSimpleRelations));
-		filesComplexRelations.add(intermediate(pathOutComplexRelations));
+		files.getFilesNodes().add(intermediate(pathOutNodes));
+		files.getFilesNodes().add(intermediate(pathOutAdditionalNodes));
+		files.getFilesWays().add(intermediate(pathOutWays));
+		files.getFilesWays().add(intermediate(pathOutAdditionalWays));
+		files.getFilesSimpleRelations()
+				.add(intermediate(pathOutSimpleRelations));
+		files.getFilesComplexRelations()
+				.add(intermediate(pathOutComplexRelations));
 
 		logger.info(String.format("Found %d nodes", results.getNumNodes()));
 		logger.info(String.format("Found %d ways", results.getNumWays()));
@@ -447,15 +360,6 @@ public class Query extends AbstractQuery
 				results.getNumSimpleRelations()));
 		logger.info(String.format("Found %d complex relations",
 				results.getNumComplexRelations()));
-	}
-
-	private void addCompletelyContainedBatch(Path pathRelations, long id,
-			List<OsmFileInput> filesRelations)
-	{
-		Path path = pathRelations.resolve(Long.toString(id));
-		filesNodes.add(input(path.resolve(relationNames.getNodes())));
-		filesWays.add(input(path.resolve(relationNames.getWays())));
-		filesRelations.add(input(path.resolve(relationNames.getRelations())));
 	}
 
 	/*
@@ -497,10 +401,10 @@ public class Query extends AbstractQuery
 		logger.info("running query");
 		// First determine all nodes of this batch that are within the
 		// requested region for quick relation selection by member id
-		queryNodes(dataNodes, queryBag.nodeIds);
+		QueryUtil.queryNodes(test, dataNodes, queryBag.nodeIds);
 		// Also determine all ways that reference any of the nodes selected
 		// before, also for quick relation selection by member id
-		queryWays(dataWays, queryBag.nodeIds, queryBag.wayIds);
+		QueryUtil.queryWays(dataWays, queryBag.nodeIds, queryBag.wayIds);
 
 		if (simple) {
 			SimpleRelationsQuery simpleRelationsQuery = new SimpleRelationsQuery(
@@ -526,32 +430,9 @@ public class Query extends AbstractQuery
 		QueryUtil.writeWays(queryBag.additionalWays, outputWays.getOsmOutput());
 		finish(outputWays);
 
-		filesNodes.add(intermediate(pathOutNodes));
-		filesWays.add(intermediate(pathOutWays));
-		filesSimpleRelations.add(intermediate(pathOutRelations));
-	}
-
-	private void queryNodes(InMemoryListDataSet dataNodes, TLongSet nodeIds)
-			throws IOException
-	{
-		for (OsmNode node : dataNodes.getNodes()) {
-			if (test.contains(
-					new Coordinate(node.getLongitude(), node.getLatitude()))) {
-				nodeIds.add(node.getId());
-			}
-		}
-	}
-
-	private void queryWays(InMemoryListDataSet dataWays, TLongSet nodeIds,
-			TLongSet wayIds) throws IOException
-	{
-		for (OsmWay way : dataWays.getWays()) {
-			boolean in = QueryUtil.anyNodeContainedIn(way, nodeIds);
-			if (!in) {
-				continue;
-			}
-			wayIds.add(way.getId());
-		}
+		files.getFilesNodes().add(intermediate(pathOutNodes));
+		files.getFilesWays().add(intermediate(pathOutWays));
+		files.getFilesSimpleRelations().add(intermediate(pathOutRelations));
 	}
 
 }

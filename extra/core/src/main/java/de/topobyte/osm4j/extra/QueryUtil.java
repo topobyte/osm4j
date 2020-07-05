@@ -21,10 +21,14 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
 
+import org.locationtech.jts.geom.Coordinate;
+
 import com.slimjars.dist.gnu.trove.map.TLongObjectMap;
 import com.slimjars.dist.gnu.trove.set.TLongSet;
 
+import de.topobyte.jts.utils.predicate.PredicateEvaluator;
 import de.topobyte.osm4j.core.access.OsmOutputStream;
+import de.topobyte.osm4j.core.dataset.InMemoryListDataSet;
 import de.topobyte.osm4j.core.model.iface.EntityType;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.osm4j.core.model.iface.OsmRelation;
@@ -297,6 +301,29 @@ public class QueryUtil
 		for (long id : ids) {
 			OsmRelation relation = map.get(id);
 			osmOutput.write(relation);
+		}
+	}
+
+	public static void queryNodes(PredicateEvaluator test,
+			InMemoryListDataSet dataNodes, TLongSet nodeIds) throws IOException
+	{
+		for (OsmNode node : dataNodes.getNodes()) {
+			if (test.contains(
+					new Coordinate(node.getLongitude(), node.getLatitude()))) {
+				nodeIds.add(node.getId());
+			}
+		}
+	}
+
+	public static void queryWays(InMemoryListDataSet dataWays, TLongSet nodeIds,
+			TLongSet wayIds) throws IOException
+	{
+		for (OsmWay way : dataWays.getWays()) {
+			boolean in = QueryUtil.anyNodeContainedIn(way, nodeIds);
+			if (!in) {
+				continue;
+			}
+			wayIds.add(way.getId());
 		}
 	}
 
