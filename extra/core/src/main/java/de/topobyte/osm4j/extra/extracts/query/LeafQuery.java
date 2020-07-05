@@ -103,8 +103,8 @@ public class LeafQuery extends AbstractQuery
 
 	public QueryResult execute(Node leaf, Path pathOutNodes, Path pathOutWays,
 			Path pathOutSimpleRelations, Path pathOutComplexRelations,
-			Path pathOutAdditionalNodes, Path pathOutAdditionalWays)
-			throws IOException
+			Path pathOutAdditionalNodes, Path pathOutAdditionalWays,
+			RelationGroupFilter relationGroupFilter) throws IOException
 	{
 		this.pathOutNodes = pathOutNodes;
 		this.pathOutWays = pathOutWays;
@@ -141,7 +141,7 @@ public class LeafQuery extends AbstractQuery
 
 		ComplexRelationsQuery complexRelationsQuery = new ComplexRelationsQuery(
 				dataNodes, dataWays, dataComplexRelations, test,
-				fastRelationTests);
+				fastRelationTests, relationGroupFilter);
 		complexRelationsQuery.execute(queryBagComplex);
 
 		logger.info("writing additional nodes");

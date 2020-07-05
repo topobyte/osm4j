@@ -35,14 +35,15 @@ public class BboxQuery extends Query
 			BatchFileNames relationNames, FileFormat inputFormat,
 			OsmOutputConfig outputConfigIntermediate,
 			OsmOutputConfig outputConfig, boolean keepTmp,
-			boolean fastRelationTests, RelationFilter relationFilter)
+			boolean fastRelationTests, RelationFilter relationFilter,
+			RelationGroupFilter relationGroupFilter)
 	{
 		super(bbox.toEnvelope(),
 				new PredicateEvaluatorRectangle(bbox.getLon1(), bbox.getLat2(),
-						bbox.getLon2(), bbox.getLat1()), pathOutput, pathTmp,
-				paths, treeNames, relationNames, inputFormat,
-				outputConfigIntermediate, outputConfig, keepTmp,
-				fastRelationTests, relationFilter);
+						bbox.getLon2(), bbox.getLat1()),
+				pathOutput, pathTmp, paths, treeNames, relationNames,
+				inputFormat, outputConfigIntermediate, outputConfig, keepTmp,
+				fastRelationTests, relationFilter, relationGroupFilter);
 	}
 
 }

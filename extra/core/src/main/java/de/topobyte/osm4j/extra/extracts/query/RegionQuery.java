@@ -36,12 +36,14 @@ public class RegionQuery extends Query
 			BatchFileNames relationNames, FileFormat inputFormat,
 			OsmOutputConfig outputConfigIntermediate,
 			OsmOutputConfig outputConfig, boolean keepTmp,
-			boolean fastRelationTests, RelationFilter relationFilter)
+			boolean fastRelationTests, RelationFilter relationFilter,
+			RelationGroupFilter relationGroupFilter)
 	{
-		super(region.getEnvelopeInternal(), new PredicateEvaluatorPrepared(
-				region), pathOutput, pathTmp, paths, treeNames, relationNames,
-				inputFormat, outputConfigIntermediate, outputConfig, keepTmp,
-				fastRelationTests, relationFilter);
+		super(region.getEnvelopeInternal(),
+				new PredicateEvaluatorPrepared(region), pathOutput, pathTmp,
+				paths, treeNames, relationNames, inputFormat,
+				outputConfigIntermediate, outputConfig, keepTmp,
+				fastRelationTests, relationFilter, relationGroupFilter);
 	}
 
 }

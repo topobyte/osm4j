@@ -174,16 +174,17 @@ public class BaseQuery extends AbstractQuery
 	 */
 	protected void runRelationsQuery(IntermediateFiles files,
 			PredicateEvaluator test, boolean simple, BatchDataSet data,
-			Path pathOutNodes, Path pathOutWays, Path pathOutRelations)
-			throws IOException
+			Path pathOutNodes, Path pathOutWays, Path pathOutRelations,
+			RelationGroupFilter relationGroupFilter) throws IOException
 	{
 		runRelationsQuery(files, test, simple, data, pathOutNodes, pathOutWays,
-				pathOutRelations, null, null);
+				pathOutRelations, relationGroupFilter, null, null);
 	}
 
 	protected void runRelationsQuery(IntermediateFiles files,
 			PredicateEvaluator test, boolean simple, BatchDataSet data,
 			Path pathOutNodes, Path pathOutWays, Path pathOutRelations,
+			RelationGroupFilter relationGroupFilter,
 			TLongObjectMap<GeometryGroup> cacheLinework,
 			TLongObjectMap<GeometryGroup> cacheRegion) throws IOException
 	{
@@ -204,7 +205,8 @@ public class BaseQuery extends AbstractQuery
 					data.selectedRelations, test, fastRelationTests);
 		} else {
 			query = new ComplexRelationsQuery(data.dataNodes, data.dataWays,
-					data.selectedRelations, test, fastRelationTests);
+					data.selectedRelations, test, fastRelationTests,
+					relationGroupFilter);
 		}
 		query.setCacheLinework(cacheLinework);
 		query.setCacheRegion(cacheRegion);

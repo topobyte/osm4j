@@ -54,6 +54,7 @@ public class Query extends BaseQuery
 	private Path pathTmp;
 
 	private RelationFilter relationFilter;
+	private RelationGroupFilter relationGroupFilter;
 
 	/**
 	 * Create a query to extract data contained in an area from an extraction
@@ -100,7 +101,8 @@ public class Query extends BaseQuery
 			TreeFileNames treeNames, BatchFileNames relationNames,
 			FileFormat inputFormat, OsmOutputConfig outputConfigIntermediate,
 			OsmOutputConfig outputConfig, boolean keepTmp,
-			boolean fastRelationTests, RelationFilter relationFilter)
+			boolean fastRelationTests, RelationFilter relationFilter,
+			RelationGroupFilter relationGroupFilter)
 	{
 		super(paths, treeNames, relationNames, inputFormat,
 				outputConfigIntermediate, outputConfig, keepTmp,
@@ -113,6 +115,7 @@ public class Query extends BaseQuery
 		this.keepTmp = keepTmp;
 		this.fastRelationTests = fastRelationTests;
 		this.relationFilter = relationFilter;
+		this.relationGroupFilter = relationGroupFilter;
 	}
 
 	private Path pathTmpTree;
@@ -263,7 +266,7 @@ public class Query extends BaseQuery
 						filename(prefix, EntityType.Relation, tmpIndex));
 
 				runRelationsQuery(files, test, simple, data, pathOutNodes,
-						pathOutWays, pathOutRelations);
+						pathOutWays, pathOutRelations, relationGroupFilter);
 			}
 		}
 	}
@@ -298,7 +301,8 @@ public class Query extends BaseQuery
 
 		QueryResult results = leafQuery.execute(leaf, pathOutNodes, pathOutWays,
 				pathOutSimpleRelations, pathOutComplexRelations,
-				pathOutAdditionalNodes, pathOutAdditionalWays);
+				pathOutAdditionalNodes, pathOutAdditionalWays,
+				relationGroupFilter);
 
 		nNodes += results.getNumNodes();
 		nWays += results.getNumWays();

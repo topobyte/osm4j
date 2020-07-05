@@ -49,11 +49,15 @@ public class ComplexRelationsQuery extends AbstractRelationsQuery
 	final static Logger logger = LoggerFactory
 			.getLogger(ComplexRelationsQuery.class);
 
+	private RelationGroupFilter relationGroupFilter;
+
 	public ComplexRelationsQuery(InMemoryListDataSet dataNodes,
 			InMemoryListDataSet dataWays, InMemoryListDataSet dataRelations,
-			PredicateEvaluator test, boolean fastRelationTests)
+			PredicateEvaluator test, boolean fastRelationTests,
+			RelationGroupFilter relationGroupFilter)
 	{
 		super(dataNodes, dataWays, dataRelations, test, fastRelationTests);
+		this.relationGroupFilter = relationGroupFilter;
 	}
 
 	@Override
@@ -155,6 +159,11 @@ public class ComplexRelationsQuery extends AbstractRelationsQuery
 					// Can't happen, using the IGNORE strategy
 					continue;
 				}
+
+				if (!relationGroupFilter.take(subGroup)) {
+					continue;
+				}
+
 				if (intersects(start, subRelations, queryBag, finder)) {
 					found.addAll(subRelations);
 				}
