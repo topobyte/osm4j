@@ -42,10 +42,6 @@ The packages are available at these coordinates:
 <a href="https://mvn.topobyte.de/de/topobyte/osm4j-testing/1.0.0/">de.topobyte:osm4j-testing:1.0.0</a>
 </pre>
 
-You can also browse the repository online:
-
-* <https://mvn.topobyte.de/de/topobyte/osm4j-core/>
-
 ## History
 
 Formerly osm4j has been distributed among a number of independent
