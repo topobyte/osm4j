@@ -15,6 +15,37 @@ This repository now contains all submodules of osm4j.
 * [FutureCitiesCatapult/TomboloDigitalConnector](https://github.com/FutureCitiesCatapult/TomboloDigitalConnector)
 * [tordanik/OSM2World](https://github.com/tordanik/OSM2World)
 
+## License
+
+This library is released under the terms of the GNU Lesser General Public
+License.
+
+See [LGPL.md](LGPL.md) and [GPL.md](GPL.md) for details.
+
+# Download
+
+We provide access to the artifacts via our own Maven repository:
+
+<https://mvn.topobyte.de>
+
+The packages are available at these coordinates:
+
+<pre>
+<a href="https://mvn.topobyte.de/de/topobyte/osm4j-core/1.0.0/">de.topobyte:osm4j-core:1.0.0</a>
+<a href="https://mvn.topobyte.de/de/topobyte/osm4j-geometry/1.0.0/">de.topobyte:osm4j-geometry:1.0.0</a>
+<a href="https://mvn.topobyte.de/de/topobyte/osm4j-xml/1.0.0/">de.topobyte:osm4j-xml:1.0.0</a>
+<a href="https://mvn.topobyte.de/de/topobyte/osm4j-pbf/1.0.0/">de.topobyte:osm4j-pbf:1.0.0</a>
+<a href="https://mvn.topobyte.de/de/topobyte/osm4j-pbf-full-runtime/1.0.0/">de.topobyte:osm4j-pbf-full-runtime:1.0.0</a>
+<a href="https://mvn.topobyte.de/de/topobyte/osm4j-tbo/1.0.0/">de.topobyte:osm4j-tbo:1.0.0</a>
+<a href="https://mvn.topobyte.de/de/topobyte/osm4j-utils/1.0.0/">de.topobyte:osm4j-utils:1.0.0</a>
+<a href="https://mvn.topobyte.de/de/topobyte/osm4j-extra/1.0.4/">de.topobyte:osm4j-extra:1.0.4</a>
+<a href="https://mvn.topobyte.de/de/topobyte/osm4j-testing/1.0.0/">de.topobyte:osm4j-testing:1.0.0</a>
+</pre>
+
+You can also browse the repository online:
+
+* <https://mvn.topobyte.de/de/topobyte/osm4j-core/>
+
 ## History
 
 Formerly osm4j has been distributed among a number of independent
