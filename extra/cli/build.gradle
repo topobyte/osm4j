@@ -33,6 +33,7 @@ launchAndInstall {
 	createScript(project, 'de.topobyte.osm4j.extra.executables.ExtractMemberIds', 'OsmExtraExtractMemberIds')
 	createScript(project, 'de.topobyte.osm4j.extra.executables.ExtractMissingWayNodes', 'OsmExtraExtractMissingWayNodes')
 	createScript(project, 'de.topobyte.osm4j.extra.executables.ExtractWayMemberNodeIds', 'OsmExtraExtractWayMemberNodeIds')
+	createScript(project, 'de.topobyte.osm4j.extra.executables.FilterHugeRelations', 'OsmFilterHugeRelations')
 	createScript(project, 'de.topobyte.osm4j.extra.executables.FindMissingWayNodes', 'OsmExtraFindMissingWayNodes')
 	createScript(project, 'de.topobyte.osm4j.extra.executables.MapWaysToTree', 'OsmExtraMapWaysToTree')
 	createScript(project, 'de.topobyte.osm4j.extra.executables.MapWaysToTreeUsingArray', 'OsmExtraMapWaysToTreeUsingArray')
