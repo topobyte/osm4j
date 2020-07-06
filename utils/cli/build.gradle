@@ -34,6 +34,8 @@ launchAndInstall {
     createScript(project, 'de.topobyte.osm4j.utils.executables.OsmKeyFilter', 'OsmKeyFilter')
     createScript(project, 'de.topobyte.osm4j.utils.executables.OsmMerge', 'OsmMerge')
     createScript(project, 'de.topobyte.osm4j.utils.executables.OsmMergeMany', 'OsmMergeMany')
+    createScript(project, 'de.topobyte.osm4j.utils.executables.OsmPopulateNodeDb', 'OsmPopulateNodeDb')
+    createScript(project, 'de.topobyte.osm4j.utils.executables.OsmPopulateWayDb', 'OsmPopulateWayDb')
     createScript(project, 'de.topobyte.osm4j.utils.executables.OsmReferenceStats', 'OsmReferenceStats')
     createScript(project, 'de.topobyte.osm4j.utils.executables.OsmRegionFilter', 'OsmRegionFilter')
     createScript(project, 'de.topobyte.osm4j.utils.executables.OsmShowBounds', 'OsmShowBounds')
@@ -50,6 +52,7 @@ distributions {
 
 dependencies {
     compile project(':osm4j-utils')
+    compile project(':osm4j-incubating')
 
     compile 'de.topobyte:simple-mapfile-xml:0.1.0'
 
