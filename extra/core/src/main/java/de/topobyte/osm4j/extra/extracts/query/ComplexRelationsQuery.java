@@ -160,7 +160,8 @@ public class ComplexRelationsQuery extends AbstractRelationsQuery
 					continue;
 				}
 
-				if (!relationGroupFilter.take(subGroup)) {
+				if (relationGroupFilter != null
+						&& !relationGroupFilter.take(subGroup)) {
 					continue;
 				}
 
