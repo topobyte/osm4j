@@ -8,7 +8,7 @@ dependencies {
 
     compile 'de.topobyte:adt-geo:0.1.0'
     compile 'de.topobyte:adt-graph:0.0.6'
-    compile 'de.topobyte:jts-utils:0.2.0'
+    compile 'de.topobyte:jts-utils:0.2.3'
     compile 'de.topobyte:large-scale-file-io:0.1.0'
     compile 'de.topobyte:commons-cli-helper:0.1.0'
 
