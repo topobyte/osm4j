@@ -7,6 +7,10 @@ allprojects {
     version = '1.1.0'
 }
 
+configure(project(':osm4j-incubating')) {
+    version = '1.1.1'
+}
+
 subprojects {
     task allDeps(type: DependencyReportTask) {}
 
