@@ -8,6 +8,7 @@ This repository now contains all submodules of osm4j.
 * [project-docs/osm4j](https://github.com/project-docs/osm4j)
 * [osm4j-examples](https://github.com/topobyte/osm4j-examples)
 * [osm4j-doc](https://github.com/topobyte/osm4j-doc)
+* [OpenStreetMap Wiki page](https://wiki.openstreetmap.org/wiki/Osm4j)
 
 ## Projects using the library
 
