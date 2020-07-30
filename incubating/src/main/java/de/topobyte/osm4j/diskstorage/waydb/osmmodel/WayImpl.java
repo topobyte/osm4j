@@ -20,6 +20,7 @@ package de.topobyte.osm4j.diskstorage.waydb.osmmodel;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.topobyte.osm4j.core.model.iface.EntityType;
 import de.topobyte.osm4j.core.model.iface.OsmMetadata;
 import de.topobyte.osm4j.core.model.iface.OsmTag;
 import de.topobyte.osm4j.core.model.iface.OsmWay;
@@ -100,6 +101,12 @@ public class WayImpl implements OsmWay
 	public long getNodeId(int index)
 	{
 		return way.getNodeIds().get(index);
+	}
+
+	@Override
+	public EntityType getType()
+	{
+		return EntityType.Way;
 	}
 
 }

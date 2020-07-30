@@ -24,7 +24,7 @@ import de.topobyte.osm4j.core.model.iface.OsmEntity;
 import de.topobyte.osm4j.core.model.iface.OsmMetadata;
 import de.topobyte.osm4j.core.model.iface.OsmTag;
 
-public class Entity implements OsmEntity
+public abstract class Entity implements OsmEntity
 {
 
 	private long id;

@@ -19,6 +19,7 @@ package de.topobyte.osm4j.core.model.impl;
 
 import java.util.List;
 
+import de.topobyte.osm4j.core.model.iface.EntityType;
 import de.topobyte.osm4j.core.model.iface.OsmMetadata;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.osm4j.core.model.iface.OsmTag;
@@ -66,6 +67,12 @@ public class Node extends Entity implements OsmNode
 	public double getLatitude()
 	{
 		return lat;
+	}
+
+	@Override
+	public EntityType getType()
+	{
+		return EntityType.Node;
 	}
 
 }

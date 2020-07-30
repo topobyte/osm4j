@@ -19,6 +19,7 @@ package de.topobyte.osm4j.testing.model;
 
 import java.util.List;
 
+import de.topobyte.osm4j.core.model.iface.EntityType;
 import de.topobyte.osm4j.core.model.iface.OsmRelation;
 
 public class TestRelation extends TestEntity implements OsmRelation
@@ -67,6 +68,12 @@ public class TestRelation extends TestEntity implements OsmRelation
 	public TestRelationMember getMember(int n)
 	{
 		return members.get(n);
+	}
+
+	@Override
+	public EntityType getType()
+	{
+		return EntityType.Relation;
 	}
 
 }

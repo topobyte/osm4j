@@ -19,6 +19,7 @@ package de.topobyte.osm4j.testing.model;
 
 import java.util.List;
 
+import de.topobyte.osm4j.core.model.iface.EntityType;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
 
 public class TestNode extends TestEntity implements OsmNode
@@ -74,6 +75,12 @@ public class TestNode extends TestEntity implements OsmNode
 	public void setLatitude(double lat)
 	{
 		this.lat = lat;
+	}
+
+	@Override
+	public EntityType getType()
+	{
+		return EntityType.Node;
 	}
 
 }

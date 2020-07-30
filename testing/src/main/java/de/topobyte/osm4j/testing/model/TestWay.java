@@ -21,6 +21,7 @@ import java.util.List;
 
 import com.slimjars.dist.gnu.trove.list.TLongList;
 
+import de.topobyte.osm4j.core.model.iface.EntityType;
 import de.topobyte.osm4j.core.model.iface.OsmWay;
 
 public class TestWay extends TestEntity implements OsmWay
@@ -67,6 +68,12 @@ public class TestWay extends TestEntity implements OsmWay
 	public long getNodeId(int n)
 	{
 		return nodes.get(n);
+	}
+
+	@Override
+	public EntityType getType()
+	{
+		return EntityType.Way;
 	}
 
 }

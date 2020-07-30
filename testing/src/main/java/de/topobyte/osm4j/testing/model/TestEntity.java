@@ -22,7 +22,7 @@ import java.util.List;
 
 import de.topobyte.osm4j.core.model.iface.OsmEntity;
 
-public class TestEntity implements OsmEntity
+public abstract class TestEntity implements OsmEntity
 {
 
 	private long id;

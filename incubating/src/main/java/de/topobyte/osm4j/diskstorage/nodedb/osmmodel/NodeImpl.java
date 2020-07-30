@@ -17,6 +17,7 @@
 
 package de.topobyte.osm4j.diskstorage.nodedb.osmmodel;
 
+import de.topobyte.osm4j.core.model.iface.EntityType;
 import de.topobyte.osm4j.core.model.iface.OsmMetadata;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.osm4j.core.model.iface.OsmTag;
@@ -77,6 +78,12 @@ public class NodeImpl implements OsmNode
 	public OsmMetadata getMetadata()
 	{
 		return null;
+	}
+
+	@Override
+	public EntityType getType()
+	{
+		return EntityType.Node;
 	}
 
 }

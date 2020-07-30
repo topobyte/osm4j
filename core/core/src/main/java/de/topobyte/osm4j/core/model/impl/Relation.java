@@ -19,6 +19,7 @@ package de.topobyte.osm4j.core.model.impl;
 
 import java.util.List;
 
+import de.topobyte.osm4j.core.model.iface.EntityType;
 import de.topobyte.osm4j.core.model.iface.OsmMetadata;
 import de.topobyte.osm4j.core.model.iface.OsmRelation;
 import de.topobyte.osm4j.core.model.iface.OsmRelationMember;
@@ -70,6 +71,12 @@ public class Relation extends Entity implements OsmRelation
 	public OsmRelationMember getMember(int n)
 	{
 		return members.get(n);
+	}
+
+	@Override
+	public EntityType getType()
+	{
+		return EntityType.Relation;
 	}
 
 }

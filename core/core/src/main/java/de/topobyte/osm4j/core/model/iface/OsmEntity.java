@@ -33,4 +33,6 @@ public interface OsmEntity
 
 	public OsmMetadata getMetadata();
 
+	public EntityType getType();
+
 }
