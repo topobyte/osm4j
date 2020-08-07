@@ -314,6 +314,7 @@ public class PbfWriter extends BlockWriter implements OsmOutputStream
 			b.setTimestamp((int) (metadata.getTimestamp() / dateGranularity));
 			b.setVersion(metadata.getVersion());
 			b.setChangeset(metadata.getChangeset());
+			b.setVisible(metadata.isVisible());
 		}
 		return b;
 	}
@@ -333,6 +334,7 @@ public class PbfWriter extends BlockWriter implements OsmOutputStream
 			int timestamp = (int) (metadata.getTimestamp() / dateGranularity);
 			int version = metadata.getVersion();
 			long changeset = metadata.getChangeset();
+			boolean visible = metadata.isVisible();
 
 			b.addVersion(version);
 			b.addTimestamp(timestamp - lasttimestamp);
@@ -343,6 +345,7 @@ public class PbfWriter extends BlockWriter implements OsmOutputStream
 			lastuid = uid;
 			b.addUserSid(userSid - lastuserSid);
 			lastuserSid = userSid;
+			b.addVisible(visible);
 		}
 	}
 
