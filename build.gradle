@@ -11,6 +11,10 @@ configure(project(':osm4j-core')) {
     version = '1.1.1'
 }
 
+configure(project(':osm4j-geometry')) {
+    version = '1.1.1'
+}
+
 configure(project(':osm4j-testing')) {
     version = '1.1.1'
 }
