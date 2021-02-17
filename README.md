@@ -32,16 +32,16 @@ We provide access to the artifacts via our own Maven repository:
 The packages are available at these coordinates:
 
 <pre>
-<a href="https://mvn.topobyte.de/de/topobyte/osm4j-core/1.1.0/">de.topobyte:osm4j-core:1.1.0</a>
-<a href="https://mvn.topobyte.de/de/topobyte/osm4j-geometry/1.1.0/">de.topobyte:osm4j-geometry:1.1.0</a>
+<a href="https://mvn.topobyte.de/de/topobyte/osm4j-core/1.1.1/">de.topobyte:osm4j-core:1.1.1</a>
+<a href="https://mvn.topobyte.de/de/topobyte/osm4j-geometry/1.1.1/">de.topobyte:osm4j-geometry:1.1.1</a>
 <a href="https://mvn.topobyte.de/de/topobyte/osm4j-xml/1.1.0/">de.topobyte:osm4j-xml:1.1.0</a>
 <a href="https://mvn.topobyte.de/de/topobyte/osm4j-pbf/1.1.0/">de.topobyte:osm4j-pbf:1.1.0</a>
 <a href="https://mvn.topobyte.de/de/topobyte/osm4j-pbf-full-runtime/1.1.0/">de.topobyte:osm4j-pbf-full-runtime:1.1.0</a>
 <a href="https://mvn.topobyte.de/de/topobyte/osm4j-tbo/1.1.0/">de.topobyte:osm4j-tbo:1.1.0</a>
 <a href="https://mvn.topobyte.de/de/topobyte/osm4j-utils/1.1.0/">de.topobyte:osm4j-utils:1.1.0</a>
 <a href="https://mvn.topobyte.de/de/topobyte/osm4j-extra/1.1.0/">de.topobyte:osm4j-extra:1.1.0</a>
-<a href="https://mvn.topobyte.de/de/topobyte/osm4j-incubating/1.1.1/">de.topobyte:osm4j-incubating:1.1.1</a>
-<a href="https://mvn.topobyte.de/de/topobyte/osm4j-testing/1.1.0/">de.topobyte:osm4j-testing:1.1.0</a>
+<a href="https://mvn.topobyte.de/de/topobyte/osm4j-incubating/1.1.2/">de.topobyte:osm4j-incubating:1.1.2</a>
+<a href="https://mvn.topobyte.de/de/topobyte/osm4j-testing/1.1.1/">de.topobyte:osm4j-testing:1.1.1</a>
 </pre>
 
 ## History
