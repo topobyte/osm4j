@@ -13,7 +13,7 @@ dependencies {
     compile 'de.topobyte:large-scale-file-io:0.1.0'
     compile 'de.topobyte:adt-geo:0.1.0'
     compile 'de.topobyte:commons-cli-helper:0.1.0'
-    compile 'de.topobyte:melon-io:0.0.1'
+    compile 'de.topobyte:melon-io:0.1.0'
 
     compile 'com.slimjars.trove4j:trove4j-int-hash-set:1.0.1'
 
