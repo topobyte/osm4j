@@ -4,23 +4,13 @@ wrapper {
 
 allprojects {
     group = 'de.topobyte'
-    version = '1.1.0'
+    version = '1.2.0'
 }
 
+// leaving this here for reference on how to modify
+// a single module version
 configure(project(':osm4j-core')) {
-    version = '1.1.1'
-}
-
-configure(project(':osm4j-geometry')) {
-    version = '1.1.1'
-}
-
-configure(project(':osm4j-testing')) {
-    version = '1.1.1'
-}
-
-configure(project(':osm4j-incubating')) {
-    version = '1.1.2'
+    version = '1.2.0'
 }
 
 subprojects {
