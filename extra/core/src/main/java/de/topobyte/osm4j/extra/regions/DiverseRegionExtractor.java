@@ -42,6 +42,8 @@ import de.topobyte.osm4j.core.resolve.EntityNotFoundException;
 import de.topobyte.osm4j.core.resolve.OsmEntityProvider;
 import de.topobyte.osm4j.diskstorage.EntityProviderImpl;
 import de.topobyte.osm4j.diskstorage.nodedb.NodeDB;
+import de.topobyte.osm4j.diskstorage.tasks.NodeDbPopulator;
+import de.topobyte.osm4j.diskstorage.tasks.WayDbPopulator;
 import de.topobyte.osm4j.diskstorage.vardb.VarDB;
 import de.topobyte.osm4j.diskstorage.waydb.WayRecord;
 import de.topobyte.osm4j.geometry.GeometryBuilder;
@@ -82,6 +84,30 @@ public class DiverseRegionExtractor
 		} catch (IOException e1) {
 			System.out.println("unable to create output directory");
 			System.exit(1);
+		}
+
+		if (!Files.exists(argNodeIndex) && !Files.exists(argNodeData)) {
+			NodeDbPopulator nodeDbPopulator = new NodeDbPopulator(
+					input.getPath(), argNodeIndex, argNodeData);
+			try {
+				nodeDbPopulator.execute();
+			} catch (IOException e) {
+				System.out.println("error while populating node database: "
+						+ e.getMessage());
+				System.exit(1);
+			}
+		}
+
+		if (!Files.exists(argWayIndex) && !Files.exists(argWayData)) {
+			WayDbPopulator wayDbPopulator = new WayDbPopulator(input.getPath(),
+					argWayIndex, argWayData, false);
+			try {
+				wayDbPopulator.execute();
+			} catch (IOException e) {
+				System.out.println("error while populating way database: "
+						+ e.getMessage());
+				System.exit(1);
+			}
 		}
 
 		System.out.println("opening node datbase");
