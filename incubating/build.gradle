@@ -5,7 +5,6 @@ if (project.hasProperty("topobyte")) {
 
 dependencies {
     compile project(':osm4j-utils')
-    compile project(':osm4j-extra')
 
     compile 'de.topobyte:melon-io:0.1.0'
     compile 'de.topobyte:melon-paths:0.0.3'

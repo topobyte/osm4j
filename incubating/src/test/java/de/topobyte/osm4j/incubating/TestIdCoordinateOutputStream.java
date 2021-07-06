@@ -24,7 +24,6 @@ import java.io.OutputStream;
 import de.topobyte.melon.io.StreamUtil;
 import de.topobyte.osm4j.core.model.iface.EntityContainer;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
-import de.topobyte.osm4j.extra.progress.NodeProgress;
 import de.topobyte.osm4j.tbo.access.TboIterator;
 
 public class TestIdCoordinateOutputStream

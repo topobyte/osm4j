@@ -15,7 +15,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with osm4j. If not, see <http://www.gnu.org/licenses/>.
 
-package de.topobyte.osm4j.extra.progress;
+package de.topobyte.osm4j.incubating;
 
 import java.text.NumberFormat;
 import java.util.Locale;

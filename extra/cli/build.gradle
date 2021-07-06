@@ -29,6 +29,7 @@ launchAndInstall {
 	createScript(project, 'de.topobyte.osm4j.extra.executables.DistributeRelations', 'OsmExtraDistributeRelations')
 	createScript(project, 'de.topobyte.osm4j.extra.executables.DistributeSimpleRelations', 'OsmExtraDistributeSimpleRelations')
 	createScript(project, 'de.topobyte.osm4j.extra.executables.DistributeWays', 'OsmExtraDistributeWays')
+	createScript(project, 'de.topobyte.osm4j.extra.executables.ExtractDiverseRegions', 'OsmExtraExtractDiverseRegions')
 	createScript(project, 'de.topobyte.osm4j.extra.executables.ExtractEntities', 'OsmExtraExtractEntities')
 	createScript(project, 'de.topobyte.osm4j.extra.executables.ExtractMemberIds', 'OsmExtraExtractMemberIds')
 	createScript(project, 'de.topobyte.osm4j.extra.executables.ExtractMissingWayNodes', 'OsmExtraExtractMissingWayNodes')

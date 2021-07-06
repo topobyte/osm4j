@@ -22,7 +22,7 @@ import java.io.IOException;
 import de.topobyte.osm4j.core.access.OsmIterator;
 import de.topobyte.osm4j.core.model.iface.EntityContainer;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
-import de.topobyte.osm4j.extra.progress.NodeProgress;
+import de.topobyte.osm4j.incubating.NodeProgress;
 
 public abstract class NodeIteratorRunnable implements Runnable
 {

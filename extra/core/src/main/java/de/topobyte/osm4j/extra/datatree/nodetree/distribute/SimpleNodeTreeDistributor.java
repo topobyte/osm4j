@@ -27,7 +27,7 @@ import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.osm4j.extra.datatree.DataTree;
 import de.topobyte.osm4j.extra.datatree.Node;
 import de.topobyte.osm4j.extra.datatree.output.DataTreeOutputFactory;
-import de.topobyte.osm4j.extra.progress.NodeProgress;
+import de.topobyte.osm4j.incubating.NodeProgress;
 
 public class SimpleNodeTreeDistributor extends AbstractNodeTreeDistributor
 {

@@ -42,7 +42,7 @@ import de.topobyte.osm4j.extra.entitywriter.EntityWriters;
 import de.topobyte.osm4j.extra.idlist.IdInput;
 import de.topobyte.osm4j.extra.idlist.IdListInputStream;
 import de.topobyte.osm4j.extra.idlist.merge.MergedIdInput;
-import de.topobyte.osm4j.extra.progress.NodeProgress;
+import de.topobyte.osm4j.incubating.NodeProgress;
 import de.topobyte.osm4j.utils.OsmIoUtils;
 import de.topobyte.osm4j.utils.OsmOutputConfig;
 

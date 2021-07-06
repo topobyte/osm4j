@@ -5,6 +5,7 @@ if (project.hasProperty("topobyte")) {
 
 dependencies {
     compile project(':osm4j-utils')
+    compile project(':osm4j-incubating')
 
     compile 'de.topobyte:adt-geo:0.1.0'
     compile 'de.topobyte:adt-graph:0.0.6'

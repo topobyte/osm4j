@@ -28,6 +28,16 @@ public abstract class AbstractExecutable
 
 	protected abstract String getHelpMessage();
 
+	protected String getHeader()
+	{
+		return null;
+	}
+
+	protected String getFooter()
+	{
+		return null;
+	}
+
 	protected Options options = new Options();
 	protected CommandLine line = null;
 
@@ -36,9 +46,10 @@ public abstract class AbstractExecutable
 		try {
 			line = new DefaultParser().parse(options, args);
 		} catch (ParseException e) {
-			System.out.println("unable to parse command line: "
-					+ e.getMessage());
-			new HelpFormatter().printHelp(getHelpMessage(), options);
+			System.out
+					.println("unable to parse command line: " + e.getMessage());
+			new HelpFormatter().printHelp(getHelpMessage(), getHeader(),
+					options, getFooter(), false);
 			System.exit(1);
 		}
 	}

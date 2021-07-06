@@ -46,7 +46,7 @@ import de.topobyte.osm4j.extra.datatree.DataTreeOpener;
 import de.topobyte.osm4j.extra.datatree.Node;
 import de.topobyte.osm4j.extra.nodearray.NodeArray;
 import de.topobyte.osm4j.extra.nodearray.NodeArrayInteger;
-import de.topobyte.osm4j.extra.progress.NodeProgress;
+import de.topobyte.osm4j.incubating.NodeProgress;
 import de.topobyte.osm4j.utils.OsmIoUtils;
 import de.topobyte.osm4j.utils.OsmOutputConfig;
 
