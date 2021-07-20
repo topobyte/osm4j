@@ -24,7 +24,6 @@ import java.net.URL;
 import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 
-import de.topobyte.osm4j.core.access.OsmInputException;
 import de.topobyte.osm4j.replication.ReplicationFiles;
 import de.topobyte.osm4j.replication.ReplicationInfo;
 import de.topobyte.osm4j.replication.ReplicationState;
@@ -33,7 +32,7 @@ public class TestMinuteStateLatest
 {
 
 	@Test
-	public void test() throws IOException, OsmInputException
+	public void test() throws IOException
 	{
 		String url = ReplicationFiles.minuteState();
 

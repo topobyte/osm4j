@@ -25,7 +25,6 @@ import org.joda.time.DateTimeZone;
 import org.junit.Assert;
 import org.junit.Test;
 
-import de.topobyte.osm4j.core.access.OsmInputException;
 import de.topobyte.osm4j.replication.ReplicationInfo;
 import de.topobyte.osm4j.replication.ReplicationUtil;
 
@@ -33,7 +32,7 @@ public class TestMinuteFind
 {
 
 	@Test
-	public void test() throws IOException, OsmInputException
+	public void test() throws IOException
 	{
 		test(new DateTime(2015, 9, 17, 12, 36, 13, DateTimeZone.UTC), 1575907);
 		test(new DateTime(2015, 9, 17, 18, 2, 1, DateTimeZone.UTC), 1576233);
