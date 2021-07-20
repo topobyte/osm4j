@@ -6,7 +6,7 @@ include 'geometry/core', 'geometry/testing'
 include 'utils/core', 'utils/cli'
 include 'extra/core', 'extra/cli'
 include 'edit/core'
-include 'osc/core', 'osc/testing'
+include 'replication/core', 'replication/testing'
 include 'testing'
 include 'incubating'
 
@@ -34,8 +34,8 @@ project(':extra/cli').name = 'osm4j-extra-cli'
 
 project(':edit/core').name = 'osm4j-edit'
 
-project(':osc/core').name = 'osm4j-osc'
-project(':osc/testing').name = 'osm4j-osc-testing'
+project(':replication/core').name = 'osm4j-replication'
+project(':replication/testing').name = 'osm4j-replication-testing'
 
 project(':testing').name = 'osm4j-testing'
 project(':incubating').name = 'osm4j-incubating'
