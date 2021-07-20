@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.topobyte.osm4j.changeset.Comment;
 import de.topobyte.osm4j.changeset.OsmChangeset;
 import de.topobyte.osm4j.core.model.iface.OsmTag;
 import de.topobyte.osm4j.core.model.impl.Tag;
@@ -130,6 +131,7 @@ class OsmChangesetsSaxHandler extends DynamicSaxHandler
 		if (data.getElement() == changeset) {
 			OsmChangeset cs = createChangeset(data);
 			fillTags(cs, data);
+			fillDiscussion(cs, data);
 
 			try {
 				handler.handle(cs);
@@ -153,6 +155,26 @@ class OsmChangesetsSaxHandler extends DynamicSaxHandler
 			tags.add(new Tag(k, v));
 		}
 		cs.setTags(tags);
+	}
+
+	private void fillDiscussion(OsmChangeset cs, Data data)
+	{
+		Data discussion = data.getSingle(NAME_DISCUSSION);
+		if (discussion == null) {
+			return;
+		}
+		List<Data> commentsData = discussion.getList(NAME_COMMENT);
+		List<Comment> comments = new ArrayList<>(commentsData.size());
+		for (Data comment : commentsData) {
+			String aUid = comment.getAttribute("uid");
+			String user = comment.getAttribute("user");
+			String aDate = comment.getAttribute("date");
+			long uid = parseLong(aUid, -1);
+			long date = parseDate(aDate, -1);
+			Data text = comment.getSingle(NAME_TEXT);
+			comments.add(new Comment(uid, user, date, text.getText()));
+		}
+		cs.setComments(comments);
 	}
 
 	private OsmChangeset createChangeset(Data data)
@@ -223,7 +245,7 @@ class OsmChangesetsSaxHandler extends DynamicSaxHandler
 		return Double.parseDouble(value);
 	}
 
-	private long parseDate(String value, int defaultValue)
+	private long parseDate(String value, long defaultValue)
 	{
 		if (value == null) {
 			return defaultValue;

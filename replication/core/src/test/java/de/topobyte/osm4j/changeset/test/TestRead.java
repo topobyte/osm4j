@@ -24,6 +24,7 @@ import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
 import org.junit.Test;
 
 import de.topobyte.osm4j.Util;
+import de.topobyte.osm4j.changeset.Comment;
 import de.topobyte.osm4j.changeset.OsmChangeset;
 import de.topobyte.osm4j.changeset.dynsax.OsmChangesetsHandler;
 import de.topobyte.osm4j.changeset.dynsax.OsmChangesetsReader;
@@ -56,6 +57,15 @@ public class TestRead implements OsmChangesetsHandler
 		for (OsmTag tag : changeset.getTags()) {
 			System.out.println(
 					String.format("  %s=%s", tag.getKey(), tag.getValue()));
+		}
+		if (changeset.getComments() != null) {
+			System.out.println("  Discussion:");
+			for (Comment comment : changeset.getComments()) {
+				System.out.println(
+						String.format("    Comment from %s (%d) at %s: \"%s\"",
+								comment.getUser(), comment.getUid(),
+								comment.getDate(), comment.getText()));
+			}
 		}
 	}
 

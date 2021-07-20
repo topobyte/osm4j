@@ -38,6 +38,7 @@ public class OsmChangeset
 	private int commentsCount;
 
 	private List<? extends OsmTag> tags;
+	private List<Comment> comments;
 
 	public OsmChangeset(long id, long createdAt, long closedAt, boolean open,
 			int numChanges, String user, long uid, double minLat, double maxLat,
@@ -125,6 +126,16 @@ public class OsmChangeset
 	public void setTags(List<? extends OsmTag> tags)
 	{
 		this.tags = tags;
+	}
+
+	public List<Comment> getComments()
+	{
+		return comments;
+	}
+
+	public void setComments(List<Comment> comments)
+	{
+		this.comments = comments;
 	}
 
 }
