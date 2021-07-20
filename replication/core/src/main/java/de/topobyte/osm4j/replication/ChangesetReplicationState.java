@@ -25,7 +25,7 @@ import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
-public class ReplicationState
+public class ChangesetReplicationState
 {
 
 	public static ReplicationInfo parse(String content) throws IOException
@@ -33,16 +33,16 @@ public class ReplicationState
 		Properties props = new Properties();
 		props.load(new StringReader(content));
 
-		String sequenceNumber = props.getProperty("sequenceNumber");
-		String timestamp = props.getProperty("timestamp");
+		String sequence = props.getProperty("sequence");
+		String timestamp = props.getProperty("last_run");
 
-		long sn = Long.parseLong(sequenceNumber);
+		long s = Long.parseLong(sequence);
 
 		DateTimeFormatter formatter = DateTimeFormat
-				.forPattern("yyyy-MM-dd'T'HH:mm:ssZ");
+				.forPattern("yyyy-MM-dd HH:mm:ss.SSSSSSSSS Z");
 		DateTime time = formatter.parseDateTime(timestamp);
 
-		return new ReplicationInfo(time, sn);
+		return new ReplicationInfo(time, s);
 	}
 
 }

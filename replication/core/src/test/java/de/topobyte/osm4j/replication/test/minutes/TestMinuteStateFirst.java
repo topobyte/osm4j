@@ -24,9 +24,9 @@ import java.net.URL;
 import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 
+import de.topobyte.osm4j.replication.ChangeReplicationState;
 import de.topobyte.osm4j.replication.ReplicationFiles;
 import de.topobyte.osm4j.replication.ReplicationInfo;
-import de.topobyte.osm4j.replication.ReplicationState;
 
 public class TestMinuteStateFirst
 {
@@ -40,7 +40,7 @@ public class TestMinuteStateFirst
 		String text = IOUtils.toString(input);
 		System.out.println(text);
 
-		ReplicationInfo info = ReplicationState.parse(text);
+		ReplicationInfo info = ChangeReplicationState.parse(text);
 		System.out.println(String.format("%d: %s", info.getSequenceNumber(),
 				info.getTime()));
 	}

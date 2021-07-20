@@ -1,4 +1,4 @@
-// Copyright 2019 Sebastian Kuerten
+// Copyright 2021 Sebastian Kuerten
 //
 // This file is part of osm4j.
 //
@@ -15,7 +15,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with osm4j. If not, see <http://www.gnu.org/licenses/>.
 
-package de.topobyte.osm4j.replication.test.minutes;
+package de.topobyte.osm4j.replication.test.changesets;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -24,23 +24,23 @@ import java.net.URL;
 import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 
+import de.topobyte.osm4j.replication.ChangesetReplicationState;
 import de.topobyte.osm4j.replication.ReplicationFiles;
 import de.topobyte.osm4j.replication.ReplicationInfo;
-import de.topobyte.osm4j.replication.ChangeReplicationState;
 
-public class TestMinuteStateLatest
+public class TestChangesetStateLatest
 {
 
 	@Test
 	public void test() throws IOException
 	{
-		String url = ReplicationFiles.minuteState();
+		String url = ReplicationFiles.changesetsState();
 
 		InputStream input = new URL(url).openConnection().getInputStream();
 		String text = IOUtils.toString(input);
 		System.out.println(text);
 
-		ReplicationInfo info = ChangeReplicationState.parse(text);
+		ReplicationInfo info = ChangesetReplicationState.parse(text);
 		System.out.println(String.format("%d: %s", info.getSequenceNumber(),
 				info.getTime()));
 	}

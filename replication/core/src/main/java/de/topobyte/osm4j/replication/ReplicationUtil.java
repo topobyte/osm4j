@@ -37,6 +37,8 @@ public class ReplicationUtil
 
 	final static Logger logger = LoggerFactory.getLogger(ReplicationUtil.class);
 
+	public static int FIRST_CHANGESET_WITH_STATE = 2007990;
+
 	private CloseableHttpClient httpclient;
 
 	public ReplicationUtil()
@@ -60,7 +62,7 @@ public class ReplicationUtil
 		String url = ReplicationFiles.minuteState();
 		String text = text(url);
 
-		ReplicationInfo info = ReplicationState.parse(text);
+		ReplicationInfo info = ChangeReplicationState.parse(text);
 
 		return info;
 	}
@@ -71,7 +73,31 @@ public class ReplicationUtil
 		String url = ReplicationFiles.minuteState(sequenceNumber);
 		String text = text(url);
 
-		ReplicationInfo info = ReplicationState.parse(text);
+		ReplicationInfo info = ChangeReplicationState.parse(text);
+
+		return info;
+	}
+
+	public ReplicationInfo getChangesetInfo()
+			throws MalformedURLException, IOException
+	{
+		String url = ReplicationFiles.changesetsState();
+		String text = text(url);
+
+		ReplicationInfo info = ChangesetReplicationState.parse(text);
+
+		return info;
+	}
+
+	public ReplicationInfo getChangesetInfo(long sequenceNumber)
+			throws MalformedURLException, IOException
+	{
+		// attention: the sequence number in the state.txt is one less than the
+		// number in the filename
+		String url = ReplicationFiles.changesetsState(sequenceNumber + 1);
+		String text = text(url);
+
+		ReplicationInfo info = ChangesetReplicationState.parse(text);
 
 		return info;
 	}
@@ -127,6 +153,47 @@ public class ReplicationUtil
 	{
 		logger.debug(String.format("%s: %d", info.getTime(),
 				info.getSequenceNumber()));
+	}
+
+	public ReplicationInfo findChangeset(DateTime needle)
+			throws MalformedURLException, IOException
+	{
+		ReplicationInfo last = getChangesetInfo();
+		ReplicationInfo first = getChangesetInfo(FIRST_CHANGESET_WITH_STATE);
+		return findChangeset(last, first, needle);
+	}
+
+	public ReplicationInfo findChangeset(ReplicationInfo high,
+			ReplicationInfo low, DateTime needle)
+			throws MalformedURLException, IOException
+	{
+		logger.debug("Searching: " + needle);
+		logger.debug("Searching between:");
+		log(high);
+		log(low);
+
+		Minutes minutes = Minutes.minutesBetween(low.getTime(), high.getTime());
+		logger.debug("minutes in between: " + minutes.getMinutes());
+
+		while (true) {
+			long midNum = (high.getSequenceNumber() + low.getSequenceNumber())
+					/ 2;
+			ReplicationInfo mid = getChangesetInfo(midNum);
+			logger.debug("mid: " + midNum + " " + mid.getTime());
+
+			if (needle.isBefore(mid.getTime())) {
+				high = mid;
+			} else {
+				low = mid;
+			}
+			log(high);
+			log(low);
+			if (high.getSequenceNumber() - low.getSequenceNumber() < 2) {
+				break;
+			}
+		}
+
+		return low;
 	}
 
 }

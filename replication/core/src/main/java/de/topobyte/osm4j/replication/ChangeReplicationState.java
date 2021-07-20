@@ -15,34 +15,34 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with osm4j. If not, see <http://www.gnu.org/licenses/>.
 
-package de.topobyte.osm4j.replication.test.minutes;
+package de.topobyte.osm4j.replication;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
+import java.io.StringReader;
+import java.util.Properties;
 
-import org.apache.commons.io.IOUtils;
-import org.junit.Test;
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
-import de.topobyte.osm4j.replication.ReplicationFiles;
-import de.topobyte.osm4j.replication.ReplicationInfo;
-import de.topobyte.osm4j.replication.ChangeReplicationState;
-
-public class TestMinuteStateLatest
+public class ChangeReplicationState
 {
 
-	@Test
-	public void test() throws IOException
+	public static ReplicationInfo parse(String content) throws IOException
 	{
-		String url = ReplicationFiles.minuteState();
+		Properties props = new Properties();
+		props.load(new StringReader(content));
 
-		InputStream input = new URL(url).openConnection().getInputStream();
-		String text = IOUtils.toString(input);
-		System.out.println(text);
+		String sequenceNumber = props.getProperty("sequenceNumber");
+		String timestamp = props.getProperty("timestamp");
 
-		ReplicationInfo info = ChangeReplicationState.parse(text);
-		System.out.println(String.format("%d: %s", info.getSequenceNumber(),
-				info.getTime()));
+		long sn = Long.parseLong(sequenceNumber);
+
+		DateTimeFormatter formatter = DateTimeFormat
+				.forPattern("yyyy-MM-dd'T'HH:mm:ssZ");
+		DateTime time = formatter.parseDateTime(timestamp);
+
+		return new ReplicationInfo(time, sn);
 	}
 
 }

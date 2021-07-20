@@ -55,7 +55,7 @@ public class ReplicationFiles
 		return file("changesets", num, "osm.gz");
 	}
 
-	public static String changesetsState(int num)
+	public static String changesetsState(long num)
 	{
 		return file("changesets", num, "state.txt");
 	}
@@ -87,7 +87,7 @@ public class ReplicationFiles
 
 	public static String changesetsState()
 	{
-		return "https://planet.openstreetmap.org/replication/minute/state.yaml";
+		return "https://planet.openstreetmap.org/replication/changesets/state.yaml";
 	}
 
 }
