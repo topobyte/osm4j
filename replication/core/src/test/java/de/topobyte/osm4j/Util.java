@@ -15,35 +15,34 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with osm4j. If not, see <http://www.gnu.org/licenses/>.
 
-package de.topobyte.osm4j.osc.test;
+package de.topobyte.osm4j;
 
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
-import org.junit.Test;
+import org.apache.commons.io.IOUtils;
 
-import de.topobyte.osm4j.Util;
-import de.topobyte.osm4j.core.access.OsmInputException;
-import de.topobyte.osm4j.osc.CompletenessChecker;
-import de.topobyte.osm4j.osc.dynsax.OsmOscReader;
-
-public class TestCompletenessChecker
+public class Util
 {
 
-	@Test
-	public void test() throws IOException, OsmInputException
+	public static String read(String filename) throws IOException
 	{
-		String filename = "003-338-100.osc.gz";
+		ClassLoader classloader = Thread.currentThread()
+				.getContextClassLoader();
 
-		InputStream cinput = Util.stream(filename);
-		InputStream input = new GzipCompressorInputStream(cinput);
+		InputStream input = classloader.getResourceAsStream(filename);
+		String text = IOUtils.toString(input);
+		input.close();
 
-		CompletenessChecker task = new CompletenessChecker();
+		return text;
+	}
 
-		OsmOscReader reader = new OsmOscReader(input, true);
-		reader.setHandler(task);
-		reader.read();
+	public static InputStream stream(String filename)
+	{
+		ClassLoader classloader = Thread.currentThread()
+				.getContextClassLoader();
+
+		return classloader.getResourceAsStream(filename);
 	}
 
 }

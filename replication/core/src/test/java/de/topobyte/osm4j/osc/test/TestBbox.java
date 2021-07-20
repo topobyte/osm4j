@@ -26,6 +26,7 @@ import org.junit.Test;
 import org.locationtech.jts.geom.Envelope;
 
 import de.topobyte.adt.geo.BBox;
+import de.topobyte.osm4j.Util;
 import de.topobyte.osm4j.core.access.OsmInputException;
 import de.topobyte.osm4j.core.dataset.InMemoryListDataSet;
 import de.topobyte.osm4j.core.model.iface.OsmNode;

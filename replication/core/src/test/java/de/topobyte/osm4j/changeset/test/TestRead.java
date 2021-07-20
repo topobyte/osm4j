@@ -1,4 +1,4 @@
-// Copyright 2019 Sebastian Kuerten
+// Copyright 2021 Sebastian Kuerten
 //
 // This file is part of osm4j.
 //
@@ -15,7 +15,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with osm4j. If not, see <http://www.gnu.org/licenses/>.
 
-package de.topobyte.osm4j.osc.test;
+package de.topobyte.osm4j.changeset.test;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -24,36 +24,39 @@ import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
 import org.junit.Test;
 
 import de.topobyte.osm4j.Util;
+import de.topobyte.osm4j.changeset.OsmChangeset;
+import de.topobyte.osm4j.changeset.dynsax.OsmChangesetsHandler;
+import de.topobyte.osm4j.changeset.dynsax.OsmChangesetsReader;
 import de.topobyte.osm4j.core.access.OsmInputException;
-import de.topobyte.osm4j.core.dataset.InMemoryListDataSet;
-import de.topobyte.osm4j.osc.OsmChange;
-import de.topobyte.osm4j.osc.dynsax.OsmChangeHandler;
-import de.topobyte.osm4j.osc.dynsax.OsmOscReader;
+import de.topobyte.osm4j.core.model.iface.OsmTag;
 
-public class TestRead implements OsmChangeHandler
+public class TestRead implements OsmChangesetsHandler
 {
 
 	@Test
 	public void test() throws IOException, OsmInputException
 	{
-		String filename = "003-338-100.osc.gz";
+		String filename = "003-338-100.osm.gz";
 
 		InputStream cinput = Util.stream(filename);
 		InputStream input = new GzipCompressorInputStream(cinput);
 
-		OsmOscReader reader = new OsmOscReader(input, true);
+		OsmChangesetsReader reader = new OsmChangesetsReader(input);
 		reader.setHandler(this);
 		reader.read();
 	}
 
 	@Override
-	public void handle(OsmChange change) throws IOException
+	public void handle(OsmChangeset changeset) throws IOException
 	{
-		InMemoryListDataSet data = change.getElements();
-		System.out.println(
-				String.format("change: %s, %d nodes, %d ways, %d relations",
-						change.getType(), data.getNodes().size(),
-						data.getWays().size(), data.getRelations().size()));
+		System.out.println(String.format(
+				"changeset %d, created at: %s, open? %b, closed at: %s, num changes: %d",
+				changeset.getId(), changeset.getCreatedAt(), changeset.isOpen(),
+				changeset.getClosedAt(), changeset.getNumChanges()));
+		for (OsmTag tag : changeset.getTags()) {
+			System.out.println(
+					String.format("  %s=%s", tag.getKey(), tag.getValue()));
+		}
 	}
 
 	@Override

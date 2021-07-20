@@ -1,4 +1,4 @@
-// Copyright 2019 Sebastian Kuerten
+// Copyright 2021 Sebastian Kuerten
 //
 // This file is part of osm4j.
 //
@@ -15,34 +15,17 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with osm4j. If not, see <http://www.gnu.org/licenses/>.
 
-package de.topobyte.osm4j.osc.test;
+package de.topobyte.osm4j.changeset.dynsax;
 
 import java.io.IOException;
-import java.io.InputStream;
 
-import org.apache.commons.io.IOUtils;
+import de.topobyte.osm4j.changeset.OsmChangeset;
 
-public class Util
+public interface OsmChangesetsHandler
 {
 
-	public static String read(String filename) throws IOException
-	{
-		ClassLoader classloader = Thread.currentThread()
-				.getContextClassLoader();
+	public void handle(OsmChangeset changeset) throws IOException;
 
-		InputStream input = classloader.getResourceAsStream(filename);
-		String text = IOUtils.toString(input);
-		input.close();
-
-		return text;
-	}
-
-	public static InputStream stream(String filename)
-	{
-		ClassLoader classloader = Thread.currentThread()
-				.getContextClassLoader();
-
-		return classloader.getResourceAsStream(filename);
-	}
+	public void complete() throws IOException;
 
 }
