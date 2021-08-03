@@ -145,6 +145,7 @@ class OsmChangesetsSaxHandler extends DynamicSaxHandler
 	{
 		List<Data> list = data.getList(NAME_TAG);
 		if (list == null) {
+			cs.setTags(new ArrayList<>());
 			return;
 		}
 
@@ -161,6 +162,7 @@ class OsmChangesetsSaxHandler extends DynamicSaxHandler
 	{
 		Data discussion = data.getSingle(NAME_DISCUSSION);
 		if (discussion == null) {
+			cs.setComments(new ArrayList<>());
 			return;
 		}
 		List<Data> commentsData = discussion.getList(NAME_COMMENT);
