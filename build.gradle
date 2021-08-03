@@ -12,6 +12,9 @@ allprojects {
 configure(project(':osm4j-core')) {
     version = '1.2.0'
 }
+configure(project(':osm4j-replication')) {
+    version = '1.0.0'
+}
 
 subprojects {
     task allDeps(type: DependencyReportTask) {}
