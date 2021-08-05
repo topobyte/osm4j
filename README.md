@@ -41,6 +41,7 @@ The packages are available at these coordinates:
 <a href="https://mvn.topobyte.de/de/topobyte/osm4j-utils/1.2.0/">de.topobyte:osm4j-utils:1.2.0</a>
 <a href="https://mvn.topobyte.de/de/topobyte/osm4j-extra/1.2.0/">de.topobyte:osm4j-extra:1.2.0</a>
 <a href="https://mvn.topobyte.de/de/topobyte/osm4j-incubating/1.2.0/">de.topobyte:osm4j-incubating:1.2.0</a>
+<a href="https://mvn.topobyte.de/de/topobyte/osm4j-replication/1.0.0/">de.topobyte:osm4j-replication:1.0.0</a>
 <a href="https://mvn.topobyte.de/de/topobyte/osm4j-testing/1.2.0/">de.topobyte:osm4j-testing:1.2.0</a>
 </pre>
 
