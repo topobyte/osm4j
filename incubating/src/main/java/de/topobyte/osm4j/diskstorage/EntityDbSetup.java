@@ -25,8 +25,11 @@ import org.slf4j.LoggerFactory;
 
 import de.topobyte.melon.io.ModTimes;
 import de.topobyte.melon.paths.PathUtil;
+import de.topobyte.osm4j.core.access.OsmIteratorInput;
 import de.topobyte.osm4j.diskstorage.tasks.NodeDbPopulator;
 import de.topobyte.osm4j.diskstorage.tasks.WayDbPopulator;
+import de.topobyte.osm4j.utils.FileFormat;
+import de.topobyte.osm4j.utils.OsmFileInput;
 
 public class EntityDbSetup
 {
@@ -47,8 +50,10 @@ public class EntityDbSetup
 		if (!force && ModTimes.isNewerThan(indexFile, inputFile)) {
 			logger.info("node index is newer than input, skipping creation");
 		} else {
-			NodeDbPopulator nodeDbPopulator = new NodeDbPopulator(inputFile,
-					indexFile, dataFile);
+			OsmFileInput input = new OsmFileInput(inputFile, FileFormat.TBO);
+			OsmIteratorInput iterator = input.createIterator(false, false);
+			NodeDbPopulator nodeDbPopulator = new NodeDbPopulator(
+					iterator.getIterator(), indexFile, dataFile);
 			nodeDbPopulator.execute();
 		}
 	}
@@ -67,8 +72,10 @@ public class EntityDbSetup
 		if (!force && ModTimes.isNewerThan(indexFile, inputFile)) {
 			logger.info("way index is newer than input, skipping creation");
 		} else {
-			WayDbPopulator wayDbPopulator = new WayDbPopulator(inputFile,
-					indexFile, dataFile, useTags);
+			OsmFileInput input = new OsmFileInput(inputFile, FileFormat.TBO);
+			OsmIteratorInput iterator = input.createIterator(useTags, false);
+			WayDbPopulator wayDbPopulator = new WayDbPopulator(
+					iterator.getIterator(), indexFile, dataFile, useTags);
 			wayDbPopulator.execute();
 		}
 	}

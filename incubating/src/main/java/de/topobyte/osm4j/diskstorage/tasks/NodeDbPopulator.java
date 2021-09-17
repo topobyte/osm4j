@@ -17,25 +17,23 @@
 
 package de.topobyte.osm4j.diskstorage.tasks;
 
-import java.io.BufferedInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import de.topobyte.osm4j.core.access.OsmIterator;
 import de.topobyte.osm4j.core.model.iface.EntityContainer;
 import de.topobyte.osm4j.core.model.iface.EntityType;
 import de.topobyte.osm4j.core.model.impl.Node;
 import de.topobyte.osm4j.diskstorage.nodedb.DbNode;
 import de.topobyte.osm4j.diskstorage.nodedb.NodeDB;
-import de.topobyte.osm4j.tbo.access.TboIterator;
 
 /**
- * Create a node database from a osm tbo file.
+ * Create a node database from an osm iterator.
  * 
  * @author Sebastian Kuerten (sebastian@topobyte.de)
  */
@@ -44,40 +42,31 @@ public class NodeDbPopulator
 
 	static final Logger logger = LoggerFactory.getLogger(NodeDbPopulator.class);
 
-	private final Path input;
+	private final OsmIterator iterator;
 	private final Path outputIndex;
 	private final Path outputData;
 
-	public NodeDbPopulator(Path input, Path outputIndex, Path outputData)
+	public NodeDbPopulator(OsmIterator iterator, Path outputIndex,
+			Path outputData)
 	{
-		this.input = input;
+		this.iterator = iterator;
 		this.outputIndex = outputIndex;
 		this.outputData = outputData;
 	}
 
 	public void execute() throws IOException
 	{
-		InputStream fis;
-		try {
-			fis = Files.newInputStream(input);
-		} catch (FileNotFoundException e1) {
-			logger.error("unable to open input file");
-			throw new IOException("unable to open input file");
-		}
-
 		// make sure we have fresh files for the node database.
 		logger.debug("making sure database is empty");
 		if (Files.exists(outputIndex)) {
 			Files.delete(outputIndex);
 			if (Files.exists(outputIndex)) {
-				fis.close();
 				throw new IOException("unable to delete existing index");
 			}
 		}
 		if (Files.exists(outputData)) {
 			Files.delete(outputData);
 			if (Files.exists(outputData)) {
-				fis.close();
 				throw new IOException("unable to delete existing database");
 			}
 		}
@@ -88,15 +77,12 @@ public class NodeDbPopulator
 		try {
 			nodeDB = new NodeDB(outputData, outputIndex);
 		} catch (FileNotFoundException e) {
-			fis.close();
 			throw new IOException("unable to create database");
 		}
 
 		// read and insert nodes
 		logger.debug("inserting nodes");
 		int i = 0; // count nodes
-		BufferedInputStream bis = new BufferedInputStream(fis);
-		TboIterator iterator = new TboIterator(bis, false, false);
 		while (iterator.hasNext()) {
 			EntityContainer container = iterator.next();
 			if (container.getType() == EntityType.Node) {

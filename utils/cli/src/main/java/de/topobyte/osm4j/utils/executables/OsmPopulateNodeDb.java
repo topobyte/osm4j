@@ -21,75 +21,84 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.DefaultParser;
-import org.apache.commons.cli.HelpFormatter;
-import org.apache.commons.cli.Options;
-import org.apache.commons.cli.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import de.topobyte.osm4j.core.access.OsmIterator;
 import de.topobyte.osm4j.diskstorage.tasks.NodeDbPopulator;
+import de.topobyte.osm4j.utils.AbstractExecutableSingleInputStream;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
 /**
- * Create a node database from a osm tbo file.
+ * Create a node database from an osm file.
  * 
  * @author Sebastian Kuerten (sebastian@topobyte.de)
  */
-public class OsmPopulateNodeDb
+public class OsmPopulateNodeDb extends AbstractExecutableSingleInputStream
 {
 
-	static final Logger logger = LoggerFactory.getLogger(OsmPopulateNodeDb.class);
+	static final Logger logger = LoggerFactory
+			.getLogger(OsmPopulateNodeDb.class);
 
-	private static final String HELP_MESSAGE = OsmPopulateNodeDb.class
-			.getSimpleName() + " [args]";
-
-	private static final String OPTION_INPUT = "input";
 	private static final String OPTION_OUTPUT_INDEX = "output-index";
 	private static final String OPTION_OUTPUT_DATA = "output-data";
+
+	@Override
+	protected String getHelpMessage()
+	{
+		return OsmPopulateNodeDb.class.getSimpleName() + " [options]";
+	}
 
 	/**
 	 * @param args
 	 *            input, output-index, output-data
+	 * @throws IOException
 	 */
-	public static void main(String[] args)
+	public static void main(String[] args) throws IOException
 	{
-		Options options = new Options();
-		OptionHelper.addL(options, OPTION_INPUT, true, true, "an osm file");
+		OsmPopulateNodeDb task = new OsmPopulateNodeDb();
+		task.setup(args);
+
+		task.readMetadata = false;
+		task.readTags = false;
+		task.init();
+
+		try {
+			task.run();
+		} catch (IOException e) {
+			System.out.println("error while running task");
+			e.printStackTrace();
+		}
+
+		task.finish();
+	}
+
+	private Path outputIndex;
+	private Path outputData;
+
+	public OsmPopulateNodeDb()
+	{
 		OptionHelper.addL(options, OPTION_OUTPUT_INDEX, true, true,
 				"a node database to populate");
 		OptionHelper.addL(options, OPTION_OUTPUT_DATA, true, true,
 				"a node database to populate");
+	}
 
-		CommandLine line = null;
-		try {
-			line = new DefaultParser().parse(options, args);
-		} catch (ParseException e) {
-			System.out
-					.println("unable to parse command line: " + e.getMessage());
-			new HelpFormatter().printHelp(HELP_MESSAGE, options);
-			System.exit(1);
-		}
+	@Override
+	protected void setup(String[] args)
+	{
+		super.setup(args);
 
-		if (line == null) {
-			return;
-		}
+		outputIndex = Paths.get(line.getOptionValue(OPTION_OUTPUT_INDEX));
+		outputData = Paths.get(line.getOptionValue(OPTION_OUTPUT_DATA));
+	}
 
-		Path input = Paths.get(line.getOptionValue(OPTION_INPUT));
-		Path outputIndex = Paths.get(line.getOptionValue(OPTION_OUTPUT_INDEX));
-		Path outputData = Paths.get(line.getOptionValue(OPTION_OUTPUT_DATA));
-
-		NodeDbPopulator populator = new NodeDbPopulator(input, outputIndex,
+	private void run() throws IOException
+	{
+		OsmIterator iterator = createIterator();
+		NodeDbPopulator populator = new NodeDbPopulator(iterator, outputIndex,
 				outputData);
-		try {
-			populator.execute();
-		} catch (IOException e) {
-			logger.error("Error while creating database: " + e.getMessage());
-			System.exit(1);
-		}
-
-		System.exit(0);
+		populator.execute();
 	}
 
 }

@@ -17,10 +17,8 @@
 
 package de.topobyte.osm4j.diskstorage.tasks;
 
-import java.io.BufferedInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
@@ -32,6 +30,7 @@ import org.slf4j.LoggerFactory;
 import com.slimjars.dist.gnu.trove.list.TLongList;
 import com.slimjars.dist.gnu.trove.list.array.TLongArrayList;
 
+import de.topobyte.osm4j.core.access.OsmIterator;
 import de.topobyte.osm4j.core.model.iface.EntityContainer;
 import de.topobyte.osm4j.core.model.iface.EntityType;
 import de.topobyte.osm4j.core.model.iface.OsmTag;
@@ -39,7 +38,6 @@ import de.topobyte.osm4j.core.model.impl.Way;
 import de.topobyte.osm4j.diskstorage.vardb.VarDB;
 import de.topobyte.osm4j.diskstorage.waydb.WayRecord;
 import de.topobyte.osm4j.diskstorage.waydb.WayRecordWithTags;
-import de.topobyte.osm4j.tbo.access.TboIterator;
 
 /**
  * Create a way database from a osm file.
@@ -51,15 +49,15 @@ public class WayDbPopulator
 
 	static final Logger logger = LoggerFactory.getLogger(WayDbPopulator.class);
 
-	private final Path input;
+	private final OsmIterator iterator;
 	private final Path outputIndex;
 	private final Path outputData;
 	private final boolean useTags;
 
-	public WayDbPopulator(Path input, Path outputIndex, Path outputData,
-			boolean useTags)
+	public WayDbPopulator(OsmIterator iterator, Path outputIndex,
+			Path outputData, boolean useTags)
 	{
-		this.input = input;
+		this.iterator = iterator;
 		this.outputIndex = outputIndex;
 		this.outputData = outputData;
 		this.useTags = useTags;
@@ -67,27 +65,17 @@ public class WayDbPopulator
 
 	public void execute() throws IOException
 	{
-		InputStream fis;
-		try {
-			fis = Files.newInputStream(input);
-		} catch (FileNotFoundException e1) {
-			logger.error("unable to open input file");
-			throw new IOException("unable to open input file");
-		}
-
 		// make sure we have fresh files for the way database.
 		logger.debug("making sure database is empty");
 		if (Files.exists(outputIndex)) {
 			Files.delete(outputIndex);
 			if (Files.exists(outputIndex)) {
-				fis.close();
 				throw new IOException("unable to delete existing index");
 			}
 		}
 		if (Files.exists(outputData)) {
 			Files.delete(outputData);
 			if (Files.exists(outputData)) {
-				fis.close();
 				throw new IOException("unable to delete existing database");
 			}
 		}
@@ -104,15 +92,12 @@ public class WayDbPopulator
 			}
 		} catch (FileNotFoundException e) {
 			logger.error("unable to create database");
-			fis.close();
 			throw new IOException("unable to create database");
 		}
 
 		// read and insert ways
 		logger.debug("inserting ways");
 		int i = 0; // count ways
-		BufferedInputStream bis = new BufferedInputStream(fis);
-		TboIterator iterator = new TboIterator(bis, true, false);
 		while (iterator.hasNext()) {
 			EntityContainer container = iterator.next();
 			if (container.getType() == EntityType.Way) {
