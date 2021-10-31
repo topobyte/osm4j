@@ -410,6 +410,7 @@ public class ExtractionFilesBuilder
 		inputWays.close();
 
 		t.stop(KEY_SORT_WAYS);
+		printInfo();
 	}
 
 	private void mapWaysToTree() throws IOException
