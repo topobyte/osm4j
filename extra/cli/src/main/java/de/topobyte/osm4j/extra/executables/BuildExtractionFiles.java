@@ -27,13 +27,12 @@ import de.topobyte.osm4j.extra.extracts.ExtractionFiles;
 import de.topobyte.osm4j.extra.extracts.ExtractionFilesBuilder;
 import de.topobyte.osm4j.extra.extracts.ExtractionFilesHelper;
 import de.topobyte.osm4j.extra.extracts.FileNameDefaults;
-import de.topobyte.osm4j.utils.AbstractExecutableInput;
-import de.topobyte.osm4j.utils.FileFormat;
+import de.topobyte.osm4j.utils.AbstractExecutableInputOutput;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 import de.topobyte.utilities.apache.commons.cli.parsing.ArgumentHelper;
 import de.topobyte.utilities.apache.commons.cli.parsing.ArgumentParseException;
 
-public class BuildExtractionFiles extends AbstractExecutableInput
+public class BuildExtractionFiles extends AbstractExecutableInputOutput
 {
 
 	private static final String OPTION_INPUT = "input";
@@ -83,7 +82,6 @@ public class BuildExtractionFiles extends AbstractExecutableInput
 	private int maxMembersComplex;
 	private boolean computeBbox = false;
 
-	private FileFormat outputFormat = FileFormat.TBO;
 	private ExtractionFileNames fileNames;
 
 	private boolean keepAll = false;
