@@ -3,7 +3,7 @@ dependencies {
     compile project(':osm4j-xml')
     compile project(':osm4j-utils')
 
-    compile 'junit:junit:4.12'
+    compile 'junit:junit:4.13.2'
     compile 'com.google.guava:guava:19.0'
 
     runtime 'org.slf4j:slf4j-log4j12:1.6.1'
