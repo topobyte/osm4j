@@ -4,14 +4,14 @@ if (project.hasProperty("topobyte")) {
 }
 
 dependencies {
-    compile project(':osm4j-core')
+    api project(':osm4j-core')
 
-    compile 'org.slf4j:slf4j-api:1.6.1'
+    api 'org.slf4j:slf4j-api:1.6.1'
 
-    testCompile project(':osm4j-xml')
+    testImplementation project(':osm4j-xml')
 
-    testCompile 'junit:junit:4.13.2'
+    testImplementation 'junit:junit:4.13.2'
 
-    testRuntime 'org.slf4j:slf4j-log4j12:1.6.1'
-    testRuntime 'log4j:log4j:1.2.16'
+    testRuntimeOnly 'org.slf4j:slf4j-log4j12:1.6.1'
+    testRuntimeOnly 'log4j:log4j:1.2.16'
 }

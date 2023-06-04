@@ -4,28 +4,28 @@ if (project.hasProperty("topobyte")) {
 }
 
 dependencies {
-    compile project(':osm4j-utils')
-    compile project(':osm4j-incubating')
+    api project(':osm4j-utils')
+    api project(':osm4j-incubating')
 
-    compile 'de.topobyte:adt-geo:0.1.0'
-    compile 'de.topobyte:adt-graph:0.0.6'
-    compile 'de.topobyte:jts-utils:0.2.3'
-    compile 'de.topobyte:large-scale-file-io:0.1.0'
-    compile 'de.topobyte:commons-cli-helper:0.1.0'
+    api 'de.topobyte:adt-geo:0.1.0'
+    api 'de.topobyte:adt-graph:0.0.6'
+    api 'de.topobyte:jts-utils:0.2.3'
+    api 'de.topobyte:large-scale-file-io:0.1.0'
+    api 'de.topobyte:commons-cli-helper:0.1.0'
 
-    compile 'com.slimjars.trove4j:trove4j-long-long-hash-map:1.0.1'
-    compile 'com.slimjars.trove4j:trove4j-long-int-hash-map:1.0.1'
-    compile 'com.slimjars.trove4j:trove4j-object-long-hash-map:1.0.1'
+    api 'com.slimjars.trove4j:trove4j-long-long-hash-map:1.0.1'
+    api 'com.slimjars.trove4j:trove4j-long-int-hash-map:1.0.1'
+    api 'com.slimjars.trove4j:trove4j-object-long-hash-map:1.0.1'
 
-    compile 'commons-io:commons-io:2.4'
+    api 'commons-io:commons-io:2.4'
 
-    compile 'org.slf4j:slf4j-api:1.6.1'
+    api 'org.slf4j:slf4j-api:1.6.1'
 
-    testCompile 'junit:junit:4.13.2'
-    testCompile 'commons-io:commons-io:2.4'
+    testImplementation 'junit:junit:4.13.2'
+    testImplementation 'commons-io:commons-io:2.4'
 
-    testRuntime 'org.slf4j:slf4j-log4j12:1.6.1'
-    testRuntime 'log4j:log4j:1.2.16'
+    testRuntimeOnly 'org.slf4j:slf4j-log4j12:1.6.1'
+    testRuntimeOnly 'log4j:log4j:1.2.16'
 }
 
 eclipse {

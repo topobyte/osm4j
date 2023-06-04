@@ -1,9 +1,9 @@
 buildscript {
     repositories {
-        maven { url 'http://mvn.topobyte.de' }
+        maven { url 'https://mvn.topobyte.de' }
     }
     dependencies {
-        classpath 'de.topobyte:gradle-launch-and-install-plugin:0.0.3'
+        classpath 'de.topobyte:gradle-launch-and-install-plugin:0.0.5'
     }
 }
 
@@ -58,15 +58,15 @@ launchAndInstall {
 
 distributions {
     main {
-        baseName = 'osm4j-extra'
+        distributionBaseName = 'osm4j-extra'
     }
 }
 
 dependencies {
-    compile project(':osm4j-extra')
+    implementation project(':osm4j-extra')
 
-    runtime 'org.slf4j:slf4j-log4j12:1.6.1'
-    runtime 'log4j:log4j:1.2.16'
+    runtimeOnly 'org.slf4j:slf4j-log4j12:1.6.1'
+    runtimeOnly 'log4j:log4j:1.2.16'
 }
 
 task copyJars(type: Copy) {
@@ -76,7 +76,7 @@ task copyJars(type: Copy) {
 
 task copyDeps(type: Copy) {
     into "$buildDir/lib-run"
-    from configurations.runtime
+    from configurations.runtimeClasspath
 }
 
 task createRuntime(dependsOn: [copyJars, copyDeps]) {

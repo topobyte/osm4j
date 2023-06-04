@@ -1,5 +1,5 @@
 dependencies {
-    compile project(':osm4j-tbo')
+    implementation project(':osm4j-tbo')
 }
 
 task copyJars(type: Copy) {
@@ -9,7 +9,7 @@ task copyJars(type: Copy) {
 
 task copyDeps(type: Copy) {
     into "$buildDir/lib-run"
-    from configurations.runtime
+    from configurations.runtimeClasspath
 }
 
 task createRuntime(dependsOn: [copyJars, copyDeps]) {

@@ -1,13 +1,13 @@
 dependencies {
-    compile project(':osm4j-core')
-    compile project(':osm4j-xml')
-    compile project(':osm4j-utils')
+    implementation project(':osm4j-core')
+    implementation project(':osm4j-xml')
+    implementation project(':osm4j-utils')
 
-    compile 'junit:junit:4.13.2'
-    compile 'com.google.guava:guava:19.0'
+    implementation 'junit:junit:4.13.2'
+    implementation 'com.google.guava:guava:19.0'
 
-    runtime 'org.slf4j:slf4j-log4j12:1.6.1'
-    runtime 'log4j:log4j:1.2.16'
+    runtimeOnly 'org.slf4j:slf4j-log4j12:1.6.1'
+    runtimeOnly 'log4j:log4j:1.2.16'
 }
 
 task copyJars(type: Copy) {
@@ -17,7 +17,7 @@ task copyJars(type: Copy) {
 
 task copyDeps(type: Copy) {
     into "$buildDir/lib-run"
-    from configurations.runtime
+    from configurations.runtimeClasspath
 }
 
 task createRuntime(dependsOn: [copyJars, copyDeps]) {

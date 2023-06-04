@@ -4,13 +4,13 @@ if (project.hasProperty("topobyte")) {
 }
 
 dependencies {
-    compile 'de.topobyte:adt-multicollections:0.0.4'
+    api 'de.topobyte:adt-multicollections:0.0.4'
 
-    compile 'com.slimjars.trove4j:trove4j-long-hash-set:1.0.1'
-    compile 'com.slimjars.trove4j:trove4j-long-array-list:1.0.1'
-    compile 'com.slimjars.trove4j:trove4j-long-object-hash-map:1.0.1'
+    api 'com.slimjars.trove4j:trove4j-long-hash-set:1.0.1'
+    api 'com.slimjars.trove4j:trove4j-long-array-list:1.0.1'
+    api 'com.slimjars.trove4j:trove4j-long-object-hash-map:1.0.1'
 
-    compile 'org.slf4j:slf4j-api:1.6.1'
+    api 'org.slf4j:slf4j-api:1.6.1'
 }
 
 eclipse.project.name = 'osm4j-core'

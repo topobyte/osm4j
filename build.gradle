@@ -1,5 +1,5 @@
 wrapper {
-    gradleVersion = '6.5.1'
+    gradleVersion = '7.6.1'
 }
 
 allprojects {
@@ -16,12 +16,35 @@ configure(project(':osm4j-replication')) {
     version = '1.0.0'
 }
 
+ext.libraries = [
+    project(':osm4j-core'),
+    project(':osm4j-edit'),
+    project(':osm4j-extra'),
+    project(':osm4j-geometry'),
+    project(':osm4j-utils'),
+    project(':osm4j-incubating'),
+    project(':osm4j-pbf'),
+    project(':osm4j-pbf-full-runtime'),
+    project(':osm4j-replication'),
+    project(':osm4j-tbo'),
+    project(':osm4j-testing'),
+    project(':osm4j-xml')
+]
+
+configure(libraries) {
+    apply plugin: 'java-library'
+    apply plugin: 'maven-publish'
+}
+
+configure(subprojects.findAll {it !in libraries}) {
+    apply plugin: 'java'
+}
+
 subprojects {
     task allDeps(type: DependencyReportTask) {}
 
-    apply plugin: 'java'
     apply plugin: 'eclipse'
-    apply plugin: 'maven'
+    apply plugin: 'maven-publish'
 
     repositories {
         maven {
@@ -36,13 +59,12 @@ subprojects {
     sourceCompatibility = 1.8
     targetCompatibility = 1.8
 
-    task sourcesJar(type: Jar, dependsOn: classes) {
-        classifier = 'sources'
-        from sourceSets.main.allSource
+    java {
+        withSourcesJar()
     }
 
-    artifacts {
-        archives sourcesJar
+    tasks.withType(GenerateModuleMetadata) {
+        enabled = false
     }
 
     def global = new File('info.pom');
@@ -56,21 +78,20 @@ subprojects {
         pomInfo.description = pomInfoL.description
     }
 
-    afterEvaluate { project ->
-        if (publish) {
-            uploadArchives {
-                repositories {
-                    mavenDeployer {
-                        pom.project {
-                            name pomInfo.name
-                            description pomInfo.description
-                            url pomInfo.url
-                            licenses {
-                                license {
-                                    name pomInfo.licenseName
-                                    url pomInfo.licenseUrl
-                                    distribution pomInfo.licenseDistribution
-                                }
+    if (publish) {
+        publishing {
+            publications {
+                maven(MavenPublication) {
+                    from components.java
+                    pom {
+                        name = "$pomInfo.name"
+                        description = "$pomInfo.description"
+                        url = "$pomInfo.url"
+                        licenses {
+                            license {
+                                name = "$pomInfo.licenseName"
+                                url = "$pomInfo.licenseUrl"
+                                distribution = "$pomInfo.licenseDistribution"
                             }
                         }
                     }
