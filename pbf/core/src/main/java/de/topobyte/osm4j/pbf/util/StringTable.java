@@ -130,7 +130,7 @@ public class StringTable
 		stringMap = new TObjectIntHashMap<>(2 * set.length);
 		for (int i = 0; i < set.length; i++) {
 			// Index 0 is reserved for use as a delimiter.
-			stringMap.put(set[i], new Integer(i + 1));
+			stringMap.put(set[i], Integer.valueOf(i + 1));
 		}
 		counts = null;
 	}
