@@ -24,6 +24,8 @@ import java.util.Map;
 import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
 import org.junit.Test;
 import org.locationtech.jts.geom.Envelope;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.topobyte.adt.geo.BBox;
 import de.topobyte.osm4j.Util;
@@ -37,6 +39,8 @@ import de.topobyte.osm4j.osc.dynsax.OsmOscReader;
 
 public class TestBbox implements OsmChangeHandler
 {
+
+	final static Logger logger = LoggerFactory.getLogger(TestBbox.class);
 
 	// Area around Berlin
 	private BBox bbox = new BBox(13.032531, 52.698857, 13.754882, 52.344568);
@@ -59,15 +63,14 @@ public class TestBbox implements OsmChangeHandler
 	public void handle(OsmChange change) throws IOException
 	{
 		InMemoryListDataSet data = change.getElements();
-		System.out.println(
-				String.format("change: %s, %d nodes, %d ways, %d relations",
-						change.getType(), data.getNodes().size(),
-						data.getWays().size(), data.getRelations().size()));
+		logger.info(String.format("change: %s, %d nodes, %d ways, %d relations",
+				change.getType(), data.getNodes().size(), data.getWays().size(),
+				data.getRelations().size()));
 
 		for (OsmNode node : data.getNodes()) {
 			if (envelope.contains(node.getLongitude(), node.getLatitude())) {
 				Map<String, String> tags = OsmModelUtil.getTagsAsMap(node);
-				System.out.println(tags);
+				logger.info(tags.toString());
 			}
 		}
 	}
@@ -75,7 +78,7 @@ public class TestBbox implements OsmChangeHandler
 	@Override
 	public void complete() throws IOException
 	{
-		System.out.println("complete");
+		logger.info("complete");
 	}
 
 }
