@@ -20,14 +20,13 @@ dependencies {
     api 'org.apache.commons:commons-compress:1.8'
     api 'com.google.guava:guava:19.0'
 
-    api 'org.slf4j:slf4j-api:1.6.1'
+    api 'org.slf4j:slf4j-api:1.7.36'
 
     testImplementation project(':osm4j-testing')
 
     testImplementation 'junit:junit:4.13.2'
 
-    testRuntimeOnly 'org.slf4j:slf4j-log4j12:1.6.1'
-    testRuntimeOnly 'log4j:log4j:1.2.16'
+    testRuntimeOnly 'org.slf4j:slf4j-reload4j:1.7.36'
 }
 
 eclipse {

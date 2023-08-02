@@ -19,13 +19,12 @@ dependencies {
 
     api 'commons-io:commons-io:2.4'
 
-    api 'org.slf4j:slf4j-api:1.6.1'
+    api 'org.slf4j:slf4j-api:1.7.36'
 
     testImplementation 'junit:junit:4.13.2'
     testImplementation 'commons-io:commons-io:2.4'
 
-    testRuntimeOnly 'org.slf4j:slf4j-log4j12:1.6.1'
-    testRuntimeOnly 'log4j:log4j:1.2.16'
+    testRuntimeOnly 'org.slf4j:slf4j-reload4j:1.7.36'
 }
 
 eclipse {

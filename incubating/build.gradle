@@ -10,12 +10,11 @@ dependencies {
     api 'de.topobyte:melon-paths:0.0.3'
     api 'de.topobyte:simple-mapfile-xml:0.1.0'
 
-    api 'org.slf4j:slf4j-api:1.6.1'
+    api 'org.slf4j:slf4j-api:1.7.36'
 
     testImplementation 'de.topobyte:collections-utils:0.0.5'
     testImplementation 'junit:junit:4.13.2'
-    testRuntimeOnly 'org.slf4j:slf4j-log4j12:1.6.1'
-    testRuntimeOnly 'log4j:log4j:1.2.16'
+    testRuntimeOnly 'org.slf4j:slf4j-reload4j:1.7.36'
 }
 
 task copyJars(type: Copy) {
