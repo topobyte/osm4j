@@ -12,7 +12,7 @@ dependencies {
     api 'com.slimjars.trove4j:trove4j-int-object-hash-map:1.0.1'
 
     api 'net.jpountz.lz4:lz4:1.3.0'
-    api 'org.apache.commons:commons-lang3:3.3.2'
+    api 'org.apache.commons:commons-lang3:3.13.0'
     api 'org.slf4j:slf4j-api:1.7.36'
 
     testImplementation project(':osm4j-xml')

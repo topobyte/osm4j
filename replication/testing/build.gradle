@@ -1,7 +1,7 @@
 dependencies {
     implementation project(':osm4j-replication')
 
-    implementation 'org.apache.commons:commons-compress:1.8'
+    implementation 'org.apache.commons:commons-compress:1.23.0'
 
     runtimeOnly 'org.slf4j:slf4j-reload4j:1.7.36'
 }

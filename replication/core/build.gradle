@@ -8,15 +8,15 @@ dependencies {
 
     api 'de.topobyte:dynsax:0.0.1'
 
-    api 'org.apache.commons:commons-text:1.1'
-    api 'commons-io:commons-io:2.4'
-    api 'joda-time:joda-time:2.9.7'
-    api 'org.apache.httpcomponents:httpclient:4.5.5'
+    api 'org.apache.commons:commons-text:1.10.0'
+    api 'commons-io:commons-io:2.13.0'
+    api 'joda-time:joda-time:2.12.5'
+    api 'org.apache.httpcomponents:httpclient:4.5.14'
     api 'org.slf4j:slf4j-api:1.7.36'
 
     testImplementation project(':osm4j-testing')
 
-    testImplementation 'org.apache.commons:commons-compress:1.8'
+    testImplementation 'org.apache.commons:commons-compress:1.23.0'
     testImplementation 'de.topobyte:adt-geo:0.2.0'
     testImplementation 'junit:junit:4.13.2'
 

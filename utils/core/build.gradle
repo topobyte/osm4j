@@ -17,7 +17,7 @@ dependencies {
 
     api 'com.slimjars.trove4j:trove4j-int-hash-set:1.0.1'
 
-    api 'org.apache.commons:commons-compress:1.8'
+    api 'org.apache.commons:commons-compress:1.23.0'
     api 'com.google.guava:guava:19.0'
 
     api 'org.slf4j:slf4j-api:1.7.36'
