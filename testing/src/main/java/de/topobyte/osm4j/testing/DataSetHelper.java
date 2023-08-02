@@ -62,7 +62,7 @@ public class DataSetHelper
 		}
 	}
 
-	public static TestDataSet read(OsmIterator iterator) throws IOException
+	public static TestDataSet read(OsmIterator iterator)
 	{
 		TestDataSet dataSet = new TestDataSet();
 
@@ -91,8 +91,7 @@ public class DataSetHelper
 		return dataSet;
 	}
 
-	public static TestDataSet read(OsmReader reader) throws IOException,
-			OsmInputException
+	public static TestDataSet read(OsmReader reader) throws OsmInputException
 	{
 		final TestDataSet dataSet = new TestDataSet();
 
@@ -187,8 +186,7 @@ public class DataSetHelper
 		return true;
 	}
 
-	public static boolean relationsEqual(
-			List<? extends OsmRelation> relations1,
+	public static boolean relationsEqual(List<? extends OsmRelation> relations1,
 			List<? extends OsmRelation> relations2)
 	{
 		if (relations1.size() != relations2.size()) {

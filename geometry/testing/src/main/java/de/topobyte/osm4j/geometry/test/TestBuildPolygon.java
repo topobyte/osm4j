@@ -24,11 +24,8 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import javax.xml.parsers.ParserConfigurationException;
-
 import org.locationtech.jts.geom.Geometry;
 import org.locationtech.jts.io.WKTWriter;
-import org.xml.sax.SAXException;
 
 import com.slimjars.dist.gnu.trove.iterator.TLongObjectIterator;
 import com.slimjars.dist.gnu.trove.map.TLongObjectMap;
@@ -47,8 +44,7 @@ public class TestBuildPolygon
 {
 
 	public static void main(String[] args)
-			throws MalformedURLException, IOException,
-			ParserConfigurationException, SAXException, EntityNotFoundException
+			throws MalformedURLException, IOException, EntityNotFoundException
 	{
 		String query = "http://overpass-api.de/api/interpreter?data=(rel(8638);>;);out;";
 

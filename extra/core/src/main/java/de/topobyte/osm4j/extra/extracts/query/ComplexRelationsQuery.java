@@ -95,7 +95,6 @@ public class ComplexRelationsQuery extends AbstractRelationsQuery
 
 	private void executeSimple(RelationQueryBag queryBag,
 			TLongSet simpleRelationIds, Set<OsmRelation> found)
-			throws IOException
 	{
 		EntityFinder finder = EntityFinders.create(provider,
 				EntityNotFoundStrategy.IGNORE);
@@ -127,7 +126,7 @@ public class ComplexRelationsQuery extends AbstractRelationsQuery
 	}
 
 	private void executeGroups(RelationQueryBag queryBag, List<Group> groups,
-			Set<OsmRelation> found) throws IOException
+			Set<OsmRelation> found)
 	{
 		EntityFinder finder = EntityFinders.create(provider,
 				EntityNotFoundStrategy.IGNORE);

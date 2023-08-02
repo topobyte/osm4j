@@ -23,11 +23,8 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.util.Arrays;
 
-import javax.xml.parsers.ParserConfigurationException;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.xml.sax.SAXException;
 
 import com.slimjars.dist.gnu.trove.map.TLongObjectMap;
 
@@ -56,8 +53,7 @@ public class TestBuildLinework
 	}
 
 	public static void main(String[] args)
-			throws MalformedURLException, IOException,
-			ParserConfigurationException, SAXException, EntityNotFoundException
+			throws MalformedURLException, IOException, EntityNotFoundException
 	{
 		if (args.length == 0) {
 			System.out.println("Please specify an input file");

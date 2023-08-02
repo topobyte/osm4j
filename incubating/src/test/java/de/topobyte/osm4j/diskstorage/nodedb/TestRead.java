@@ -20,12 +20,6 @@ package de.topobyte.osm4j.diskstorage.nodedb;
 import java.io.IOException;
 import java.nio.file.Paths;
 
-import de.topobyte.osm4j.diskstorage.nodedb.Block;
-import de.topobyte.osm4j.diskstorage.nodedb.DbNode;
-import de.topobyte.osm4j.diskstorage.nodedb.Entry;
-import de.topobyte.osm4j.diskstorage.nodedb.Index;
-import de.topobyte.osm4j.diskstorage.nodedb.NodeDB;
-
 /**
  * Test class that reads a single node from database
  * 

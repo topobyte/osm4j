@@ -17,7 +17,6 @@
 
 package de.topobyte.osm4j.utils.merge.sorted;
 
-import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -27,8 +26,8 @@ import de.topobyte.osm4j.core.model.iface.EntityType;
 import de.topobyte.osm4j.core.model.iface.IdContainer;
 import de.topobyte.osm4j.core.model.iface.OsmBounds;
 
-public class SortedIdMergeIterator extends AbstractSortedIdMerge implements
-		OsmIdIterator
+public class SortedIdMergeIterator extends AbstractSortedIdMerge
+		implements OsmIdIterator
 {
 
 	/**
@@ -42,7 +41,6 @@ public class SortedIdMergeIterator extends AbstractSortedIdMerge implements
 	 *            a collection of iterators to retrieve data from.
 	 */
 	public SortedIdMergeIterator(Collection<OsmIdIterator> inputs)
-			throws IOException
 	{
 		super(inputs);
 
@@ -56,7 +54,7 @@ public class SortedIdMergeIterator extends AbstractSortedIdMerge implements
 	// Remember the last id returned per entity type to skip duplicates
 	private long lastId = -1;
 
-	private void prepare() throws IOException
+	private void prepare()
 	{
 		for (OsmIdIterator iterator : inputs) {
 			if (!iterator.hasNext()) {

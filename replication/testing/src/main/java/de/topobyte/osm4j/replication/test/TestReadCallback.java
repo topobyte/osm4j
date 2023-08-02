@@ -23,8 +23,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import javax.xml.parsers.ParserConfigurationException;
-
 import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
 
 import de.topobyte.osm4j.core.access.OsmInputException;
@@ -36,8 +34,7 @@ import de.topobyte.osm4j.osc.dynsax.OsmOscReader;
 public class TestReadCallback implements OsmChangeHandler
 {
 
-	public static void main(String[] args)
-			throws ParserConfigurationException, OsmInputException, IOException
+	public static void main(String[] args) throws OsmInputException, IOException
 	{
 		if (args.length != 1) {
 			System.out

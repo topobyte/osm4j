@@ -17,7 +17,6 @@
 
 package de.topobyte.osm4j.xml.test;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.Locale;
 
@@ -37,7 +36,7 @@ public class TestReadEmoji extends LocaleTest
 	}
 
 	@Test
-	public void testIterator() throws IOException
+	public void testIterator()
 	{
 		String filename = "username-emoji.osm";
 

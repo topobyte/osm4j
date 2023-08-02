@@ -75,13 +75,13 @@ public class OsmIoUtils
 	}
 
 	public static OsmReader setupOsmReader(InputStream in, FileFormat format,
-			boolean readMetadata) throws IOException
+			boolean readMetadata)
 	{
 		return setupOsmReader(in, format, true, readMetadata);
 	}
 
 	public static OsmReader setupOsmReader(InputStream in, FileFormat format,
-			boolean readTags, boolean readMetadata) throws IOException
+			boolean readTags, boolean readMetadata)
 	{
 		switch (format) {
 		default:
@@ -110,8 +110,8 @@ public class OsmIoUtils
 		}
 	}
 
-	public static OsmIdReader setupOsmIdReader(InputStream in, FileFormat format)
-			throws IOException
+	public static OsmIdReader setupOsmIdReader(InputStream in,
+			FileFormat format)
 	{
 		switch (format) {
 		default:
@@ -127,7 +127,7 @@ public class OsmIoUtils
 	}
 
 	public static OsmElementCounter setupOsmElementCounter(InputStream in,
-			FileFormat format) throws IOException
+			FileFormat format)
 	{
 		switch (format) {
 		default:
@@ -241,8 +241,8 @@ public class OsmIoUtils
 
 		if (relationLimit instanceof ElementCountLimit) {
 			ElementCountLimit limit = (ElementCountLimit) relationLimit;
-			tboWriter.setBatchSizeRelationsByElementCount(limit
-					.getMaxElements());
+			tboWriter.setBatchSizeRelationsByElementCount(
+					limit.getMaxElements());
 		} else if (relationLimit instanceof RelationMemberLimit) {
 			RelationMemberLimit limit = (RelationMemberLimit) relationLimit;
 			tboWriter.setBatchSizeRelationsByMembers(limit.getMaxMembers());

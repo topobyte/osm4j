@@ -17,7 +17,6 @@
 
 package de.topobyte.osm4j.utils.sort;
 
-import java.io.IOException;
 import java.util.Collections;
 import java.util.Random;
 
@@ -36,7 +35,7 @@ public class BaseTest
 	protected TestDataSet shuffled;
 
 	protected void setup(int numNodes, int numWays, int numRelations,
-			double fractionDuplicates) throws IOException
+			double fractionDuplicates)
 	{
 		// Generate some data
 		entityGenerator = new EntityGenerator(10, true);

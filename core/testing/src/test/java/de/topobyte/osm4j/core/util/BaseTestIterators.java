@@ -17,7 +17,6 @@
 
 package de.topobyte.osm4j.core.util;
 
-import java.io.IOException;
 import java.io.InputStream;
 
 import de.topobyte.osm4j.utils.FileFormat;
@@ -26,7 +25,7 @@ import de.topobyte.osm4j.utils.OsmStreamInput;
 public class BaseTestIterators
 {
 
-	public OsmStreamInput createInput() throws IOException
+	public OsmStreamInput createInput()
 	{
 		InputStream input = Thread.currentThread().getContextClassLoader()
 				.getResourceAsStream("data1.osm");

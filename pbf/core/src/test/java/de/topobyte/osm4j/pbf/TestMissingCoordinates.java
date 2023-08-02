@@ -17,7 +17,6 @@
 
 package de.topobyte.osm4j.pbf;
 
-import java.io.IOException;
 import java.util.List;
 
 import org.junit.Assert;
@@ -42,7 +41,7 @@ public class TestMissingCoordinates
 	private String resource = "data-with-missing-coordinates.pbf";
 
 	@Test
-	public void testReader() throws IOException, OsmInputException
+	public void testReader() throws OsmInputException
 	{
 		PbfReader reader = Util.reader(resource, true);
 		TestDataSet data = DataSetHelper.read(reader);
@@ -50,7 +49,7 @@ public class TestMissingCoordinates
 	}
 
 	@Test
-	public void testIterator() throws IOException
+	public void testIterator()
 	{
 		OsmIterator iterator = Util.iterator(resource, true);
 		TestDataSet data = DataSetHelper.read(iterator);

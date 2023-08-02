@@ -17,8 +17,6 @@
 
 package de.topobyte.osm4j.pbf;
 
-import java.io.IOException;
-
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.junit.Assert;
@@ -39,7 +37,7 @@ public class TestValidateSingleNode extends TestValidateData
 	}
 
 	@Test
-	public void test() throws IOException, OsmInputException
+	public void test() throws OsmInputException
 	{
 		TestDataSet xmlData = xmlData(resourceXML, fetchMetadata);
 

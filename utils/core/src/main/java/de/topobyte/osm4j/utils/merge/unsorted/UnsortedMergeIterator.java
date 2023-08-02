@@ -17,7 +17,6 @@
 
 package de.topobyte.osm4j.utils.merge.unsorted;
 
-import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -31,8 +30,8 @@ import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.osm4j.core.model.iface.OsmRelation;
 import de.topobyte.osm4j.core.model.iface.OsmWay;
 
-public class UnsortedMergeIterator extends AbstractUnsortedMerge implements
-		OsmIterator
+public class UnsortedMergeIterator extends AbstractUnsortedMerge
+		implements OsmIterator
 {
 
 	/**
@@ -45,7 +44,6 @@ public class UnsortedMergeIterator extends AbstractUnsortedMerge implements
 	 *            a collection of iterators to retrieve data from.
 	 */
 	public UnsortedMergeIterator(Collection<OsmIterator> inputs)
-			throws IOException
 	{
 		super(inputs);
 
@@ -60,7 +58,7 @@ public class UnsortedMergeIterator extends AbstractUnsortedMerge implements
 	private Input<OsmWay> wayInput = null;
 	private Input<OsmRelation> relationInput = null;
 
-	private void prepare() throws IOException
+	private void prepare()
 	{
 		for (OsmIterator iterator : inputs) {
 			if (!iterator.hasNext()) {

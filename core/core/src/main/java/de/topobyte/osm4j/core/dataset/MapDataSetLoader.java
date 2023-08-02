@@ -67,7 +67,6 @@ public class MapDataSetLoader
 
 	public static InMemoryMapDataSet read(OsmIterator iterator,
 			boolean keepNodeTags, boolean keepWayTags, boolean keepRelationTags)
-			throws IOException
 	{
 		InMemoryMapDataSet dataSet = new InMemoryMapDataSet();
 
@@ -140,8 +139,8 @@ public class MapDataSetLoader
 			public void handle(OsmNode node) throws IOException
 			{
 				if (!keepNodeTags) {
-					node = new Node(node.getId(), node.getLongitude(), node
-							.getLatitude());
+					node = new Node(node.getId(), node.getLongitude(),
+							node.getLatitude());
 				}
 				nodes.put(node.getId(), node);
 			}

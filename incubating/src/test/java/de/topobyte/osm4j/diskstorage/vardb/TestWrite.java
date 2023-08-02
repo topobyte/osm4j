@@ -24,8 +24,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import de.topobyte.osm4j.diskstorage.HighLevelOutputStream;
-import de.topobyte.osm4j.diskstorage.vardb.Record;
-import de.topobyte.osm4j.diskstorage.vardb.VarDB;
 
 /**
  * Test class for vardb in general. Corresponds to TestRead.

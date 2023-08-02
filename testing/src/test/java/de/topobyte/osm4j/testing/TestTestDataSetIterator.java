@@ -17,8 +17,6 @@
 
 package de.topobyte.osm4j.testing;
 
-import java.io.IOException;
-
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -28,7 +26,7 @@ public class TestTestDataSetIterator
 {
 
 	@Test
-	public void test() throws IOException
+	public void test()
 	{
 		EntityGenerator entityGenerator = new EntityGenerator(10, true);
 		DataSetGenerator dataSetGenerator = new DataSetGenerator(

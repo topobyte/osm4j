@@ -21,7 +21,6 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import de.topobyte.osm4j.core.access.OsmInputException;
 import de.topobyte.osm4j.extra.Renamer;
 import de.topobyte.osm4j.utils.AbstractExecutable;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
@@ -40,8 +39,7 @@ public class RenameFiles extends AbstractExecutable
 		return RenameFiles.class.getSimpleName() + " [options]";
 	}
 
-	public static void main(String[] args) throws IOException,
-			OsmInputException
+	public static void main(String[] args) throws IOException
 	{
 		RenameFiles task = new RenameFiles();
 
@@ -78,7 +76,7 @@ public class RenameFiles extends AbstractExecutable
 		dry = line.hasOption(OPTION_DRY);
 	}
 
-	private void execute() throws IOException, OsmInputException
+	private void execute() throws IOException
 	{
 		Renamer renamer = new Renamer(path, from, to, dry);
 

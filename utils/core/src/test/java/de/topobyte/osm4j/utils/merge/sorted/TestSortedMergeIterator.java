@@ -17,7 +17,6 @@
 
 package de.topobyte.osm4j.utils.merge.sorted;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,7 +32,7 @@ public class TestSortedMergeIterator extends BaseTest
 {
 
 	@Test
-	public void test() throws IOException
+	public void test()
 	{
 		test(100, 100, 100, 10, 0.8);
 		test(100, 100, 100, 10, 0.5);
@@ -46,7 +45,7 @@ public class TestSortedMergeIterator extends BaseTest
 	}
 
 	public void test(int numNodes, int numWays, int numRelations, int numFiles,
-			double p) throws IOException
+			double p)
 	{
 		setup(numNodes, numWays, numRelations, numFiles, p);
 
@@ -60,8 +59,8 @@ public class TestSortedMergeIterator extends BaseTest
 
 		Assert.assertEquals(data.getNodes().size(), merged.getNodes().size());
 		Assert.assertEquals(data.getWays().size(), merged.getWays().size());
-		Assert.assertEquals(data.getRelations().size(), merged.getRelations()
-				.size());
+		Assert.assertEquals(data.getRelations().size(),
+				merged.getRelations().size());
 		Assert.assertTrue(DataSetHelper.equals(data, merged));
 	}
 

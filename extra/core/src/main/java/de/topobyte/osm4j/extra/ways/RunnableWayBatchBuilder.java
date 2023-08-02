@@ -17,8 +17,6 @@
 
 package de.topobyte.osm4j.extra.ways;
 
-import java.io.IOException;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -61,40 +59,36 @@ public class RunnableWayBatchBuilder implements StoppableRunnable
 	@Override
 	public void run()
 	{
-		try {
-			WayBatch batch = new WayBatch(maxWays, maxWayNodes);
-			while (!stopped && input.hasNext()) {
-				EntityContainer container = input.next();
-				switch (container.getType()) {
-				case Way:
-					OsmWay way = (OsmWay) container.getEntity();
-					if (way.getNumberOfNodes() == 0) {
-						continue;
-					}
-					if (batch.fits(way)) {
-						batch.add(way);
-					} else {
-						logger.info("does not fit");
-						output.write(batch);
-						logger.info("write returned");
-						batch = new WayBatch(maxWays, maxWayNodes);
-						batch.add(way);
-					}
-					break;
-				case Node:
-					break;
-				case Relation:
-					break;
+		WayBatch batch = new WayBatch(maxWays, maxWayNodes);
+		while (!stopped && input.hasNext()) {
+			EntityContainer container = input.next();
+			switch (container.getType()) {
+			case Way:
+				OsmWay way = (OsmWay) container.getEntity();
+				if (way.getNumberOfNodes() == 0) {
+					continue;
 				}
-			}
-			if (!stopped) {
-				if (!batch.getElements().isEmpty()) {
+				if (batch.fits(way)) {
+					batch.add(way);
+				} else {
+					logger.info("does not fit");
 					output.write(batch);
+					logger.info("write returned");
+					batch = new WayBatch(maxWays, maxWayNodes);
+					batch.add(way);
 				}
-				output.complete();
+				break;
+			case Node:
+				break;
+			case Relation:
+				break;
 			}
-		} catch (IOException e) {
-			throw new RuntimeException(e);
+		}
+		if (!stopped) {
+			if (!batch.getElements().isEmpty()) {
+				output.write(batch);
+			}
+			output.complete();
 		}
 	}
 

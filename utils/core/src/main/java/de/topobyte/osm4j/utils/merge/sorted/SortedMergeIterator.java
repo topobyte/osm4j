@@ -17,7 +17,6 @@
 
 package de.topobyte.osm4j.utils.merge.sorted;
 
-import java.io.IOException;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Iterator;
@@ -33,8 +32,8 @@ import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.osm4j.core.model.iface.OsmRelation;
 import de.topobyte.osm4j.core.model.iface.OsmWay;
 
-public class SortedMergeIterator extends AbstractSortedMerge implements
-		OsmIterator
+public class SortedMergeIterator extends AbstractSortedMerge
+		implements OsmIterator
 {
 
 	/**
@@ -48,7 +47,6 @@ public class SortedMergeIterator extends AbstractSortedMerge implements
 	 *            a collection of iterators to retrieve data from.
 	 */
 	public SortedMergeIterator(Collection<OsmIterator> inputs)
-			throws IOException
 	{
 		this(inputs, new IdComparator());
 	}
@@ -66,7 +64,7 @@ public class SortedMergeIterator extends AbstractSortedMerge implements
 	 *            a Comparator used to compare elements of the same type.
 	 */
 	public SortedMergeIterator(Collection<OsmIterator> inputs,
-			Comparator<OsmEntity> comparator) throws IOException
+			Comparator<OsmEntity> comparator)
 	{
 		this(inputs, comparator, comparator, comparator);
 	}
@@ -91,7 +89,6 @@ public class SortedMergeIterator extends AbstractSortedMerge implements
 			Comparator<? super OsmNode> comparatorNodes,
 			Comparator<? super OsmWay> comparatorWays,
 			Comparator<? super OsmRelation> comparatorRelations)
-			throws IOException
 	{
 		super(inputs, comparatorNodes, comparatorWays, comparatorRelations);
 
@@ -105,7 +102,7 @@ public class SortedMergeIterator extends AbstractSortedMerge implements
 	// Remember the last id returned per entity type to skip duplicates
 	private long lastId = -1;
 
-	private void prepare() throws IOException
+	private void prepare()
 	{
 		for (OsmIterator iterator : inputs) {
 			if (!iterator.hasNext()) {
@@ -115,12 +112,12 @@ public class SortedMergeIterator extends AbstractSortedMerge implements
 			EntityContainer container = iterator.next();
 			switch (container.getType()) {
 			case Node:
-				nodeItems.add(createItem((OsmNode) container.getEntity(),
-						iterator));
+				nodeItems.add(
+						createItem((OsmNode) container.getEntity(), iterator));
 				break;
 			case Way:
-				wayItems.add(createItem((OsmWay) container.getEntity(),
-						iterator));
+				wayItems.add(
+						createItem((OsmWay) container.getEntity(), iterator));
 				break;
 			case Relation:
 				relationItems.add(createItem(

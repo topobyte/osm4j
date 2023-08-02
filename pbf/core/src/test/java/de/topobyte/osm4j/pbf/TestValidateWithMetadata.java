@@ -17,8 +17,6 @@
 
 package de.topobyte.osm4j.pbf;
 
-import java.io.IOException;
-
 import org.junit.Test;
 
 import de.topobyte.osm4j.core.access.OsmInputException;
@@ -32,13 +30,13 @@ public class TestValidateWithMetadata extends TestValidateData
 	}
 
 	@Test
-	public void testIterator() throws IOException
+	public void testIterator()
 	{
 		validateUsingIterator();
 	}
 
 	@Test
-	public void testReader() throws IOException, OsmInputException
+	public void testReader() throws OsmInputException
 	{
 		validateUsingReader();
 	}

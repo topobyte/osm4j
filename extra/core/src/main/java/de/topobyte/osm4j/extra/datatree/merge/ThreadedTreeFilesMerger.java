@@ -55,7 +55,7 @@ public class ThreadedTreeFilesMerger extends AbstractTreeFilesMerger
 		run();
 	}
 
-	public void run() throws IOException
+	public void run()
 	{
 		BlockingQueue<Runnable> tasks = new ArrayBlockingQueue<>(10);
 		ThreadPoolExecutor exec = new ThreadPoolExecutor(3, 3, 1,

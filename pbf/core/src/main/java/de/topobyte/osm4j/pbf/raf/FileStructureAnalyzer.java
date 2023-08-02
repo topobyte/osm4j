@@ -417,7 +417,6 @@ public class FileStructureAnalyzer
 	}
 
 	private boolean contains(Set<EntityType> blockTypes, EntityType... types)
-			throws IOException
 	{
 		boolean allFound = true;
 		for (EntityType type : types) {

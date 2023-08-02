@@ -17,8 +17,6 @@
 
 package de.topobyte.osm4j.utils.check;
 
-import java.io.IOException;
-
 import de.topobyte.osm4j.core.access.OsmIterator;
 import de.topobyte.osm4j.core.model.iface.EntityContainer;
 import de.topobyte.osm4j.core.model.iface.OsmEntity;
@@ -37,7 +35,7 @@ public class OrderCheck
 		this.iterator = iterator;
 	}
 
-	public void run() throws IOException
+	public void run()
 	{
 		while (iterator.hasNext()) {
 			EntityContainer container = iterator.next();

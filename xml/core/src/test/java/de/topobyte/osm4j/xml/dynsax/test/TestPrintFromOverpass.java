@@ -21,10 +21,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 
-import javax.xml.parsers.ParserConfigurationException;
-
-import org.xml.sax.SAXException;
-
 import de.topobyte.osm4j.core.access.OsmIterator;
 import de.topobyte.osm4j.core.model.iface.EntityContainer;
 import de.topobyte.osm4j.core.model.iface.EntityType;
@@ -35,8 +31,7 @@ import de.topobyte.osm4j.xml.output.OsmXmlOutputStream;
 public class TestPrintFromOverpass
 {
 
-	public static void main(String[] args) throws IOException,
-			ParserConfigurationException, SAXException
+	public static void main(String[] args) throws IOException
 	{
 		String url = "https://www.overpass-api.de/api/xapi?map?bbox="
 				+ "13.465661,52.504055,13.469817,52.506204";

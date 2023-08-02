@@ -17,7 +17,6 @@
 
 package de.topobyte.osm4j.extra.threading;
 
-import java.io.IOException;
 import java.util.Deque;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -74,7 +73,7 @@ public class ObjectBuffer<T> implements Iterable<T>, Iterator<T>
 		}
 	}
 
-	public void close() throws IOException
+	public void close()
 	{
 		if (!currentWriteBuffer.isEmpty()) {
 			enqueueCurrentWriteBuffer();

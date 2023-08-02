@@ -24,7 +24,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import de.topobyte.osm4j.core.access.OsmHandler;
-import de.topobyte.osm4j.core.access.OsmInputException;
 import de.topobyte.osm4j.core.model.iface.OsmBounds;
 import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.osm4j.core.model.iface.OsmRelation;
@@ -35,12 +34,10 @@ import de.topobyte.osm4j.pbf.seq.PbfWriter;
 public class CopyElementwise
 {
 
-	public static void main(String[] args) throws IOException,
-			OsmInputException
+	public static void main(String[] args) throws IOException
 	{
 		if (args.length != 2) {
-			System.out.println("usage: "
-					+ CopyElementwise.class.getSimpleName()
+			System.out.println("usage: " + CopyElementwise.class.getSimpleName()
 					+ " <input> <output>");
 			System.exit(1);
 		}

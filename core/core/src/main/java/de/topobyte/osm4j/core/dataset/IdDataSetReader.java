@@ -39,7 +39,6 @@ public class IdDataSetReader
 {
 
 	public static InMemorySetIdDataSet read(OsmIdIterator iterator)
-			throws IOException
 	{
 		InMemorySetIdDataSet dataSet = new InMemorySetIdDataSet();
 
@@ -70,7 +69,6 @@ public class IdDataSetReader
 	}
 
 	public static InMemorySetIdDataSet read(OsmIterator iterator)
-			throws IOException
 	{
 		InMemorySetIdDataSet dataSet = new InMemorySetIdDataSet();
 

@@ -178,7 +178,7 @@ public class TboWriter implements OsmOutputStream
 	 * external writing methods
 	 */
 
-	public void writeHeader(FileHeader header) throws IOException
+	public void writeHeader(FileHeader header)
 	{
 		this.header = header;
 	}
@@ -279,7 +279,7 @@ public class TboWriter implements OsmOutputStream
 	}
 
 	private static <T extends OsmEntity> boolean checkBatch(T element,
-			BatchBuilder<T> batchBuilder) throws IOException
+			BatchBuilder<T> batchBuilder)
 	{
 		batchBuilder.add(element);
 		boolean full = batchBuilder.full();

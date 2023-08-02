@@ -20,8 +20,6 @@ package de.topobyte.osm4j.xml.dynsax.test;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-import javax.xml.parsers.ParserConfigurationException;
-
 import de.topobyte.osm4j.core.access.OsmHandler;
 import de.topobyte.osm4j.core.access.OsmInputException;
 import de.topobyte.osm4j.core.access.OsmReader;
@@ -37,13 +35,13 @@ import de.topobyte.osm4j.xml.dynsax.OsmXmlReader;
 public class TestReadCallback implements OsmHandler
 {
 
-	public static void main(String[] args) throws ParserConfigurationException,
-			OsmInputException, FileNotFoundException
+	public static void main(String[] args)
+			throws OsmInputException, FileNotFoundException
 	{
 		if (args.length != 1) {
-			System.out.println("usage: "
-					+ TestReadCallback.class.getSimpleName()
-					+ " <input osm xml>");
+			System.out
+					.println("usage: " + TestReadCallback.class.getSimpleName()
+							+ " <input osm xml>");
 			System.exit(1);
 		}
 

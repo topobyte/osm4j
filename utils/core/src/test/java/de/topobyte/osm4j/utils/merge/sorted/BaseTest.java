@@ -17,7 +17,6 @@
 
 package de.topobyte.osm4j.utils.merge.sorted;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -43,7 +42,7 @@ class BaseTest
 	protected List<TestDataSet> dataSets;
 
 	protected void setup(int numNodes, int numWays, int numRelations,
-			int numFiles, double p) throws IOException
+			int numFiles, double p)
 	{
 		dataSets = new ArrayList<>();
 

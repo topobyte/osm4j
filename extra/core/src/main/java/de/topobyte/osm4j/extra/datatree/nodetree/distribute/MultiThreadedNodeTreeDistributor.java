@@ -157,7 +157,7 @@ public class MultiThreadedNodeTreeDistributor
 		status.stop();
 	}
 
-	private void handle(OsmNode node) throws IOException
+	private void handle(OsmNode node)
 	{
 		List<Node> leafs = tree.query(head, node.getLongitude(),
 				node.getLatitude());

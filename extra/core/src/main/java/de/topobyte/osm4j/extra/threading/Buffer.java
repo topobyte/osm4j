@@ -17,7 +17,6 @@
 
 package de.topobyte.osm4j.extra.threading;
 
-import java.io.IOException;
 import java.util.Deque;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -59,7 +58,7 @@ public class Buffer<T> implements Iterable<T>, Iterator<T>
 		valid = false;
 	}
 
-	public void complete() throws IOException
+	public void complete()
 	{
 		synchronized (sync) {
 			done = true;

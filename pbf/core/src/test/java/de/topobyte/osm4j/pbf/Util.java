@@ -42,7 +42,6 @@ public class Util
 {
 
 	public static OsmIterator iterator(String resource, boolean fetchMetadata)
-			throws IOException
 	{
 		InputStream input = Thread.currentThread().getContextClassLoader()
 				.getResourceAsStream(resource);
@@ -53,7 +52,7 @@ public class Util
 	}
 
 	public static OsmIterator xmlIterator(String resource,
-			boolean fetchMetadata) throws IOException
+			boolean fetchMetadata)
 	{
 		InputStream input = Thread.currentThread().getContextClassLoader()
 				.getResourceAsStream(resource);

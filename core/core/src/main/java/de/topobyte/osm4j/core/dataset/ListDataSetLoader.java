@@ -66,7 +66,6 @@ public class ListDataSetLoader
 
 	public static InMemoryListDataSet read(OsmIterator iterator,
 			boolean keepNodeTags, boolean keepWayTags, boolean keepRelationTags)
-			throws IOException
 	{
 		InMemoryListDataSet dataSet = new InMemoryListDataSet();
 
@@ -139,8 +138,8 @@ public class ListDataSetLoader
 			public void handle(OsmNode node) throws IOException
 			{
 				if (!keepNodeTags) {
-					node = new Node(node.getId(), node.getLongitude(), node
-							.getLatitude());
+					node = new Node(node.getId(), node.getLongitude(),
+							node.getLatitude());
 				}
 				nodes.add(node);
 			}

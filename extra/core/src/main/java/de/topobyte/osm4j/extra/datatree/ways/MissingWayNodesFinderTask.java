@@ -157,7 +157,6 @@ public class MissingWayNodesFinderTask implements Task
 	}
 
 	private void build(OsmWay way, TLongSet nodeIds, TLongSet missing)
-			throws IOException
 	{
 		for (int i = 0; i < way.getNumberOfNodes(); i++) {
 			long nodeId = way.getNodeId(i);

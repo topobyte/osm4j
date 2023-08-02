@@ -19,10 +19,6 @@ package de.topobyte.osm4j.xml.dynsax.test;
 
 import java.io.IOException;
 
-import javax.xml.parsers.ParserConfigurationException;
-
-import org.xml.sax.SAXException;
-
 import de.topobyte.osm4j.core.model.iface.EntityContainer;
 import de.topobyte.osm4j.core.model.iface.EntityType;
 import de.topobyte.osm4j.core.model.iface.OsmEntity;
@@ -36,13 +32,12 @@ import de.topobyte.osm4j.xml.dynsax.OsmXmlIterator;
 public class TestReadIterator
 {
 
-	public static void main(String[] args) throws ParserConfigurationException,
-			SAXException, IOException
+	public static void main(String[] args) throws IOException
 	{
 		if (args.length != 1) {
-			System.out.println("usage: "
-					+ TestReadIterator.class.getSimpleName()
-					+ " <input osm xml>");
+			System.out
+					.println("usage: " + TestReadIterator.class.getSimpleName()
+							+ " <input osm xml>");
 			System.exit(1);
 		}
 

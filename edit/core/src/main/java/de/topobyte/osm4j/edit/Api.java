@@ -236,7 +236,7 @@ public class Api
 	}
 
 	public RequestResult deleteEntity(String type, long id, Document document)
-			throws ParserConfigurationException, IOException, URISyntaxException
+			throws IOException, URISyntaxException
 	{
 		String payload = Documents.toString(document);
 

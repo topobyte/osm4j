@@ -17,7 +17,6 @@
 
 package de.topobyte.osm4j.extra.datatree.nodetree.count;
 
-import java.io.IOException;
 import java.util.List;
 
 import com.slimjars.dist.gnu.trove.map.TLongLongMap;
@@ -55,7 +54,7 @@ public class IteratorNodeTreeLeafCounter
 		return counters;
 	}
 
-	public void execute(OsmIterator input) throws IOException
+	public void execute(OsmIterator input)
 	{
 		counter.printTimed(1000);
 
@@ -66,7 +65,7 @@ public class IteratorNodeTreeLeafCounter
 		}
 	}
 
-	private void count(OsmIterator iterator) throws IOException
+	private void count(OsmIterator iterator)
 	{
 		loop: while (iterator.hasNext()) {
 			EntityContainer entityContainer = iterator.next();

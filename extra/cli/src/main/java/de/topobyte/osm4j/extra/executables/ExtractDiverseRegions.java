@@ -51,7 +51,7 @@ public class ExtractDiverseRegions extends AbstractExecutableSingleInputFile
 				+ " of various levels and postal codes.";
 	}
 
-	public static void main(String[] args) throws IOException
+	public static void main(String[] args)
 	{
 		ExtractDiverseRegions task = new ExtractDiverseRegions();
 

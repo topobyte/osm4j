@@ -185,7 +185,7 @@ public abstract class AbstractRelationsQuery
 	}
 
 	protected boolean intersects(OsmRelation start, List<OsmRelation> relations,
-			RelationQueryBag queryBag, EntityFinder finder) throws IOException
+			RelationQueryBag queryBag, EntityFinder finder)
 	{
 		if (QueryUtil.anyMemberContainedIn(relations, queryBag.nodeIds,
 				queryBag.wayIds)) {

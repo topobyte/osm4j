@@ -17,7 +17,6 @@
 
 package de.topobyte.osm4j.extra.relations;
 
-import java.io.IOException;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
@@ -68,9 +67,9 @@ public class RelationGraph
 		this.undirected = undirected;
 	}
 
-	public void build(OsmIterator iterator) throws IOException
+	public void build(OsmIterator iterator)
 	{
-		graph = undirected ? new UndirectedGraph<Long>() : new Graph<Long>();
+		graph = undirected ? new UndirectedGraph<>() : new Graph<>();
 		for (EntityContainer container : iterator) {
 			if (container.getType() != EntityType.Relation) {
 				continue;
@@ -80,9 +79,9 @@ public class RelationGraph
 		}
 	}
 
-	public void build(Collection<OsmRelation> relations) throws IOException
+	public void build(Collection<OsmRelation> relations)
 	{
-		graph = undirected ? new UndirectedGraph<Long>() : new Graph<Long>();
+		graph = undirected ? new UndirectedGraph<>() : new Graph<>();
 		for (OsmRelation relation : relations) {
 			process(relation);
 		}

@@ -65,18 +65,15 @@ public class ThreadedNodeTreeLeafCounter implements NodeTreeLeafCounter
 	private void count() throws IOException
 	{
 		final OsmBuffer buffer = new OsmBuffer(10000, 20);
-		RunnableBufferBridge bridge = new RunnableBufferBridge(iterator, buffer);
+		RunnableBufferBridge bridge = new RunnableBufferBridge(iterator,
+				buffer);
 
 		Runnable runnableLeafCounter = new Runnable() {
 
 			@Override
 			public void run()
 			{
-				try {
-					counter.execute(buffer);
-				} catch (IOException e) {
-					throw new RuntimeException(e);
-				}
+				counter.execute(buffer);
 			}
 		};
 

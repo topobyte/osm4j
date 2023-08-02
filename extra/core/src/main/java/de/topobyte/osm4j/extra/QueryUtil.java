@@ -305,7 +305,7 @@ public class QueryUtil
 	}
 
 	public static void queryNodes(PredicateEvaluator test,
-			InMemoryListDataSet dataNodes, TLongSet nodeIds) throws IOException
+			InMemoryListDataSet dataNodes, TLongSet nodeIds)
 	{
 		for (OsmNode node : dataNodes.getNodes()) {
 			if (test.contains(
@@ -316,7 +316,7 @@ public class QueryUtil
 	}
 
 	public static void queryWays(InMemoryListDataSet dataWays, TLongSet nodeIds,
-			TLongSet wayIds) throws IOException
+			TLongSet wayIds)
 	{
 		for (OsmWay way : dataWays.getWays()) {
 			boolean in = QueryUtil.anyNodeContainedIn(way, nodeIds);

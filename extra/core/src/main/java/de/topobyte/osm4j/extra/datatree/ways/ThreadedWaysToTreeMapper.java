@@ -104,7 +104,7 @@ public class ThreadedWaysToTreeMapper implements WaysToTreeMapper
 		finish();
 	}
 
-	protected void put(OsmWay way, Node leaf) throws IOException
+	protected void put(OsmWay way, Node leaf)
 	{
 		OsmStreamOutput output = outputs.get(leaf.getPath());
 		buffer.write(new WayWriteRequest(way, output.getOsmOutput()));

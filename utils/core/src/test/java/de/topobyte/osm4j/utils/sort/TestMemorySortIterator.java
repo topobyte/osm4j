@@ -17,8 +17,6 @@
 
 package de.topobyte.osm4j.utils.sort;
 
-import java.io.IOException;
-
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -30,7 +28,7 @@ public class TestMemorySortIterator extends BaseTest
 {
 
 	@Test
-	public void test() throws IOException
+	public void test()
 	{
 		test(100, 100, 100, 0);
 		test(0, 100, 100, 0);
@@ -51,7 +49,7 @@ public class TestMemorySortIterator extends BaseTest
 	}
 
 	public void test(int numNodes, int numWays, int numRelations,
-			double fractionDuplicates) throws IOException
+			double fractionDuplicates)
 	{
 		do {
 			setup(numNodes, numWays, numRelations, fractionDuplicates);

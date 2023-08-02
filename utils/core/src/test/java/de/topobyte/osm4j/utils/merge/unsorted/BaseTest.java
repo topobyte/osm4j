@@ -17,7 +17,6 @@
 
 package de.topobyte.osm4j.utils.merge.unsorted;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,7 +34,6 @@ public class BaseTest
 	protected List<TestDataSet> dataSets;
 
 	public void setup(int numNodes, int numWays, int numRelations, int numFiles)
-			throws IOException
 	{
 		dataSets = new ArrayList<>();
 
@@ -45,8 +43,8 @@ public class BaseTest
 
 		// Create some data sets
 		for (int i = 0; i < numFiles; i++) {
-			dataSets.add(dataSetGenerator.generate(numNodes, numWays,
-					numRelations));
+			dataSets.add(
+					dataSetGenerator.generate(numNodes, numWays, numRelations));
 		}
 
 		data = new TestDataSet();

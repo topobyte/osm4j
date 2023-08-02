@@ -17,7 +17,6 @@
 
 package de.topobyte.osm4j.pbf;
 
-import java.io.IOException;
 import java.io.InputStream;
 
 import org.junit.Assert;
@@ -45,7 +44,6 @@ public class TestValidateData
 	}
 
 	protected TestDataSet xmlData(String resource, boolean fetchMetadata)
-			throws IOException
 	{
 		InputStream input = Thread.currentThread().getContextClassLoader()
 				.getResourceAsStream(resource);
@@ -54,7 +52,7 @@ public class TestValidateData
 		return data;
 	}
 
-	protected void validateUsingIterator() throws IOException
+	protected void validateUsingIterator()
 	{
 		TestDataSet xmlData = xmlData(resourceXML, fetchMetadata);
 
@@ -65,7 +63,7 @@ public class TestValidateData
 		Assert.assertTrue("Comparison with XML data", equals);
 	}
 
-	protected void validateUsingReader() throws IOException, OsmInputException
+	protected void validateUsingReader() throws OsmInputException
 	{
 		TestDataSet xmlData = xmlData(resourceXML, fetchMetadata);
 

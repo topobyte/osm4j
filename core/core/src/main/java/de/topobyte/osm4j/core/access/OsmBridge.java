@@ -95,7 +95,7 @@ public class OsmBridge
 	}
 
 	public static void write(OsmReader reader, OsmOutputStream output)
-			throws IOException, OsmInputException
+			throws OsmInputException
 	{
 		OsmHandler handler = new OsmOutputStreamHandler(output);
 		reader.setHandler(handler);

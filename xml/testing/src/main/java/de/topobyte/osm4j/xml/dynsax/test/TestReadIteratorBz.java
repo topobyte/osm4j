@@ -21,10 +21,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import javax.xml.parsers.ParserConfigurationException;
-
 import org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream;
-import org.xml.sax.SAXException;
 
 import de.topobyte.osm4j.core.model.iface.EntityContainer;
 import de.topobyte.osm4j.core.model.iface.EntityType;
@@ -39,13 +36,12 @@ import de.topobyte.osm4j.xml.dynsax.OsmXmlIterator;
 public class TestReadIteratorBz
 {
 
-	public static void main(String[] args) throws ParserConfigurationException,
-			SAXException, IOException
+	public static void main(String[] args) throws IOException
 	{
 		if (args.length != 1) {
-			System.out.println("usage: "
-					+ TestReadIteratorBz.class.getSimpleName()
-					+ " <input osm xml bz>");
+			System.out.println(
+					"usage: " + TestReadIteratorBz.class.getSimpleName()
+							+ " <input osm xml bz>");
 			System.exit(1);
 		}
 

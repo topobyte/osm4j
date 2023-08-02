@@ -60,7 +60,7 @@ public class BuildExtractionFiles extends AbstractExecutableInputOutput
 		return BuildExtractionFiles.class.getSimpleName() + " [options]";
 	}
 
-	public static void main(String[] args) throws IOException, OsmInputException
+	public static void main(String[] args)
 	{
 		BuildExtractionFiles task = new BuildExtractionFiles();
 

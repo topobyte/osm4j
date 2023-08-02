@@ -21,10 +21,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 
-import javax.xml.parsers.ParserConfigurationException;
-
-import org.xml.sax.SAXException;
-
 import de.topobyte.osm4j.core.access.OsmIterator;
 import de.topobyte.osm4j.core.model.iface.EntityContainer;
 import de.topobyte.osm4j.core.model.iface.EntityType;
@@ -35,8 +31,7 @@ import de.topobyte.osm4j.xml.output.OsmXmlOutputStream;
 public class TestPrintFromOsmApi
 {
 
-	public static void main(String[] args) throws IOException,
-			ParserConfigurationException, SAXException
+	public static void main(String[] args) throws IOException
 	{
 		String url = "https://api.openstreetmap.org/api/0.6/node/240109189";
 		InputStream input = new URL(url).openStream();

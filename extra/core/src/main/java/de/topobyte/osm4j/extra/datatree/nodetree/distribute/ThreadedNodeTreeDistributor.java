@@ -85,7 +85,7 @@ public class ThreadedNodeTreeDistributor extends AbstractNodeTreeDistributor
 		executor.execute();
 	}
 
-	protected void handle(OsmNode node) throws IOException
+	protected void handle(OsmNode node)
 	{
 		List<Node> leafs = tree.query(head, node.getLongitude(),
 				node.getLatitude());
