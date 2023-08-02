@@ -18,6 +18,7 @@ public final class Fileformat {
      * </pre>
      *
      * <code>optional bytes raw = 1;</code>
+     * @return Whether the raw field is set.
      */
     boolean hasRaw();
     /**
@@ -26,6 +27,7 @@ public final class Fileformat {
      * </pre>
      *
      * <code>optional bytes raw = 1;</code>
+     * @return The raw.
      */
     com.google.protobuf.ByteString getRaw();
 
@@ -35,6 +37,7 @@ public final class Fileformat {
      * </pre>
      *
      * <code>optional int32 raw_size = 2;</code>
+     * @return Whether the rawSize field is set.
      */
     boolean hasRawSize();
     /**
@@ -43,6 +46,7 @@ public final class Fileformat {
      * </pre>
      *
      * <code>optional int32 raw_size = 2;</code>
+     * @return The rawSize.
      */
     int getRawSize();
 
@@ -52,6 +56,7 @@ public final class Fileformat {
      * </pre>
      *
      * <code>optional bytes zlib_data = 3;</code>
+     * @return Whether the zlibData field is set.
      */
     boolean hasZlibData();
     /**
@@ -60,6 +65,7 @@ public final class Fileformat {
      * </pre>
      *
      * <code>optional bytes zlib_data = 3;</code>
+     * @return The zlibData.
      */
     com.google.protobuf.ByteString getZlibData();
 
@@ -69,6 +75,7 @@ public final class Fileformat {
      * </pre>
      *
      * <code>optional bytes lzma_data = 4;</code>
+     * @return Whether the lzmaData field is set.
      */
     boolean hasLzmaData();
     /**
@@ -77,6 +84,7 @@ public final class Fileformat {
      * </pre>
      *
      * <code>optional bytes lzma_data = 4;</code>
+     * @return The lzmaData.
      */
     com.google.protobuf.ByteString getLzmaData();
 
@@ -86,6 +94,9 @@ public final class Fileformat {
      * </pre>
      *
      * <code>optional bytes OBSOLETE_bzip2_data = 5 [deprecated = true];</code>
+     * @deprecated OSMPBF.Blob.OBSOLETE_bzip2_data is deprecated.
+     *     See res/proto/fileformat.proto;l=39
+     * @return Whether the oBSOLETEBzip2Data field is set.
      */
     @java.lang.Deprecated boolean hasOBSOLETEBzip2Data();
     /**
@@ -94,6 +105,9 @@ public final class Fileformat {
      * </pre>
      *
      * <code>optional bytes OBSOLETE_bzip2_data = 5 [deprecated = true];</code>
+     * @deprecated OSMPBF.Blob.OBSOLETE_bzip2_data is deprecated.
+     *     See res/proto/fileformat.proto;l=39
+     * @return The oBSOLETEBzip2Data.
      */
     @java.lang.Deprecated com.google.protobuf.ByteString getOBSOLETEBzip2Data();
 
@@ -104,6 +118,7 @@ public final class Fileformat {
      * </pre>
      *
      * <code>optional bytes lz4_data = 6;</code>
+     * @return Whether the lz4Data field is set.
      */
     boolean hasLz4Data();
     /**
@@ -113,6 +128,7 @@ public final class Fileformat {
      * </pre>
      *
      * <code>optional bytes lz4_data = 6;</code>
+     * @return The lz4Data.
      */
     com.google.protobuf.ByteString getLz4Data();
   }
@@ -140,6 +156,7 @@ public final class Fileformat {
      * </pre>
      *
      * <code>optional bytes raw = 1;</code>
+     * @return Whether the raw field is set.
      */
     @java.lang.Override
     public boolean hasRaw() {
@@ -151,6 +168,7 @@ public final class Fileformat {
      * </pre>
      *
      * <code>optional bytes raw = 1;</code>
+     * @return The raw.
      */
     @java.lang.Override
     public com.google.protobuf.ByteString getRaw() {
@@ -162,11 +180,10 @@ public final class Fileformat {
      * </pre>
      *
      * <code>optional bytes raw = 1;</code>
+     * @param value The raw to set.
      */
     private void setRaw(com.google.protobuf.ByteString value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
+      java.lang.Class<?> valueClass = value.getClass();
   bitField0_ |= 0x00000001;
       raw_ = value;
     }
@@ -190,6 +207,7 @@ public final class Fileformat {
      * </pre>
      *
      * <code>optional int32 raw_size = 2;</code>
+     * @return Whether the rawSize field is set.
      */
     @java.lang.Override
     public boolean hasRawSize() {
@@ -201,6 +219,7 @@ public final class Fileformat {
      * </pre>
      *
      * <code>optional int32 raw_size = 2;</code>
+     * @return The rawSize.
      */
     @java.lang.Override
     public int getRawSize() {
@@ -212,6 +231,7 @@ public final class Fileformat {
      * </pre>
      *
      * <code>optional int32 raw_size = 2;</code>
+     * @param value The rawSize to set.
      */
     private void setRawSize(int value) {
       bitField0_ |= 0x00000002;
@@ -237,6 +257,7 @@ public final class Fileformat {
      * </pre>
      *
      * <code>optional bytes zlib_data = 3;</code>
+     * @return Whether the zlibData field is set.
      */
     @java.lang.Override
     public boolean hasZlibData() {
@@ -248,6 +269,7 @@ public final class Fileformat {
      * </pre>
      *
      * <code>optional bytes zlib_data = 3;</code>
+     * @return The zlibData.
      */
     @java.lang.Override
     public com.google.protobuf.ByteString getZlibData() {
@@ -259,11 +281,10 @@ public final class Fileformat {
      * </pre>
      *
      * <code>optional bytes zlib_data = 3;</code>
+     * @param value The zlibData to set.
      */
     private void setZlibData(com.google.protobuf.ByteString value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
+      java.lang.Class<?> valueClass = value.getClass();
   bitField0_ |= 0x00000004;
       zlibData_ = value;
     }
@@ -287,6 +308,7 @@ public final class Fileformat {
      * </pre>
      *
      * <code>optional bytes lzma_data = 4;</code>
+     * @return Whether the lzmaData field is set.
      */
     @java.lang.Override
     public boolean hasLzmaData() {
@@ -298,6 +320,7 @@ public final class Fileformat {
      * </pre>
      *
      * <code>optional bytes lzma_data = 4;</code>
+     * @return The lzmaData.
      */
     @java.lang.Override
     public com.google.protobuf.ByteString getLzmaData() {
@@ -309,11 +332,10 @@ public final class Fileformat {
      * </pre>
      *
      * <code>optional bytes lzma_data = 4;</code>
+     * @param value The lzmaData to set.
      */
     private void setLzmaData(com.google.protobuf.ByteString value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
+      java.lang.Class<?> valueClass = value.getClass();
   bitField0_ |= 0x00000008;
       lzmaData_ = value;
     }
@@ -337,6 +359,9 @@ public final class Fileformat {
      * </pre>
      *
      * <code>optional bytes OBSOLETE_bzip2_data = 5 [deprecated = true];</code>
+     * @deprecated OSMPBF.Blob.OBSOLETE_bzip2_data is deprecated.
+     *     See res/proto/fileformat.proto;l=39
+     * @return Whether the oBSOLETEBzip2Data field is set.
      */
     @java.lang.Override
     @java.lang.Deprecated public boolean hasOBSOLETEBzip2Data() {
@@ -348,6 +373,9 @@ public final class Fileformat {
      * </pre>
      *
      * <code>optional bytes OBSOLETE_bzip2_data = 5 [deprecated = true];</code>
+     * @deprecated OSMPBF.Blob.OBSOLETE_bzip2_data is deprecated.
+     *     See res/proto/fileformat.proto;l=39
+     * @return The oBSOLETEBzip2Data.
      */
     @java.lang.Override
     @java.lang.Deprecated public com.google.protobuf.ByteString getOBSOLETEBzip2Data() {
@@ -359,11 +387,12 @@ public final class Fileformat {
      * </pre>
      *
      * <code>optional bytes OBSOLETE_bzip2_data = 5 [deprecated = true];</code>
+     * @deprecated OSMPBF.Blob.OBSOLETE_bzip2_data is deprecated.
+     *     See res/proto/fileformat.proto;l=39
+     * @param value The oBSOLETEBzip2Data to set.
      */
     private void setOBSOLETEBzip2Data(com.google.protobuf.ByteString value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
+      java.lang.Class<?> valueClass = value.getClass();
   bitField0_ |= 0x00000010;
       oBSOLETEBzip2Data_ = value;
     }
@@ -373,6 +402,8 @@ public final class Fileformat {
      * </pre>
      *
      * <code>optional bytes OBSOLETE_bzip2_data = 5 [deprecated = true];</code>
+     * @deprecated OSMPBF.Blob.OBSOLETE_bzip2_data is deprecated.
+     *     See res/proto/fileformat.proto;l=39
      */
     private void clearOBSOLETEBzip2Data() {
       bitField0_ = (bitField0_ & ~0x00000010);
@@ -388,6 +419,7 @@ public final class Fileformat {
      * </pre>
      *
      * <code>optional bytes lz4_data = 6;</code>
+     * @return Whether the lz4Data field is set.
      */
     @java.lang.Override
     public boolean hasLz4Data() {
@@ -400,6 +432,7 @@ public final class Fileformat {
      * </pre>
      *
      * <code>optional bytes lz4_data = 6;</code>
+     * @return The lz4Data.
      */
     @java.lang.Override
     public com.google.protobuf.ByteString getLz4Data() {
@@ -412,11 +445,10 @@ public final class Fileformat {
      * </pre>
      *
      * <code>optional bytes lz4_data = 6;</code>
+     * @param value The lz4Data to set.
      */
     private void setLz4Data(com.google.protobuf.ByteString value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
+      java.lang.Class<?> valueClass = value.getClass();
   bitField0_ |= 0x00000020;
       lz4Data_ = value;
     }
@@ -483,10 +515,12 @@ public final class Fileformat {
       return com.google.protobuf.GeneratedMessageLite.parseFrom(
           DEFAULT_INSTANCE, input, extensionRegistry);
     }
+
     public static de.topobyte.osm4j.pbf.protobuf.Fileformat.Blob parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return parseDelimitedFrom(DEFAULT_INSTANCE, input);
     }
+
     public static de.topobyte.osm4j.pbf.protobuf.Fileformat.Blob parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -534,6 +568,7 @@ public final class Fileformat {
        * </pre>
        *
        * <code>optional bytes raw = 1;</code>
+       * @return Whether the raw field is set.
        */
       @java.lang.Override
       public boolean hasRaw() {
@@ -545,6 +580,7 @@ public final class Fileformat {
        * </pre>
        *
        * <code>optional bytes raw = 1;</code>
+       * @return The raw.
        */
       @java.lang.Override
       public com.google.protobuf.ByteString getRaw() {
@@ -556,6 +592,8 @@ public final class Fileformat {
        * </pre>
        *
        * <code>optional bytes raw = 1;</code>
+       * @param value The raw to set.
+       * @return This builder for chaining.
        */
       public Builder setRaw(com.google.protobuf.ByteString value) {
         copyOnWrite();
@@ -568,6 +606,7 @@ public final class Fileformat {
        * </pre>
        *
        * <code>optional bytes raw = 1;</code>
+       * @return This builder for chaining.
        */
       public Builder clearRaw() {
         copyOnWrite();
@@ -581,6 +620,7 @@ public final class Fileformat {
        * </pre>
        *
        * <code>optional int32 raw_size = 2;</code>
+       * @return Whether the rawSize field is set.
        */
       @java.lang.Override
       public boolean hasRawSize() {
@@ -592,6 +632,7 @@ public final class Fileformat {
        * </pre>
        *
        * <code>optional int32 raw_size = 2;</code>
+       * @return The rawSize.
        */
       @java.lang.Override
       public int getRawSize() {
@@ -603,6 +644,8 @@ public final class Fileformat {
        * </pre>
        *
        * <code>optional int32 raw_size = 2;</code>
+       * @param value The rawSize to set.
+       * @return This builder for chaining.
        */
       public Builder setRawSize(int value) {
         copyOnWrite();
@@ -615,6 +658,7 @@ public final class Fileformat {
        * </pre>
        *
        * <code>optional int32 raw_size = 2;</code>
+       * @return This builder for chaining.
        */
       public Builder clearRawSize() {
         copyOnWrite();
@@ -628,6 +672,7 @@ public final class Fileformat {
        * </pre>
        *
        * <code>optional bytes zlib_data = 3;</code>
+       * @return Whether the zlibData field is set.
        */
       @java.lang.Override
       public boolean hasZlibData() {
@@ -639,6 +684,7 @@ public final class Fileformat {
        * </pre>
        *
        * <code>optional bytes zlib_data = 3;</code>
+       * @return The zlibData.
        */
       @java.lang.Override
       public com.google.protobuf.ByteString getZlibData() {
@@ -650,6 +696,8 @@ public final class Fileformat {
        * </pre>
        *
        * <code>optional bytes zlib_data = 3;</code>
+       * @param value The zlibData to set.
+       * @return This builder for chaining.
        */
       public Builder setZlibData(com.google.protobuf.ByteString value) {
         copyOnWrite();
@@ -662,6 +710,7 @@ public final class Fileformat {
        * </pre>
        *
        * <code>optional bytes zlib_data = 3;</code>
+       * @return This builder for chaining.
        */
       public Builder clearZlibData() {
         copyOnWrite();
@@ -675,6 +724,7 @@ public final class Fileformat {
        * </pre>
        *
        * <code>optional bytes lzma_data = 4;</code>
+       * @return Whether the lzmaData field is set.
        */
       @java.lang.Override
       public boolean hasLzmaData() {
@@ -686,6 +736,7 @@ public final class Fileformat {
        * </pre>
        *
        * <code>optional bytes lzma_data = 4;</code>
+       * @return The lzmaData.
        */
       @java.lang.Override
       public com.google.protobuf.ByteString getLzmaData() {
@@ -697,6 +748,8 @@ public final class Fileformat {
        * </pre>
        *
        * <code>optional bytes lzma_data = 4;</code>
+       * @param value The lzmaData to set.
+       * @return This builder for chaining.
        */
       public Builder setLzmaData(com.google.protobuf.ByteString value) {
         copyOnWrite();
@@ -709,6 +762,7 @@ public final class Fileformat {
        * </pre>
        *
        * <code>optional bytes lzma_data = 4;</code>
+       * @return This builder for chaining.
        */
       public Builder clearLzmaData() {
         copyOnWrite();
@@ -722,6 +776,9 @@ public final class Fileformat {
        * </pre>
        *
        * <code>optional bytes OBSOLETE_bzip2_data = 5 [deprecated = true];</code>
+       * @deprecated OSMPBF.Blob.OBSOLETE_bzip2_data is deprecated.
+       *     See res/proto/fileformat.proto;l=39
+       * @return Whether the oBSOLETEBzip2Data field is set.
        */
       @java.lang.Override
       @java.lang.Deprecated public boolean hasOBSOLETEBzip2Data() {
@@ -733,6 +790,9 @@ public final class Fileformat {
        * </pre>
        *
        * <code>optional bytes OBSOLETE_bzip2_data = 5 [deprecated = true];</code>
+       * @deprecated OSMPBF.Blob.OBSOLETE_bzip2_data is deprecated.
+       *     See res/proto/fileformat.proto;l=39
+       * @return The oBSOLETEBzip2Data.
        */
       @java.lang.Override
       @java.lang.Deprecated public com.google.protobuf.ByteString getOBSOLETEBzip2Data() {
@@ -744,6 +804,10 @@ public final class Fileformat {
        * </pre>
        *
        * <code>optional bytes OBSOLETE_bzip2_data = 5 [deprecated = true];</code>
+       * @deprecated OSMPBF.Blob.OBSOLETE_bzip2_data is deprecated.
+       *     See res/proto/fileformat.proto;l=39
+       * @param value The oBSOLETEBzip2Data to set.
+       * @return This builder for chaining.
        */
       @java.lang.Deprecated public Builder setOBSOLETEBzip2Data(com.google.protobuf.ByteString value) {
         copyOnWrite();
@@ -756,6 +820,9 @@ public final class Fileformat {
        * </pre>
        *
        * <code>optional bytes OBSOLETE_bzip2_data = 5 [deprecated = true];</code>
+       * @deprecated OSMPBF.Blob.OBSOLETE_bzip2_data is deprecated.
+       *     See res/proto/fileformat.proto;l=39
+       * @return This builder for chaining.
        */
       @java.lang.Deprecated public Builder clearOBSOLETEBzip2Data() {
         copyOnWrite();
@@ -770,6 +837,7 @@ public final class Fileformat {
        * </pre>
        *
        * <code>optional bytes lz4_data = 6;</code>
+       * @return Whether the lz4Data field is set.
        */
       @java.lang.Override
       public boolean hasLz4Data() {
@@ -782,6 +850,7 @@ public final class Fileformat {
        * </pre>
        *
        * <code>optional bytes lz4_data = 6;</code>
+       * @return The lz4Data.
        */
       @java.lang.Override
       public com.google.protobuf.ByteString getLz4Data() {
@@ -794,6 +863,8 @@ public final class Fileformat {
        * </pre>
        *
        * <code>optional bytes lz4_data = 6;</code>
+       * @param value The lz4Data to set.
+       * @return This builder for chaining.
        */
       public Builder setLz4Data(com.google.protobuf.ByteString value) {
         copyOnWrite();
@@ -807,6 +878,7 @@ public final class Fileformat {
        * </pre>
        *
        * <code>optional bytes lz4_data = 6;</code>
+       * @return This builder for chaining.
        */
       public Builder clearLz4Data() {
         copyOnWrite();
@@ -839,8 +911,9 @@ public final class Fileformat {
               "lz4Data_",
             };
             java.lang.String info =
-                "\u0001\u0006\u0000\u0001\u0001\u0006\u0006\u0000\u0000\u0000\u0001\n\u0000\u0002" +
-                "\u0004\u0001\u0003\n\u0002\u0004\n\u0003\u0005\n\u0004\u0006\n\u0005";
+                "\u0001\u0006\u0000\u0001\u0001\u0006\u0006\u0000\u0000\u0000\u0001\u100a\u0000\u0002" +
+                "\u1004\u0001\u0003\u100a\u0002\u0004\u100a\u0003\u0005\u100a\u0004\u0006\u100a\u0005" +
+                "";
             return newMessageInfo(DEFAULT_INSTANCE, info, objects);
         }
         // fall through
@@ -901,33 +974,40 @@ public final class Fileformat {
 
     /**
      * <code>required string type = 1;</code>
+     * @return Whether the type field is set.
      */
     boolean hasType();
     /**
      * <code>required string type = 1;</code>
+     * @return The type.
      */
     java.lang.String getType();
     /**
      * <code>required string type = 1;</code>
+     * @return The bytes for type.
      */
     com.google.protobuf.ByteString
         getTypeBytes();
 
     /**
      * <code>optional bytes indexdata = 2;</code>
+     * @return Whether the indexdata field is set.
      */
     boolean hasIndexdata();
     /**
      * <code>optional bytes indexdata = 2;</code>
+     * @return The indexdata.
      */
     com.google.protobuf.ByteString getIndexdata();
 
     /**
      * <code>required int32 datasize = 3;</code>
+     * @return Whether the datasize field is set.
      */
     boolean hasDatasize();
     /**
      * <code>required int32 datasize = 3;</code>
+     * @return The datasize.
      */
     int getDatasize();
   }
@@ -948,6 +1028,7 @@ public final class Fileformat {
     private java.lang.String type_;
     /**
      * <code>required string type = 1;</code>
+     * @return Whether the type field is set.
      */
     @java.lang.Override
     public boolean hasType() {
@@ -955,6 +1036,7 @@ public final class Fileformat {
     }
     /**
      * <code>required string type = 1;</code>
+     * @return The type.
      */
     @java.lang.Override
     public java.lang.String getType() {
@@ -962,6 +1044,7 @@ public final class Fileformat {
     }
     /**
      * <code>required string type = 1;</code>
+     * @return The bytes for type.
      */
     @java.lang.Override
     public com.google.protobuf.ByteString
@@ -970,12 +1053,11 @@ public final class Fileformat {
     }
     /**
      * <code>required string type = 1;</code>
+     * @param value The type to set.
      */
     private void setType(
         java.lang.String value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
+      java.lang.Class<?> valueClass = value.getClass();
   bitField0_ |= 0x00000001;
       type_ = value;
     }
@@ -988,20 +1070,19 @@ public final class Fileformat {
     }
     /**
      * <code>required string type = 1;</code>
+     * @param value The bytes for type to set.
      */
     private void setTypeBytes(
         com.google.protobuf.ByteString value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000001;
       type_ = value.toStringUtf8();
+      bitField0_ |= 0x00000001;
     }
 
     public static final int INDEXDATA_FIELD_NUMBER = 2;
     private com.google.protobuf.ByteString indexdata_;
     /**
      * <code>optional bytes indexdata = 2;</code>
+     * @return Whether the indexdata field is set.
      */
     @java.lang.Override
     public boolean hasIndexdata() {
@@ -1009,6 +1090,7 @@ public final class Fileformat {
     }
     /**
      * <code>optional bytes indexdata = 2;</code>
+     * @return The indexdata.
      */
     @java.lang.Override
     public com.google.protobuf.ByteString getIndexdata() {
@@ -1016,11 +1098,10 @@ public final class Fileformat {
     }
     /**
      * <code>optional bytes indexdata = 2;</code>
+     * @param value The indexdata to set.
      */
     private void setIndexdata(com.google.protobuf.ByteString value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
+      java.lang.Class<?> valueClass = value.getClass();
   bitField0_ |= 0x00000002;
       indexdata_ = value;
     }
@@ -1036,6 +1117,7 @@ public final class Fileformat {
     private int datasize_;
     /**
      * <code>required int32 datasize = 3;</code>
+     * @return Whether the datasize field is set.
      */
     @java.lang.Override
     public boolean hasDatasize() {
@@ -1043,6 +1125,7 @@ public final class Fileformat {
     }
     /**
      * <code>required int32 datasize = 3;</code>
+     * @return The datasize.
      */
     @java.lang.Override
     public int getDatasize() {
@@ -1050,6 +1133,7 @@ public final class Fileformat {
     }
     /**
      * <code>required int32 datasize = 3;</code>
+     * @param value The datasize to set.
      */
     private void setDatasize(int value) {
       bitField0_ |= 0x00000004;
@@ -1113,10 +1197,12 @@ public final class Fileformat {
       return com.google.protobuf.GeneratedMessageLite.parseFrom(
           DEFAULT_INSTANCE, input, extensionRegistry);
     }
+
     public static de.topobyte.osm4j.pbf.protobuf.Fileformat.BlobHeader parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return parseDelimitedFrom(DEFAULT_INSTANCE, input);
     }
+
     public static de.topobyte.osm4j.pbf.protobuf.Fileformat.BlobHeader parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -1160,6 +1246,7 @@ public final class Fileformat {
 
       /**
        * <code>required string type = 1;</code>
+       * @return Whether the type field is set.
        */
       @java.lang.Override
       public boolean hasType() {
@@ -1167,6 +1254,7 @@ public final class Fileformat {
       }
       /**
        * <code>required string type = 1;</code>
+       * @return The type.
        */
       @java.lang.Override
       public java.lang.String getType() {
@@ -1174,6 +1262,7 @@ public final class Fileformat {
       }
       /**
        * <code>required string type = 1;</code>
+       * @return The bytes for type.
        */
       @java.lang.Override
       public com.google.protobuf.ByteString
@@ -1182,6 +1271,8 @@ public final class Fileformat {
       }
       /**
        * <code>required string type = 1;</code>
+       * @param value The type to set.
+       * @return This builder for chaining.
        */
       public Builder setType(
           java.lang.String value) {
@@ -1191,6 +1282,7 @@ public final class Fileformat {
       }
       /**
        * <code>required string type = 1;</code>
+       * @return This builder for chaining.
        */
       public Builder clearType() {
         copyOnWrite();
@@ -1199,6 +1291,8 @@ public final class Fileformat {
       }
       /**
        * <code>required string type = 1;</code>
+       * @param value The bytes for type to set.
+       * @return This builder for chaining.
        */
       public Builder setTypeBytes(
           com.google.protobuf.ByteString value) {
@@ -1209,6 +1303,7 @@ public final class Fileformat {
 
       /**
        * <code>optional bytes indexdata = 2;</code>
+       * @return Whether the indexdata field is set.
        */
       @java.lang.Override
       public boolean hasIndexdata() {
@@ -1216,6 +1311,7 @@ public final class Fileformat {
       }
       /**
        * <code>optional bytes indexdata = 2;</code>
+       * @return The indexdata.
        */
       @java.lang.Override
       public com.google.protobuf.ByteString getIndexdata() {
@@ -1223,6 +1319,8 @@ public final class Fileformat {
       }
       /**
        * <code>optional bytes indexdata = 2;</code>
+       * @param value The indexdata to set.
+       * @return This builder for chaining.
        */
       public Builder setIndexdata(com.google.protobuf.ByteString value) {
         copyOnWrite();
@@ -1231,6 +1329,7 @@ public final class Fileformat {
       }
       /**
        * <code>optional bytes indexdata = 2;</code>
+       * @return This builder for chaining.
        */
       public Builder clearIndexdata() {
         copyOnWrite();
@@ -1240,6 +1339,7 @@ public final class Fileformat {
 
       /**
        * <code>required int32 datasize = 3;</code>
+       * @return Whether the datasize field is set.
        */
       @java.lang.Override
       public boolean hasDatasize() {
@@ -1247,6 +1347,7 @@ public final class Fileformat {
       }
       /**
        * <code>required int32 datasize = 3;</code>
+       * @return The datasize.
        */
       @java.lang.Override
       public int getDatasize() {
@@ -1254,6 +1355,8 @@ public final class Fileformat {
       }
       /**
        * <code>required int32 datasize = 3;</code>
+       * @param value The datasize to set.
+       * @return This builder for chaining.
        */
       public Builder setDatasize(int value) {
         copyOnWrite();
@@ -1262,6 +1365,7 @@ public final class Fileformat {
       }
       /**
        * <code>required int32 datasize = 3;</code>
+       * @return This builder for chaining.
        */
       public Builder clearDatasize() {
         copyOnWrite();
@@ -1292,8 +1396,8 @@ public final class Fileformat {
               "datasize_",
             };
             java.lang.String info =
-                "\u0001\u0003\u0000\u0001\u0001\u0003\u0003\u0000\u0000\u0002\u0001\u0508\u0000\u0002" +
-                "\n\u0001\u0003\u0504\u0002";
+                "\u0001\u0003\u0000\u0001\u0001\u0003\u0003\u0000\u0000\u0002\u0001\u1508\u0000\u0002" +
+                "\u100a\u0001\u0003\u1504\u0002";
             return newMessageInfo(DEFAULT_INSTANCE, info, objects);
         }
         // fall through

@@ -14,10 +14,12 @@ public final class Osmformat {
 
     /**
      * <code>optional .OSMPBF.HeaderBBox bbox = 1;</code>
+     * @return Whether the bbox field is set.
      */
     boolean hasBbox();
     /**
      * <code>optional .OSMPBF.HeaderBBox bbox = 1;</code>
+     * @return The bbox.
      */
     de.topobyte.osm4j.pbf.protobuf.Osmformat.HeaderBBox getBbox();
 
@@ -27,6 +29,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated string required_features = 4;</code>
+     * @return A list containing the requiredFeatures.
      */
     java.util.List<java.lang.String>
         getRequiredFeaturesList();
@@ -36,6 +39,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated string required_features = 4;</code>
+     * @return The count of requiredFeatures.
      */
     int getRequiredFeaturesCount();
     /**
@@ -44,6 +48,8 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated string required_features = 4;</code>
+     * @param index The index of the element to return.
+     * @return The requiredFeatures at the given index.
      */
     java.lang.String getRequiredFeatures(int index);
     /**
@@ -52,39 +58,50 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated string required_features = 4;</code>
+     * @param index The index of the element to return.
+     * @return The requiredFeatures at the given index.
      */
     com.google.protobuf.ByteString
         getRequiredFeaturesBytes(int index);
 
     /**
      * <code>repeated string optional_features = 5;</code>
+     * @return A list containing the optionalFeatures.
      */
     java.util.List<java.lang.String>
         getOptionalFeaturesList();
     /**
      * <code>repeated string optional_features = 5;</code>
+     * @return The count of optionalFeatures.
      */
     int getOptionalFeaturesCount();
     /**
      * <code>repeated string optional_features = 5;</code>
+     * @param index The index of the element to return.
+     * @return The optionalFeatures at the given index.
      */
     java.lang.String getOptionalFeatures(int index);
     /**
      * <code>repeated string optional_features = 5;</code>
+     * @param index The index of the element to return.
+     * @return The optionalFeatures at the given index.
      */
     com.google.protobuf.ByteString
         getOptionalFeaturesBytes(int index);
 
     /**
      * <code>optional string writingprogram = 16;</code>
+     * @return Whether the writingprogram field is set.
      */
     boolean hasWritingprogram();
     /**
      * <code>optional string writingprogram = 16;</code>
+     * @return The writingprogram.
      */
     java.lang.String getWritingprogram();
     /**
      * <code>optional string writingprogram = 16;</code>
+     * @return The bytes for writingprogram.
      */
     com.google.protobuf.ByteString
         getWritingprogramBytes();
@@ -95,6 +112,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>optional string source = 17;</code>
+     * @return Whether the source field is set.
      */
     boolean hasSource();
     /**
@@ -103,6 +121,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>optional string source = 17;</code>
+     * @return The source.
      */
     java.lang.String getSource();
     /**
@@ -111,6 +130,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>optional string source = 17;</code>
+     * @return The bytes for source.
      */
     com.google.protobuf.ByteString
         getSourceBytes();
@@ -150,29 +170,17 @@ public final class Osmformat {
      * <code>optional .OSMPBF.HeaderBBox bbox = 1;</code>
      */
     private void setBbox(de.topobyte.osm4j.pbf.protobuf.Osmformat.HeaderBBox value) {
-      if (value == null) {
-        throw new NullPointerException();
-      }
-      bbox_ = value;
+      value.getClass();
+  bbox_ = value;
       bitField0_ |= 0x00000001;
       }
-    /**
-     * <code>optional .OSMPBF.HeaderBBox bbox = 1;</code>
-     */
-    private void setBbox(
-        de.topobyte.osm4j.pbf.protobuf.Osmformat.HeaderBBox.Builder builderForValue) {
-      bbox_ = builderForValue.build();
-      bitField0_ |= 0x00000001;
-    }
     /**
      * <code>optional .OSMPBF.HeaderBBox bbox = 1;</code>
      */
     @java.lang.SuppressWarnings({"ReferenceEquality"})
     private void mergeBbox(de.topobyte.osm4j.pbf.protobuf.Osmformat.HeaderBBox value) {
-      if (value == null) {
-        throw new NullPointerException();
-      }
-      if (bbox_ != null &&
+      value.getClass();
+  if (bbox_ != null &&
           bbox_ != de.topobyte.osm4j.pbf.protobuf.Osmformat.HeaderBBox.getDefaultInstance()) {
         bbox_ =
           de.topobyte.osm4j.pbf.protobuf.Osmformat.HeaderBBox.newBuilder(bbox_).mergeFrom(value).buildPartial();
@@ -196,6 +204,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated string required_features = 4;</code>
+     * @return A list containing the requiredFeatures.
      */
     @java.lang.Override
     public java.util.List<java.lang.String> getRequiredFeaturesList() {
@@ -207,6 +216,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated string required_features = 4;</code>
+     * @return The count of requiredFeatures.
      */
     @java.lang.Override
     public int getRequiredFeaturesCount() {
@@ -218,6 +228,8 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated string required_features = 4;</code>
+     * @param index The index of the element to return.
+     * @return The requiredFeatures at the given index.
      */
     @java.lang.Override
     public java.lang.String getRequiredFeatures(int index) {
@@ -229,6 +241,8 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated string required_features = 4;</code>
+     * @param index The index of the value to return.
+     * @return The bytes of the requiredFeatures at the given index.
      */
     @java.lang.Override
     public com.google.protobuf.ByteString
@@ -237,9 +251,10 @@ public final class Osmformat {
           requiredFeatures_.get(index));
     }
     private void ensureRequiredFeaturesIsMutable() {
-      if (!requiredFeatures_.isModifiable()) {
+      com.google.protobuf.Internal.ProtobufList<java.lang.String> tmp =
+          requiredFeatures_;  if (!tmp.isModifiable()) {
         requiredFeatures_ =
-            com.google.protobuf.GeneratedMessageLite.mutableCopy(requiredFeatures_);
+            com.google.protobuf.GeneratedMessageLite.mutableCopy(tmp);
        }
     }
     /**
@@ -248,12 +263,12 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated string required_features = 4;</code>
+     * @param index The index to set the value at.
+     * @param value The requiredFeatures to set.
      */
     private void setRequiredFeatures(
         int index, java.lang.String value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
+      java.lang.Class<?> valueClass = value.getClass();
   ensureRequiredFeaturesIsMutable();
       requiredFeatures_.set(index, value);
     }
@@ -263,12 +278,11 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated string required_features = 4;</code>
+     * @param value The requiredFeatures to add.
      */
     private void addRequiredFeatures(
         java.lang.String value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
+      java.lang.Class<?> valueClass = value.getClass();
   ensureRequiredFeaturesIsMutable();
       requiredFeatures_.add(value);
     }
@@ -278,6 +292,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated string required_features = 4;</code>
+     * @param values The requiredFeatures to add.
      */
     private void addAllRequiredFeatures(
         java.lang.Iterable<java.lang.String> values) {
@@ -301,13 +316,11 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated string required_features = 4;</code>
+     * @param value The bytes of the requiredFeatures to add.
      */
     private void addRequiredFeaturesBytes(
         com.google.protobuf.ByteString value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  ensureRequiredFeaturesIsMutable();
+      ensureRequiredFeaturesIsMutable();
       requiredFeatures_.add(value.toStringUtf8());
     }
 
@@ -315,6 +328,7 @@ public final class Osmformat {
     private com.google.protobuf.Internal.ProtobufList<java.lang.String> optionalFeatures_;
     /**
      * <code>repeated string optional_features = 5;</code>
+     * @return A list containing the optionalFeatures.
      */
     @java.lang.Override
     public java.util.List<java.lang.String> getOptionalFeaturesList() {
@@ -322,6 +336,7 @@ public final class Osmformat {
     }
     /**
      * <code>repeated string optional_features = 5;</code>
+     * @return The count of optionalFeatures.
      */
     @java.lang.Override
     public int getOptionalFeaturesCount() {
@@ -329,6 +344,8 @@ public final class Osmformat {
     }
     /**
      * <code>repeated string optional_features = 5;</code>
+     * @param index The index of the element to return.
+     * @return The optionalFeatures at the given index.
      */
     @java.lang.Override
     public java.lang.String getOptionalFeatures(int index) {
@@ -336,6 +353,8 @@ public final class Osmformat {
     }
     /**
      * <code>repeated string optional_features = 5;</code>
+     * @param index The index of the value to return.
+     * @return The bytes of the optionalFeatures at the given index.
      */
     @java.lang.Override
     public com.google.protobuf.ByteString
@@ -344,35 +363,36 @@ public final class Osmformat {
           optionalFeatures_.get(index));
     }
     private void ensureOptionalFeaturesIsMutable() {
-      if (!optionalFeatures_.isModifiable()) {
+      com.google.protobuf.Internal.ProtobufList<java.lang.String> tmp =
+          optionalFeatures_;  if (!tmp.isModifiable()) {
         optionalFeatures_ =
-            com.google.protobuf.GeneratedMessageLite.mutableCopy(optionalFeatures_);
+            com.google.protobuf.GeneratedMessageLite.mutableCopy(tmp);
        }
     }
     /**
      * <code>repeated string optional_features = 5;</code>
+     * @param index The index to set the value at.
+     * @param value The optionalFeatures to set.
      */
     private void setOptionalFeatures(
         int index, java.lang.String value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
+      java.lang.Class<?> valueClass = value.getClass();
   ensureOptionalFeaturesIsMutable();
       optionalFeatures_.set(index, value);
     }
     /**
      * <code>repeated string optional_features = 5;</code>
+     * @param value The optionalFeatures to add.
      */
     private void addOptionalFeatures(
         java.lang.String value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
+      java.lang.Class<?> valueClass = value.getClass();
   ensureOptionalFeaturesIsMutable();
       optionalFeatures_.add(value);
     }
     /**
      * <code>repeated string optional_features = 5;</code>
+     * @param values The optionalFeatures to add.
      */
     private void addAllOptionalFeatures(
         java.lang.Iterable<java.lang.String> values) {
@@ -388,13 +408,11 @@ public final class Osmformat {
     }
     /**
      * <code>repeated string optional_features = 5;</code>
+     * @param value The bytes of the optionalFeatures to add.
      */
     private void addOptionalFeaturesBytes(
         com.google.protobuf.ByteString value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  ensureOptionalFeaturesIsMutable();
+      ensureOptionalFeaturesIsMutable();
       optionalFeatures_.add(value.toStringUtf8());
     }
 
@@ -402,6 +420,7 @@ public final class Osmformat {
     private java.lang.String writingprogram_;
     /**
      * <code>optional string writingprogram = 16;</code>
+     * @return Whether the writingprogram field is set.
      */
     @java.lang.Override
     public boolean hasWritingprogram() {
@@ -409,6 +428,7 @@ public final class Osmformat {
     }
     /**
      * <code>optional string writingprogram = 16;</code>
+     * @return The writingprogram.
      */
     @java.lang.Override
     public java.lang.String getWritingprogram() {
@@ -416,6 +436,7 @@ public final class Osmformat {
     }
     /**
      * <code>optional string writingprogram = 16;</code>
+     * @return The bytes for writingprogram.
      */
     @java.lang.Override
     public com.google.protobuf.ByteString
@@ -424,12 +445,11 @@ public final class Osmformat {
     }
     /**
      * <code>optional string writingprogram = 16;</code>
+     * @param value The writingprogram to set.
      */
     private void setWritingprogram(
         java.lang.String value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
+      java.lang.Class<?> valueClass = value.getClass();
   bitField0_ |= 0x00000002;
       writingprogram_ = value;
     }
@@ -442,14 +462,12 @@ public final class Osmformat {
     }
     /**
      * <code>optional string writingprogram = 16;</code>
+     * @param value The bytes for writingprogram to set.
      */
     private void setWritingprogramBytes(
         com.google.protobuf.ByteString value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000002;
       writingprogram_ = value.toStringUtf8();
+      bitField0_ |= 0x00000002;
     }
 
     public static final int SOURCE_FIELD_NUMBER = 17;
@@ -460,6 +478,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>optional string source = 17;</code>
+     * @return Whether the source field is set.
      */
     @java.lang.Override
     public boolean hasSource() {
@@ -471,6 +490,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>optional string source = 17;</code>
+     * @return The source.
      */
     @java.lang.Override
     public java.lang.String getSource() {
@@ -482,6 +502,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>optional string source = 17;</code>
+     * @return The bytes for source.
      */
     @java.lang.Override
     public com.google.protobuf.ByteString
@@ -494,12 +515,11 @@ public final class Osmformat {
      * </pre>
      *
      * <code>optional string source = 17;</code>
+     * @param value The source to set.
      */
     private void setSource(
         java.lang.String value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
+      java.lang.Class<?> valueClass = value.getClass();
   bitField0_ |= 0x00000004;
       source_ = value;
     }
@@ -520,14 +540,12 @@ public final class Osmformat {
      * </pre>
      *
      * <code>optional string source = 17;</code>
+     * @param value The bytes for source to set.
      */
     private void setSourceBytes(
         com.google.protobuf.ByteString value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000004;
       source_ = value.toStringUtf8();
+      bitField0_ |= 0x00000004;
     }
 
     public static de.topobyte.osm4j.pbf.protobuf.Osmformat.HeaderBlock parseFrom(
@@ -580,10 +598,12 @@ public final class Osmformat {
       return com.google.protobuf.GeneratedMessageLite.parseFrom(
           DEFAULT_INSTANCE, input, extensionRegistry);
     }
+
     public static de.topobyte.osm4j.pbf.protobuf.Osmformat.HeaderBlock parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return parseDelimitedFrom(DEFAULT_INSTANCE, input);
     }
+
     public static de.topobyte.osm4j.pbf.protobuf.Osmformat.HeaderBlock parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -653,7 +673,7 @@ public final class Osmformat {
       public Builder setBbox(
           de.topobyte.osm4j.pbf.protobuf.Osmformat.HeaderBBox.Builder builderForValue) {
         copyOnWrite();
-        instance.setBbox(builderForValue);
+        instance.setBbox(builderForValue.build());
         return this;
       }
       /**
@@ -678,6 +698,7 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated string required_features = 4;</code>
+       * @return A list containing the requiredFeatures.
        */
       @java.lang.Override
       public java.util.List<java.lang.String>
@@ -691,6 +712,7 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated string required_features = 4;</code>
+       * @return The count of requiredFeatures.
        */
       @java.lang.Override
       public int getRequiredFeaturesCount() {
@@ -702,6 +724,8 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated string required_features = 4;</code>
+       * @param index The index of the element to return.
+       * @return The requiredFeatures at the given index.
        */
       @java.lang.Override
       public java.lang.String getRequiredFeatures(int index) {
@@ -713,6 +737,8 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated string required_features = 4;</code>
+       * @param index The index of the value to return.
+       * @return The bytes of the requiredFeatures at the given index.
        */
       @java.lang.Override
       public com.google.protobuf.ByteString
@@ -725,6 +751,9 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated string required_features = 4;</code>
+       * @param index The index to set the value at.
+       * @param value The requiredFeatures to set.
+       * @return This builder for chaining.
        */
       public Builder setRequiredFeatures(
           int index, java.lang.String value) {
@@ -738,6 +767,8 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated string required_features = 4;</code>
+       * @param value The requiredFeatures to add.
+       * @return This builder for chaining.
        */
       public Builder addRequiredFeatures(
           java.lang.String value) {
@@ -751,6 +782,8 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated string required_features = 4;</code>
+       * @param values The requiredFeatures to add.
+       * @return This builder for chaining.
        */
       public Builder addAllRequiredFeatures(
           java.lang.Iterable<java.lang.String> values) {
@@ -764,6 +797,7 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated string required_features = 4;</code>
+       * @return This builder for chaining.
        */
       public Builder clearRequiredFeatures() {
         copyOnWrite();
@@ -776,6 +810,8 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated string required_features = 4;</code>
+       * @param value The bytes of the requiredFeatures to add.
+       * @return This builder for chaining.
        */
       public Builder addRequiredFeaturesBytes(
           com.google.protobuf.ByteString value) {
@@ -786,6 +822,7 @@ public final class Osmformat {
 
       /**
        * <code>repeated string optional_features = 5;</code>
+       * @return A list containing the optionalFeatures.
        */
       @java.lang.Override
       public java.util.List<java.lang.String>
@@ -795,6 +832,7 @@ public final class Osmformat {
       }
       /**
        * <code>repeated string optional_features = 5;</code>
+       * @return The count of optionalFeatures.
        */
       @java.lang.Override
       public int getOptionalFeaturesCount() {
@@ -802,6 +840,8 @@ public final class Osmformat {
       }
       /**
        * <code>repeated string optional_features = 5;</code>
+       * @param index The index of the element to return.
+       * @return The optionalFeatures at the given index.
        */
       @java.lang.Override
       public java.lang.String getOptionalFeatures(int index) {
@@ -809,6 +849,8 @@ public final class Osmformat {
       }
       /**
        * <code>repeated string optional_features = 5;</code>
+       * @param index The index of the value to return.
+       * @return The bytes of the optionalFeatures at the given index.
        */
       @java.lang.Override
       public com.google.protobuf.ByteString
@@ -817,6 +859,9 @@ public final class Osmformat {
       }
       /**
        * <code>repeated string optional_features = 5;</code>
+       * @param index The index to set the value at.
+       * @param value The optionalFeatures to set.
+       * @return This builder for chaining.
        */
       public Builder setOptionalFeatures(
           int index, java.lang.String value) {
@@ -826,6 +871,8 @@ public final class Osmformat {
       }
       /**
        * <code>repeated string optional_features = 5;</code>
+       * @param value The optionalFeatures to add.
+       * @return This builder for chaining.
        */
       public Builder addOptionalFeatures(
           java.lang.String value) {
@@ -835,6 +882,8 @@ public final class Osmformat {
       }
       /**
        * <code>repeated string optional_features = 5;</code>
+       * @param values The optionalFeatures to add.
+       * @return This builder for chaining.
        */
       public Builder addAllOptionalFeatures(
           java.lang.Iterable<java.lang.String> values) {
@@ -844,6 +893,7 @@ public final class Osmformat {
       }
       /**
        * <code>repeated string optional_features = 5;</code>
+       * @return This builder for chaining.
        */
       public Builder clearOptionalFeatures() {
         copyOnWrite();
@@ -852,6 +902,8 @@ public final class Osmformat {
       }
       /**
        * <code>repeated string optional_features = 5;</code>
+       * @param value The bytes of the optionalFeatures to add.
+       * @return This builder for chaining.
        */
       public Builder addOptionalFeaturesBytes(
           com.google.protobuf.ByteString value) {
@@ -862,6 +914,7 @@ public final class Osmformat {
 
       /**
        * <code>optional string writingprogram = 16;</code>
+       * @return Whether the writingprogram field is set.
        */
       @java.lang.Override
       public boolean hasWritingprogram() {
@@ -869,6 +922,7 @@ public final class Osmformat {
       }
       /**
        * <code>optional string writingprogram = 16;</code>
+       * @return The writingprogram.
        */
       @java.lang.Override
       public java.lang.String getWritingprogram() {
@@ -876,6 +930,7 @@ public final class Osmformat {
       }
       /**
        * <code>optional string writingprogram = 16;</code>
+       * @return The bytes for writingprogram.
        */
       @java.lang.Override
       public com.google.protobuf.ByteString
@@ -884,6 +939,8 @@ public final class Osmformat {
       }
       /**
        * <code>optional string writingprogram = 16;</code>
+       * @param value The writingprogram to set.
+       * @return This builder for chaining.
        */
       public Builder setWritingprogram(
           java.lang.String value) {
@@ -893,6 +950,7 @@ public final class Osmformat {
       }
       /**
        * <code>optional string writingprogram = 16;</code>
+       * @return This builder for chaining.
        */
       public Builder clearWritingprogram() {
         copyOnWrite();
@@ -901,6 +959,8 @@ public final class Osmformat {
       }
       /**
        * <code>optional string writingprogram = 16;</code>
+       * @param value The bytes for writingprogram to set.
+       * @return This builder for chaining.
        */
       public Builder setWritingprogramBytes(
           com.google.protobuf.ByteString value) {
@@ -915,6 +975,7 @@ public final class Osmformat {
        * </pre>
        *
        * <code>optional string source = 17;</code>
+       * @return Whether the source field is set.
        */
       @java.lang.Override
       public boolean hasSource() {
@@ -926,6 +987,7 @@ public final class Osmformat {
        * </pre>
        *
        * <code>optional string source = 17;</code>
+       * @return The source.
        */
       @java.lang.Override
       public java.lang.String getSource() {
@@ -937,6 +999,7 @@ public final class Osmformat {
        * </pre>
        *
        * <code>optional string source = 17;</code>
+       * @return The bytes for source.
        */
       @java.lang.Override
       public com.google.protobuf.ByteString
@@ -949,6 +1012,8 @@ public final class Osmformat {
        * </pre>
        *
        * <code>optional string source = 17;</code>
+       * @param value The source to set.
+       * @return This builder for chaining.
        */
       public Builder setSource(
           java.lang.String value) {
@@ -962,6 +1027,7 @@ public final class Osmformat {
        * </pre>
        *
        * <code>optional string source = 17;</code>
+       * @return This builder for chaining.
        */
       public Builder clearSource() {
         copyOnWrite();
@@ -974,6 +1040,8 @@ public final class Osmformat {
        * </pre>
        *
        * <code>optional string source = 17;</code>
+       * @param value The bytes for source to set.
+       * @return This builder for chaining.
        */
       public Builder setSourceBytes(
           com.google.protobuf.ByteString value) {
@@ -1007,8 +1075,8 @@ public final class Osmformat {
               "source_",
             };
             java.lang.String info =
-                "\u0001\u0005\u0000\u0001\u0001\u0011\u0005\u0000\u0002\u0001\u0001\u0409\u0000\u0004" +
-                "\u001a\u0005\u001a\u0010\b\u0001\u0011\b\u0002";
+                "\u0001\u0005\u0000\u0001\u0001\u0011\u0005\u0000\u0002\u0001\u0001\u1409\u0000\u0004" +
+                "\u001a\u0005\u001a\u0010\u1008\u0001\u0011\u1008\u0002";
             return newMessageInfo(DEFAULT_INSTANCE, info, objects);
         }
         // fall through
@@ -1070,37 +1138,45 @@ public final class Osmformat {
 
     /**
      * <code>required sint64 left = 1;</code>
+     * @return Whether the left field is set.
      */
     boolean hasLeft();
     /**
      * <code>required sint64 left = 1;</code>
+     * @return The left.
      */
     long getLeft();
 
     /**
      * <code>required sint64 right = 2;</code>
+     * @return Whether the right field is set.
      */
     boolean hasRight();
     /**
      * <code>required sint64 right = 2;</code>
+     * @return The right.
      */
     long getRight();
 
     /**
      * <code>required sint64 top = 3;</code>
+     * @return Whether the top field is set.
      */
     boolean hasTop();
     /**
      * <code>required sint64 top = 3;</code>
+     * @return The top.
      */
     long getTop();
 
     /**
      * <code>required sint64 bottom = 4;</code>
+     * @return Whether the bottom field is set.
      */
     boolean hasBottom();
     /**
      * <code>required sint64 bottom = 4;</code>
+     * @return The bottom.
      */
     long getBottom();
   }
@@ -1119,6 +1195,7 @@ public final class Osmformat {
     private long left_;
     /**
      * <code>required sint64 left = 1;</code>
+     * @return Whether the left field is set.
      */
     @java.lang.Override
     public boolean hasLeft() {
@@ -1126,6 +1203,7 @@ public final class Osmformat {
     }
     /**
      * <code>required sint64 left = 1;</code>
+     * @return The left.
      */
     @java.lang.Override
     public long getLeft() {
@@ -1133,6 +1211,7 @@ public final class Osmformat {
     }
     /**
      * <code>required sint64 left = 1;</code>
+     * @param value The left to set.
      */
     private void setLeft(long value) {
       bitField0_ |= 0x00000001;
@@ -1150,6 +1229,7 @@ public final class Osmformat {
     private long right_;
     /**
      * <code>required sint64 right = 2;</code>
+     * @return Whether the right field is set.
      */
     @java.lang.Override
     public boolean hasRight() {
@@ -1157,6 +1237,7 @@ public final class Osmformat {
     }
     /**
      * <code>required sint64 right = 2;</code>
+     * @return The right.
      */
     @java.lang.Override
     public long getRight() {
@@ -1164,6 +1245,7 @@ public final class Osmformat {
     }
     /**
      * <code>required sint64 right = 2;</code>
+     * @param value The right to set.
      */
     private void setRight(long value) {
       bitField0_ |= 0x00000002;
@@ -1181,6 +1263,7 @@ public final class Osmformat {
     private long top_;
     /**
      * <code>required sint64 top = 3;</code>
+     * @return Whether the top field is set.
      */
     @java.lang.Override
     public boolean hasTop() {
@@ -1188,6 +1271,7 @@ public final class Osmformat {
     }
     /**
      * <code>required sint64 top = 3;</code>
+     * @return The top.
      */
     @java.lang.Override
     public long getTop() {
@@ -1195,6 +1279,7 @@ public final class Osmformat {
     }
     /**
      * <code>required sint64 top = 3;</code>
+     * @param value The top to set.
      */
     private void setTop(long value) {
       bitField0_ |= 0x00000004;
@@ -1212,6 +1297,7 @@ public final class Osmformat {
     private long bottom_;
     /**
      * <code>required sint64 bottom = 4;</code>
+     * @return Whether the bottom field is set.
      */
     @java.lang.Override
     public boolean hasBottom() {
@@ -1219,6 +1305,7 @@ public final class Osmformat {
     }
     /**
      * <code>required sint64 bottom = 4;</code>
+     * @return The bottom.
      */
     @java.lang.Override
     public long getBottom() {
@@ -1226,6 +1313,7 @@ public final class Osmformat {
     }
     /**
      * <code>required sint64 bottom = 4;</code>
+     * @param value The bottom to set.
      */
     private void setBottom(long value) {
       bitField0_ |= 0x00000008;
@@ -1289,10 +1377,12 @@ public final class Osmformat {
       return com.google.protobuf.GeneratedMessageLite.parseFrom(
           DEFAULT_INSTANCE, input, extensionRegistry);
     }
+
     public static de.topobyte.osm4j.pbf.protobuf.Osmformat.HeaderBBox parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return parseDelimitedFrom(DEFAULT_INSTANCE, input);
     }
+
     public static de.topobyte.osm4j.pbf.protobuf.Osmformat.HeaderBBox parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -1336,6 +1426,7 @@ public final class Osmformat {
 
       /**
        * <code>required sint64 left = 1;</code>
+       * @return Whether the left field is set.
        */
       @java.lang.Override
       public boolean hasLeft() {
@@ -1343,6 +1434,7 @@ public final class Osmformat {
       }
       /**
        * <code>required sint64 left = 1;</code>
+       * @return The left.
        */
       @java.lang.Override
       public long getLeft() {
@@ -1350,6 +1442,8 @@ public final class Osmformat {
       }
       /**
        * <code>required sint64 left = 1;</code>
+       * @param value The left to set.
+       * @return This builder for chaining.
        */
       public Builder setLeft(long value) {
         copyOnWrite();
@@ -1358,6 +1452,7 @@ public final class Osmformat {
       }
       /**
        * <code>required sint64 left = 1;</code>
+       * @return This builder for chaining.
        */
       public Builder clearLeft() {
         copyOnWrite();
@@ -1367,6 +1462,7 @@ public final class Osmformat {
 
       /**
        * <code>required sint64 right = 2;</code>
+       * @return Whether the right field is set.
        */
       @java.lang.Override
       public boolean hasRight() {
@@ -1374,6 +1470,7 @@ public final class Osmformat {
       }
       /**
        * <code>required sint64 right = 2;</code>
+       * @return The right.
        */
       @java.lang.Override
       public long getRight() {
@@ -1381,6 +1478,8 @@ public final class Osmformat {
       }
       /**
        * <code>required sint64 right = 2;</code>
+       * @param value The right to set.
+       * @return This builder for chaining.
        */
       public Builder setRight(long value) {
         copyOnWrite();
@@ -1389,6 +1488,7 @@ public final class Osmformat {
       }
       /**
        * <code>required sint64 right = 2;</code>
+       * @return This builder for chaining.
        */
       public Builder clearRight() {
         copyOnWrite();
@@ -1398,6 +1498,7 @@ public final class Osmformat {
 
       /**
        * <code>required sint64 top = 3;</code>
+       * @return Whether the top field is set.
        */
       @java.lang.Override
       public boolean hasTop() {
@@ -1405,6 +1506,7 @@ public final class Osmformat {
       }
       /**
        * <code>required sint64 top = 3;</code>
+       * @return The top.
        */
       @java.lang.Override
       public long getTop() {
@@ -1412,6 +1514,8 @@ public final class Osmformat {
       }
       /**
        * <code>required sint64 top = 3;</code>
+       * @param value The top to set.
+       * @return This builder for chaining.
        */
       public Builder setTop(long value) {
         copyOnWrite();
@@ -1420,6 +1524,7 @@ public final class Osmformat {
       }
       /**
        * <code>required sint64 top = 3;</code>
+       * @return This builder for chaining.
        */
       public Builder clearTop() {
         copyOnWrite();
@@ -1429,6 +1534,7 @@ public final class Osmformat {
 
       /**
        * <code>required sint64 bottom = 4;</code>
+       * @return Whether the bottom field is set.
        */
       @java.lang.Override
       public boolean hasBottom() {
@@ -1436,6 +1542,7 @@ public final class Osmformat {
       }
       /**
        * <code>required sint64 bottom = 4;</code>
+       * @return The bottom.
        */
       @java.lang.Override
       public long getBottom() {
@@ -1443,6 +1550,8 @@ public final class Osmformat {
       }
       /**
        * <code>required sint64 bottom = 4;</code>
+       * @param value The bottom to set.
+       * @return This builder for chaining.
        */
       public Builder setBottom(long value) {
         copyOnWrite();
@@ -1451,6 +1560,7 @@ public final class Osmformat {
       }
       /**
        * <code>required sint64 bottom = 4;</code>
+       * @return This builder for chaining.
        */
       public Builder clearBottom() {
         copyOnWrite();
@@ -1482,8 +1592,8 @@ public final class Osmformat {
               "bottom_",
             };
             java.lang.String info =
-                "\u0001\u0004\u0000\u0001\u0001\u0004\u0004\u0000\u0000\u0004\u0001\u0510\u0000\u0002" +
-                "\u0510\u0001\u0003\u0510\u0002\u0004\u0510\u0003";
+                "\u0001\u0004\u0000\u0001\u0001\u0004\u0004\u0000\u0000\u0004\u0001\u1510\u0000\u0002" +
+                "\u1510\u0001\u0003\u1510\u0002\u0004\u1510\u0003";
             return newMessageInfo(DEFAULT_INSTANCE, info, objects);
         }
         // fall through
@@ -1545,10 +1655,12 @@ public final class Osmformat {
 
     /**
      * <code>required .OSMPBF.StringTable stringtable = 1;</code>
+     * @return Whether the stringtable field is set.
      */
     boolean hasStringtable();
     /**
      * <code>required .OSMPBF.StringTable stringtable = 1;</code>
+     * @return The stringtable.
      */
     de.topobyte.osm4j.pbf.protobuf.Osmformat.StringTable getStringtable();
 
@@ -1572,6 +1684,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>optional int32 granularity = 17 [default = 100];</code>
+     * @return Whether the granularity field is set.
      */
     boolean hasGranularity();
     /**
@@ -1580,6 +1693,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>optional int32 granularity = 17 [default = 100];</code>
+     * @return The granularity.
      */
     int getGranularity();
 
@@ -1589,6 +1703,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>optional int64 lat_offset = 19 [default = 0];</code>
+     * @return Whether the latOffset field is set.
      */
     boolean hasLatOffset();
     /**
@@ -1597,15 +1712,18 @@ public final class Osmformat {
      * </pre>
      *
      * <code>optional int64 lat_offset = 19 [default = 0];</code>
+     * @return The latOffset.
      */
     long getLatOffset();
 
     /**
      * <code>optional int64 lon_offset = 20 [default = 0];</code>
+     * @return Whether the lonOffset field is set.
      */
     boolean hasLonOffset();
     /**
      * <code>optional int64 lon_offset = 20 [default = 0];</code>
+     * @return The lonOffset.
      */
     long getLonOffset();
 
@@ -1615,6 +1733,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>optional int32 date_granularity = 18 [default = 1000];</code>
+     * @return Whether the dateGranularity field is set.
      */
     boolean hasDateGranularity();
     /**
@@ -1623,6 +1742,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>optional int32 date_granularity = 18 [default = 1000];</code>
+     * @return The dateGranularity.
      */
     int getDateGranularity();
   }
@@ -1660,29 +1780,17 @@ public final class Osmformat {
      * <code>required .OSMPBF.StringTable stringtable = 1;</code>
      */
     private void setStringtable(de.topobyte.osm4j.pbf.protobuf.Osmformat.StringTable value) {
-      if (value == null) {
-        throw new NullPointerException();
-      }
-      stringtable_ = value;
+      value.getClass();
+  stringtable_ = value;
       bitField0_ |= 0x00000001;
       }
-    /**
-     * <code>required .OSMPBF.StringTable stringtable = 1;</code>
-     */
-    private void setStringtable(
-        de.topobyte.osm4j.pbf.protobuf.Osmformat.StringTable.Builder builderForValue) {
-      stringtable_ = builderForValue.build();
-      bitField0_ |= 0x00000001;
-    }
     /**
      * <code>required .OSMPBF.StringTable stringtable = 1;</code>
      */
     @java.lang.SuppressWarnings({"ReferenceEquality"})
     private void mergeStringtable(de.topobyte.osm4j.pbf.protobuf.Osmformat.StringTable value) {
-      if (value == null) {
-        throw new NullPointerException();
-      }
-      if (stringtable_ != null &&
+      value.getClass();
+  if (stringtable_ != null &&
           stringtable_ != de.topobyte.osm4j.pbf.protobuf.Osmformat.StringTable.getDefaultInstance()) {
         stringtable_ =
           de.topobyte.osm4j.pbf.protobuf.Osmformat.StringTable.newBuilder(stringtable_).mergeFrom(value).buildPartial();
@@ -1736,9 +1844,10 @@ public final class Osmformat {
       return primitivegroup_.get(index);
     }
     private void ensurePrimitivegroupIsMutable() {
-      if (!primitivegroup_.isModifiable()) {
+      com.google.protobuf.Internal.ProtobufList<de.topobyte.osm4j.pbf.protobuf.Osmformat.PrimitiveGroup> tmp = primitivegroup_;
+      if (!tmp.isModifiable()) {
         primitivegroup_ =
-            com.google.protobuf.GeneratedMessageLite.mutableCopy(primitivegroup_);
+            com.google.protobuf.GeneratedMessageLite.mutableCopy(tmp);
        }
     }
 
@@ -1747,28 +1856,16 @@ public final class Osmformat {
      */
     private void setPrimitivegroup(
         int index, de.topobyte.osm4j.pbf.protobuf.Osmformat.PrimitiveGroup value) {
-      if (value == null) {
-        throw new NullPointerException();
-      }
-      ensurePrimitivegroupIsMutable();
+      value.getClass();
+  ensurePrimitivegroupIsMutable();
       primitivegroup_.set(index, value);
     }
     /**
      * <code>repeated .OSMPBF.PrimitiveGroup primitivegroup = 2;</code>
      */
-    private void setPrimitivegroup(
-        int index, de.topobyte.osm4j.pbf.protobuf.Osmformat.PrimitiveGroup.Builder builderForValue) {
-      ensurePrimitivegroupIsMutable();
-      primitivegroup_.set(index, builderForValue.build());
-    }
-    /**
-     * <code>repeated .OSMPBF.PrimitiveGroup primitivegroup = 2;</code>
-     */
     private void addPrimitivegroup(de.topobyte.osm4j.pbf.protobuf.Osmformat.PrimitiveGroup value) {
-      if (value == null) {
-        throw new NullPointerException();
-      }
-      ensurePrimitivegroupIsMutable();
+      value.getClass();
+  ensurePrimitivegroupIsMutable();
       primitivegroup_.add(value);
     }
     /**
@@ -1776,27 +1873,9 @@ public final class Osmformat {
      */
     private void addPrimitivegroup(
         int index, de.topobyte.osm4j.pbf.protobuf.Osmformat.PrimitiveGroup value) {
-      if (value == null) {
-        throw new NullPointerException();
-      }
-      ensurePrimitivegroupIsMutable();
+      value.getClass();
+  ensurePrimitivegroupIsMutable();
       primitivegroup_.add(index, value);
-    }
-    /**
-     * <code>repeated .OSMPBF.PrimitiveGroup primitivegroup = 2;</code>
-     */
-    private void addPrimitivegroup(
-        de.topobyte.osm4j.pbf.protobuf.Osmformat.PrimitiveGroup.Builder builderForValue) {
-      ensurePrimitivegroupIsMutable();
-      primitivegroup_.add(builderForValue.build());
-    }
-    /**
-     * <code>repeated .OSMPBF.PrimitiveGroup primitivegroup = 2;</code>
-     */
-    private void addPrimitivegroup(
-        int index, de.topobyte.osm4j.pbf.protobuf.Osmformat.PrimitiveGroup.Builder builderForValue) {
-      ensurePrimitivegroupIsMutable();
-      primitivegroup_.add(index, builderForValue.build());
     }
     /**
      * <code>repeated .OSMPBF.PrimitiveGroup primitivegroup = 2;</code>
@@ -1829,6 +1908,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>optional int32 granularity = 17 [default = 100];</code>
+     * @return Whether the granularity field is set.
      */
     @java.lang.Override
     public boolean hasGranularity() {
@@ -1840,6 +1920,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>optional int32 granularity = 17 [default = 100];</code>
+     * @return The granularity.
      */
     @java.lang.Override
     public int getGranularity() {
@@ -1851,6 +1932,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>optional int32 granularity = 17 [default = 100];</code>
+     * @param value The granularity to set.
      */
     private void setGranularity(int value) {
       bitField0_ |= 0x00000002;
@@ -1876,6 +1958,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>optional int64 lat_offset = 19 [default = 0];</code>
+     * @return Whether the latOffset field is set.
      */
     @java.lang.Override
     public boolean hasLatOffset() {
@@ -1887,6 +1970,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>optional int64 lat_offset = 19 [default = 0];</code>
+     * @return The latOffset.
      */
     @java.lang.Override
     public long getLatOffset() {
@@ -1898,6 +1982,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>optional int64 lat_offset = 19 [default = 0];</code>
+     * @param value The latOffset to set.
      */
     private void setLatOffset(long value) {
       bitField0_ |= 0x00000004;
@@ -1919,6 +2004,7 @@ public final class Osmformat {
     private long lonOffset_;
     /**
      * <code>optional int64 lon_offset = 20 [default = 0];</code>
+     * @return Whether the lonOffset field is set.
      */
     @java.lang.Override
     public boolean hasLonOffset() {
@@ -1926,6 +2012,7 @@ public final class Osmformat {
     }
     /**
      * <code>optional int64 lon_offset = 20 [default = 0];</code>
+     * @return The lonOffset.
      */
     @java.lang.Override
     public long getLonOffset() {
@@ -1933,6 +2020,7 @@ public final class Osmformat {
     }
     /**
      * <code>optional int64 lon_offset = 20 [default = 0];</code>
+     * @param value The lonOffset to set.
      */
     private void setLonOffset(long value) {
       bitField0_ |= 0x00000008;
@@ -1954,6 +2042,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>optional int32 date_granularity = 18 [default = 1000];</code>
+     * @return Whether the dateGranularity field is set.
      */
     @java.lang.Override
     public boolean hasDateGranularity() {
@@ -1965,6 +2054,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>optional int32 date_granularity = 18 [default = 1000];</code>
+     * @return The dateGranularity.
      */
     @java.lang.Override
     public int getDateGranularity() {
@@ -1976,6 +2066,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>optional int32 date_granularity = 18 [default = 1000];</code>
+     * @param value The dateGranularity to set.
      */
     private void setDateGranularity(int value) {
       bitField0_ |= 0x00000010;
@@ -2043,10 +2134,12 @@ public final class Osmformat {
       return com.google.protobuf.GeneratedMessageLite.parseFrom(
           DEFAULT_INSTANCE, input, extensionRegistry);
     }
+
     public static de.topobyte.osm4j.pbf.protobuf.Osmformat.PrimitiveBlock parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return parseDelimitedFrom(DEFAULT_INSTANCE, input);
     }
+
     public static de.topobyte.osm4j.pbf.protobuf.Osmformat.PrimitiveBlock parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -2116,7 +2209,7 @@ public final class Osmformat {
       public Builder setStringtable(
           de.topobyte.osm4j.pbf.protobuf.Osmformat.StringTable.Builder builderForValue) {
         copyOnWrite();
-        instance.setStringtable(builderForValue);
+        instance.setStringtable(builderForValue.build());
         return this;
       }
       /**
@@ -2171,7 +2264,8 @@ public final class Osmformat {
       public Builder setPrimitivegroup(
           int index, de.topobyte.osm4j.pbf.protobuf.Osmformat.PrimitiveGroup.Builder builderForValue) {
         copyOnWrite();
-        instance.setPrimitivegroup(index, builderForValue);
+        instance.setPrimitivegroup(index,
+            builderForValue.build());
         return this;
       }
       /**
@@ -2197,7 +2291,7 @@ public final class Osmformat {
       public Builder addPrimitivegroup(
           de.topobyte.osm4j.pbf.protobuf.Osmformat.PrimitiveGroup.Builder builderForValue) {
         copyOnWrite();
-        instance.addPrimitivegroup(builderForValue);
+        instance.addPrimitivegroup(builderForValue.build());
         return this;
       }
       /**
@@ -2206,7 +2300,8 @@ public final class Osmformat {
       public Builder addPrimitivegroup(
           int index, de.topobyte.osm4j.pbf.protobuf.Osmformat.PrimitiveGroup.Builder builderForValue) {
         copyOnWrite();
-        instance.addPrimitivegroup(index, builderForValue);
+        instance.addPrimitivegroup(index,
+            builderForValue.build());
         return this;
       }
       /**
@@ -2241,6 +2336,7 @@ public final class Osmformat {
        * </pre>
        *
        * <code>optional int32 granularity = 17 [default = 100];</code>
+       * @return Whether the granularity field is set.
        */
       @java.lang.Override
       public boolean hasGranularity() {
@@ -2252,6 +2348,7 @@ public final class Osmformat {
        * </pre>
        *
        * <code>optional int32 granularity = 17 [default = 100];</code>
+       * @return The granularity.
        */
       @java.lang.Override
       public int getGranularity() {
@@ -2263,6 +2360,8 @@ public final class Osmformat {
        * </pre>
        *
        * <code>optional int32 granularity = 17 [default = 100];</code>
+       * @param value The granularity to set.
+       * @return This builder for chaining.
        */
       public Builder setGranularity(int value) {
         copyOnWrite();
@@ -2275,6 +2374,7 @@ public final class Osmformat {
        * </pre>
        *
        * <code>optional int32 granularity = 17 [default = 100];</code>
+       * @return This builder for chaining.
        */
       public Builder clearGranularity() {
         copyOnWrite();
@@ -2288,6 +2388,7 @@ public final class Osmformat {
        * </pre>
        *
        * <code>optional int64 lat_offset = 19 [default = 0];</code>
+       * @return Whether the latOffset field is set.
        */
       @java.lang.Override
       public boolean hasLatOffset() {
@@ -2299,6 +2400,7 @@ public final class Osmformat {
        * </pre>
        *
        * <code>optional int64 lat_offset = 19 [default = 0];</code>
+       * @return The latOffset.
        */
       @java.lang.Override
       public long getLatOffset() {
@@ -2310,6 +2412,8 @@ public final class Osmformat {
        * </pre>
        *
        * <code>optional int64 lat_offset = 19 [default = 0];</code>
+       * @param value The latOffset to set.
+       * @return This builder for chaining.
        */
       public Builder setLatOffset(long value) {
         copyOnWrite();
@@ -2322,6 +2426,7 @@ public final class Osmformat {
        * </pre>
        *
        * <code>optional int64 lat_offset = 19 [default = 0];</code>
+       * @return This builder for chaining.
        */
       public Builder clearLatOffset() {
         copyOnWrite();
@@ -2331,6 +2436,7 @@ public final class Osmformat {
 
       /**
        * <code>optional int64 lon_offset = 20 [default = 0];</code>
+       * @return Whether the lonOffset field is set.
        */
       @java.lang.Override
       public boolean hasLonOffset() {
@@ -2338,6 +2444,7 @@ public final class Osmformat {
       }
       /**
        * <code>optional int64 lon_offset = 20 [default = 0];</code>
+       * @return The lonOffset.
        */
       @java.lang.Override
       public long getLonOffset() {
@@ -2345,6 +2452,8 @@ public final class Osmformat {
       }
       /**
        * <code>optional int64 lon_offset = 20 [default = 0];</code>
+       * @param value The lonOffset to set.
+       * @return This builder for chaining.
        */
       public Builder setLonOffset(long value) {
         copyOnWrite();
@@ -2353,6 +2462,7 @@ public final class Osmformat {
       }
       /**
        * <code>optional int64 lon_offset = 20 [default = 0];</code>
+       * @return This builder for chaining.
        */
       public Builder clearLonOffset() {
         copyOnWrite();
@@ -2366,6 +2476,7 @@ public final class Osmformat {
        * </pre>
        *
        * <code>optional int32 date_granularity = 18 [default = 1000];</code>
+       * @return Whether the dateGranularity field is set.
        */
       @java.lang.Override
       public boolean hasDateGranularity() {
@@ -2377,6 +2488,7 @@ public final class Osmformat {
        * </pre>
        *
        * <code>optional int32 date_granularity = 18 [default = 1000];</code>
+       * @return The dateGranularity.
        */
       @java.lang.Override
       public int getDateGranularity() {
@@ -2388,6 +2500,8 @@ public final class Osmformat {
        * </pre>
        *
        * <code>optional int32 date_granularity = 18 [default = 1000];</code>
+       * @param value The dateGranularity to set.
+       * @return This builder for chaining.
        */
       public Builder setDateGranularity(int value) {
         copyOnWrite();
@@ -2400,6 +2514,7 @@ public final class Osmformat {
        * </pre>
        *
        * <code>optional int32 date_granularity = 18 [default = 1000];</code>
+       * @return This builder for chaining.
        */
       public Builder clearDateGranularity() {
         copyOnWrite();
@@ -2434,8 +2549,8 @@ public final class Osmformat {
               "lonOffset_",
             };
             java.lang.String info =
-                "\u0001\u0006\u0000\u0001\u0001\u0014\u0006\u0000\u0001\u0002\u0001\u0509\u0000\u0002" +
-                "\u041b\u0011\u0004\u0001\u0012\u0004\u0004\u0013\u0002\u0002\u0014\u0002\u0003";
+                "\u0001\u0006\u0000\u0001\u0001\u0014\u0006\u0000\u0001\u0002\u0001\u1509\u0000\u0002" +
+                "\u041b\u0011\u1004\u0001\u0012\u1004\u0004\u0013\u1002\u0002\u0014\u1002\u0003";
             return newMessageInfo(DEFAULT_INSTANCE, info, objects);
         }
         // fall through
@@ -2511,10 +2626,12 @@ public final class Osmformat {
 
     /**
      * <code>optional .OSMPBF.DenseNodes dense = 2;</code>
+     * @return Whether the dense field is set.
      */
     boolean hasDense();
     /**
      * <code>optional .OSMPBF.DenseNodes dense = 2;</code>
+     * @return The dense.
      */
     de.topobyte.osm4j.pbf.protobuf.Osmformat.DenseNodes getDense();
 
@@ -2617,9 +2734,10 @@ public final class Osmformat {
       return nodes_.get(index);
     }
     private void ensureNodesIsMutable() {
-      if (!nodes_.isModifiable()) {
+      com.google.protobuf.Internal.ProtobufList<de.topobyte.osm4j.pbf.protobuf.Osmformat.Node> tmp = nodes_;
+      if (!tmp.isModifiable()) {
         nodes_ =
-            com.google.protobuf.GeneratedMessageLite.mutableCopy(nodes_);
+            com.google.protobuf.GeneratedMessageLite.mutableCopy(tmp);
        }
     }
 
@@ -2628,28 +2746,16 @@ public final class Osmformat {
      */
     private void setNodes(
         int index, de.topobyte.osm4j.pbf.protobuf.Osmformat.Node value) {
-      if (value == null) {
-        throw new NullPointerException();
-      }
-      ensureNodesIsMutable();
+      value.getClass();
+  ensureNodesIsMutable();
       nodes_.set(index, value);
     }
     /**
      * <code>repeated .OSMPBF.Node nodes = 1;</code>
      */
-    private void setNodes(
-        int index, de.topobyte.osm4j.pbf.protobuf.Osmformat.Node.Builder builderForValue) {
-      ensureNodesIsMutable();
-      nodes_.set(index, builderForValue.build());
-    }
-    /**
-     * <code>repeated .OSMPBF.Node nodes = 1;</code>
-     */
     private void addNodes(de.topobyte.osm4j.pbf.protobuf.Osmformat.Node value) {
-      if (value == null) {
-        throw new NullPointerException();
-      }
-      ensureNodesIsMutable();
+      value.getClass();
+  ensureNodesIsMutable();
       nodes_.add(value);
     }
     /**
@@ -2657,27 +2763,9 @@ public final class Osmformat {
      */
     private void addNodes(
         int index, de.topobyte.osm4j.pbf.protobuf.Osmformat.Node value) {
-      if (value == null) {
-        throw new NullPointerException();
-      }
-      ensureNodesIsMutable();
+      value.getClass();
+  ensureNodesIsMutable();
       nodes_.add(index, value);
-    }
-    /**
-     * <code>repeated .OSMPBF.Node nodes = 1;</code>
-     */
-    private void addNodes(
-        de.topobyte.osm4j.pbf.protobuf.Osmformat.Node.Builder builderForValue) {
-      ensureNodesIsMutable();
-      nodes_.add(builderForValue.build());
-    }
-    /**
-     * <code>repeated .OSMPBF.Node nodes = 1;</code>
-     */
-    private void addNodes(
-        int index, de.topobyte.osm4j.pbf.protobuf.Osmformat.Node.Builder builderForValue) {
-      ensureNodesIsMutable();
-      nodes_.add(index, builderForValue.build());
     }
     /**
      * <code>repeated .OSMPBF.Node nodes = 1;</code>
@@ -2722,29 +2810,17 @@ public final class Osmformat {
      * <code>optional .OSMPBF.DenseNodes dense = 2;</code>
      */
     private void setDense(de.topobyte.osm4j.pbf.protobuf.Osmformat.DenseNodes value) {
-      if (value == null) {
-        throw new NullPointerException();
-      }
-      dense_ = value;
+      value.getClass();
+  dense_ = value;
       bitField0_ |= 0x00000001;
       }
-    /**
-     * <code>optional .OSMPBF.DenseNodes dense = 2;</code>
-     */
-    private void setDense(
-        de.topobyte.osm4j.pbf.protobuf.Osmformat.DenseNodes.Builder builderForValue) {
-      dense_ = builderForValue.build();
-      bitField0_ |= 0x00000001;
-    }
     /**
      * <code>optional .OSMPBF.DenseNodes dense = 2;</code>
      */
     @java.lang.SuppressWarnings({"ReferenceEquality"})
     private void mergeDense(de.topobyte.osm4j.pbf.protobuf.Osmformat.DenseNodes value) {
-      if (value == null) {
-        throw new NullPointerException();
-      }
-      if (dense_ != null &&
+      value.getClass();
+  if (dense_ != null &&
           dense_ != de.topobyte.osm4j.pbf.protobuf.Osmformat.DenseNodes.getDefaultInstance()) {
         dense_ =
           de.topobyte.osm4j.pbf.protobuf.Osmformat.DenseNodes.newBuilder(dense_).mergeFrom(value).buildPartial();
@@ -2798,9 +2874,10 @@ public final class Osmformat {
       return ways_.get(index);
     }
     private void ensureWaysIsMutable() {
-      if (!ways_.isModifiable()) {
+      com.google.protobuf.Internal.ProtobufList<de.topobyte.osm4j.pbf.protobuf.Osmformat.Way> tmp = ways_;
+      if (!tmp.isModifiable()) {
         ways_ =
-            com.google.protobuf.GeneratedMessageLite.mutableCopy(ways_);
+            com.google.protobuf.GeneratedMessageLite.mutableCopy(tmp);
        }
     }
 
@@ -2809,28 +2886,16 @@ public final class Osmformat {
      */
     private void setWays(
         int index, de.topobyte.osm4j.pbf.protobuf.Osmformat.Way value) {
-      if (value == null) {
-        throw new NullPointerException();
-      }
-      ensureWaysIsMutable();
+      value.getClass();
+  ensureWaysIsMutable();
       ways_.set(index, value);
     }
     /**
      * <code>repeated .OSMPBF.Way ways = 3;</code>
      */
-    private void setWays(
-        int index, de.topobyte.osm4j.pbf.protobuf.Osmformat.Way.Builder builderForValue) {
-      ensureWaysIsMutable();
-      ways_.set(index, builderForValue.build());
-    }
-    /**
-     * <code>repeated .OSMPBF.Way ways = 3;</code>
-     */
     private void addWays(de.topobyte.osm4j.pbf.protobuf.Osmformat.Way value) {
-      if (value == null) {
-        throw new NullPointerException();
-      }
-      ensureWaysIsMutable();
+      value.getClass();
+  ensureWaysIsMutable();
       ways_.add(value);
     }
     /**
@@ -2838,27 +2903,9 @@ public final class Osmformat {
      */
     private void addWays(
         int index, de.topobyte.osm4j.pbf.protobuf.Osmformat.Way value) {
-      if (value == null) {
-        throw new NullPointerException();
-      }
-      ensureWaysIsMutable();
+      value.getClass();
+  ensureWaysIsMutable();
       ways_.add(index, value);
-    }
-    /**
-     * <code>repeated .OSMPBF.Way ways = 3;</code>
-     */
-    private void addWays(
-        de.topobyte.osm4j.pbf.protobuf.Osmformat.Way.Builder builderForValue) {
-      ensureWaysIsMutable();
-      ways_.add(builderForValue.build());
-    }
-    /**
-     * <code>repeated .OSMPBF.Way ways = 3;</code>
-     */
-    private void addWays(
-        int index, de.topobyte.osm4j.pbf.protobuf.Osmformat.Way.Builder builderForValue) {
-      ensureWaysIsMutable();
-      ways_.add(index, builderForValue.build());
     }
     /**
      * <code>repeated .OSMPBF.Way ways = 3;</code>
@@ -2921,9 +2968,10 @@ public final class Osmformat {
       return relations_.get(index);
     }
     private void ensureRelationsIsMutable() {
-      if (!relations_.isModifiable()) {
+      com.google.protobuf.Internal.ProtobufList<de.topobyte.osm4j.pbf.protobuf.Osmformat.Relation> tmp = relations_;
+      if (!tmp.isModifiable()) {
         relations_ =
-            com.google.protobuf.GeneratedMessageLite.mutableCopy(relations_);
+            com.google.protobuf.GeneratedMessageLite.mutableCopy(tmp);
        }
     }
 
@@ -2932,28 +2980,16 @@ public final class Osmformat {
      */
     private void setRelations(
         int index, de.topobyte.osm4j.pbf.protobuf.Osmformat.Relation value) {
-      if (value == null) {
-        throw new NullPointerException();
-      }
-      ensureRelationsIsMutable();
+      value.getClass();
+  ensureRelationsIsMutable();
       relations_.set(index, value);
     }
     /**
      * <code>repeated .OSMPBF.Relation relations = 4;</code>
      */
-    private void setRelations(
-        int index, de.topobyte.osm4j.pbf.protobuf.Osmformat.Relation.Builder builderForValue) {
-      ensureRelationsIsMutable();
-      relations_.set(index, builderForValue.build());
-    }
-    /**
-     * <code>repeated .OSMPBF.Relation relations = 4;</code>
-     */
     private void addRelations(de.topobyte.osm4j.pbf.protobuf.Osmformat.Relation value) {
-      if (value == null) {
-        throw new NullPointerException();
-      }
-      ensureRelationsIsMutable();
+      value.getClass();
+  ensureRelationsIsMutable();
       relations_.add(value);
     }
     /**
@@ -2961,27 +2997,9 @@ public final class Osmformat {
      */
     private void addRelations(
         int index, de.topobyte.osm4j.pbf.protobuf.Osmformat.Relation value) {
-      if (value == null) {
-        throw new NullPointerException();
-      }
-      ensureRelationsIsMutable();
+      value.getClass();
+  ensureRelationsIsMutable();
       relations_.add(index, value);
-    }
-    /**
-     * <code>repeated .OSMPBF.Relation relations = 4;</code>
-     */
-    private void addRelations(
-        de.topobyte.osm4j.pbf.protobuf.Osmformat.Relation.Builder builderForValue) {
-      ensureRelationsIsMutable();
-      relations_.add(builderForValue.build());
-    }
-    /**
-     * <code>repeated .OSMPBF.Relation relations = 4;</code>
-     */
-    private void addRelations(
-        int index, de.topobyte.osm4j.pbf.protobuf.Osmformat.Relation.Builder builderForValue) {
-      ensureRelationsIsMutable();
-      relations_.add(index, builderForValue.build());
     }
     /**
      * <code>repeated .OSMPBF.Relation relations = 4;</code>
@@ -3044,9 +3062,10 @@ public final class Osmformat {
       return changesets_.get(index);
     }
     private void ensureChangesetsIsMutable() {
-      if (!changesets_.isModifiable()) {
+      com.google.protobuf.Internal.ProtobufList<de.topobyte.osm4j.pbf.protobuf.Osmformat.ChangeSet> tmp = changesets_;
+      if (!tmp.isModifiable()) {
         changesets_ =
-            com.google.protobuf.GeneratedMessageLite.mutableCopy(changesets_);
+            com.google.protobuf.GeneratedMessageLite.mutableCopy(tmp);
        }
     }
 
@@ -3055,28 +3074,16 @@ public final class Osmformat {
      */
     private void setChangesets(
         int index, de.topobyte.osm4j.pbf.protobuf.Osmformat.ChangeSet value) {
-      if (value == null) {
-        throw new NullPointerException();
-      }
-      ensureChangesetsIsMutable();
+      value.getClass();
+  ensureChangesetsIsMutable();
       changesets_.set(index, value);
     }
     /**
      * <code>repeated .OSMPBF.ChangeSet changesets = 5;</code>
      */
-    private void setChangesets(
-        int index, de.topobyte.osm4j.pbf.protobuf.Osmformat.ChangeSet.Builder builderForValue) {
-      ensureChangesetsIsMutable();
-      changesets_.set(index, builderForValue.build());
-    }
-    /**
-     * <code>repeated .OSMPBF.ChangeSet changesets = 5;</code>
-     */
     private void addChangesets(de.topobyte.osm4j.pbf.protobuf.Osmformat.ChangeSet value) {
-      if (value == null) {
-        throw new NullPointerException();
-      }
-      ensureChangesetsIsMutable();
+      value.getClass();
+  ensureChangesetsIsMutable();
       changesets_.add(value);
     }
     /**
@@ -3084,27 +3091,9 @@ public final class Osmformat {
      */
     private void addChangesets(
         int index, de.topobyte.osm4j.pbf.protobuf.Osmformat.ChangeSet value) {
-      if (value == null) {
-        throw new NullPointerException();
-      }
-      ensureChangesetsIsMutable();
+      value.getClass();
+  ensureChangesetsIsMutable();
       changesets_.add(index, value);
-    }
-    /**
-     * <code>repeated .OSMPBF.ChangeSet changesets = 5;</code>
-     */
-    private void addChangesets(
-        de.topobyte.osm4j.pbf.protobuf.Osmformat.ChangeSet.Builder builderForValue) {
-      ensureChangesetsIsMutable();
-      changesets_.add(builderForValue.build());
-    }
-    /**
-     * <code>repeated .OSMPBF.ChangeSet changesets = 5;</code>
-     */
-    private void addChangesets(
-        int index, de.topobyte.osm4j.pbf.protobuf.Osmformat.ChangeSet.Builder builderForValue) {
-      ensureChangesetsIsMutable();
-      changesets_.add(index, builderForValue.build());
     }
     /**
      * <code>repeated .OSMPBF.ChangeSet changesets = 5;</code>
@@ -3179,10 +3168,12 @@ public final class Osmformat {
       return com.google.protobuf.GeneratedMessageLite.parseFrom(
           DEFAULT_INSTANCE, input, extensionRegistry);
     }
+
     public static de.topobyte.osm4j.pbf.protobuf.Osmformat.PrimitiveGroup parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return parseDelimitedFrom(DEFAULT_INSTANCE, input);
     }
+
     public static de.topobyte.osm4j.pbf.protobuf.Osmformat.PrimitiveGroup parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -3264,7 +3255,8 @@ public final class Osmformat {
       public Builder setNodes(
           int index, de.topobyte.osm4j.pbf.protobuf.Osmformat.Node.Builder builderForValue) {
         copyOnWrite();
-        instance.setNodes(index, builderForValue);
+        instance.setNodes(index,
+            builderForValue.build());
         return this;
       }
       /**
@@ -3290,7 +3282,7 @@ public final class Osmformat {
       public Builder addNodes(
           de.topobyte.osm4j.pbf.protobuf.Osmformat.Node.Builder builderForValue) {
         copyOnWrite();
-        instance.addNodes(builderForValue);
+        instance.addNodes(builderForValue.build());
         return this;
       }
       /**
@@ -3299,7 +3291,8 @@ public final class Osmformat {
       public Builder addNodes(
           int index, de.topobyte.osm4j.pbf.protobuf.Osmformat.Node.Builder builderForValue) {
         copyOnWrite();
-        instance.addNodes(index, builderForValue);
+        instance.addNodes(index,
+            builderForValue.build());
         return this;
       }
       /**
@@ -3356,7 +3349,7 @@ public final class Osmformat {
       public Builder setDense(
           de.topobyte.osm4j.pbf.protobuf.Osmformat.DenseNodes.Builder builderForValue) {
         copyOnWrite();
-        instance.setDense(builderForValue);
+        instance.setDense(builderForValue.build());
         return this;
       }
       /**
@@ -3411,7 +3404,8 @@ public final class Osmformat {
       public Builder setWays(
           int index, de.topobyte.osm4j.pbf.protobuf.Osmformat.Way.Builder builderForValue) {
         copyOnWrite();
-        instance.setWays(index, builderForValue);
+        instance.setWays(index,
+            builderForValue.build());
         return this;
       }
       /**
@@ -3437,7 +3431,7 @@ public final class Osmformat {
       public Builder addWays(
           de.topobyte.osm4j.pbf.protobuf.Osmformat.Way.Builder builderForValue) {
         copyOnWrite();
-        instance.addWays(builderForValue);
+        instance.addWays(builderForValue.build());
         return this;
       }
       /**
@@ -3446,7 +3440,8 @@ public final class Osmformat {
       public Builder addWays(
           int index, de.topobyte.osm4j.pbf.protobuf.Osmformat.Way.Builder builderForValue) {
         copyOnWrite();
-        instance.addWays(index, builderForValue);
+        instance.addWays(index,
+            builderForValue.build());
         return this;
       }
       /**
@@ -3511,7 +3506,8 @@ public final class Osmformat {
       public Builder setRelations(
           int index, de.topobyte.osm4j.pbf.protobuf.Osmformat.Relation.Builder builderForValue) {
         copyOnWrite();
-        instance.setRelations(index, builderForValue);
+        instance.setRelations(index,
+            builderForValue.build());
         return this;
       }
       /**
@@ -3537,7 +3533,7 @@ public final class Osmformat {
       public Builder addRelations(
           de.topobyte.osm4j.pbf.protobuf.Osmformat.Relation.Builder builderForValue) {
         copyOnWrite();
-        instance.addRelations(builderForValue);
+        instance.addRelations(builderForValue.build());
         return this;
       }
       /**
@@ -3546,7 +3542,8 @@ public final class Osmformat {
       public Builder addRelations(
           int index, de.topobyte.osm4j.pbf.protobuf.Osmformat.Relation.Builder builderForValue) {
         copyOnWrite();
-        instance.addRelations(index, builderForValue);
+        instance.addRelations(index,
+            builderForValue.build());
         return this;
       }
       /**
@@ -3611,7 +3608,8 @@ public final class Osmformat {
       public Builder setChangesets(
           int index, de.topobyte.osm4j.pbf.protobuf.Osmformat.ChangeSet.Builder builderForValue) {
         copyOnWrite();
-        instance.setChangesets(index, builderForValue);
+        instance.setChangesets(index,
+            builderForValue.build());
         return this;
       }
       /**
@@ -3637,7 +3635,7 @@ public final class Osmformat {
       public Builder addChangesets(
           de.topobyte.osm4j.pbf.protobuf.Osmformat.ChangeSet.Builder builderForValue) {
         copyOnWrite();
-        instance.addChangesets(builderForValue);
+        instance.addChangesets(builderForValue.build());
         return this;
       }
       /**
@@ -3646,7 +3644,8 @@ public final class Osmformat {
       public Builder addChangesets(
           int index, de.topobyte.osm4j.pbf.protobuf.Osmformat.ChangeSet.Builder builderForValue) {
         copyOnWrite();
-        instance.addChangesets(index, builderForValue);
+        instance.addChangesets(index,
+            builderForValue.build());
         return this;
       }
       /**
@@ -3704,7 +3703,7 @@ public final class Osmformat {
               de.topobyte.osm4j.pbf.protobuf.Osmformat.ChangeSet.class,
             };
             java.lang.String info =
-                "\u0001\u0005\u0000\u0001\u0001\u0005\u0005\u0000\u0004\u0004\u0001\u041b\u0002\t" +
+                "\u0001\u0005\u0000\u0001\u0001\u0005\u0005\u0000\u0004\u0004\u0001\u041b\u0002\u1009" +
                 "\u0000\u0003\u041b\u0004\u041b\u0005\u041b";
             return newMessageInfo(DEFAULT_INSTANCE, info, objects);
         }
@@ -3767,20 +3766,25 @@ public final class Osmformat {
 
     /**
      * <code>repeated bytes s = 1;</code>
+     * @return A list containing the s.
      */
     java.util.List<com.google.protobuf.ByteString> getSList();
     /**
      * <code>repeated bytes s = 1;</code>
+     * @return The count of s.
      */
     int getSCount();
     /**
      * <code>repeated bytes s = 1;</code>
+     * @param index The index of the element to return.
+     * @return The s at the given index.
      */
     com.google.protobuf.ByteString getS(int index);
   }
   /**
    * <pre>
    ** String table, contains the common strings in each block.
+   *
    *Note that we reserve index '0' as a delimiter, so the entry at that
    *index in the table is ALWAYS blank and unused.
    * </pre>
@@ -3799,6 +3803,7 @@ public final class Osmformat {
     private com.google.protobuf.Internal.ProtobufList<com.google.protobuf.ByteString> s_;
     /**
      * <code>repeated bytes s = 1;</code>
+     * @return A list containing the s.
      */
     @java.lang.Override
     public java.util.List<com.google.protobuf.ByteString>
@@ -3807,6 +3812,7 @@ public final class Osmformat {
     }
     /**
      * <code>repeated bytes s = 1;</code>
+     * @return The count of s.
      */
     @java.lang.Override
     public int getSCount() {
@@ -3814,40 +3820,43 @@ public final class Osmformat {
     }
     /**
      * <code>repeated bytes s = 1;</code>
+     * @param index The index of the element to return.
+     * @return The s at the given index.
      */
     @java.lang.Override
     public com.google.protobuf.ByteString getS(int index) {
       return s_.get(index);
     }
     private void ensureSIsMutable() {
-      if (!s_.isModifiable()) {
+      com.google.protobuf.Internal.ProtobufList<com.google.protobuf.ByteString> tmp = s_;
+      if (!tmp.isModifiable()) {
         s_ =
-            com.google.protobuf.GeneratedMessageLite.mutableCopy(s_);
+            com.google.protobuf.GeneratedMessageLite.mutableCopy(tmp);
        }
     }
     /**
      * <code>repeated bytes s = 1;</code>
+     * @param index The index to set the value at.
+     * @param value The s to set.
      */
     private void setS(
         int index, com.google.protobuf.ByteString value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
+      java.lang.Class<?> valueClass = value.getClass();
   ensureSIsMutable();
       s_.set(index, value);
     }
     /**
      * <code>repeated bytes s = 1;</code>
+     * @param value The s to add.
      */
     private void addS(com.google.protobuf.ByteString value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
+      java.lang.Class<?> valueClass = value.getClass();
   ensureSIsMutable();
       s_.add(value);
     }
     /**
      * <code>repeated bytes s = 1;</code>
+     * @param values The s to add.
      */
     private void addAllS(
         java.lang.Iterable<? extends com.google.protobuf.ByteString> values) {
@@ -3912,10 +3921,12 @@ public final class Osmformat {
       return com.google.protobuf.GeneratedMessageLite.parseFrom(
           DEFAULT_INSTANCE, input, extensionRegistry);
     }
+
     public static de.topobyte.osm4j.pbf.protobuf.Osmformat.StringTable parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return parseDelimitedFrom(DEFAULT_INSTANCE, input);
     }
+
     public static de.topobyte.osm4j.pbf.protobuf.Osmformat.StringTable parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -3946,6 +3957,7 @@ public final class Osmformat {
     /**
      * <pre>
      ** String table, contains the common strings in each block.
+     *
      *Note that we reserve index '0' as a delimiter, so the entry at that
      *index in the table is ALWAYS blank and unused.
      * </pre>
@@ -3965,6 +3977,7 @@ public final class Osmformat {
 
       /**
        * <code>repeated bytes s = 1;</code>
+       * @return A list containing the s.
        */
       @java.lang.Override
       public java.util.List<com.google.protobuf.ByteString>
@@ -3974,6 +3987,7 @@ public final class Osmformat {
       }
       /**
        * <code>repeated bytes s = 1;</code>
+       * @return The count of s.
        */
       @java.lang.Override
       public int getSCount() {
@@ -3981,6 +3995,8 @@ public final class Osmformat {
       }
       /**
        * <code>repeated bytes s = 1;</code>
+       * @param index The index of the element to return.
+       * @return The s at the given index.
        */
       @java.lang.Override
       public com.google.protobuf.ByteString getS(int index) {
@@ -3988,6 +4004,8 @@ public final class Osmformat {
       }
       /**
        * <code>repeated bytes s = 1;</code>
+       * @param value The s to set.
+       * @return This builder for chaining.
        */
       public Builder setS(
           int index, com.google.protobuf.ByteString value) {
@@ -3997,6 +4015,8 @@ public final class Osmformat {
       }
       /**
        * <code>repeated bytes s = 1;</code>
+       * @param value The s to add.
+       * @return This builder for chaining.
        */
       public Builder addS(com.google.protobuf.ByteString value) {
         copyOnWrite();
@@ -4005,6 +4025,8 @@ public final class Osmformat {
       }
       /**
        * <code>repeated bytes s = 1;</code>
+       * @param values The s to add.
+       * @return This builder for chaining.
        */
       public Builder addAllS(
           java.lang.Iterable<? extends com.google.protobuf.ByteString> values) {
@@ -4014,6 +4036,7 @@ public final class Osmformat {
       }
       /**
        * <code>repeated bytes s = 1;</code>
+       * @return This builder for chaining.
        */
       public Builder clearS() {
         copyOnWrite();
@@ -4101,37 +4124,45 @@ public final class Osmformat {
 
     /**
      * <code>optional int32 version = 1 [default = -1];</code>
+     * @return Whether the version field is set.
      */
     boolean hasVersion();
     /**
      * <code>optional int32 version = 1 [default = -1];</code>
+     * @return The version.
      */
     int getVersion();
 
     /**
      * <code>optional int64 timestamp = 2;</code>
+     * @return Whether the timestamp field is set.
      */
     boolean hasTimestamp();
     /**
      * <code>optional int64 timestamp = 2;</code>
+     * @return The timestamp.
      */
     long getTimestamp();
 
     /**
      * <code>optional int64 changeset = 3;</code>
+     * @return Whether the changeset field is set.
      */
     boolean hasChangeset();
     /**
      * <code>optional int64 changeset = 3;</code>
+     * @return The changeset.
      */
     long getChangeset();
 
     /**
      * <code>optional int32 uid = 4;</code>
+     * @return Whether the uid field is set.
      */
     boolean hasUid();
     /**
      * <code>optional int32 uid = 4;</code>
+     * @return The uid.
      */
     int getUid();
 
@@ -4141,6 +4172,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>optional uint32 user_sid = 5;</code>
+     * @return Whether the userSid field is set.
      */
     boolean hasUserSid();
     /**
@@ -4149,6 +4181,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>optional uint32 user_sid = 5;</code>
+     * @return The userSid.
      */
     int getUserSid();
 
@@ -4165,6 +4198,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>optional bool visible = 6;</code>
+     * @return Whether the visible field is set.
      */
     boolean hasVisible();
     /**
@@ -4180,6 +4214,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>optional bool visible = 6;</code>
+     * @return The visible.
      */
     boolean getVisible();
   }
@@ -4203,6 +4238,7 @@ public final class Osmformat {
     private int version_;
     /**
      * <code>optional int32 version = 1 [default = -1];</code>
+     * @return Whether the version field is set.
      */
     @java.lang.Override
     public boolean hasVersion() {
@@ -4210,6 +4246,7 @@ public final class Osmformat {
     }
     /**
      * <code>optional int32 version = 1 [default = -1];</code>
+     * @return The version.
      */
     @java.lang.Override
     public int getVersion() {
@@ -4217,6 +4254,7 @@ public final class Osmformat {
     }
     /**
      * <code>optional int32 version = 1 [default = -1];</code>
+     * @param value The version to set.
      */
     private void setVersion(int value) {
       bitField0_ |= 0x00000001;
@@ -4234,6 +4272,7 @@ public final class Osmformat {
     private long timestamp_;
     /**
      * <code>optional int64 timestamp = 2;</code>
+     * @return Whether the timestamp field is set.
      */
     @java.lang.Override
     public boolean hasTimestamp() {
@@ -4241,6 +4280,7 @@ public final class Osmformat {
     }
     /**
      * <code>optional int64 timestamp = 2;</code>
+     * @return The timestamp.
      */
     @java.lang.Override
     public long getTimestamp() {
@@ -4248,6 +4288,7 @@ public final class Osmformat {
     }
     /**
      * <code>optional int64 timestamp = 2;</code>
+     * @param value The timestamp to set.
      */
     private void setTimestamp(long value) {
       bitField0_ |= 0x00000002;
@@ -4265,6 +4306,7 @@ public final class Osmformat {
     private long changeset_;
     /**
      * <code>optional int64 changeset = 3;</code>
+     * @return Whether the changeset field is set.
      */
     @java.lang.Override
     public boolean hasChangeset() {
@@ -4272,6 +4314,7 @@ public final class Osmformat {
     }
     /**
      * <code>optional int64 changeset = 3;</code>
+     * @return The changeset.
      */
     @java.lang.Override
     public long getChangeset() {
@@ -4279,6 +4322,7 @@ public final class Osmformat {
     }
     /**
      * <code>optional int64 changeset = 3;</code>
+     * @param value The changeset to set.
      */
     private void setChangeset(long value) {
       bitField0_ |= 0x00000004;
@@ -4296,6 +4340,7 @@ public final class Osmformat {
     private int uid_;
     /**
      * <code>optional int32 uid = 4;</code>
+     * @return Whether the uid field is set.
      */
     @java.lang.Override
     public boolean hasUid() {
@@ -4303,6 +4348,7 @@ public final class Osmformat {
     }
     /**
      * <code>optional int32 uid = 4;</code>
+     * @return The uid.
      */
     @java.lang.Override
     public int getUid() {
@@ -4310,6 +4356,7 @@ public final class Osmformat {
     }
     /**
      * <code>optional int32 uid = 4;</code>
+     * @param value The uid to set.
      */
     private void setUid(int value) {
       bitField0_ |= 0x00000008;
@@ -4331,6 +4378,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>optional uint32 user_sid = 5;</code>
+     * @return Whether the userSid field is set.
      */
     @java.lang.Override
     public boolean hasUserSid() {
@@ -4342,6 +4390,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>optional uint32 user_sid = 5;</code>
+     * @return The userSid.
      */
     @java.lang.Override
     public int getUserSid() {
@@ -4353,6 +4402,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>optional uint32 user_sid = 5;</code>
+     * @param value The userSid to set.
      */
     private void setUserSid(int value) {
       bitField0_ |= 0x00000010;
@@ -4385,6 +4435,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>optional bool visible = 6;</code>
+     * @return Whether the visible field is set.
      */
     @java.lang.Override
     public boolean hasVisible() {
@@ -4403,6 +4454,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>optional bool visible = 6;</code>
+     * @return The visible.
      */
     @java.lang.Override
     public boolean getVisible() {
@@ -4421,6 +4473,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>optional bool visible = 6;</code>
+     * @param value The visible to set.
      */
     private void setVisible(boolean value) {
       bitField0_ |= 0x00000020;
@@ -4495,10 +4548,12 @@ public final class Osmformat {
       return com.google.protobuf.GeneratedMessageLite.parseFrom(
           DEFAULT_INSTANCE, input, extensionRegistry);
     }
+
     public static de.topobyte.osm4j.pbf.protobuf.Osmformat.Info parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return parseDelimitedFrom(DEFAULT_INSTANCE, input);
     }
+
     public static de.topobyte.osm4j.pbf.protobuf.Osmformat.Info parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -4546,6 +4601,7 @@ public final class Osmformat {
 
       /**
        * <code>optional int32 version = 1 [default = -1];</code>
+       * @return Whether the version field is set.
        */
       @java.lang.Override
       public boolean hasVersion() {
@@ -4553,6 +4609,7 @@ public final class Osmformat {
       }
       /**
        * <code>optional int32 version = 1 [default = -1];</code>
+       * @return The version.
        */
       @java.lang.Override
       public int getVersion() {
@@ -4560,6 +4617,8 @@ public final class Osmformat {
       }
       /**
        * <code>optional int32 version = 1 [default = -1];</code>
+       * @param value The version to set.
+       * @return This builder for chaining.
        */
       public Builder setVersion(int value) {
         copyOnWrite();
@@ -4568,6 +4627,7 @@ public final class Osmformat {
       }
       /**
        * <code>optional int32 version = 1 [default = -1];</code>
+       * @return This builder for chaining.
        */
       public Builder clearVersion() {
         copyOnWrite();
@@ -4577,6 +4637,7 @@ public final class Osmformat {
 
       /**
        * <code>optional int64 timestamp = 2;</code>
+       * @return Whether the timestamp field is set.
        */
       @java.lang.Override
       public boolean hasTimestamp() {
@@ -4584,6 +4645,7 @@ public final class Osmformat {
       }
       /**
        * <code>optional int64 timestamp = 2;</code>
+       * @return The timestamp.
        */
       @java.lang.Override
       public long getTimestamp() {
@@ -4591,6 +4653,8 @@ public final class Osmformat {
       }
       /**
        * <code>optional int64 timestamp = 2;</code>
+       * @param value The timestamp to set.
+       * @return This builder for chaining.
        */
       public Builder setTimestamp(long value) {
         copyOnWrite();
@@ -4599,6 +4663,7 @@ public final class Osmformat {
       }
       /**
        * <code>optional int64 timestamp = 2;</code>
+       * @return This builder for chaining.
        */
       public Builder clearTimestamp() {
         copyOnWrite();
@@ -4608,6 +4673,7 @@ public final class Osmformat {
 
       /**
        * <code>optional int64 changeset = 3;</code>
+       * @return Whether the changeset field is set.
        */
       @java.lang.Override
       public boolean hasChangeset() {
@@ -4615,6 +4681,7 @@ public final class Osmformat {
       }
       /**
        * <code>optional int64 changeset = 3;</code>
+       * @return The changeset.
        */
       @java.lang.Override
       public long getChangeset() {
@@ -4622,6 +4689,8 @@ public final class Osmformat {
       }
       /**
        * <code>optional int64 changeset = 3;</code>
+       * @param value The changeset to set.
+       * @return This builder for chaining.
        */
       public Builder setChangeset(long value) {
         copyOnWrite();
@@ -4630,6 +4699,7 @@ public final class Osmformat {
       }
       /**
        * <code>optional int64 changeset = 3;</code>
+       * @return This builder for chaining.
        */
       public Builder clearChangeset() {
         copyOnWrite();
@@ -4639,6 +4709,7 @@ public final class Osmformat {
 
       /**
        * <code>optional int32 uid = 4;</code>
+       * @return Whether the uid field is set.
        */
       @java.lang.Override
       public boolean hasUid() {
@@ -4646,6 +4717,7 @@ public final class Osmformat {
       }
       /**
        * <code>optional int32 uid = 4;</code>
+       * @return The uid.
        */
       @java.lang.Override
       public int getUid() {
@@ -4653,6 +4725,8 @@ public final class Osmformat {
       }
       /**
        * <code>optional int32 uid = 4;</code>
+       * @param value The uid to set.
+       * @return This builder for chaining.
        */
       public Builder setUid(int value) {
         copyOnWrite();
@@ -4661,6 +4735,7 @@ public final class Osmformat {
       }
       /**
        * <code>optional int32 uid = 4;</code>
+       * @return This builder for chaining.
        */
       public Builder clearUid() {
         copyOnWrite();
@@ -4674,6 +4749,7 @@ public final class Osmformat {
        * </pre>
        *
        * <code>optional uint32 user_sid = 5;</code>
+       * @return Whether the userSid field is set.
        */
       @java.lang.Override
       public boolean hasUserSid() {
@@ -4685,6 +4761,7 @@ public final class Osmformat {
        * </pre>
        *
        * <code>optional uint32 user_sid = 5;</code>
+       * @return The userSid.
        */
       @java.lang.Override
       public int getUserSid() {
@@ -4696,6 +4773,8 @@ public final class Osmformat {
        * </pre>
        *
        * <code>optional uint32 user_sid = 5;</code>
+       * @param value The userSid to set.
+       * @return This builder for chaining.
        */
       public Builder setUserSid(int value) {
         copyOnWrite();
@@ -4708,6 +4787,7 @@ public final class Osmformat {
        * </pre>
        *
        * <code>optional uint32 user_sid = 5;</code>
+       * @return This builder for chaining.
        */
       public Builder clearUserSid() {
         copyOnWrite();
@@ -4728,6 +4808,7 @@ public final class Osmformat {
        * </pre>
        *
        * <code>optional bool visible = 6;</code>
+       * @return Whether the visible field is set.
        */
       @java.lang.Override
       public boolean hasVisible() {
@@ -4746,6 +4827,7 @@ public final class Osmformat {
        * </pre>
        *
        * <code>optional bool visible = 6;</code>
+       * @return The visible.
        */
       @java.lang.Override
       public boolean getVisible() {
@@ -4764,6 +4846,8 @@ public final class Osmformat {
        * </pre>
        *
        * <code>optional bool visible = 6;</code>
+       * @param value The visible to set.
+       * @return This builder for chaining.
        */
       public Builder setVisible(boolean value) {
         copyOnWrite();
@@ -4783,6 +4867,7 @@ public final class Osmformat {
        * </pre>
        *
        * <code>optional bool visible = 6;</code>
+       * @return This builder for chaining.
        */
       public Builder clearVisible() {
         copyOnWrite();
@@ -4815,8 +4900,8 @@ public final class Osmformat {
               "visible_",
             };
             java.lang.String info =
-                "\u0001\u0006\u0000\u0001\u0001\u0006\u0006\u0000\u0000\u0000\u0001\u0004\u0000\u0002" +
-                "\u0002\u0001\u0003\u0002\u0002\u0004\u0004\u0003\u0005\u000b\u0004\u0006\u0007\u0005" +
+                "\u0001\u0006\u0000\u0001\u0001\u0006\u0006\u0000\u0000\u0000\u0001\u1004\u0000\u0002" +
+                "\u1002\u0001\u0003\u1002\u0002\u0004\u1004\u0003\u0005\u100b\u0004\u0006\u1007\u0005" +
                 "";
             return newMessageInfo(DEFAULT_INSTANCE, info, objects);
         }
@@ -4878,14 +4963,18 @@ public final class Osmformat {
 
     /**
      * <code>repeated int32 version = 1 [packed = true];</code>
+     * @return A list containing the version.
      */
     java.util.List<java.lang.Integer> getVersionList();
     /**
      * <code>repeated int32 version = 1 [packed = true];</code>
+     * @return The count of version.
      */
     int getVersionCount();
     /**
      * <code>repeated int32 version = 1 [packed = true];</code>
+     * @param index The index of the element to return.
+     * @return The version at the given index.
      */
     int getVersion(int index);
 
@@ -4895,6 +4984,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint64 timestamp = 2 [packed = true];</code>
+     * @return A list containing the timestamp.
      */
     java.util.List<java.lang.Long> getTimestampList();
     /**
@@ -4903,6 +4993,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint64 timestamp = 2 [packed = true];</code>
+     * @return The count of timestamp.
      */
     int getTimestampCount();
     /**
@@ -4911,6 +5002,8 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint64 timestamp = 2 [packed = true];</code>
+     * @param index The index of the element to return.
+     * @return The timestamp at the given index.
      */
     long getTimestamp(int index);
 
@@ -4920,6 +5013,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint64 changeset = 3 [packed = true];</code>
+     * @return A list containing the changeset.
      */
     java.util.List<java.lang.Long> getChangesetList();
     /**
@@ -4928,6 +5022,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint64 changeset = 3 [packed = true];</code>
+     * @return The count of changeset.
      */
     int getChangesetCount();
     /**
@@ -4936,6 +5031,8 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint64 changeset = 3 [packed = true];</code>
+     * @param index The index of the element to return.
+     * @return The changeset at the given index.
      */
     long getChangeset(int index);
 
@@ -4945,6 +5042,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint32 uid = 4 [packed = true];</code>
+     * @return A list containing the uid.
      */
     java.util.List<java.lang.Integer> getUidList();
     /**
@@ -4953,6 +5051,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint32 uid = 4 [packed = true];</code>
+     * @return The count of uid.
      */
     int getUidCount();
     /**
@@ -4961,6 +5060,8 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint32 uid = 4 [packed = true];</code>
+     * @param index The index of the element to return.
+     * @return The uid at the given index.
      */
     int getUid(int index);
 
@@ -4970,6 +5071,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint32 user_sid = 5 [packed = true];</code>
+     * @return A list containing the userSid.
      */
     java.util.List<java.lang.Integer> getUserSidList();
     /**
@@ -4978,6 +5080,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint32 user_sid = 5 [packed = true];</code>
+     * @return The count of userSid.
      */
     int getUserSidCount();
     /**
@@ -4986,6 +5089,8 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint32 user_sid = 5 [packed = true];</code>
+     * @param index The index of the element to return.
+     * @return The userSid at the given index.
      */
     int getUserSid(int index);
 
@@ -5002,6 +5107,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated bool visible = 6 [packed = true];</code>
+     * @return A list containing the visible.
      */
     java.util.List<java.lang.Boolean> getVisibleList();
     /**
@@ -5017,6 +5123,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated bool visible = 6 [packed = true];</code>
+     * @return The count of visible.
      */
     int getVisibleCount();
     /**
@@ -5032,6 +5139,8 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated bool visible = 6 [packed = true];</code>
+     * @param index The index of the element to return.
+     * @return The visible at the given index.
      */
     boolean getVisible(int index);
   }
@@ -5059,6 +5168,7 @@ public final class Osmformat {
     private com.google.protobuf.Internal.IntList version_;
     /**
      * <code>repeated int32 version = 1 [packed = true];</code>
+     * @return A list containing the version.
      */
     @java.lang.Override
     public java.util.List<java.lang.Integer>
@@ -5067,6 +5177,7 @@ public final class Osmformat {
     }
     /**
      * <code>repeated int32 version = 1 [packed = true];</code>
+     * @return The count of version.
      */
     @java.lang.Override
     public int getVersionCount() {
@@ -5074,6 +5185,8 @@ public final class Osmformat {
     }
     /**
      * <code>repeated int32 version = 1 [packed = true];</code>
+     * @param index The index of the element to return.
+     * @return The version at the given index.
      */
     @java.lang.Override
     public int getVersion(int index) {
@@ -5081,13 +5194,16 @@ public final class Osmformat {
     }
     private int versionMemoizedSerializedSize = -1;
     private void ensureVersionIsMutable() {
-      if (!version_.isModifiable()) {
+      com.google.protobuf.Internal.IntList tmp = version_;
+      if (!tmp.isModifiable()) {
         version_ =
-            com.google.protobuf.GeneratedMessageLite.mutableCopy(version_);
+            com.google.protobuf.GeneratedMessageLite.mutableCopy(tmp);
        }
     }
     /**
      * <code>repeated int32 version = 1 [packed = true];</code>
+     * @param index The index to set the value at.
+     * @param value The version to set.
      */
     private void setVersion(
         int index, int value) {
@@ -5096,6 +5212,7 @@ public final class Osmformat {
     }
     /**
      * <code>repeated int32 version = 1 [packed = true];</code>
+     * @param value The version to add.
      */
     private void addVersion(int value) {
       ensureVersionIsMutable();
@@ -5103,6 +5220,7 @@ public final class Osmformat {
     }
     /**
      * <code>repeated int32 version = 1 [packed = true];</code>
+     * @param values The version to add.
      */
     private void addAllVersion(
         java.lang.Iterable<? extends java.lang.Integer> values) {
@@ -5125,6 +5243,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint64 timestamp = 2 [packed = true];</code>
+     * @return A list containing the timestamp.
      */
     @java.lang.Override
     public java.util.List<java.lang.Long>
@@ -5137,6 +5256,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint64 timestamp = 2 [packed = true];</code>
+     * @return The count of timestamp.
      */
     @java.lang.Override
     public int getTimestampCount() {
@@ -5148,6 +5268,8 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint64 timestamp = 2 [packed = true];</code>
+     * @param index The index of the element to return.
+     * @return The timestamp at the given index.
      */
     @java.lang.Override
     public long getTimestamp(int index) {
@@ -5155,9 +5277,10 @@ public final class Osmformat {
     }
     private int timestampMemoizedSerializedSize = -1;
     private void ensureTimestampIsMutable() {
-      if (!timestamp_.isModifiable()) {
+      com.google.protobuf.Internal.LongList tmp = timestamp_;
+      if (!tmp.isModifiable()) {
         timestamp_ =
-            com.google.protobuf.GeneratedMessageLite.mutableCopy(timestamp_);
+            com.google.protobuf.GeneratedMessageLite.mutableCopy(tmp);
        }
     }
     /**
@@ -5166,6 +5289,8 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint64 timestamp = 2 [packed = true];</code>
+     * @param index The index to set the value at.
+     * @param value The timestamp to set.
      */
     private void setTimestamp(
         int index, long value) {
@@ -5178,6 +5303,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint64 timestamp = 2 [packed = true];</code>
+     * @param value The timestamp to add.
      */
     private void addTimestamp(long value) {
       ensureTimestampIsMutable();
@@ -5189,6 +5315,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint64 timestamp = 2 [packed = true];</code>
+     * @param values The timestamp to add.
      */
     private void addAllTimestamp(
         java.lang.Iterable<? extends java.lang.Long> values) {
@@ -5215,6 +5342,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint64 changeset = 3 [packed = true];</code>
+     * @return A list containing the changeset.
      */
     @java.lang.Override
     public java.util.List<java.lang.Long>
@@ -5227,6 +5355,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint64 changeset = 3 [packed = true];</code>
+     * @return The count of changeset.
      */
     @java.lang.Override
     public int getChangesetCount() {
@@ -5238,6 +5367,8 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint64 changeset = 3 [packed = true];</code>
+     * @param index The index of the element to return.
+     * @return The changeset at the given index.
      */
     @java.lang.Override
     public long getChangeset(int index) {
@@ -5245,9 +5376,10 @@ public final class Osmformat {
     }
     private int changesetMemoizedSerializedSize = -1;
     private void ensureChangesetIsMutable() {
-      if (!changeset_.isModifiable()) {
+      com.google.protobuf.Internal.LongList tmp = changeset_;
+      if (!tmp.isModifiable()) {
         changeset_ =
-            com.google.protobuf.GeneratedMessageLite.mutableCopy(changeset_);
+            com.google.protobuf.GeneratedMessageLite.mutableCopy(tmp);
        }
     }
     /**
@@ -5256,6 +5388,8 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint64 changeset = 3 [packed = true];</code>
+     * @param index The index to set the value at.
+     * @param value The changeset to set.
      */
     private void setChangeset(
         int index, long value) {
@@ -5268,6 +5402,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint64 changeset = 3 [packed = true];</code>
+     * @param value The changeset to add.
      */
     private void addChangeset(long value) {
       ensureChangesetIsMutable();
@@ -5279,6 +5414,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint64 changeset = 3 [packed = true];</code>
+     * @param values The changeset to add.
      */
     private void addAllChangeset(
         java.lang.Iterable<? extends java.lang.Long> values) {
@@ -5305,6 +5441,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint32 uid = 4 [packed = true];</code>
+     * @return A list containing the uid.
      */
     @java.lang.Override
     public java.util.List<java.lang.Integer>
@@ -5317,6 +5454,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint32 uid = 4 [packed = true];</code>
+     * @return The count of uid.
      */
     @java.lang.Override
     public int getUidCount() {
@@ -5328,6 +5466,8 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint32 uid = 4 [packed = true];</code>
+     * @param index The index of the element to return.
+     * @return The uid at the given index.
      */
     @java.lang.Override
     public int getUid(int index) {
@@ -5335,9 +5475,10 @@ public final class Osmformat {
     }
     private int uidMemoizedSerializedSize = -1;
     private void ensureUidIsMutable() {
-      if (!uid_.isModifiable()) {
+      com.google.protobuf.Internal.IntList tmp = uid_;
+      if (!tmp.isModifiable()) {
         uid_ =
-            com.google.protobuf.GeneratedMessageLite.mutableCopy(uid_);
+            com.google.protobuf.GeneratedMessageLite.mutableCopy(tmp);
        }
     }
     /**
@@ -5346,6 +5487,8 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint32 uid = 4 [packed = true];</code>
+     * @param index The index to set the value at.
+     * @param value The uid to set.
      */
     private void setUid(
         int index, int value) {
@@ -5358,6 +5501,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint32 uid = 4 [packed = true];</code>
+     * @param value The uid to add.
      */
     private void addUid(int value) {
       ensureUidIsMutable();
@@ -5369,6 +5513,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint32 uid = 4 [packed = true];</code>
+     * @param values The uid to add.
      */
     private void addAllUid(
         java.lang.Iterable<? extends java.lang.Integer> values) {
@@ -5395,6 +5540,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint32 user_sid = 5 [packed = true];</code>
+     * @return A list containing the userSid.
      */
     @java.lang.Override
     public java.util.List<java.lang.Integer>
@@ -5407,6 +5553,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint32 user_sid = 5 [packed = true];</code>
+     * @return The count of userSid.
      */
     @java.lang.Override
     public int getUserSidCount() {
@@ -5418,6 +5565,8 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint32 user_sid = 5 [packed = true];</code>
+     * @param index The index of the element to return.
+     * @return The userSid at the given index.
      */
     @java.lang.Override
     public int getUserSid(int index) {
@@ -5425,9 +5574,10 @@ public final class Osmformat {
     }
     private int userSidMemoizedSerializedSize = -1;
     private void ensureUserSidIsMutable() {
-      if (!userSid_.isModifiable()) {
+      com.google.protobuf.Internal.IntList tmp = userSid_;
+      if (!tmp.isModifiable()) {
         userSid_ =
-            com.google.protobuf.GeneratedMessageLite.mutableCopy(userSid_);
+            com.google.protobuf.GeneratedMessageLite.mutableCopy(tmp);
        }
     }
     /**
@@ -5436,6 +5586,8 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint32 user_sid = 5 [packed = true];</code>
+     * @param index The index to set the value at.
+     * @param value The userSid to set.
      */
     private void setUserSid(
         int index, int value) {
@@ -5448,6 +5600,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint32 user_sid = 5 [packed = true];</code>
+     * @param value The userSid to add.
      */
     private void addUserSid(int value) {
       ensureUserSidIsMutable();
@@ -5459,6 +5612,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint32 user_sid = 5 [packed = true];</code>
+     * @param values The userSid to add.
      */
     private void addAllUserSid(
         java.lang.Iterable<? extends java.lang.Integer> values) {
@@ -5492,6 +5646,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated bool visible = 6 [packed = true];</code>
+     * @return A list containing the visible.
      */
     @java.lang.Override
     public java.util.List<java.lang.Boolean>
@@ -5511,6 +5666,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated bool visible = 6 [packed = true];</code>
+     * @return The count of visible.
      */
     @java.lang.Override
     public int getVisibleCount() {
@@ -5529,6 +5685,8 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated bool visible = 6 [packed = true];</code>
+     * @param index The index of the element to return.
+     * @return The visible at the given index.
      */
     @java.lang.Override
     public boolean getVisible(int index) {
@@ -5536,9 +5694,10 @@ public final class Osmformat {
     }
     private int visibleMemoizedSerializedSize = -1;
     private void ensureVisibleIsMutable() {
-      if (!visible_.isModifiable()) {
+      com.google.protobuf.Internal.BooleanList tmp = visible_;
+      if (!tmp.isModifiable()) {
         visible_ =
-            com.google.protobuf.GeneratedMessageLite.mutableCopy(visible_);
+            com.google.protobuf.GeneratedMessageLite.mutableCopy(tmp);
        }
     }
     /**
@@ -5554,6 +5713,8 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated bool visible = 6 [packed = true];</code>
+     * @param index The index to set the value at.
+     * @param value The visible to set.
      */
     private void setVisible(
         int index, boolean value) {
@@ -5573,6 +5734,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated bool visible = 6 [packed = true];</code>
+     * @param value The visible to add.
      */
     private void addVisible(boolean value) {
       ensureVisibleIsMutable();
@@ -5591,6 +5753,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated bool visible = 6 [packed = true];</code>
+     * @param values The visible to add.
      */
     private void addAllVisible(
         java.lang.Iterable<? extends java.lang.Boolean> values) {
@@ -5666,10 +5829,12 @@ public final class Osmformat {
       return com.google.protobuf.GeneratedMessageLite.parseFrom(
           DEFAULT_INSTANCE, input, extensionRegistry);
     }
+
     public static de.topobyte.osm4j.pbf.protobuf.Osmformat.DenseInfo parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return parseDelimitedFrom(DEFAULT_INSTANCE, input);
     }
+
     public static de.topobyte.osm4j.pbf.protobuf.Osmformat.DenseInfo parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -5717,6 +5882,7 @@ public final class Osmformat {
 
       /**
        * <code>repeated int32 version = 1 [packed = true];</code>
+       * @return A list containing the version.
        */
       @java.lang.Override
       public java.util.List<java.lang.Integer>
@@ -5726,6 +5892,7 @@ public final class Osmformat {
       }
       /**
        * <code>repeated int32 version = 1 [packed = true];</code>
+       * @return The count of version.
        */
       @java.lang.Override
       public int getVersionCount() {
@@ -5733,6 +5900,8 @@ public final class Osmformat {
       }
       /**
        * <code>repeated int32 version = 1 [packed = true];</code>
+       * @param index The index of the element to return.
+       * @return The version at the given index.
        */
       @java.lang.Override
       public int getVersion(int index) {
@@ -5740,6 +5909,8 @@ public final class Osmformat {
       }
       /**
        * <code>repeated int32 version = 1 [packed = true];</code>
+       * @param value The version to set.
+       * @return This builder for chaining.
        */
       public Builder setVersion(
           int index, int value) {
@@ -5749,6 +5920,8 @@ public final class Osmformat {
       }
       /**
        * <code>repeated int32 version = 1 [packed = true];</code>
+       * @param value The version to add.
+       * @return This builder for chaining.
        */
       public Builder addVersion(int value) {
         copyOnWrite();
@@ -5757,6 +5930,8 @@ public final class Osmformat {
       }
       /**
        * <code>repeated int32 version = 1 [packed = true];</code>
+       * @param values The version to add.
+       * @return This builder for chaining.
        */
       public Builder addAllVersion(
           java.lang.Iterable<? extends java.lang.Integer> values) {
@@ -5766,6 +5941,7 @@ public final class Osmformat {
       }
       /**
        * <code>repeated int32 version = 1 [packed = true];</code>
+       * @return This builder for chaining.
        */
       public Builder clearVersion() {
         copyOnWrite();
@@ -5779,6 +5955,7 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated sint64 timestamp = 2 [packed = true];</code>
+       * @return A list containing the timestamp.
        */
       @java.lang.Override
       public java.util.List<java.lang.Long>
@@ -5792,6 +5969,7 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated sint64 timestamp = 2 [packed = true];</code>
+       * @return The count of timestamp.
        */
       @java.lang.Override
       public int getTimestampCount() {
@@ -5803,6 +5981,8 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated sint64 timestamp = 2 [packed = true];</code>
+       * @param index The index of the element to return.
+       * @return The timestamp at the given index.
        */
       @java.lang.Override
       public long getTimestamp(int index) {
@@ -5814,6 +5994,8 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated sint64 timestamp = 2 [packed = true];</code>
+       * @param value The timestamp to set.
+       * @return This builder for chaining.
        */
       public Builder setTimestamp(
           int index, long value) {
@@ -5827,6 +6009,8 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated sint64 timestamp = 2 [packed = true];</code>
+       * @param value The timestamp to add.
+       * @return This builder for chaining.
        */
       public Builder addTimestamp(long value) {
         copyOnWrite();
@@ -5839,6 +6023,8 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated sint64 timestamp = 2 [packed = true];</code>
+       * @param values The timestamp to add.
+       * @return This builder for chaining.
        */
       public Builder addAllTimestamp(
           java.lang.Iterable<? extends java.lang.Long> values) {
@@ -5852,6 +6038,7 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated sint64 timestamp = 2 [packed = true];</code>
+       * @return This builder for chaining.
        */
       public Builder clearTimestamp() {
         copyOnWrite();
@@ -5865,6 +6052,7 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated sint64 changeset = 3 [packed = true];</code>
+       * @return A list containing the changeset.
        */
       @java.lang.Override
       public java.util.List<java.lang.Long>
@@ -5878,6 +6066,7 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated sint64 changeset = 3 [packed = true];</code>
+       * @return The count of changeset.
        */
       @java.lang.Override
       public int getChangesetCount() {
@@ -5889,6 +6078,8 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated sint64 changeset = 3 [packed = true];</code>
+       * @param index The index of the element to return.
+       * @return The changeset at the given index.
        */
       @java.lang.Override
       public long getChangeset(int index) {
@@ -5900,6 +6091,8 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated sint64 changeset = 3 [packed = true];</code>
+       * @param value The changeset to set.
+       * @return This builder for chaining.
        */
       public Builder setChangeset(
           int index, long value) {
@@ -5913,6 +6106,8 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated sint64 changeset = 3 [packed = true];</code>
+       * @param value The changeset to add.
+       * @return This builder for chaining.
        */
       public Builder addChangeset(long value) {
         copyOnWrite();
@@ -5925,6 +6120,8 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated sint64 changeset = 3 [packed = true];</code>
+       * @param values The changeset to add.
+       * @return This builder for chaining.
        */
       public Builder addAllChangeset(
           java.lang.Iterable<? extends java.lang.Long> values) {
@@ -5938,6 +6135,7 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated sint64 changeset = 3 [packed = true];</code>
+       * @return This builder for chaining.
        */
       public Builder clearChangeset() {
         copyOnWrite();
@@ -5951,6 +6149,7 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated sint32 uid = 4 [packed = true];</code>
+       * @return A list containing the uid.
        */
       @java.lang.Override
       public java.util.List<java.lang.Integer>
@@ -5964,6 +6163,7 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated sint32 uid = 4 [packed = true];</code>
+       * @return The count of uid.
        */
       @java.lang.Override
       public int getUidCount() {
@@ -5975,6 +6175,8 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated sint32 uid = 4 [packed = true];</code>
+       * @param index The index of the element to return.
+       * @return The uid at the given index.
        */
       @java.lang.Override
       public int getUid(int index) {
@@ -5986,6 +6188,8 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated sint32 uid = 4 [packed = true];</code>
+       * @param value The uid to set.
+       * @return This builder for chaining.
        */
       public Builder setUid(
           int index, int value) {
@@ -5999,6 +6203,8 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated sint32 uid = 4 [packed = true];</code>
+       * @param value The uid to add.
+       * @return This builder for chaining.
        */
       public Builder addUid(int value) {
         copyOnWrite();
@@ -6011,6 +6217,8 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated sint32 uid = 4 [packed = true];</code>
+       * @param values The uid to add.
+       * @return This builder for chaining.
        */
       public Builder addAllUid(
           java.lang.Iterable<? extends java.lang.Integer> values) {
@@ -6024,6 +6232,7 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated sint32 uid = 4 [packed = true];</code>
+       * @return This builder for chaining.
        */
       public Builder clearUid() {
         copyOnWrite();
@@ -6037,6 +6246,7 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated sint32 user_sid = 5 [packed = true];</code>
+       * @return A list containing the userSid.
        */
       @java.lang.Override
       public java.util.List<java.lang.Integer>
@@ -6050,6 +6260,7 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated sint32 user_sid = 5 [packed = true];</code>
+       * @return The count of userSid.
        */
       @java.lang.Override
       public int getUserSidCount() {
@@ -6061,6 +6272,8 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated sint32 user_sid = 5 [packed = true];</code>
+       * @param index The index of the element to return.
+       * @return The userSid at the given index.
        */
       @java.lang.Override
       public int getUserSid(int index) {
@@ -6072,6 +6285,8 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated sint32 user_sid = 5 [packed = true];</code>
+       * @param value The userSid to set.
+       * @return This builder for chaining.
        */
       public Builder setUserSid(
           int index, int value) {
@@ -6085,6 +6300,8 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated sint32 user_sid = 5 [packed = true];</code>
+       * @param value The userSid to add.
+       * @return This builder for chaining.
        */
       public Builder addUserSid(int value) {
         copyOnWrite();
@@ -6097,6 +6314,8 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated sint32 user_sid = 5 [packed = true];</code>
+       * @param values The userSid to add.
+       * @return This builder for chaining.
        */
       public Builder addAllUserSid(
           java.lang.Iterable<? extends java.lang.Integer> values) {
@@ -6110,6 +6329,7 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated sint32 user_sid = 5 [packed = true];</code>
+       * @return This builder for chaining.
        */
       public Builder clearUserSid() {
         copyOnWrite();
@@ -6130,6 +6350,7 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated bool visible = 6 [packed = true];</code>
+       * @return A list containing the visible.
        */
       @java.lang.Override
       public java.util.List<java.lang.Boolean>
@@ -6150,6 +6371,7 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated bool visible = 6 [packed = true];</code>
+       * @return The count of visible.
        */
       @java.lang.Override
       public int getVisibleCount() {
@@ -6168,6 +6390,8 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated bool visible = 6 [packed = true];</code>
+       * @param index The index of the element to return.
+       * @return The visible at the given index.
        */
       @java.lang.Override
       public boolean getVisible(int index) {
@@ -6186,6 +6410,8 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated bool visible = 6 [packed = true];</code>
+       * @param value The visible to set.
+       * @return This builder for chaining.
        */
       public Builder setVisible(
           int index, boolean value) {
@@ -6206,6 +6432,8 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated bool visible = 6 [packed = true];</code>
+       * @param value The visible to add.
+       * @return This builder for chaining.
        */
       public Builder addVisible(boolean value) {
         copyOnWrite();
@@ -6225,6 +6453,8 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated bool visible = 6 [packed = true];</code>
+       * @param values The visible to add.
+       * @return This builder for chaining.
        */
       public Builder addAllVisible(
           java.lang.Iterable<? extends java.lang.Boolean> values) {
@@ -6245,6 +6475,7 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated bool visible = 6 [packed = true];</code>
+       * @return This builder for chaining.
        */
       public Builder clearVisible() {
         copyOnWrite();
@@ -6342,10 +6573,12 @@ public final class Osmformat {
      *   // Parallel arrays.
      *   repeated uint32 keys = 2 [packed = true]; // String IDs.
      *   repeated uint32 vals = 3 [packed = true]; // String IDs.
+     *
      *   optional Info info = 4;
      * </pre>
      *
      * <code>required int64 id = 1;</code>
+     * @return Whether the id field is set.
      */
     boolean hasId();
     /**
@@ -6354,10 +6587,12 @@ public final class Osmformat {
      *   // Parallel arrays.
      *   repeated uint32 keys = 2 [packed = true]; // String IDs.
      *   repeated uint32 vals = 3 [packed = true]; // String IDs.
+     *
      *   optional Info info = 4;
      * </pre>
      *
      * <code>required int64 id = 1;</code>
+     * @return The id.
      */
     long getId();
   }
@@ -6385,10 +6620,12 @@ public final class Osmformat {
      *   // Parallel arrays.
      *   repeated uint32 keys = 2 [packed = true]; // String IDs.
      *   repeated uint32 vals = 3 [packed = true]; // String IDs.
+     *
      *   optional Info info = 4;
      * </pre>
      *
      * <code>required int64 id = 1;</code>
+     * @return Whether the id field is set.
      */
     @java.lang.Override
     public boolean hasId() {
@@ -6400,10 +6637,12 @@ public final class Osmformat {
      *   // Parallel arrays.
      *   repeated uint32 keys = 2 [packed = true]; // String IDs.
      *   repeated uint32 vals = 3 [packed = true]; // String IDs.
+     *
      *   optional Info info = 4;
      * </pre>
      *
      * <code>required int64 id = 1;</code>
+     * @return The id.
      */
     @java.lang.Override
     public long getId() {
@@ -6415,10 +6654,12 @@ public final class Osmformat {
      *   // Parallel arrays.
      *   repeated uint32 keys = 2 [packed = true]; // String IDs.
      *   repeated uint32 vals = 3 [packed = true]; // String IDs.
+     *
      *   optional Info info = 4;
      * </pre>
      *
      * <code>required int64 id = 1;</code>
+     * @param value The id to set.
      */
     private void setId(long value) {
       bitField0_ |= 0x00000001;
@@ -6430,6 +6671,7 @@ public final class Osmformat {
      *   // Parallel arrays.
      *   repeated uint32 keys = 2 [packed = true]; // String IDs.
      *   repeated uint32 vals = 3 [packed = true]; // String IDs.
+     *
      *   optional Info info = 4;
      * </pre>
      *
@@ -6490,10 +6732,12 @@ public final class Osmformat {
       return com.google.protobuf.GeneratedMessageLite.parseFrom(
           DEFAULT_INSTANCE, input, extensionRegistry);
     }
+
     public static de.topobyte.osm4j.pbf.protobuf.Osmformat.ChangeSet parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return parseDelimitedFrom(DEFAULT_INSTANCE, input);
     }
+
     public static de.topobyte.osm4j.pbf.protobuf.Osmformat.ChangeSet parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -6546,10 +6790,12 @@ public final class Osmformat {
        *   // Parallel arrays.
        *   repeated uint32 keys = 2 [packed = true]; // String IDs.
        *   repeated uint32 vals = 3 [packed = true]; // String IDs.
+       *
        *   optional Info info = 4;
        * </pre>
        *
        * <code>required int64 id = 1;</code>
+       * @return Whether the id field is set.
        */
       @java.lang.Override
       public boolean hasId() {
@@ -6561,10 +6807,12 @@ public final class Osmformat {
        *   // Parallel arrays.
        *   repeated uint32 keys = 2 [packed = true]; // String IDs.
        *   repeated uint32 vals = 3 [packed = true]; // String IDs.
+       *
        *   optional Info info = 4;
        * </pre>
        *
        * <code>required int64 id = 1;</code>
+       * @return The id.
        */
       @java.lang.Override
       public long getId() {
@@ -6576,10 +6824,13 @@ public final class Osmformat {
        *   // Parallel arrays.
        *   repeated uint32 keys = 2 [packed = true]; // String IDs.
        *   repeated uint32 vals = 3 [packed = true]; // String IDs.
+       *
        *   optional Info info = 4;
        * </pre>
        *
        * <code>required int64 id = 1;</code>
+       * @param value The id to set.
+       * @return This builder for chaining.
        */
       public Builder setId(long value) {
         copyOnWrite();
@@ -6592,10 +6843,12 @@ public final class Osmformat {
        *   // Parallel arrays.
        *   repeated uint32 keys = 2 [packed = true]; // String IDs.
        *   repeated uint32 vals = 3 [packed = true]; // String IDs.
+       *
        *   optional Info info = 4;
        * </pre>
        *
        * <code>required int64 id = 1;</code>
+       * @return This builder for chaining.
        */
       public Builder clearId() {
         copyOnWrite();
@@ -6624,7 +6877,7 @@ public final class Osmformat {
               "id_",
             };
             java.lang.String info =
-                "\u0001\u0001\u0000\u0001\u0001\u0001\u0001\u0000\u0000\u0001\u0001\u0502\u0000";
+                "\u0001\u0001\u0000\u0001\u0001\u0001\u0001\u0000\u0000\u0001\u0001\u1502\u0000";
             return newMessageInfo(DEFAULT_INSTANCE, info, objects);
         }
         // fall through
@@ -6686,10 +6939,12 @@ public final class Osmformat {
 
     /**
      * <code>required sint64 id = 1;</code>
+     * @return Whether the id field is set.
      */
     boolean hasId();
     /**
      * <code>required sint64 id = 1;</code>
+     * @return The id.
      */
     long getId();
 
@@ -6699,6 +6954,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated uint32 keys = 2 [packed = true];</code>
+     * @return A list containing the keys.
      */
     java.util.List<java.lang.Integer> getKeysList();
     /**
@@ -6707,6 +6963,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated uint32 keys = 2 [packed = true];</code>
+     * @return The count of keys.
      */
     int getKeysCount();
     /**
@@ -6715,6 +6972,8 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated uint32 keys = 2 [packed = true];</code>
+     * @param index The index of the element to return.
+     * @return The keys at the given index.
      */
     int getKeys(int index);
 
@@ -6724,6 +6983,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated uint32 vals = 3 [packed = true];</code>
+     * @return A list containing the vals.
      */
     java.util.List<java.lang.Integer> getValsList();
     /**
@@ -6732,6 +6992,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated uint32 vals = 3 [packed = true];</code>
+     * @return The count of vals.
      */
     int getValsCount();
     /**
@@ -6740,6 +7001,8 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated uint32 vals = 3 [packed = true];</code>
+     * @param index The index of the element to return.
+     * @return The vals at the given index.
      */
     int getVals(int index);
 
@@ -6749,6 +7012,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>optional .OSMPBF.Info info = 4;</code>
+     * @return Whether the info field is set.
      */
     boolean hasInfo();
     /**
@@ -6757,24 +7021,29 @@ public final class Osmformat {
      * </pre>
      *
      * <code>optional .OSMPBF.Info info = 4;</code>
+     * @return The info.
      */
     de.topobyte.osm4j.pbf.protobuf.Osmformat.Info getInfo();
 
     /**
      * <code>required sint64 lat = 8;</code>
+     * @return Whether the lat field is set.
      */
     boolean hasLat();
     /**
      * <code>required sint64 lat = 8;</code>
+     * @return The lat.
      */
     long getLat();
 
     /**
      * <code>required sint64 lon = 9;</code>
+     * @return Whether the lon field is set.
      */
     boolean hasLon();
     /**
      * <code>required sint64 lon = 9;</code>
+     * @return The lon.
      */
     long getLon();
   }
@@ -6795,6 +7064,7 @@ public final class Osmformat {
     private long id_;
     /**
      * <code>required sint64 id = 1;</code>
+     * @return Whether the id field is set.
      */
     @java.lang.Override
     public boolean hasId() {
@@ -6802,6 +7072,7 @@ public final class Osmformat {
     }
     /**
      * <code>required sint64 id = 1;</code>
+     * @return The id.
      */
     @java.lang.Override
     public long getId() {
@@ -6809,6 +7080,7 @@ public final class Osmformat {
     }
     /**
      * <code>required sint64 id = 1;</code>
+     * @param value The id to set.
      */
     private void setId(long value) {
       bitField0_ |= 0x00000001;
@@ -6830,6 +7102,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated uint32 keys = 2 [packed = true];</code>
+     * @return A list containing the keys.
      */
     @java.lang.Override
     public java.util.List<java.lang.Integer>
@@ -6842,6 +7115,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated uint32 keys = 2 [packed = true];</code>
+     * @return The count of keys.
      */
     @java.lang.Override
     public int getKeysCount() {
@@ -6853,6 +7127,8 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated uint32 keys = 2 [packed = true];</code>
+     * @param index The index of the element to return.
+     * @return The keys at the given index.
      */
     @java.lang.Override
     public int getKeys(int index) {
@@ -6860,9 +7136,10 @@ public final class Osmformat {
     }
     private int keysMemoizedSerializedSize = -1;
     private void ensureKeysIsMutable() {
-      if (!keys_.isModifiable()) {
+      com.google.protobuf.Internal.IntList tmp = keys_;
+      if (!tmp.isModifiable()) {
         keys_ =
-            com.google.protobuf.GeneratedMessageLite.mutableCopy(keys_);
+            com.google.protobuf.GeneratedMessageLite.mutableCopy(tmp);
        }
     }
     /**
@@ -6871,6 +7148,8 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated uint32 keys = 2 [packed = true];</code>
+     * @param index The index to set the value at.
+     * @param value The keys to set.
      */
     private void setKeys(
         int index, int value) {
@@ -6883,6 +7162,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated uint32 keys = 2 [packed = true];</code>
+     * @param value The keys to add.
      */
     private void addKeys(int value) {
       ensureKeysIsMutable();
@@ -6894,6 +7174,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated uint32 keys = 2 [packed = true];</code>
+     * @param values The keys to add.
      */
     private void addAllKeys(
         java.lang.Iterable<? extends java.lang.Integer> values) {
@@ -6920,6 +7201,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated uint32 vals = 3 [packed = true];</code>
+     * @return A list containing the vals.
      */
     @java.lang.Override
     public java.util.List<java.lang.Integer>
@@ -6932,6 +7214,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated uint32 vals = 3 [packed = true];</code>
+     * @return The count of vals.
      */
     @java.lang.Override
     public int getValsCount() {
@@ -6943,6 +7226,8 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated uint32 vals = 3 [packed = true];</code>
+     * @param index The index of the element to return.
+     * @return The vals at the given index.
      */
     @java.lang.Override
     public int getVals(int index) {
@@ -6950,9 +7235,10 @@ public final class Osmformat {
     }
     private int valsMemoizedSerializedSize = -1;
     private void ensureValsIsMutable() {
-      if (!vals_.isModifiable()) {
+      com.google.protobuf.Internal.IntList tmp = vals_;
+      if (!tmp.isModifiable()) {
         vals_ =
-            com.google.protobuf.GeneratedMessageLite.mutableCopy(vals_);
+            com.google.protobuf.GeneratedMessageLite.mutableCopy(tmp);
        }
     }
     /**
@@ -6961,6 +7247,8 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated uint32 vals = 3 [packed = true];</code>
+     * @param index The index to set the value at.
+     * @param value The vals to set.
      */
     private void setVals(
         int index, int value) {
@@ -6973,6 +7261,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated uint32 vals = 3 [packed = true];</code>
+     * @param value The vals to add.
      */
     private void addVals(int value) {
       ensureValsIsMutable();
@@ -6984,6 +7273,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated uint32 vals = 3 [packed = true];</code>
+     * @param values The vals to add.
      */
     private void addAllVals(
         java.lang.Iterable<? extends java.lang.Integer> values) {
@@ -7034,24 +7324,10 @@ public final class Osmformat {
      * <code>optional .OSMPBF.Info info = 4;</code>
      */
     private void setInfo(de.topobyte.osm4j.pbf.protobuf.Osmformat.Info value) {
-      if (value == null) {
-        throw new NullPointerException();
-      }
-      info_ = value;
+      value.getClass();
+  info_ = value;
       bitField0_ |= 0x00000002;
       }
-    /**
-     * <pre>
-     * May be omitted in omitmeta
-     * </pre>
-     *
-     * <code>optional .OSMPBF.Info info = 4;</code>
-     */
-    private void setInfo(
-        de.topobyte.osm4j.pbf.protobuf.Osmformat.Info.Builder builderForValue) {
-      info_ = builderForValue.build();
-      bitField0_ |= 0x00000002;
-    }
     /**
      * <pre>
      * May be omitted in omitmeta
@@ -7061,10 +7337,8 @@ public final class Osmformat {
      */
     @java.lang.SuppressWarnings({"ReferenceEquality"})
     private void mergeInfo(de.topobyte.osm4j.pbf.protobuf.Osmformat.Info value) {
-      if (value == null) {
-        throw new NullPointerException();
-      }
-      if (info_ != null &&
+      value.getClass();
+  if (info_ != null &&
           info_ != de.topobyte.osm4j.pbf.protobuf.Osmformat.Info.getDefaultInstance()) {
         info_ =
           de.topobyte.osm4j.pbf.protobuf.Osmformat.Info.newBuilder(info_).mergeFrom(value).buildPartial();
@@ -7088,6 +7362,7 @@ public final class Osmformat {
     private long lat_;
     /**
      * <code>required sint64 lat = 8;</code>
+     * @return Whether the lat field is set.
      */
     @java.lang.Override
     public boolean hasLat() {
@@ -7095,6 +7370,7 @@ public final class Osmformat {
     }
     /**
      * <code>required sint64 lat = 8;</code>
+     * @return The lat.
      */
     @java.lang.Override
     public long getLat() {
@@ -7102,6 +7378,7 @@ public final class Osmformat {
     }
     /**
      * <code>required sint64 lat = 8;</code>
+     * @param value The lat to set.
      */
     private void setLat(long value) {
       bitField0_ |= 0x00000004;
@@ -7119,6 +7396,7 @@ public final class Osmformat {
     private long lon_;
     /**
      * <code>required sint64 lon = 9;</code>
+     * @return Whether the lon field is set.
      */
     @java.lang.Override
     public boolean hasLon() {
@@ -7126,6 +7404,7 @@ public final class Osmformat {
     }
     /**
      * <code>required sint64 lon = 9;</code>
+     * @return The lon.
      */
     @java.lang.Override
     public long getLon() {
@@ -7133,6 +7412,7 @@ public final class Osmformat {
     }
     /**
      * <code>required sint64 lon = 9;</code>
+     * @param value The lon to set.
      */
     private void setLon(long value) {
       bitField0_ |= 0x00000008;
@@ -7196,10 +7476,12 @@ public final class Osmformat {
       return com.google.protobuf.GeneratedMessageLite.parseFrom(
           DEFAULT_INSTANCE, input, extensionRegistry);
     }
+
     public static de.topobyte.osm4j.pbf.protobuf.Osmformat.Node parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return parseDelimitedFrom(DEFAULT_INSTANCE, input);
     }
+
     public static de.topobyte.osm4j.pbf.protobuf.Osmformat.Node parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -7243,6 +7525,7 @@ public final class Osmformat {
 
       /**
        * <code>required sint64 id = 1;</code>
+       * @return Whether the id field is set.
        */
       @java.lang.Override
       public boolean hasId() {
@@ -7250,6 +7533,7 @@ public final class Osmformat {
       }
       /**
        * <code>required sint64 id = 1;</code>
+       * @return The id.
        */
       @java.lang.Override
       public long getId() {
@@ -7257,6 +7541,8 @@ public final class Osmformat {
       }
       /**
        * <code>required sint64 id = 1;</code>
+       * @param value The id to set.
+       * @return This builder for chaining.
        */
       public Builder setId(long value) {
         copyOnWrite();
@@ -7265,6 +7551,7 @@ public final class Osmformat {
       }
       /**
        * <code>required sint64 id = 1;</code>
+       * @return This builder for chaining.
        */
       public Builder clearId() {
         copyOnWrite();
@@ -7278,6 +7565,7 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated uint32 keys = 2 [packed = true];</code>
+       * @return A list containing the keys.
        */
       @java.lang.Override
       public java.util.List<java.lang.Integer>
@@ -7291,6 +7579,7 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated uint32 keys = 2 [packed = true];</code>
+       * @return The count of keys.
        */
       @java.lang.Override
       public int getKeysCount() {
@@ -7302,6 +7591,8 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated uint32 keys = 2 [packed = true];</code>
+       * @param index The index of the element to return.
+       * @return The keys at the given index.
        */
       @java.lang.Override
       public int getKeys(int index) {
@@ -7313,6 +7604,8 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated uint32 keys = 2 [packed = true];</code>
+       * @param value The keys to set.
+       * @return This builder for chaining.
        */
       public Builder setKeys(
           int index, int value) {
@@ -7326,6 +7619,8 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated uint32 keys = 2 [packed = true];</code>
+       * @param value The keys to add.
+       * @return This builder for chaining.
        */
       public Builder addKeys(int value) {
         copyOnWrite();
@@ -7338,6 +7633,8 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated uint32 keys = 2 [packed = true];</code>
+       * @param values The keys to add.
+       * @return This builder for chaining.
        */
       public Builder addAllKeys(
           java.lang.Iterable<? extends java.lang.Integer> values) {
@@ -7351,6 +7648,7 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated uint32 keys = 2 [packed = true];</code>
+       * @return This builder for chaining.
        */
       public Builder clearKeys() {
         copyOnWrite();
@@ -7364,6 +7662,7 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated uint32 vals = 3 [packed = true];</code>
+       * @return A list containing the vals.
        */
       @java.lang.Override
       public java.util.List<java.lang.Integer>
@@ -7377,6 +7676,7 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated uint32 vals = 3 [packed = true];</code>
+       * @return The count of vals.
        */
       @java.lang.Override
       public int getValsCount() {
@@ -7388,6 +7688,8 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated uint32 vals = 3 [packed = true];</code>
+       * @param index The index of the element to return.
+       * @return The vals at the given index.
        */
       @java.lang.Override
       public int getVals(int index) {
@@ -7399,6 +7701,8 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated uint32 vals = 3 [packed = true];</code>
+       * @param value The vals to set.
+       * @return This builder for chaining.
        */
       public Builder setVals(
           int index, int value) {
@@ -7412,6 +7716,8 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated uint32 vals = 3 [packed = true];</code>
+       * @param value The vals to add.
+       * @return This builder for chaining.
        */
       public Builder addVals(int value) {
         copyOnWrite();
@@ -7424,6 +7730,8 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated uint32 vals = 3 [packed = true];</code>
+       * @param values The vals to add.
+       * @return This builder for chaining.
        */
       public Builder addAllVals(
           java.lang.Iterable<? extends java.lang.Integer> values) {
@@ -7437,6 +7745,7 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated uint32 vals = 3 [packed = true];</code>
+       * @return This builder for chaining.
        */
       public Builder clearVals() {
         copyOnWrite();
@@ -7488,7 +7797,7 @@ public final class Osmformat {
       public Builder setInfo(
           de.topobyte.osm4j.pbf.protobuf.Osmformat.Info.Builder builderForValue) {
         copyOnWrite();
-        instance.setInfo(builderForValue);
+        instance.setInfo(builderForValue.build());
         return this;
       }
       /**
@@ -7517,6 +7826,7 @@ public final class Osmformat {
 
       /**
        * <code>required sint64 lat = 8;</code>
+       * @return Whether the lat field is set.
        */
       @java.lang.Override
       public boolean hasLat() {
@@ -7524,6 +7834,7 @@ public final class Osmformat {
       }
       /**
        * <code>required sint64 lat = 8;</code>
+       * @return The lat.
        */
       @java.lang.Override
       public long getLat() {
@@ -7531,6 +7842,8 @@ public final class Osmformat {
       }
       /**
        * <code>required sint64 lat = 8;</code>
+       * @param value The lat to set.
+       * @return This builder for chaining.
        */
       public Builder setLat(long value) {
         copyOnWrite();
@@ -7539,6 +7852,7 @@ public final class Osmformat {
       }
       /**
        * <code>required sint64 lat = 8;</code>
+       * @return This builder for chaining.
        */
       public Builder clearLat() {
         copyOnWrite();
@@ -7548,6 +7862,7 @@ public final class Osmformat {
 
       /**
        * <code>required sint64 lon = 9;</code>
+       * @return Whether the lon field is set.
        */
       @java.lang.Override
       public boolean hasLon() {
@@ -7555,6 +7870,7 @@ public final class Osmformat {
       }
       /**
        * <code>required sint64 lon = 9;</code>
+       * @return The lon.
        */
       @java.lang.Override
       public long getLon() {
@@ -7562,6 +7878,8 @@ public final class Osmformat {
       }
       /**
        * <code>required sint64 lon = 9;</code>
+       * @param value The lon to set.
+       * @return This builder for chaining.
        */
       public Builder setLon(long value) {
         copyOnWrite();
@@ -7570,6 +7888,7 @@ public final class Osmformat {
       }
       /**
        * <code>required sint64 lon = 9;</code>
+       * @return This builder for chaining.
        */
       public Builder clearLon() {
         copyOnWrite();
@@ -7603,8 +7922,8 @@ public final class Osmformat {
               "lon_",
             };
             java.lang.String info =
-                "\u0001\u0006\u0000\u0001\u0001\t\u0006\u0000\u0002\u0003\u0001\u0510\u0000\u0002" +
-                "+\u0003+\u0004\t\u0001\b\u0510\u0002\t\u0510\u0003";
+                "\u0001\u0006\u0000\u0001\u0001\t\u0006\u0000\u0002\u0003\u0001\u1510\u0000\u0002" +
+                "+\u0003+\u0004\u1009\u0001\b\u1510\u0002\t\u1510\u0003";
             return newMessageInfo(DEFAULT_INSTANCE, info, objects);
         }
         // fall through
@@ -7670,6 +7989,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint64 id = 1 [packed = true];</code>
+     * @return A list containing the id.
      */
     java.util.List<java.lang.Long> getIdList();
     /**
@@ -7678,6 +7998,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint64 id = 1 [packed = true];</code>
+     * @return The count of id.
      */
     int getIdCount();
     /**
@@ -7686,6 +8007,8 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint64 id = 1 [packed = true];</code>
+     * @param index The index of the element to return.
+     * @return The id at the given index.
      */
     long getId(int index);
 
@@ -7695,6 +8018,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>optional .OSMPBF.DenseInfo denseinfo = 5;</code>
+     * @return Whether the denseinfo field is set.
      */
     boolean hasDenseinfo();
     /**
@@ -7703,6 +8027,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>optional .OSMPBF.DenseInfo denseinfo = 5;</code>
+     * @return The denseinfo.
      */
     de.topobyte.osm4j.pbf.protobuf.Osmformat.DenseInfo getDenseinfo();
 
@@ -7712,6 +8037,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint64 lat = 8 [packed = true];</code>
+     * @return A list containing the lat.
      */
     java.util.List<java.lang.Long> getLatList();
     /**
@@ -7720,6 +8046,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint64 lat = 8 [packed = true];</code>
+     * @return The count of lat.
      */
     int getLatCount();
     /**
@@ -7728,6 +8055,8 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint64 lat = 8 [packed = true];</code>
+     * @param index The index of the element to return.
+     * @return The lat at the given index.
      */
     long getLat(int index);
 
@@ -7737,6 +8066,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint64 lon = 9 [packed = true];</code>
+     * @return A list containing the lon.
      */
     java.util.List<java.lang.Long> getLonList();
     /**
@@ -7745,6 +8075,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint64 lon = 9 [packed = true];</code>
+     * @return The count of lon.
      */
     int getLonCount();
     /**
@@ -7753,6 +8084,8 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint64 lon = 9 [packed = true];</code>
+     * @param index The index of the element to return.
+     * @return The lon at the given index.
      */
     long getLon(int index);
 
@@ -7762,6 +8095,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated int32 keys_vals = 10 [packed = true];</code>
+     * @return A list containing the keysVals.
      */
     java.util.List<java.lang.Integer> getKeysValsList();
     /**
@@ -7770,6 +8104,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated int32 keys_vals = 10 [packed = true];</code>
+     * @return The count of keysVals.
      */
     int getKeysValsCount();
     /**
@@ -7778,6 +8113,8 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated int32 keys_vals = 10 [packed = true];</code>
+     * @param index The index of the element to return.
+     * @return The keysVals at the given index.
      */
     int getKeysVals(int index);
   }
@@ -7804,6 +8141,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint64 id = 1 [packed = true];</code>
+     * @return A list containing the id.
      */
     @java.lang.Override
     public java.util.List<java.lang.Long>
@@ -7816,6 +8154,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint64 id = 1 [packed = true];</code>
+     * @return The count of id.
      */
     @java.lang.Override
     public int getIdCount() {
@@ -7827,6 +8166,8 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint64 id = 1 [packed = true];</code>
+     * @param index The index of the element to return.
+     * @return The id at the given index.
      */
     @java.lang.Override
     public long getId(int index) {
@@ -7834,9 +8175,10 @@ public final class Osmformat {
     }
     private int idMemoizedSerializedSize = -1;
     private void ensureIdIsMutable() {
-      if (!id_.isModifiable()) {
+      com.google.protobuf.Internal.LongList tmp = id_;
+      if (!tmp.isModifiable()) {
         id_ =
-            com.google.protobuf.GeneratedMessageLite.mutableCopy(id_);
+            com.google.protobuf.GeneratedMessageLite.mutableCopy(tmp);
        }
     }
     /**
@@ -7845,6 +8187,8 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint64 id = 1 [packed = true];</code>
+     * @param index The index to set the value at.
+     * @param value The id to set.
      */
     private void setId(
         int index, long value) {
@@ -7857,6 +8201,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint64 id = 1 [packed = true];</code>
+     * @param value The id to add.
      */
     private void addId(long value) {
       ensureIdIsMutable();
@@ -7868,6 +8213,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint64 id = 1 [packed = true];</code>
+     * @param values The id to add.
      */
     private void addAllId(
         java.lang.Iterable<? extends java.lang.Long> values) {
@@ -7918,24 +8264,10 @@ public final class Osmformat {
      * <code>optional .OSMPBF.DenseInfo denseinfo = 5;</code>
      */
     private void setDenseinfo(de.topobyte.osm4j.pbf.protobuf.Osmformat.DenseInfo value) {
-      if (value == null) {
-        throw new NullPointerException();
-      }
-      denseinfo_ = value;
+      value.getClass();
+  denseinfo_ = value;
       bitField0_ |= 0x00000001;
       }
-    /**
-     * <pre>
-     *repeated Info info = 4;
-     * </pre>
-     *
-     * <code>optional .OSMPBF.DenseInfo denseinfo = 5;</code>
-     */
-    private void setDenseinfo(
-        de.topobyte.osm4j.pbf.protobuf.Osmformat.DenseInfo.Builder builderForValue) {
-      denseinfo_ = builderForValue.build();
-      bitField0_ |= 0x00000001;
-    }
     /**
      * <pre>
      *repeated Info info = 4;
@@ -7945,10 +8277,8 @@ public final class Osmformat {
      */
     @java.lang.SuppressWarnings({"ReferenceEquality"})
     private void mergeDenseinfo(de.topobyte.osm4j.pbf.protobuf.Osmformat.DenseInfo value) {
-      if (value == null) {
-        throw new NullPointerException();
-      }
-      if (denseinfo_ != null &&
+      value.getClass();
+  if (denseinfo_ != null &&
           denseinfo_ != de.topobyte.osm4j.pbf.protobuf.Osmformat.DenseInfo.getDefaultInstance()) {
         denseinfo_ =
           de.topobyte.osm4j.pbf.protobuf.Osmformat.DenseInfo.newBuilder(denseinfo_).mergeFrom(value).buildPartial();
@@ -7976,6 +8306,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint64 lat = 8 [packed = true];</code>
+     * @return A list containing the lat.
      */
     @java.lang.Override
     public java.util.List<java.lang.Long>
@@ -7988,6 +8319,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint64 lat = 8 [packed = true];</code>
+     * @return The count of lat.
      */
     @java.lang.Override
     public int getLatCount() {
@@ -7999,6 +8331,8 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint64 lat = 8 [packed = true];</code>
+     * @param index The index of the element to return.
+     * @return The lat at the given index.
      */
     @java.lang.Override
     public long getLat(int index) {
@@ -8006,9 +8340,10 @@ public final class Osmformat {
     }
     private int latMemoizedSerializedSize = -1;
     private void ensureLatIsMutable() {
-      if (!lat_.isModifiable()) {
+      com.google.protobuf.Internal.LongList tmp = lat_;
+      if (!tmp.isModifiable()) {
         lat_ =
-            com.google.protobuf.GeneratedMessageLite.mutableCopy(lat_);
+            com.google.protobuf.GeneratedMessageLite.mutableCopy(tmp);
        }
     }
     /**
@@ -8017,6 +8352,8 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint64 lat = 8 [packed = true];</code>
+     * @param index The index to set the value at.
+     * @param value The lat to set.
      */
     private void setLat(
         int index, long value) {
@@ -8029,6 +8366,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint64 lat = 8 [packed = true];</code>
+     * @param value The lat to add.
      */
     private void addLat(long value) {
       ensureLatIsMutable();
@@ -8040,6 +8378,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint64 lat = 8 [packed = true];</code>
+     * @param values The lat to add.
      */
     private void addAllLat(
         java.lang.Iterable<? extends java.lang.Long> values) {
@@ -8066,6 +8405,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint64 lon = 9 [packed = true];</code>
+     * @return A list containing the lon.
      */
     @java.lang.Override
     public java.util.List<java.lang.Long>
@@ -8078,6 +8418,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint64 lon = 9 [packed = true];</code>
+     * @return The count of lon.
      */
     @java.lang.Override
     public int getLonCount() {
@@ -8089,6 +8430,8 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint64 lon = 9 [packed = true];</code>
+     * @param index The index of the element to return.
+     * @return The lon at the given index.
      */
     @java.lang.Override
     public long getLon(int index) {
@@ -8096,9 +8439,10 @@ public final class Osmformat {
     }
     private int lonMemoizedSerializedSize = -1;
     private void ensureLonIsMutable() {
-      if (!lon_.isModifiable()) {
+      com.google.protobuf.Internal.LongList tmp = lon_;
+      if (!tmp.isModifiable()) {
         lon_ =
-            com.google.protobuf.GeneratedMessageLite.mutableCopy(lon_);
+            com.google.protobuf.GeneratedMessageLite.mutableCopy(tmp);
        }
     }
     /**
@@ -8107,6 +8451,8 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint64 lon = 9 [packed = true];</code>
+     * @param index The index to set the value at.
+     * @param value The lon to set.
      */
     private void setLon(
         int index, long value) {
@@ -8119,6 +8465,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint64 lon = 9 [packed = true];</code>
+     * @param value The lon to add.
      */
     private void addLon(long value) {
       ensureLonIsMutable();
@@ -8130,6 +8477,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint64 lon = 9 [packed = true];</code>
+     * @param values The lon to add.
      */
     private void addAllLon(
         java.lang.Iterable<? extends java.lang.Long> values) {
@@ -8156,6 +8504,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated int32 keys_vals = 10 [packed = true];</code>
+     * @return A list containing the keysVals.
      */
     @java.lang.Override
     public java.util.List<java.lang.Integer>
@@ -8168,6 +8517,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated int32 keys_vals = 10 [packed = true];</code>
+     * @return The count of keysVals.
      */
     @java.lang.Override
     public int getKeysValsCount() {
@@ -8179,6 +8529,8 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated int32 keys_vals = 10 [packed = true];</code>
+     * @param index The index of the element to return.
+     * @return The keysVals at the given index.
      */
     @java.lang.Override
     public int getKeysVals(int index) {
@@ -8186,9 +8538,10 @@ public final class Osmformat {
     }
     private int keysValsMemoizedSerializedSize = -1;
     private void ensureKeysValsIsMutable() {
-      if (!keysVals_.isModifiable()) {
+      com.google.protobuf.Internal.IntList tmp = keysVals_;
+      if (!tmp.isModifiable()) {
         keysVals_ =
-            com.google.protobuf.GeneratedMessageLite.mutableCopy(keysVals_);
+            com.google.protobuf.GeneratedMessageLite.mutableCopy(tmp);
        }
     }
     /**
@@ -8197,6 +8550,8 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated int32 keys_vals = 10 [packed = true];</code>
+     * @param index The index to set the value at.
+     * @param value The keysVals to set.
      */
     private void setKeysVals(
         int index, int value) {
@@ -8209,6 +8564,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated int32 keys_vals = 10 [packed = true];</code>
+     * @param value The keysVals to add.
      */
     private void addKeysVals(int value) {
       ensureKeysValsIsMutable();
@@ -8220,6 +8576,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated int32 keys_vals = 10 [packed = true];</code>
+     * @param values The keysVals to add.
      */
     private void addAllKeysVals(
         java.lang.Iterable<? extends java.lang.Integer> values) {
@@ -8288,10 +8645,12 @@ public final class Osmformat {
       return com.google.protobuf.GeneratedMessageLite.parseFrom(
           DEFAULT_INSTANCE, input, extensionRegistry);
     }
+
     public static de.topobyte.osm4j.pbf.protobuf.Osmformat.DenseNodes parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return parseDelimitedFrom(DEFAULT_INSTANCE, input);
     }
+
     public static de.topobyte.osm4j.pbf.protobuf.Osmformat.DenseNodes parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -8339,6 +8698,7 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated sint64 id = 1 [packed = true];</code>
+       * @return A list containing the id.
        */
       @java.lang.Override
       public java.util.List<java.lang.Long>
@@ -8352,6 +8712,7 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated sint64 id = 1 [packed = true];</code>
+       * @return The count of id.
        */
       @java.lang.Override
       public int getIdCount() {
@@ -8363,6 +8724,8 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated sint64 id = 1 [packed = true];</code>
+       * @param index The index of the element to return.
+       * @return The id at the given index.
        */
       @java.lang.Override
       public long getId(int index) {
@@ -8374,6 +8737,8 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated sint64 id = 1 [packed = true];</code>
+       * @param value The id to set.
+       * @return This builder for chaining.
        */
       public Builder setId(
           int index, long value) {
@@ -8387,6 +8752,8 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated sint64 id = 1 [packed = true];</code>
+       * @param value The id to add.
+       * @return This builder for chaining.
        */
       public Builder addId(long value) {
         copyOnWrite();
@@ -8399,6 +8766,8 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated sint64 id = 1 [packed = true];</code>
+       * @param values The id to add.
+       * @return This builder for chaining.
        */
       public Builder addAllId(
           java.lang.Iterable<? extends java.lang.Long> values) {
@@ -8412,6 +8781,7 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated sint64 id = 1 [packed = true];</code>
+       * @return This builder for chaining.
        */
       public Builder clearId() {
         copyOnWrite();
@@ -8463,7 +8833,7 @@ public final class Osmformat {
       public Builder setDenseinfo(
           de.topobyte.osm4j.pbf.protobuf.Osmformat.DenseInfo.Builder builderForValue) {
         copyOnWrite();
-        instance.setDenseinfo(builderForValue);
+        instance.setDenseinfo(builderForValue.build());
         return this;
       }
       /**
@@ -8496,6 +8866,7 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated sint64 lat = 8 [packed = true];</code>
+       * @return A list containing the lat.
        */
       @java.lang.Override
       public java.util.List<java.lang.Long>
@@ -8509,6 +8880,7 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated sint64 lat = 8 [packed = true];</code>
+       * @return The count of lat.
        */
       @java.lang.Override
       public int getLatCount() {
@@ -8520,6 +8892,8 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated sint64 lat = 8 [packed = true];</code>
+       * @param index The index of the element to return.
+       * @return The lat at the given index.
        */
       @java.lang.Override
       public long getLat(int index) {
@@ -8531,6 +8905,8 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated sint64 lat = 8 [packed = true];</code>
+       * @param value The lat to set.
+       * @return This builder for chaining.
        */
       public Builder setLat(
           int index, long value) {
@@ -8544,6 +8920,8 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated sint64 lat = 8 [packed = true];</code>
+       * @param value The lat to add.
+       * @return This builder for chaining.
        */
       public Builder addLat(long value) {
         copyOnWrite();
@@ -8556,6 +8934,8 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated sint64 lat = 8 [packed = true];</code>
+       * @param values The lat to add.
+       * @return This builder for chaining.
        */
       public Builder addAllLat(
           java.lang.Iterable<? extends java.lang.Long> values) {
@@ -8569,6 +8949,7 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated sint64 lat = 8 [packed = true];</code>
+       * @return This builder for chaining.
        */
       public Builder clearLat() {
         copyOnWrite();
@@ -8582,6 +8963,7 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated sint64 lon = 9 [packed = true];</code>
+       * @return A list containing the lon.
        */
       @java.lang.Override
       public java.util.List<java.lang.Long>
@@ -8595,6 +8977,7 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated sint64 lon = 9 [packed = true];</code>
+       * @return The count of lon.
        */
       @java.lang.Override
       public int getLonCount() {
@@ -8606,6 +8989,8 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated sint64 lon = 9 [packed = true];</code>
+       * @param index The index of the element to return.
+       * @return The lon at the given index.
        */
       @java.lang.Override
       public long getLon(int index) {
@@ -8617,6 +9002,8 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated sint64 lon = 9 [packed = true];</code>
+       * @param value The lon to set.
+       * @return This builder for chaining.
        */
       public Builder setLon(
           int index, long value) {
@@ -8630,6 +9017,8 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated sint64 lon = 9 [packed = true];</code>
+       * @param value The lon to add.
+       * @return This builder for chaining.
        */
       public Builder addLon(long value) {
         copyOnWrite();
@@ -8642,6 +9031,8 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated sint64 lon = 9 [packed = true];</code>
+       * @param values The lon to add.
+       * @return This builder for chaining.
        */
       public Builder addAllLon(
           java.lang.Iterable<? extends java.lang.Long> values) {
@@ -8655,6 +9046,7 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated sint64 lon = 9 [packed = true];</code>
+       * @return This builder for chaining.
        */
       public Builder clearLon() {
         copyOnWrite();
@@ -8668,6 +9060,7 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated int32 keys_vals = 10 [packed = true];</code>
+       * @return A list containing the keysVals.
        */
       @java.lang.Override
       public java.util.List<java.lang.Integer>
@@ -8681,6 +9074,7 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated int32 keys_vals = 10 [packed = true];</code>
+       * @return The count of keysVals.
        */
       @java.lang.Override
       public int getKeysValsCount() {
@@ -8692,6 +9086,8 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated int32 keys_vals = 10 [packed = true];</code>
+       * @param index The index of the element to return.
+       * @return The keysVals at the given index.
        */
       @java.lang.Override
       public int getKeysVals(int index) {
@@ -8703,6 +9099,8 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated int32 keys_vals = 10 [packed = true];</code>
+       * @param value The keysVals to set.
+       * @return This builder for chaining.
        */
       public Builder setKeysVals(
           int index, int value) {
@@ -8716,6 +9114,8 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated int32 keys_vals = 10 [packed = true];</code>
+       * @param value The keysVals to add.
+       * @return This builder for chaining.
        */
       public Builder addKeysVals(int value) {
         copyOnWrite();
@@ -8728,6 +9128,8 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated int32 keys_vals = 10 [packed = true];</code>
+       * @param values The keysVals to add.
+       * @return This builder for chaining.
        */
       public Builder addAllKeysVals(
           java.lang.Iterable<? extends java.lang.Integer> values) {
@@ -8741,6 +9143,7 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated int32 keys_vals = 10 [packed = true];</code>
+       * @return This builder for chaining.
        */
       public Builder clearKeysVals() {
         copyOnWrite();
@@ -8772,8 +9175,8 @@ public final class Osmformat {
               "keysVals_",
             };
             java.lang.String info =
-                "\u0001\u0005\u0000\u0001\u0001\n\u0005\u0000\u0004\u0000\u00010\u0005\t\u0000\b0" +
-                "\t0\n\'";
+                "\u0001\u0005\u0000\u0001\u0001\n\u0005\u0000\u0004\u0000\u00010\u0005\u1009\u0000" +
+                "\b0\t0\n\'";
             return newMessageInfo(DEFAULT_INSTANCE, info, objects);
         }
         // fall through
@@ -8834,10 +9237,12 @@ public final class Osmformat {
 
     /**
      * <code>required int64 id = 1;</code>
+     * @return Whether the id field is set.
      */
     boolean hasId();
     /**
      * <code>required int64 id = 1;</code>
+     * @return The id.
      */
     long getId();
 
@@ -8847,6 +9252,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated uint32 keys = 2 [packed = true];</code>
+     * @return A list containing the keys.
      */
     java.util.List<java.lang.Integer> getKeysList();
     /**
@@ -8855,6 +9261,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated uint32 keys = 2 [packed = true];</code>
+     * @return The count of keys.
      */
     int getKeysCount();
     /**
@@ -8863,28 +9270,36 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated uint32 keys = 2 [packed = true];</code>
+     * @param index The index of the element to return.
+     * @return The keys at the given index.
      */
     int getKeys(int index);
 
     /**
      * <code>repeated uint32 vals = 3 [packed = true];</code>
+     * @return A list containing the vals.
      */
     java.util.List<java.lang.Integer> getValsList();
     /**
      * <code>repeated uint32 vals = 3 [packed = true];</code>
+     * @return The count of vals.
      */
     int getValsCount();
     /**
      * <code>repeated uint32 vals = 3 [packed = true];</code>
+     * @param index The index of the element to return.
+     * @return The vals at the given index.
      */
     int getVals(int index);
 
     /**
      * <code>optional .OSMPBF.Info info = 4;</code>
+     * @return Whether the info field is set.
      */
     boolean hasInfo();
     /**
      * <code>optional .OSMPBF.Info info = 4;</code>
+     * @return The info.
      */
     de.topobyte.osm4j.pbf.protobuf.Osmformat.Info getInfo();
 
@@ -8894,6 +9309,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint64 refs = 8 [packed = true];</code>
+     * @return A list containing the refs.
      */
     java.util.List<java.lang.Long> getRefsList();
     /**
@@ -8902,6 +9318,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint64 refs = 8 [packed = true];</code>
+     * @return The count of refs.
      */
     int getRefsCount();
     /**
@@ -8910,6 +9327,8 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint64 refs = 8 [packed = true];</code>
+     * @param index The index of the element to return.
+     * @return The refs at the given index.
      */
     long getRefs(int index);
   }
@@ -8931,6 +9350,7 @@ public final class Osmformat {
     private long id_;
     /**
      * <code>required int64 id = 1;</code>
+     * @return Whether the id field is set.
      */
     @java.lang.Override
     public boolean hasId() {
@@ -8938,6 +9358,7 @@ public final class Osmformat {
     }
     /**
      * <code>required int64 id = 1;</code>
+     * @return The id.
      */
     @java.lang.Override
     public long getId() {
@@ -8945,6 +9366,7 @@ public final class Osmformat {
     }
     /**
      * <code>required int64 id = 1;</code>
+     * @param value The id to set.
      */
     private void setId(long value) {
       bitField0_ |= 0x00000001;
@@ -8966,6 +9388,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated uint32 keys = 2 [packed = true];</code>
+     * @return A list containing the keys.
      */
     @java.lang.Override
     public java.util.List<java.lang.Integer>
@@ -8978,6 +9401,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated uint32 keys = 2 [packed = true];</code>
+     * @return The count of keys.
      */
     @java.lang.Override
     public int getKeysCount() {
@@ -8989,6 +9413,8 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated uint32 keys = 2 [packed = true];</code>
+     * @param index The index of the element to return.
+     * @return The keys at the given index.
      */
     @java.lang.Override
     public int getKeys(int index) {
@@ -8996,9 +9422,10 @@ public final class Osmformat {
     }
     private int keysMemoizedSerializedSize = -1;
     private void ensureKeysIsMutable() {
-      if (!keys_.isModifiable()) {
+      com.google.protobuf.Internal.IntList tmp = keys_;
+      if (!tmp.isModifiable()) {
         keys_ =
-            com.google.protobuf.GeneratedMessageLite.mutableCopy(keys_);
+            com.google.protobuf.GeneratedMessageLite.mutableCopy(tmp);
        }
     }
     /**
@@ -9007,6 +9434,8 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated uint32 keys = 2 [packed = true];</code>
+     * @param index The index to set the value at.
+     * @param value The keys to set.
      */
     private void setKeys(
         int index, int value) {
@@ -9019,6 +9448,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated uint32 keys = 2 [packed = true];</code>
+     * @param value The keys to add.
      */
     private void addKeys(int value) {
       ensureKeysIsMutable();
@@ -9030,6 +9460,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated uint32 keys = 2 [packed = true];</code>
+     * @param values The keys to add.
      */
     private void addAllKeys(
         java.lang.Iterable<? extends java.lang.Integer> values) {
@@ -9052,6 +9483,7 @@ public final class Osmformat {
     private com.google.protobuf.Internal.IntList vals_;
     /**
      * <code>repeated uint32 vals = 3 [packed = true];</code>
+     * @return A list containing the vals.
      */
     @java.lang.Override
     public java.util.List<java.lang.Integer>
@@ -9060,6 +9492,7 @@ public final class Osmformat {
     }
     /**
      * <code>repeated uint32 vals = 3 [packed = true];</code>
+     * @return The count of vals.
      */
     @java.lang.Override
     public int getValsCount() {
@@ -9067,6 +9500,8 @@ public final class Osmformat {
     }
     /**
      * <code>repeated uint32 vals = 3 [packed = true];</code>
+     * @param index The index of the element to return.
+     * @return The vals at the given index.
      */
     @java.lang.Override
     public int getVals(int index) {
@@ -9074,13 +9509,16 @@ public final class Osmformat {
     }
     private int valsMemoizedSerializedSize = -1;
     private void ensureValsIsMutable() {
-      if (!vals_.isModifiable()) {
+      com.google.protobuf.Internal.IntList tmp = vals_;
+      if (!tmp.isModifiable()) {
         vals_ =
-            com.google.protobuf.GeneratedMessageLite.mutableCopy(vals_);
+            com.google.protobuf.GeneratedMessageLite.mutableCopy(tmp);
        }
     }
     /**
      * <code>repeated uint32 vals = 3 [packed = true];</code>
+     * @param index The index to set the value at.
+     * @param value The vals to set.
      */
     private void setVals(
         int index, int value) {
@@ -9089,6 +9527,7 @@ public final class Osmformat {
     }
     /**
      * <code>repeated uint32 vals = 3 [packed = true];</code>
+     * @param value The vals to add.
      */
     private void addVals(int value) {
       ensureValsIsMutable();
@@ -9096,6 +9535,7 @@ public final class Osmformat {
     }
     /**
      * <code>repeated uint32 vals = 3 [packed = true];</code>
+     * @param values The vals to add.
      */
     private void addAllVals(
         java.lang.Iterable<? extends java.lang.Integer> values) {
@@ -9130,29 +9570,17 @@ public final class Osmformat {
      * <code>optional .OSMPBF.Info info = 4;</code>
      */
     private void setInfo(de.topobyte.osm4j.pbf.protobuf.Osmformat.Info value) {
-      if (value == null) {
-        throw new NullPointerException();
-      }
-      info_ = value;
+      value.getClass();
+  info_ = value;
       bitField0_ |= 0x00000002;
       }
-    /**
-     * <code>optional .OSMPBF.Info info = 4;</code>
-     */
-    private void setInfo(
-        de.topobyte.osm4j.pbf.protobuf.Osmformat.Info.Builder builderForValue) {
-      info_ = builderForValue.build();
-      bitField0_ |= 0x00000002;
-    }
     /**
      * <code>optional .OSMPBF.Info info = 4;</code>
      */
     @java.lang.SuppressWarnings({"ReferenceEquality"})
     private void mergeInfo(de.topobyte.osm4j.pbf.protobuf.Osmformat.Info value) {
-      if (value == null) {
-        throw new NullPointerException();
-      }
-      if (info_ != null &&
+      value.getClass();
+  if (info_ != null &&
           info_ != de.topobyte.osm4j.pbf.protobuf.Osmformat.Info.getDefaultInstance()) {
         info_ =
           de.topobyte.osm4j.pbf.protobuf.Osmformat.Info.newBuilder(info_).mergeFrom(value).buildPartial();
@@ -9176,6 +9604,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint64 refs = 8 [packed = true];</code>
+     * @return A list containing the refs.
      */
     @java.lang.Override
     public java.util.List<java.lang.Long>
@@ -9188,6 +9617,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint64 refs = 8 [packed = true];</code>
+     * @return The count of refs.
      */
     @java.lang.Override
     public int getRefsCount() {
@@ -9199,6 +9629,8 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint64 refs = 8 [packed = true];</code>
+     * @param index The index of the element to return.
+     * @return The refs at the given index.
      */
     @java.lang.Override
     public long getRefs(int index) {
@@ -9206,9 +9638,10 @@ public final class Osmformat {
     }
     private int refsMemoizedSerializedSize = -1;
     private void ensureRefsIsMutable() {
-      if (!refs_.isModifiable()) {
+      com.google.protobuf.Internal.LongList tmp = refs_;
+      if (!tmp.isModifiable()) {
         refs_ =
-            com.google.protobuf.GeneratedMessageLite.mutableCopy(refs_);
+            com.google.protobuf.GeneratedMessageLite.mutableCopy(tmp);
        }
     }
     /**
@@ -9217,6 +9650,8 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint64 refs = 8 [packed = true];</code>
+     * @param index The index to set the value at.
+     * @param value The refs to set.
      */
     private void setRefs(
         int index, long value) {
@@ -9229,6 +9664,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint64 refs = 8 [packed = true];</code>
+     * @param value The refs to add.
      */
     private void addRefs(long value) {
       ensureRefsIsMutable();
@@ -9240,6 +9676,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint64 refs = 8 [packed = true];</code>
+     * @param values The refs to add.
      */
     private void addAllRefs(
         java.lang.Iterable<? extends java.lang.Long> values) {
@@ -9308,10 +9745,12 @@ public final class Osmformat {
       return com.google.protobuf.GeneratedMessageLite.parseFrom(
           DEFAULT_INSTANCE, input, extensionRegistry);
     }
+
     public static de.topobyte.osm4j.pbf.protobuf.Osmformat.Way parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return parseDelimitedFrom(DEFAULT_INSTANCE, input);
     }
+
     public static de.topobyte.osm4j.pbf.protobuf.Osmformat.Way parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -9355,6 +9794,7 @@ public final class Osmformat {
 
       /**
        * <code>required int64 id = 1;</code>
+       * @return Whether the id field is set.
        */
       @java.lang.Override
       public boolean hasId() {
@@ -9362,6 +9802,7 @@ public final class Osmformat {
       }
       /**
        * <code>required int64 id = 1;</code>
+       * @return The id.
        */
       @java.lang.Override
       public long getId() {
@@ -9369,6 +9810,8 @@ public final class Osmformat {
       }
       /**
        * <code>required int64 id = 1;</code>
+       * @param value The id to set.
+       * @return This builder for chaining.
        */
       public Builder setId(long value) {
         copyOnWrite();
@@ -9377,6 +9820,7 @@ public final class Osmformat {
       }
       /**
        * <code>required int64 id = 1;</code>
+       * @return This builder for chaining.
        */
       public Builder clearId() {
         copyOnWrite();
@@ -9390,6 +9834,7 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated uint32 keys = 2 [packed = true];</code>
+       * @return A list containing the keys.
        */
       @java.lang.Override
       public java.util.List<java.lang.Integer>
@@ -9403,6 +9848,7 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated uint32 keys = 2 [packed = true];</code>
+       * @return The count of keys.
        */
       @java.lang.Override
       public int getKeysCount() {
@@ -9414,6 +9860,8 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated uint32 keys = 2 [packed = true];</code>
+       * @param index The index of the element to return.
+       * @return The keys at the given index.
        */
       @java.lang.Override
       public int getKeys(int index) {
@@ -9425,6 +9873,8 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated uint32 keys = 2 [packed = true];</code>
+       * @param value The keys to set.
+       * @return This builder for chaining.
        */
       public Builder setKeys(
           int index, int value) {
@@ -9438,6 +9888,8 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated uint32 keys = 2 [packed = true];</code>
+       * @param value The keys to add.
+       * @return This builder for chaining.
        */
       public Builder addKeys(int value) {
         copyOnWrite();
@@ -9450,6 +9902,8 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated uint32 keys = 2 [packed = true];</code>
+       * @param values The keys to add.
+       * @return This builder for chaining.
        */
       public Builder addAllKeys(
           java.lang.Iterable<? extends java.lang.Integer> values) {
@@ -9463,6 +9917,7 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated uint32 keys = 2 [packed = true];</code>
+       * @return This builder for chaining.
        */
       public Builder clearKeys() {
         copyOnWrite();
@@ -9472,6 +9927,7 @@ public final class Osmformat {
 
       /**
        * <code>repeated uint32 vals = 3 [packed = true];</code>
+       * @return A list containing the vals.
        */
       @java.lang.Override
       public java.util.List<java.lang.Integer>
@@ -9481,6 +9937,7 @@ public final class Osmformat {
       }
       /**
        * <code>repeated uint32 vals = 3 [packed = true];</code>
+       * @return The count of vals.
        */
       @java.lang.Override
       public int getValsCount() {
@@ -9488,6 +9945,8 @@ public final class Osmformat {
       }
       /**
        * <code>repeated uint32 vals = 3 [packed = true];</code>
+       * @param index The index of the element to return.
+       * @return The vals at the given index.
        */
       @java.lang.Override
       public int getVals(int index) {
@@ -9495,6 +9954,8 @@ public final class Osmformat {
       }
       /**
        * <code>repeated uint32 vals = 3 [packed = true];</code>
+       * @param value The vals to set.
+       * @return This builder for chaining.
        */
       public Builder setVals(
           int index, int value) {
@@ -9504,6 +9965,8 @@ public final class Osmformat {
       }
       /**
        * <code>repeated uint32 vals = 3 [packed = true];</code>
+       * @param value The vals to add.
+       * @return This builder for chaining.
        */
       public Builder addVals(int value) {
         copyOnWrite();
@@ -9512,6 +9975,8 @@ public final class Osmformat {
       }
       /**
        * <code>repeated uint32 vals = 3 [packed = true];</code>
+       * @param values The vals to add.
+       * @return This builder for chaining.
        */
       public Builder addAllVals(
           java.lang.Iterable<? extends java.lang.Integer> values) {
@@ -9521,6 +9986,7 @@ public final class Osmformat {
       }
       /**
        * <code>repeated uint32 vals = 3 [packed = true];</code>
+       * @return This builder for chaining.
        */
       public Builder clearVals() {
         copyOnWrite();
@@ -9556,7 +10022,7 @@ public final class Osmformat {
       public Builder setInfo(
           de.topobyte.osm4j.pbf.protobuf.Osmformat.Info.Builder builderForValue) {
         copyOnWrite();
-        instance.setInfo(builderForValue);
+        instance.setInfo(builderForValue.build());
         return this;
       }
       /**
@@ -9581,6 +10047,7 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated sint64 refs = 8 [packed = true];</code>
+       * @return A list containing the refs.
        */
       @java.lang.Override
       public java.util.List<java.lang.Long>
@@ -9594,6 +10061,7 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated sint64 refs = 8 [packed = true];</code>
+       * @return The count of refs.
        */
       @java.lang.Override
       public int getRefsCount() {
@@ -9605,6 +10073,8 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated sint64 refs = 8 [packed = true];</code>
+       * @param index The index of the element to return.
+       * @return The refs at the given index.
        */
       @java.lang.Override
       public long getRefs(int index) {
@@ -9616,6 +10086,8 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated sint64 refs = 8 [packed = true];</code>
+       * @param value The refs to set.
+       * @return This builder for chaining.
        */
       public Builder setRefs(
           int index, long value) {
@@ -9629,6 +10101,8 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated sint64 refs = 8 [packed = true];</code>
+       * @param value The refs to add.
+       * @return This builder for chaining.
        */
       public Builder addRefs(long value) {
         copyOnWrite();
@@ -9641,6 +10115,8 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated sint64 refs = 8 [packed = true];</code>
+       * @param values The refs to add.
+       * @return This builder for chaining.
        */
       public Builder addAllRefs(
           java.lang.Iterable<? extends java.lang.Long> values) {
@@ -9654,6 +10130,7 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated sint64 refs = 8 [packed = true];</code>
+       * @return This builder for chaining.
        */
       public Builder clearRefs() {
         copyOnWrite();
@@ -9686,8 +10163,8 @@ public final class Osmformat {
               "refs_",
             };
             java.lang.String info =
-                "\u0001\u0005\u0000\u0001\u0001\b\u0005\u0000\u0003\u0001\u0001\u0502\u0000\u0002" +
-                "+\u0003+\u0004\t\u0001\b0";
+                "\u0001\u0005\u0000\u0001\u0001\b\u0005\u0000\u0003\u0001\u0001\u1502\u0000\u0002" +
+                "+\u0003+\u0004\u1009\u0001\b0";
             return newMessageInfo(DEFAULT_INSTANCE, info, objects);
         }
         // fall through
@@ -9749,10 +10226,12 @@ public final class Osmformat {
 
     /**
      * <code>required int64 id = 1;</code>
+     * @return Whether the id field is set.
      */
     boolean hasId();
     /**
      * <code>required int64 id = 1;</code>
+     * @return The id.
      */
     long getId();
 
@@ -9762,6 +10241,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated uint32 keys = 2 [packed = true];</code>
+     * @return A list containing the keys.
      */
     java.util.List<java.lang.Integer> getKeysList();
     /**
@@ -9770,6 +10250,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated uint32 keys = 2 [packed = true];</code>
+     * @return The count of keys.
      */
     int getKeysCount();
     /**
@@ -9778,28 +10259,36 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated uint32 keys = 2 [packed = true];</code>
+     * @param index The index of the element to return.
+     * @return The keys at the given index.
      */
     int getKeys(int index);
 
     /**
      * <code>repeated uint32 vals = 3 [packed = true];</code>
+     * @return A list containing the vals.
      */
     java.util.List<java.lang.Integer> getValsList();
     /**
      * <code>repeated uint32 vals = 3 [packed = true];</code>
+     * @return The count of vals.
      */
     int getValsCount();
     /**
      * <code>repeated uint32 vals = 3 [packed = true];</code>
+     * @param index The index of the element to return.
+     * @return The vals at the given index.
      */
     int getVals(int index);
 
     /**
      * <code>optional .OSMPBF.Info info = 4;</code>
+     * @return Whether the info field is set.
      */
     boolean hasInfo();
     /**
      * <code>optional .OSMPBF.Info info = 4;</code>
+     * @return The info.
      */
     de.topobyte.osm4j.pbf.protobuf.Osmformat.Info getInfo();
 
@@ -9809,6 +10298,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated int32 roles_sid = 8 [packed = true];</code>
+     * @return A list containing the rolesSid.
      */
     java.util.List<java.lang.Integer> getRolesSidList();
     /**
@@ -9817,6 +10307,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated int32 roles_sid = 8 [packed = true];</code>
+     * @return The count of rolesSid.
      */
     int getRolesSidCount();
     /**
@@ -9825,6 +10316,8 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated int32 roles_sid = 8 [packed = true];</code>
+     * @param index The index of the element to return.
+     * @return The rolesSid at the given index.
      */
     int getRolesSid(int index);
 
@@ -9834,6 +10327,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint64 memids = 9 [packed = true];</code>
+     * @return A list containing the memids.
      */
     java.util.List<java.lang.Long> getMemidsList();
     /**
@@ -9842,6 +10336,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint64 memids = 9 [packed = true];</code>
+     * @return The count of memids.
      */
     int getMemidsCount();
     /**
@@ -9850,19 +10345,25 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint64 memids = 9 [packed = true];</code>
+     * @param index The index of the element to return.
+     * @return The memids at the given index.
      */
     long getMemids(int index);
 
     /**
      * <code>repeated .OSMPBF.Relation.MemberType types = 10 [packed = true];</code>
+     * @return A list containing the types.
      */
     java.util.List<de.topobyte.osm4j.pbf.protobuf.Osmformat.Relation.MemberType> getTypesList();
     /**
      * <code>repeated .OSMPBF.Relation.MemberType types = 10 [packed = true];</code>
+     * @return The count of types.
      */
     int getTypesCount();
     /**
      * <code>repeated .OSMPBF.Relation.MemberType types = 10 [packed = true];</code>
+     * @param index The index of the element to return.
+     * @return The types at the given index.
      */
     de.topobyte.osm4j.pbf.protobuf.Osmformat.Relation.MemberType getTypes(int index);
   }
@@ -9920,6 +10421,8 @@ public final class Osmformat {
       }
 
       /**
+       * @param value The number of the enum to look for.
+       * @return The enum associated with the given number.
        * @deprecated Use {@link #forNumber(int)} instead.
        */
       @java.lang.Deprecated
@@ -9977,6 +10480,7 @@ public final class Osmformat {
     private long id_;
     /**
      * <code>required int64 id = 1;</code>
+     * @return Whether the id field is set.
      */
     @java.lang.Override
     public boolean hasId() {
@@ -9984,6 +10488,7 @@ public final class Osmformat {
     }
     /**
      * <code>required int64 id = 1;</code>
+     * @return The id.
      */
     @java.lang.Override
     public long getId() {
@@ -9991,6 +10496,7 @@ public final class Osmformat {
     }
     /**
      * <code>required int64 id = 1;</code>
+     * @param value The id to set.
      */
     private void setId(long value) {
       bitField0_ |= 0x00000001;
@@ -10012,6 +10518,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated uint32 keys = 2 [packed = true];</code>
+     * @return A list containing the keys.
      */
     @java.lang.Override
     public java.util.List<java.lang.Integer>
@@ -10024,6 +10531,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated uint32 keys = 2 [packed = true];</code>
+     * @return The count of keys.
      */
     @java.lang.Override
     public int getKeysCount() {
@@ -10035,6 +10543,8 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated uint32 keys = 2 [packed = true];</code>
+     * @param index The index of the element to return.
+     * @return The keys at the given index.
      */
     @java.lang.Override
     public int getKeys(int index) {
@@ -10042,9 +10552,10 @@ public final class Osmformat {
     }
     private int keysMemoizedSerializedSize = -1;
     private void ensureKeysIsMutable() {
-      if (!keys_.isModifiable()) {
+      com.google.protobuf.Internal.IntList tmp = keys_;
+      if (!tmp.isModifiable()) {
         keys_ =
-            com.google.protobuf.GeneratedMessageLite.mutableCopy(keys_);
+            com.google.protobuf.GeneratedMessageLite.mutableCopy(tmp);
        }
     }
     /**
@@ -10053,6 +10564,8 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated uint32 keys = 2 [packed = true];</code>
+     * @param index The index to set the value at.
+     * @param value The keys to set.
      */
     private void setKeys(
         int index, int value) {
@@ -10065,6 +10578,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated uint32 keys = 2 [packed = true];</code>
+     * @param value The keys to add.
      */
     private void addKeys(int value) {
       ensureKeysIsMutable();
@@ -10076,6 +10590,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated uint32 keys = 2 [packed = true];</code>
+     * @param values The keys to add.
      */
     private void addAllKeys(
         java.lang.Iterable<? extends java.lang.Integer> values) {
@@ -10098,6 +10613,7 @@ public final class Osmformat {
     private com.google.protobuf.Internal.IntList vals_;
     /**
      * <code>repeated uint32 vals = 3 [packed = true];</code>
+     * @return A list containing the vals.
      */
     @java.lang.Override
     public java.util.List<java.lang.Integer>
@@ -10106,6 +10622,7 @@ public final class Osmformat {
     }
     /**
      * <code>repeated uint32 vals = 3 [packed = true];</code>
+     * @return The count of vals.
      */
     @java.lang.Override
     public int getValsCount() {
@@ -10113,6 +10630,8 @@ public final class Osmformat {
     }
     /**
      * <code>repeated uint32 vals = 3 [packed = true];</code>
+     * @param index The index of the element to return.
+     * @return The vals at the given index.
      */
     @java.lang.Override
     public int getVals(int index) {
@@ -10120,13 +10639,16 @@ public final class Osmformat {
     }
     private int valsMemoizedSerializedSize = -1;
     private void ensureValsIsMutable() {
-      if (!vals_.isModifiable()) {
+      com.google.protobuf.Internal.IntList tmp = vals_;
+      if (!tmp.isModifiable()) {
         vals_ =
-            com.google.protobuf.GeneratedMessageLite.mutableCopy(vals_);
+            com.google.protobuf.GeneratedMessageLite.mutableCopy(tmp);
        }
     }
     /**
      * <code>repeated uint32 vals = 3 [packed = true];</code>
+     * @param index The index to set the value at.
+     * @param value The vals to set.
      */
     private void setVals(
         int index, int value) {
@@ -10135,6 +10657,7 @@ public final class Osmformat {
     }
     /**
      * <code>repeated uint32 vals = 3 [packed = true];</code>
+     * @param value The vals to add.
      */
     private void addVals(int value) {
       ensureValsIsMutable();
@@ -10142,6 +10665,7 @@ public final class Osmformat {
     }
     /**
      * <code>repeated uint32 vals = 3 [packed = true];</code>
+     * @param values The vals to add.
      */
     private void addAllVals(
         java.lang.Iterable<? extends java.lang.Integer> values) {
@@ -10176,29 +10700,17 @@ public final class Osmformat {
      * <code>optional .OSMPBF.Info info = 4;</code>
      */
     private void setInfo(de.topobyte.osm4j.pbf.protobuf.Osmformat.Info value) {
-      if (value == null) {
-        throw new NullPointerException();
-      }
-      info_ = value;
+      value.getClass();
+  info_ = value;
       bitField0_ |= 0x00000002;
       }
-    /**
-     * <code>optional .OSMPBF.Info info = 4;</code>
-     */
-    private void setInfo(
-        de.topobyte.osm4j.pbf.protobuf.Osmformat.Info.Builder builderForValue) {
-      info_ = builderForValue.build();
-      bitField0_ |= 0x00000002;
-    }
     /**
      * <code>optional .OSMPBF.Info info = 4;</code>
      */
     @java.lang.SuppressWarnings({"ReferenceEquality"})
     private void mergeInfo(de.topobyte.osm4j.pbf.protobuf.Osmformat.Info value) {
-      if (value == null) {
-        throw new NullPointerException();
-      }
-      if (info_ != null &&
+      value.getClass();
+  if (info_ != null &&
           info_ != de.topobyte.osm4j.pbf.protobuf.Osmformat.Info.getDefaultInstance()) {
         info_ =
           de.topobyte.osm4j.pbf.protobuf.Osmformat.Info.newBuilder(info_).mergeFrom(value).buildPartial();
@@ -10222,6 +10734,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated int32 roles_sid = 8 [packed = true];</code>
+     * @return A list containing the rolesSid.
      */
     @java.lang.Override
     public java.util.List<java.lang.Integer>
@@ -10234,6 +10747,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated int32 roles_sid = 8 [packed = true];</code>
+     * @return The count of rolesSid.
      */
     @java.lang.Override
     public int getRolesSidCount() {
@@ -10245,6 +10759,8 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated int32 roles_sid = 8 [packed = true];</code>
+     * @param index The index of the element to return.
+     * @return The rolesSid at the given index.
      */
     @java.lang.Override
     public int getRolesSid(int index) {
@@ -10252,9 +10768,10 @@ public final class Osmformat {
     }
     private int rolesSidMemoizedSerializedSize = -1;
     private void ensureRolesSidIsMutable() {
-      if (!rolesSid_.isModifiable()) {
+      com.google.protobuf.Internal.IntList tmp = rolesSid_;
+      if (!tmp.isModifiable()) {
         rolesSid_ =
-            com.google.protobuf.GeneratedMessageLite.mutableCopy(rolesSid_);
+            com.google.protobuf.GeneratedMessageLite.mutableCopy(tmp);
        }
     }
     /**
@@ -10263,6 +10780,8 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated int32 roles_sid = 8 [packed = true];</code>
+     * @param index The index to set the value at.
+     * @param value The rolesSid to set.
      */
     private void setRolesSid(
         int index, int value) {
@@ -10275,6 +10794,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated int32 roles_sid = 8 [packed = true];</code>
+     * @param value The rolesSid to add.
      */
     private void addRolesSid(int value) {
       ensureRolesSidIsMutable();
@@ -10286,6 +10806,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated int32 roles_sid = 8 [packed = true];</code>
+     * @param values The rolesSid to add.
      */
     private void addAllRolesSid(
         java.lang.Iterable<? extends java.lang.Integer> values) {
@@ -10312,6 +10833,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint64 memids = 9 [packed = true];</code>
+     * @return A list containing the memids.
      */
     @java.lang.Override
     public java.util.List<java.lang.Long>
@@ -10324,6 +10846,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint64 memids = 9 [packed = true];</code>
+     * @return The count of memids.
      */
     @java.lang.Override
     public int getMemidsCount() {
@@ -10335,6 +10858,8 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint64 memids = 9 [packed = true];</code>
+     * @param index The index of the element to return.
+     * @return The memids at the given index.
      */
     @java.lang.Override
     public long getMemids(int index) {
@@ -10342,9 +10867,10 @@ public final class Osmformat {
     }
     private int memidsMemoizedSerializedSize = -1;
     private void ensureMemidsIsMutable() {
-      if (!memids_.isModifiable()) {
+      com.google.protobuf.Internal.LongList tmp = memids_;
+      if (!tmp.isModifiable()) {
         memids_ =
-            com.google.protobuf.GeneratedMessageLite.mutableCopy(memids_);
+            com.google.protobuf.GeneratedMessageLite.mutableCopy(tmp);
        }
     }
     /**
@@ -10353,6 +10879,8 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint64 memids = 9 [packed = true];</code>
+     * @param index The index to set the value at.
+     * @param value The memids to set.
      */
     private void setMemids(
         int index, long value) {
@@ -10365,6 +10893,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint64 memids = 9 [packed = true];</code>
+     * @param value The memids to add.
      */
     private void addMemids(long value) {
       ensureMemidsIsMutable();
@@ -10376,6 +10905,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint64 memids = 9 [packed = true];</code>
+     * @param values The memids to add.
      */
     private void addAllMemids(
         java.lang.Iterable<? extends java.lang.Long> values) {
@@ -10408,6 +10938,7 @@ public final class Osmformat {
             };
     /**
      * <code>repeated .OSMPBF.Relation.MemberType types = 10 [packed = true];</code>
+     * @return A list containing the types.
      */
     @java.lang.Override
     public java.util.List<de.topobyte.osm4j.pbf.protobuf.Osmformat.Relation.MemberType> getTypesList() {
@@ -10416,6 +10947,7 @@ public final class Osmformat {
     }
     /**
      * <code>repeated .OSMPBF.Relation.MemberType types = 10 [packed = true];</code>
+     * @return The count of types.
      */
     @java.lang.Override
     public int getTypesCount() {
@@ -10423,41 +10955,45 @@ public final class Osmformat {
     }
     /**
      * <code>repeated .OSMPBF.Relation.MemberType types = 10 [packed = true];</code>
+     * @param index The index of the element to return.
+     * @return The types at the given index.
      */
     @java.lang.Override
     public de.topobyte.osm4j.pbf.protobuf.Osmformat.Relation.MemberType getTypes(int index) {
-      return types_converter_.convert(types_.getInt(index));
+      de.topobyte.osm4j.pbf.protobuf.Osmformat.Relation.MemberType result = de.topobyte.osm4j.pbf.protobuf.Osmformat.Relation.MemberType.forNumber(types_.getInt(index));
+      return result == null ? de.topobyte.osm4j.pbf.protobuf.Osmformat.Relation.MemberType.NODE : result;
     }
     private int typesMemoizedSerializedSize;
     private void ensureTypesIsMutable() {
-      if (!types_.isModifiable()) {
+      com.google.protobuf.Internal.IntList tmp = types_;
+      if (!tmp.isModifiable()) {
         types_ =
-            com.google.protobuf.GeneratedMessageLite.mutableCopy(types_);
+            com.google.protobuf.GeneratedMessageLite.mutableCopy(tmp);
       }
     }
     /**
      * <code>repeated .OSMPBF.Relation.MemberType types = 10 [packed = true];</code>
+     * @param index The index to set the value at.
+     * @param value The types to set.
      */
     private void setTypes(
         int index, de.topobyte.osm4j.pbf.protobuf.Osmformat.Relation.MemberType value) {
-      if (value == null) {
-        throw new NullPointerException();
-      }
-      ensureTypesIsMutable();
+      value.getClass();
+  ensureTypesIsMutable();
       types_.setInt(index, value.getNumber());
     }
     /**
      * <code>repeated .OSMPBF.Relation.MemberType types = 10 [packed = true];</code>
+     * @param value The types to add.
      */
     private void addTypes(de.topobyte.osm4j.pbf.protobuf.Osmformat.Relation.MemberType value) {
-      if (value == null) {
-        throw new NullPointerException();
-      }
-      ensureTypesIsMutable();
+      value.getClass();
+  ensureTypesIsMutable();
       types_.addInt(value.getNumber());
     }
     /**
      * <code>repeated .OSMPBF.Relation.MemberType types = 10 [packed = true];</code>
+     * @param values The types to add.
      */
     private void addAllTypes(
         java.lang.Iterable<? extends de.topobyte.osm4j.pbf.protobuf.Osmformat.Relation.MemberType> values) {
@@ -10523,10 +11059,12 @@ public final class Osmformat {
       return com.google.protobuf.GeneratedMessageLite.parseFrom(
           DEFAULT_INSTANCE, input, extensionRegistry);
     }
+
     public static de.topobyte.osm4j.pbf.protobuf.Osmformat.Relation parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return parseDelimitedFrom(DEFAULT_INSTANCE, input);
     }
+
     public static de.topobyte.osm4j.pbf.protobuf.Osmformat.Relation parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -10570,6 +11108,7 @@ public final class Osmformat {
 
       /**
        * <code>required int64 id = 1;</code>
+       * @return Whether the id field is set.
        */
       @java.lang.Override
       public boolean hasId() {
@@ -10577,6 +11116,7 @@ public final class Osmformat {
       }
       /**
        * <code>required int64 id = 1;</code>
+       * @return The id.
        */
       @java.lang.Override
       public long getId() {
@@ -10584,6 +11124,8 @@ public final class Osmformat {
       }
       /**
        * <code>required int64 id = 1;</code>
+       * @param value The id to set.
+       * @return This builder for chaining.
        */
       public Builder setId(long value) {
         copyOnWrite();
@@ -10592,6 +11134,7 @@ public final class Osmformat {
       }
       /**
        * <code>required int64 id = 1;</code>
+       * @return This builder for chaining.
        */
       public Builder clearId() {
         copyOnWrite();
@@ -10605,6 +11148,7 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated uint32 keys = 2 [packed = true];</code>
+       * @return A list containing the keys.
        */
       @java.lang.Override
       public java.util.List<java.lang.Integer>
@@ -10618,6 +11162,7 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated uint32 keys = 2 [packed = true];</code>
+       * @return The count of keys.
        */
       @java.lang.Override
       public int getKeysCount() {
@@ -10629,6 +11174,8 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated uint32 keys = 2 [packed = true];</code>
+       * @param index The index of the element to return.
+       * @return The keys at the given index.
        */
       @java.lang.Override
       public int getKeys(int index) {
@@ -10640,6 +11187,8 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated uint32 keys = 2 [packed = true];</code>
+       * @param value The keys to set.
+       * @return This builder for chaining.
        */
       public Builder setKeys(
           int index, int value) {
@@ -10653,6 +11202,8 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated uint32 keys = 2 [packed = true];</code>
+       * @param value The keys to add.
+       * @return This builder for chaining.
        */
       public Builder addKeys(int value) {
         copyOnWrite();
@@ -10665,6 +11216,8 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated uint32 keys = 2 [packed = true];</code>
+       * @param values The keys to add.
+       * @return This builder for chaining.
        */
       public Builder addAllKeys(
           java.lang.Iterable<? extends java.lang.Integer> values) {
@@ -10678,6 +11231,7 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated uint32 keys = 2 [packed = true];</code>
+       * @return This builder for chaining.
        */
       public Builder clearKeys() {
         copyOnWrite();
@@ -10687,6 +11241,7 @@ public final class Osmformat {
 
       /**
        * <code>repeated uint32 vals = 3 [packed = true];</code>
+       * @return A list containing the vals.
        */
       @java.lang.Override
       public java.util.List<java.lang.Integer>
@@ -10696,6 +11251,7 @@ public final class Osmformat {
       }
       /**
        * <code>repeated uint32 vals = 3 [packed = true];</code>
+       * @return The count of vals.
        */
       @java.lang.Override
       public int getValsCount() {
@@ -10703,6 +11259,8 @@ public final class Osmformat {
       }
       /**
        * <code>repeated uint32 vals = 3 [packed = true];</code>
+       * @param index The index of the element to return.
+       * @return The vals at the given index.
        */
       @java.lang.Override
       public int getVals(int index) {
@@ -10710,6 +11268,8 @@ public final class Osmformat {
       }
       /**
        * <code>repeated uint32 vals = 3 [packed = true];</code>
+       * @param value The vals to set.
+       * @return This builder for chaining.
        */
       public Builder setVals(
           int index, int value) {
@@ -10719,6 +11279,8 @@ public final class Osmformat {
       }
       /**
        * <code>repeated uint32 vals = 3 [packed = true];</code>
+       * @param value The vals to add.
+       * @return This builder for chaining.
        */
       public Builder addVals(int value) {
         copyOnWrite();
@@ -10727,6 +11289,8 @@ public final class Osmformat {
       }
       /**
        * <code>repeated uint32 vals = 3 [packed = true];</code>
+       * @param values The vals to add.
+       * @return This builder for chaining.
        */
       public Builder addAllVals(
           java.lang.Iterable<? extends java.lang.Integer> values) {
@@ -10736,6 +11300,7 @@ public final class Osmformat {
       }
       /**
        * <code>repeated uint32 vals = 3 [packed = true];</code>
+       * @return This builder for chaining.
        */
       public Builder clearVals() {
         copyOnWrite();
@@ -10771,7 +11336,7 @@ public final class Osmformat {
       public Builder setInfo(
           de.topobyte.osm4j.pbf.protobuf.Osmformat.Info.Builder builderForValue) {
         copyOnWrite();
-        instance.setInfo(builderForValue);
+        instance.setInfo(builderForValue.build());
         return this;
       }
       /**
@@ -10796,6 +11361,7 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated int32 roles_sid = 8 [packed = true];</code>
+       * @return A list containing the rolesSid.
        */
       @java.lang.Override
       public java.util.List<java.lang.Integer>
@@ -10809,6 +11375,7 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated int32 roles_sid = 8 [packed = true];</code>
+       * @return The count of rolesSid.
        */
       @java.lang.Override
       public int getRolesSidCount() {
@@ -10820,6 +11387,8 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated int32 roles_sid = 8 [packed = true];</code>
+       * @param index The index of the element to return.
+       * @return The rolesSid at the given index.
        */
       @java.lang.Override
       public int getRolesSid(int index) {
@@ -10831,6 +11400,8 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated int32 roles_sid = 8 [packed = true];</code>
+       * @param value The rolesSid to set.
+       * @return This builder for chaining.
        */
       public Builder setRolesSid(
           int index, int value) {
@@ -10844,6 +11415,8 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated int32 roles_sid = 8 [packed = true];</code>
+       * @param value The rolesSid to add.
+       * @return This builder for chaining.
        */
       public Builder addRolesSid(int value) {
         copyOnWrite();
@@ -10856,6 +11429,8 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated int32 roles_sid = 8 [packed = true];</code>
+       * @param values The rolesSid to add.
+       * @return This builder for chaining.
        */
       public Builder addAllRolesSid(
           java.lang.Iterable<? extends java.lang.Integer> values) {
@@ -10869,6 +11444,7 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated int32 roles_sid = 8 [packed = true];</code>
+       * @return This builder for chaining.
        */
       public Builder clearRolesSid() {
         copyOnWrite();
@@ -10882,6 +11458,7 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated sint64 memids = 9 [packed = true];</code>
+       * @return A list containing the memids.
        */
       @java.lang.Override
       public java.util.List<java.lang.Long>
@@ -10895,6 +11472,7 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated sint64 memids = 9 [packed = true];</code>
+       * @return The count of memids.
        */
       @java.lang.Override
       public int getMemidsCount() {
@@ -10906,6 +11484,8 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated sint64 memids = 9 [packed = true];</code>
+       * @param index The index of the element to return.
+       * @return The memids at the given index.
        */
       @java.lang.Override
       public long getMemids(int index) {
@@ -10917,6 +11497,8 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated sint64 memids = 9 [packed = true];</code>
+       * @param value The memids to set.
+       * @return This builder for chaining.
        */
       public Builder setMemids(
           int index, long value) {
@@ -10930,6 +11512,8 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated sint64 memids = 9 [packed = true];</code>
+       * @param value The memids to add.
+       * @return This builder for chaining.
        */
       public Builder addMemids(long value) {
         copyOnWrite();
@@ -10942,6 +11526,8 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated sint64 memids = 9 [packed = true];</code>
+       * @param values The memids to add.
+       * @return This builder for chaining.
        */
       public Builder addAllMemids(
           java.lang.Iterable<? extends java.lang.Long> values) {
@@ -10955,6 +11541,7 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated sint64 memids = 9 [packed = true];</code>
+       * @return This builder for chaining.
        */
       public Builder clearMemids() {
         copyOnWrite();
@@ -10964,6 +11551,7 @@ public final class Osmformat {
 
       /**
        * <code>repeated .OSMPBF.Relation.MemberType types = 10 [packed = true];</code>
+       * @return A list containing the types.
        */
       @java.lang.Override
       public java.util.List<de.topobyte.osm4j.pbf.protobuf.Osmformat.Relation.MemberType> getTypesList() {
@@ -10971,6 +11559,7 @@ public final class Osmformat {
       }
       /**
        * <code>repeated .OSMPBF.Relation.MemberType types = 10 [packed = true];</code>
+       * @return The count of types.
        */
       @java.lang.Override
       public int getTypesCount() {
@@ -10978,6 +11567,8 @@ public final class Osmformat {
       }
       /**
        * <code>repeated .OSMPBF.Relation.MemberType types = 10 [packed = true];</code>
+       * @param index The index of the element to return.
+       * @return The types at the given index.
        */
       @java.lang.Override
       public de.topobyte.osm4j.pbf.protobuf.Osmformat.Relation.MemberType getTypes(int index) {
@@ -10985,6 +11576,9 @@ public final class Osmformat {
       }
       /**
        * <code>repeated .OSMPBF.Relation.MemberType types = 10 [packed = true];</code>
+       * @param index The index to set the value at.
+       * @param value The types to set.
+       * @return This builder for chaining.
        */
       public Builder setTypes(
           int index, de.topobyte.osm4j.pbf.protobuf.Osmformat.Relation.MemberType value) {
@@ -10994,6 +11588,8 @@ public final class Osmformat {
       }
       /**
        * <code>repeated .OSMPBF.Relation.MemberType types = 10 [packed = true];</code>
+       * @param value The types to add.
+       * @return This builder for chaining.
        */
       public Builder addTypes(de.topobyte.osm4j.pbf.protobuf.Osmformat.Relation.MemberType value) {
         copyOnWrite();
@@ -11002,6 +11598,8 @@ public final class Osmformat {
       }
       /**
        * <code>repeated .OSMPBF.Relation.MemberType types = 10 [packed = true];</code>
+       * @param values The types to add.
+       * @return This builder for chaining.
        */
       public Builder addAllTypes(
           java.lang.Iterable<? extends de.topobyte.osm4j.pbf.protobuf.Osmformat.Relation.MemberType> values) {
@@ -11010,6 +11608,7 @@ public final class Osmformat {
       }
       /**
        * <code>repeated .OSMPBF.Relation.MemberType types = 10 [packed = true];</code>
+       * @return This builder for chaining.
        */
       public Builder clearTypes() {
         copyOnWrite();
@@ -11045,8 +11644,8 @@ public final class Osmformat {
               de.topobyte.osm4j.pbf.protobuf.Osmformat.Relation.MemberType.internalGetVerifier(),
             };
             java.lang.String info =
-                "\u0001\u0007\u0000\u0001\u0001\n\u0007\u0000\u0005\u0001\u0001\u0502\u0000\u0002" +
-                "+\u0003+\u0004\t\u0001\b\'\t0\n,";
+                "\u0001\u0007\u0000\u0001\u0001\n\u0007\u0000\u0005\u0001\u0001\u1502\u0000\u0002" +
+                "+\u0003+\u0004\u1009\u0001\b\'\t0\n,";
             return newMessageInfo(DEFAULT_INSTANCE, info, objects);
         }
         // fall through
