@@ -20,13 +20,14 @@ package de.topobyte.osm4j.replication.test.minutes;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 
 import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 
+import de.topobyte.osm4j.replication.ChangeReplicationState;
 import de.topobyte.osm4j.replication.ReplicationFiles;
 import de.topobyte.osm4j.replication.ReplicationInfo;
-import de.topobyte.osm4j.replication.ChangeReplicationState;
 
 public class TestMinuteStateLatest
 {
@@ -37,7 +38,7 @@ public class TestMinuteStateLatest
 		String url = ReplicationFiles.minuteState();
 
 		InputStream input = new URL(url).openConnection().getInputStream();
-		String text = IOUtils.toString(input);
+		String text = IOUtils.toString(input, StandardCharsets.UTF_8);
 		System.out.println(text);
 
 		ReplicationInfo info = ChangeReplicationState.parse(text);

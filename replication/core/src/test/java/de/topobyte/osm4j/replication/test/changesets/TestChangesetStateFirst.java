@@ -20,6 +20,7 @@ package de.topobyte.osm4j.replication.test.changesets;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 
 import org.apache.commons.io.IOUtils;
 import org.junit.Test;
@@ -39,7 +40,7 @@ public class TestChangesetStateFirst
 				.changesetsState(ReplicationUtil.FIRST_CHANGESET_WITH_STATE);
 
 		InputStream input = new URL(url).openConnection().getInputStream();
-		String text = IOUtils.toString(input);
+		String text = IOUtils.toString(input, StandardCharsets.UTF_8);
 		System.out.println(text);
 
 		ReplicationInfo info = ChangesetReplicationState.parse(text);

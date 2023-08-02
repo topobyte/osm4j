@@ -19,6 +19,7 @@ package de.topobyte.osm4j;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 
 import org.apache.commons.io.IOUtils;
 
@@ -31,7 +32,7 @@ public class Util
 				.getContextClassLoader();
 
 		InputStream input = classloader.getResourceAsStream(filename);
-		String text = IOUtils.toString(input);
+		String text = IOUtils.toString(input, StandardCharsets.UTF_8);
 		input.close();
 
 		return text;

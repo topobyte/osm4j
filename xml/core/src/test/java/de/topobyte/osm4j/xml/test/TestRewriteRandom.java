@@ -20,6 +20,7 @@ package de.topobyte.osm4j.xml.test;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.Locale;
 
 import org.apache.commons.io.IOUtils;
@@ -70,7 +71,7 @@ public class TestRewriteRandom extends LocaleTest
 
 		// Re-read the data from XML
 
-		InputStream input = IOUtils.toInputStream(xml);
+		InputStream input = IOUtils.toInputStream(xml, StandardCharsets.UTF_8);
 		OsmXmlIterator iterator = new OsmXmlIterator(input, true);
 		TestDataSet reread = DataSetHelper.read(iterator);
 
