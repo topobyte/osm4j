@@ -17,7 +17,7 @@ dependencies {
     testImplementation project(':osm4j-testing')
 
     testImplementation 'org.apache.commons:commons-compress:1.8'
-    testImplementation 'de.topobyte:adt-geo:0.1.0'
+    testImplementation 'de.topobyte:adt-geo:0.2.0'
     testImplementation 'junit:junit:4.13.2'
 
     testRuntimeOnly 'org.slf4j:slf4j-reload4j:1.7.36'

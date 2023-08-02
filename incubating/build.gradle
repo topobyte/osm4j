@@ -7,7 +7,7 @@ dependencies {
     api project(':osm4j-utils')
 
     api 'de.topobyte:melon-io:0.1.0'
-    api 'de.topobyte:melon-paths:0.0.3'
+    api 'de.topobyte:melon-paths:0.1.0'
     api 'de.topobyte:simple-mapfile-xml:0.1.0'
 
     api 'org.slf4j:slf4j-api:1.7.36'
