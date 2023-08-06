@@ -215,6 +215,11 @@ public class ExtractionFilesBuilder
 				throw new IOException(error);
 			}
 		}
+		if (Files.exists(files.getTree())) {
+			String error = "Tree directory is not empty";
+			logger.error(error);
+			throw new IOException(error);
+		}
 
 		extension = OsmIoUtils.extension(outputFormat);
 
