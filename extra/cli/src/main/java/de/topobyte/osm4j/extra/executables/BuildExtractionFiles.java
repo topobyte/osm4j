@@ -47,6 +47,7 @@ public class BuildExtractionFiles extends AbstractExecutableInputOutput
 	private static final String OPTION_MAX_MEMBERS_COMPLEX = "max-members-complex";
 	private static final String OPTION_COMPUTE_BBOX = "compute-bbox";
 
+	private static final String OPTION_DELETE_INPUT = "delete-input";
 	private static final String OPTION_KEEP_ALL = "keep-all";
 	private static final String OPTION_KEEP_SPLITTED = "keep-splitted";
 	private static final String OPTION_KEEP_SPLITTED_NODES = "keep-splitted-nodes";
@@ -91,6 +92,7 @@ public class BuildExtractionFiles extends AbstractExecutableInputOutput
 
 	private ExtractionFileNames fileNames;
 
+	private boolean deleteInput = false;
 	private boolean keepAll = false;
 	private boolean keepSplitted = false;
 	private boolean keepSplittedNodes = false;
@@ -115,6 +117,7 @@ public class BuildExtractionFiles extends AbstractExecutableInputOutput
 		OptionHelper.addL(options, OPTION_MAX_MEMBERS_COMPLEX, true, true, "maximum number of nodes per batch");
 		OptionHelper.addL(options, OPTION_COMPUTE_BBOX, false, false, "compute bbox instead of using bbox declared in input file");
 		ExtractionFilesHelper.addOptions(options);
+		OptionHelper.addL(options, OPTION_DELETE_INPUT, false, false, "delete input file right after splitting");
 		OptionHelper.addL(options, OPTION_KEEP_ALL, false, false, "keep all temporary files");
 		OptionHelper.addL(options, OPTION_KEEP_SPLITTED, false, false, "keep the files containing only input nodes/ways/relations");
 		OptionHelper.addL(options, OPTION_KEEP_SPLITTED_NODES, false, false, "keep the file containing only input nodes");
@@ -192,6 +195,7 @@ public class BuildExtractionFiles extends AbstractExecutableInputOutput
 
 		ExtractionFilesHelper.parse(line, fileNames);
 
+		deleteInput = line.hasOption(OPTION_DELETE_INPUT);
 		keepAll = line.hasOption(OPTION_KEEP_ALL);
 		keepSplitted = line.hasOption(OPTION_KEEP_SPLITTED);
 
@@ -238,6 +242,7 @@ public class BuildExtractionFiles extends AbstractExecutableInputOutput
 				maxNodes, includeMetadata, maxMembersSimple, maxMembersComplex,
 				computeBbox, continuePreviousBuild);
 
+		builder.setDeleteInput(deleteInput);
 		builder.setKeepSplittedNodes(keepSplittedNodes);
 		builder.setKeepSplittedWays(keepSplittedWays);
 		builder.setKeepSplittedRelations(keepSplittedRelations);

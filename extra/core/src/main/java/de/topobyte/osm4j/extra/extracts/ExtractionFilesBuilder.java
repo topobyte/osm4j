@@ -135,6 +135,7 @@ public class ExtractionFilesBuilder
 	private Path pathSimpleRelationsSortedGeometry;
 	private Path pathComplexRelationsSortedGeometry;
 
+	private boolean deleteInput = false;
 	private boolean keepSplittedNodes = false;
 	private boolean keepSplittedWays = false;
 	private boolean keepSplittedRelations = false;
@@ -285,6 +286,7 @@ public class ExtractionFilesBuilder
 
 		determineBounds();
 		splitEntities();
+		deleteInput();
 		calculateBoundingBox();
 		buildNodeTree();
 		sortWays();
@@ -385,6 +387,18 @@ public class ExtractionFilesBuilder
 
 		t.stop(KEY_SPLIT);
 		printInfo();
+	}
+
+	private void deleteInput() throws IOException
+	{
+		if (deleteInput) {
+			if (inputFactory instanceof OsmFileInput) {
+				logger.info("Deleting input file...");
+				OsmFileInput fileInput = (OsmFileInput) inputFactory;
+				Files.delete(fileInput.getPath());
+				logger.info("done");
+			}
+		}
 	}
 
 	private void calculateBoundingBox() throws IOException
@@ -730,6 +744,16 @@ public class ExtractionFilesBuilder
 		for (String key : keys) {
 			logger.info(String.format("%s: %s", key, t.htime(key)));
 		}
+	}
+
+	public boolean isDeleteInput()
+	{
+		return deleteInput;
+	}
+
+	public void setDeleteInput(boolean deleteInput)
+	{
+		this.deleteInput = deleteInput;
 	}
 
 	public boolean isKeepSplittedNodes()
