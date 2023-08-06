@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import de.topobyte.osm4j.core.access.OsmInputAccessFactory;
 import de.topobyte.osm4j.core.access.OsmInputException;
 import de.topobyte.osm4j.extra.extracts.ExtractionFileNames;
 import de.topobyte.osm4j.extra.extracts.ExtractionFiles;
@@ -28,6 +29,8 @@ import de.topobyte.osm4j.extra.extracts.ExtractionFilesBuilder;
 import de.topobyte.osm4j.extra.extracts.ExtractionFilesHelper;
 import de.topobyte.osm4j.extra.extracts.FileNameDefaults;
 import de.topobyte.osm4j.utils.AbstractExecutableInputOutput;
+import de.topobyte.osm4j.utils.OsmFileInput;
+import de.topobyte.osm4j.utils.OsmUrlInput;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 import de.topobyte.utilities.apache.commons.cli.parsing.ArgumentHelper;
 import de.topobyte.utilities.apache.commons.cli.parsing.ArgumentParseException;
@@ -35,7 +38,8 @@ import de.topobyte.utilities.apache.commons.cli.parsing.ArgumentParseException;
 public class BuildExtractionFiles extends AbstractExecutableInputOutput
 {
 
-	private static final String OPTION_INPUT = "input";
+	private static final String OPTION_INPUT_FILE = "input-file";
+	private static final String OPTION_INPUT_URL = "input-url";
 	private static final String OPTION_OUTPUT = "output";
 	private static final String OPTION_MAX_NODES = "max-nodes";
 	private static final String OPTION_MAX_MEMBERS_SIMPLE = "max-members-simple";
@@ -74,7 +78,8 @@ public class BuildExtractionFiles extends AbstractExecutableInputOutput
 		}
 	}
 
-	private Path pathInput;
+	private Path pathInputFile;
+	private String pathInputUrl;
 	private Path pathOutput;
 	private int maxNodes;
 	private boolean includeMetadata = true;
@@ -100,7 +105,8 @@ public class BuildExtractionFiles extends AbstractExecutableInputOutput
 	public BuildExtractionFiles()
 	{
 		// @formatter:off
-		OptionHelper.addL(options, OPTION_INPUT, true, true, "input file");
+		OptionHelper.addL(options, OPTION_INPUT_FILE, true, false, "input file");
+		OptionHelper.addL(options, OPTION_INPUT_URL, true, false, "input file URL");
 		OptionHelper.addL(options, OPTION_OUTPUT, true, true, "directory to store output in");
 		OptionHelper.addL(options, OPTION_MAX_NODES, true, true, "the maximum number of nodes per file");
 		OptionHelper.addL(options, OPTION_MAX_MEMBERS_SIMPLE, true, true, "maximum number of nodes per batch");
@@ -126,7 +132,21 @@ public class BuildExtractionFiles extends AbstractExecutableInputOutput
 	{
 		super.setup(args);
 
-		pathInput = Paths.get(line.getOptionValue(OPTION_INPUT));
+		String inputFile = line.getOptionValue(OPTION_INPUT_FILE);
+		pathInputFile = inputFile == null ? null : Paths.get(inputFile);
+		pathInputUrl = line.getOptionValue(OPTION_INPUT_URL);
+
+		if (pathInputFile == null && pathInputUrl == null) {
+			System.out.println(String.format("Please specify '%s' or '%s'",
+					OPTION_INPUT_FILE, OPTION_INPUT_URL));
+			System.exit(1);
+		} else if (pathInputFile != null && pathInputUrl != null) {
+			System.out.println(String.format(
+					"Please specify either '%s' or '%s' but not both",
+					OPTION_INPUT_FILE, OPTION_INPUT_URL));
+			System.exit(1);
+		}
+
 		pathOutput = Paths.get(line.getOptionValue(OPTION_OUTPUT));
 
 		String argMaxNodes = line.getOptionValue(OPTION_MAX_NODES);
@@ -196,11 +216,18 @@ public class BuildExtractionFiles extends AbstractExecutableInputOutput
 	{
 		ExtractionFiles files = new ExtractionFiles(pathOutput, fileNames);
 
-		ExtractionFilesBuilder builder = new ExtractionFilesBuilder(pathInput,
-				inputFormat, pathOutput, outputFormat, files,
-				fileNames.getTreeNames(), fileNames.getRelationNames(),
-				maxNodes, includeMetadata, maxMembersSimple, maxMembersComplex,
-				computeBbox, continuePreviousBuild);
+		OsmInputAccessFactory input = null;
+		if (pathInputFile != null) {
+			input = new OsmFileInput(pathInputFile, inputFormat);
+		} else if (pathInputUrl != null) {
+			input = new OsmUrlInput(pathInputUrl, inputFormat);
+		}
+
+		ExtractionFilesBuilder builder = new ExtractionFilesBuilder(input,
+				pathOutput, outputFormat, files, fileNames.getTreeNames(),
+				fileNames.getRelationNames(), maxNodes, includeMetadata,
+				maxMembersSimple, maxMembersComplex, computeBbox,
+				continuePreviousBuild);
 
 		builder.setKeepSplittedNodes(keepSplittedNodes);
 		builder.setKeepSplittedWays(keepSplittedWays);

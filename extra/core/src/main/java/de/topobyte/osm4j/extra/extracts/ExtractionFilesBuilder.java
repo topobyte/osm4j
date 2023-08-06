@@ -29,6 +29,7 @@ import org.slf4j.LoggerFactory;
 
 import de.topobyte.adt.geo.BBox;
 import de.topobyte.adt.geo.BBoxString;
+import de.topobyte.osm4j.core.access.OsmInputAccessFactory;
 import de.topobyte.osm4j.core.access.OsmInputException;
 import de.topobyte.osm4j.core.access.OsmIteratorInput;
 import de.topobyte.osm4j.core.model.iface.OsmBounds;
@@ -101,8 +102,7 @@ public class ExtractionFilesBuilder
 	private static final int SPLIT_INITIAL = 20;
 	private static final int SPLIT_ITERATION = 8;
 
-	private Path pathInput;
-	private FileFormat inputFormat;
+	private OsmInputAccessFactory inputFactory;
 	private Path pathOutput;
 	private FileFormat outputFormat;
 	private ExtractionFiles files;
@@ -140,8 +140,6 @@ public class ExtractionFilesBuilder
 
 	private TimeTable t = new TimeTable();
 
-	private OsmFileInput fileInput;
-
 	private OsmFileInput fileInputNodes;
 	private OsmFileInput fileInputWays;
 	private OsmFileInput fileInputRelations;
@@ -169,15 +167,14 @@ public class ExtractionFilesBuilder
 
 	private boolean continuePreviousBuild;
 
-	public ExtractionFilesBuilder(Path pathInput, FileFormat inputFormat,
-			Path pathOutput, FileFormat outputFormat, ExtractionFiles files,
+	public ExtractionFilesBuilder(OsmInputAccessFactory input, Path pathOutput,
+			FileFormat outputFormat, ExtractionFiles files,
 			TreeFileNames treeNames, BatchFileNames relationNames, int maxNodes,
 			boolean includeMetadata, int maxMembersSimple,
 			int maxMembersComplex, boolean computeBbox,
 			boolean continuePreviousBuild)
 	{
-		this.pathInput = pathInput;
-		this.inputFormat = inputFormat;
+		this.inputFactory = input;
 		this.pathOutput = pathOutput;
 		this.outputFormat = outputFormat;
 		this.files = files;
@@ -232,8 +229,6 @@ public class ExtractionFilesBuilder
 		pathTreeGeometry = pathOutput.resolve("tree.wkt");
 		pathSimpleRelationsSortedGeometry = pathOutput.resolve("simple.wkt");
 		pathComplexRelationsSortedGeometry = pathOutput.resolve("complex.wkt");
-
-		fileInput = new OsmFileInput(pathInput, inputFormat);
 
 		fileInputNodes = new OsmFileInput(files.getSplitNodes(), outputFormat);
 		fileInputWays = new OsmFileInput(files.getSplitWays(), outputFormat);
@@ -309,8 +304,10 @@ public class ExtractionFilesBuilder
 	private void determineBounds() throws IOException
 	{
 		// Determine bounds
+		logger.info("Determining bounds from input");
 
-		OsmIteratorInput inputBounds = fileInput.createIterator(false, false);
+		OsmIteratorInput inputBounds = inputFactory.createIterator(false,
+				false);
 
 		if (!inputBounds.getIterator().hasBounds() && !computeBbox) {
 			String error = "Input does not provide bounds"
@@ -335,13 +332,17 @@ public class ExtractionFilesBuilder
 		if (Files.exists(files.getSplitNodes())
 				|| Files.exists(files.getSplitWays())
 				|| Files.exists(files.getSplitRelations())) {
+			logger.info(
+					"No need to split input by entities, split files found");
 			return;
 		}
+
+		logger.info("Splitting input by entities");
 
 		// Split entities
 		t.start(KEY_SPLIT);
 
-		OsmIteratorInput input = fileInput.createIterator(true,
+		OsmIteratorInput input = inputFactory.createIterator(true,
 				includeMetadata);
 
 		ThreadedEntitySplitter splitter = new ThreadedEntitySplitter(
