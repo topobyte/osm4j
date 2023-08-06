@@ -42,13 +42,14 @@ public class ExtractionFileNames
 	private TreeFileNames treeNames;
 	private BatchFileNames relationNames;
 
-	public ExtractionFileNames(FileFormat outputFormat)
+	public ExtractionFileNames(FileFormat splitFormat, FileFormat outputFormat)
 	{
+		String splitExtension = OsmIoUtils.extension(splitFormat);
 		String extension = OsmIoUtils.extension(outputFormat);
 
-		splitNodes = "nodes" + extension;
-		splitWays = "ways" + extension;
-		splitRelations = "relations" + extension;
+		splitNodes = "nodes" + splitExtension;
+		splitWays = "ways" + splitExtension;
+		splitRelations = "relations" + splitExtension;
 
 		treeNames = new TreeFileNames(outputFormat);
 		relationNames = new BatchFileNames(outputFormat);

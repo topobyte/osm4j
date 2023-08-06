@@ -44,6 +44,23 @@ public class OsmUrlInput implements OsmInputAccessFactory
 		this.fileFormat = fileFormat;
 	}
 
+	public String getUrl()
+	{
+		return url;
+	}
+
+	public FileFormat getFileFormat()
+	{
+		return fileFormat;
+	}
+
+	@Override
+	public InputStream createInputStream() throws IOException
+	{
+		InputStream is = new URL(url).openStream();
+		return new BufferedInputStream(is);
+	}
+
 	@Override
 	public OsmIteratorInput createIterator(boolean readTags,
 			boolean readMetadata) throws IOException

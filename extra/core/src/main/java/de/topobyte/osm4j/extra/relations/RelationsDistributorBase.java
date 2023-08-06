@@ -230,7 +230,7 @@ public abstract class RelationsDistributorBase
 	protected InMemoryMapDataSet read(Path path, boolean readMetadata,
 			boolean keepTags) throws IOException
 	{
-		InputStream input = StreamUtil.bufferedInputStream(path.toFile());
+		InputStream input = StreamUtil.bufferedInputStream(path);
 		OsmIterator osmIterator = OsmIoUtils.setupOsmIterator(input,
 				inputFormat, readMetadata);
 		InMemoryMapDataSet data = MapDataSetLoader.read(osmIterator, keepTags,

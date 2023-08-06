@@ -50,11 +50,27 @@ public class OsmFileInput implements OsmInputAccessFactory
 		this.fileFormat = fileFormat;
 	}
 
+	public Path getPath()
+	{
+		return path;
+	}
+
+	public FileFormat getFileFormat()
+	{
+		return fileFormat;
+	}
+
+	@Override
+	public InputStream createInputStream() throws IOException
+	{
+		return StreamUtil.bufferedInputStream(path);
+	}
+
 	@Override
 	public OsmIteratorInput createIterator(boolean readTags,
 			boolean readMetadata) throws IOException
 	{
-		InputStream input = StreamUtil.bufferedInputStream(path.toFile());
+		InputStream input = StreamUtil.bufferedInputStream(path);
 		OsmIterator iterator = OsmIoUtils.setupOsmIterator(input, fileFormat,
 				readTags, readMetadata);
 		return new OsmSingleIteratorInput(input, iterator);
@@ -64,7 +80,7 @@ public class OsmFileInput implements OsmInputAccessFactory
 	public OsmReaderInput createReader(boolean readTags, boolean readMetadata)
 			throws IOException
 	{
-		InputStream input = StreamUtil.bufferedInputStream(path.toFile());
+		InputStream input = StreamUtil.bufferedInputStream(path);
 		OsmReader reader = OsmIoUtils.setupOsmReader(input, fileFormat,
 				readTags, readMetadata);
 		return new OsmSingleReaderInput(input, reader);
@@ -73,7 +89,7 @@ public class OsmFileInput implements OsmInputAccessFactory
 	@Override
 	public OsmIdIteratorInput createIdIterator() throws IOException
 	{
-		InputStream input = StreamUtil.bufferedInputStream(path.toFile());
+		InputStream input = StreamUtil.bufferedInputStream(path);
 		OsmIdIterator iterator = OsmIoUtils.setupOsmIdIterator(input,
 				fileFormat);
 		return new OsmSingleIdIteratorInput(input, iterator);
@@ -82,7 +98,7 @@ public class OsmFileInput implements OsmInputAccessFactory
 	@Override
 	public OsmIdReaderInput createIdReader() throws IOException
 	{
-		InputStream input = StreamUtil.bufferedInputStream(path.toFile());
+		InputStream input = StreamUtil.bufferedInputStream(path);
 		OsmIdReader reader = OsmIoUtils.setupOsmIdReader(input, fileFormat);
 		return new OsmSingleIdReaderInput(input, reader);
 	}

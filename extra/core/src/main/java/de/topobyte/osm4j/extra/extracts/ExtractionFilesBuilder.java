@@ -18,6 +18,8 @@
 package de.topobyte.osm4j.extra.extracts;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -29,6 +31,7 @@ import org.slf4j.LoggerFactory;
 
 import de.topobyte.adt.geo.BBox;
 import de.topobyte.adt.geo.BBoxString;
+import de.topobyte.melon.io.StreamUtil;
 import de.topobyte.osm4j.core.access.OsmInputAccessFactory;
 import de.topobyte.osm4j.core.access.OsmInputException;
 import de.topobyte.osm4j.core.access.OsmIteratorInput;
@@ -64,10 +67,12 @@ import de.topobyte.osm4j.extra.relations.RelationsSplitterAndMemberCollector;
 import de.topobyte.osm4j.extra.relations.SimpleRelationsDistributor;
 import de.topobyte.osm4j.extra.ways.ThreadedWaysSorterByFirstNodeId;
 import de.topobyte.osm4j.extra.ways.WaysSorterByFirstNodeId;
+import de.topobyte.osm4j.pbf.seq.PbfEntitySplit;
 import de.topobyte.osm4j.utils.FileFormat;
 import de.topobyte.osm4j.utils.OsmFileInput;
 import de.topobyte.osm4j.utils.OsmIoUtils;
 import de.topobyte.osm4j.utils.OsmOutputConfig;
+import de.topobyte.osm4j.utils.OsmUrlInput;
 import de.topobyte.osm4j.utils.OsmUtils;
 import de.topobyte.osm4j.utils.config.limit.ElementCountLimit;
 import de.topobyte.osm4j.utils.config.limit.RelationMemberLimit;
@@ -104,6 +109,7 @@ public class ExtractionFilesBuilder
 
 	private OsmInputAccessFactory inputFactory;
 	private Path pathOutput;
+	private FileFormat splitFormat;
 	private FileFormat outputFormat;
 	private ExtractionFiles files;
 	private TreeFileNames treeNames;
@@ -167,15 +173,16 @@ public class ExtractionFilesBuilder
 
 	private boolean continuePreviousBuild;
 
-	public ExtractionFilesBuilder(OsmInputAccessFactory input, Path pathOutput,
-			FileFormat outputFormat, ExtractionFiles files,
-			TreeFileNames treeNames, BatchFileNames relationNames, int maxNodes,
-			boolean includeMetadata, int maxMembersSimple,
-			int maxMembersComplex, boolean computeBbox,
+	public ExtractionFilesBuilder(OsmInputAccessFactory inputFactory,
+			Path pathOutput, FileFormat splitFormat, FileFormat outputFormat,
+			ExtractionFiles files, TreeFileNames treeNames,
+			BatchFileNames relationNames, int maxNodes, boolean includeMetadata,
+			int maxMembersSimple, int maxMembersComplex, boolean computeBbox,
 			boolean continuePreviousBuild)
 	{
-		this.inputFactory = input;
+		this.inputFactory = inputFactory;
 		this.pathOutput = pathOutput;
+		this.splitFormat = splitFormat;
 		this.outputFormat = outputFormat;
 		this.files = files;
 		this.treeNames = treeNames;
@@ -230,10 +237,10 @@ public class ExtractionFilesBuilder
 		pathSimpleRelationsSortedGeometry = pathOutput.resolve("simple.wkt");
 		pathComplexRelationsSortedGeometry = pathOutput.resolve("complex.wkt");
 
-		fileInputNodes = new OsmFileInput(files.getSplitNodes(), outputFormat);
-		fileInputWays = new OsmFileInput(files.getSplitWays(), outputFormat);
+		fileInputNodes = new OsmFileInput(files.getSplitNodes(), splitFormat);
+		fileInputWays = new OsmFileInput(files.getSplitWays(), splitFormat);
 		fileInputRelations = new OsmFileInput(files.getSplitRelations(),
-				outputFormat);
+				splitFormat);
 
 		fileNamesFinalNodes = treeNames.getNodes();
 		fileNamesFinalWays = treeNames.getWays();
@@ -251,7 +258,7 @@ public class ExtractionFilesBuilder
 
 		fileNamesRelations = relationNames.getRelations();
 
-		outputConfigSplit = new OsmOutputConfig(outputFormat, includeMetadata);
+		outputConfigSplit = new OsmOutputConfig(splitFormat, includeMetadata);
 		outputConfigTree = new OsmOutputConfig(outputFormat, includeMetadata);
 		outputConfigWays = new OsmOutputConfig(outputFormat, includeMetadata);
 		outputConfigRelations = new OsmOutputConfig(outputFormat,
@@ -342,16 +349,39 @@ public class ExtractionFilesBuilder
 		// Split entities
 		t.start(KEY_SPLIT);
 
-		OsmIteratorInput input = inputFactory.createIterator(true,
-				includeMetadata);
+		FileFormat inputFormat = null;
+		if (inputFactory instanceof OsmFileInput) {
+			OsmFileInput fileInput = (OsmFileInput) inputFactory;
+			inputFormat = fileInput.getFileFormat();
+		} else if (inputFactory instanceof OsmUrlInput) {
+			OsmUrlInput urlInput = (OsmUrlInput) inputFactory;
+			inputFormat = urlInput.getFileFormat();
+		}
 
-		ThreadedEntitySplitter splitter = new ThreadedEntitySplitter(
-				input.getIterator(), files.getSplitNodes(),
-				files.getSplitWays(), files.getSplitRelations(),
-				outputConfigSplit, 10000, 200);
-		splitter.execute();
-
-		input.close();
+		// Optimize here and use special entity splitter in case input and split
+		// format are both PBF.
+		if (inputFormat == FileFormat.PBF && splitFormat == FileFormat.PBF) {
+			InputStream input = inputFactory.createInputStream();
+			OutputStream outNodes = StreamUtil
+					.bufferedOutputStream(files.getSplitNodes());
+			OutputStream outWays = StreamUtil
+					.bufferedOutputStream(files.getSplitWays());
+			OutputStream outRelations = StreamUtil
+					.bufferedOutputStream(files.getSplitRelations());
+			PbfEntitySplit task = new PbfEntitySplit(input, outNodes, outWays,
+					outRelations);
+			task.execute();
+			input.close();
+		} else {
+			OsmIteratorInput input = inputFactory.createIterator(true,
+					includeMetadata);
+			ThreadedEntitySplitter splitter = new ThreadedEntitySplitter(
+					input.getIterator(), files.getSplitNodes(),
+					files.getSplitWays(), files.getSplitRelations(),
+					outputConfigSplit, 10000, 200);
+			splitter.execute();
+			input.close();
+		}
 
 		t.stop(KEY_SPLIT);
 		printInfo();

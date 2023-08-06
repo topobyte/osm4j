@@ -51,11 +51,10 @@ public class SimpleRelationsDistributor extends RelationsDistributorBase
 {
 
 	public SimpleRelationsDistributor(Path pathTree, Path pathData,
-			Path pathOutputEmpty, Path pathOutputNonTree,
-			Path pathOutputBboxes, String fileNamesRelations,
-			String fileNamesWays, String fileNamesNodes,
-			String fileNamesTreeRelations, FileFormat inputFormat,
-			OsmOutputConfig outputConfig)
+			Path pathOutputEmpty, Path pathOutputNonTree, Path pathOutputBboxes,
+			String fileNamesRelations, String fileNamesWays,
+			String fileNamesNodes, String fileNamesTreeRelations,
+			FileFormat inputFormat, OsmOutputConfig outputConfig)
 	{
 		super(pathTree, pathData, pathOutputEmpty, pathOutputNonTree,
 				pathOutputBboxes, fileNamesRelations, fileNamesWays,
@@ -83,8 +82,7 @@ public class SimpleRelationsDistributor extends RelationsDistributorBase
 		OsmEntityProvider entityProvider = new CompositeOsmEntityProvider(
 				dataNodes, dataWays, new NullOsmEntityProvider());
 
-		InputStream input = StreamUtil.bufferedInputStream(pathRelations
-				.toFile());
+		InputStream input = StreamUtil.bufferedInputStream(pathRelations);
 		OsmIterator osmIterator = OsmIoUtils.setupOsmIterator(input,
 				inputFormat, outputConfig.isWriteMetadata());
 		RelationIterator relationIterator = new RelationIterator(osmIterator);

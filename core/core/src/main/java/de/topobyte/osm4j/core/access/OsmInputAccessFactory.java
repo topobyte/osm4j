@@ -17,8 +17,13 @@
 
 package de.topobyte.osm4j.core.access;
 
-public interface OsmInputAccessFactory extends OsmIteratorInputFactory,
-		OsmReaderInputFactory
+import java.io.IOException;
+import java.io.InputStream;
+
+public interface OsmInputAccessFactory
+		extends OsmIteratorInputFactory, OsmReaderInputFactory
 {
+
+	public InputStream createInputStream() throws IOException;
 
 }

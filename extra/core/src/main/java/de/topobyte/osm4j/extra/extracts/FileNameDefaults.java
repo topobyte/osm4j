@@ -22,9 +22,10 @@ import de.topobyte.osm4j.utils.FileFormat;
 public class FileNameDefaults
 {
 
-	public static ExtractionFileNames forFormat(FileFormat format)
+	public static ExtractionFileNames forFormat(FileFormat splitFormat,
+			FileFormat outputFormat)
 	{
-		return new ExtractionFileNames(format);
+		return new ExtractionFileNames(splitFormat, outputFormat);
 	}
 
 }

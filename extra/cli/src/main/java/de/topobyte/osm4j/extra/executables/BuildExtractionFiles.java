@@ -29,6 +29,7 @@ import de.topobyte.osm4j.extra.extracts.ExtractionFilesBuilder;
 import de.topobyte.osm4j.extra.extracts.ExtractionFilesHelper;
 import de.topobyte.osm4j.extra.extracts.FileNameDefaults;
 import de.topobyte.osm4j.utils.AbstractExecutableInputOutput;
+import de.topobyte.osm4j.utils.FileFormat;
 import de.topobyte.osm4j.utils.OsmFileInput;
 import de.topobyte.osm4j.utils.OsmUrlInput;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
@@ -80,6 +81,7 @@ public class BuildExtractionFiles extends AbstractExecutableInputOutput
 
 	private Path pathInputFile;
 	private String pathInputUrl;
+	private FileFormat splitFormat;
 	private Path pathOutput;
 	private int maxNodes;
 	private boolean includeMetadata = true;
@@ -179,7 +181,14 @@ public class BuildExtractionFiles extends AbstractExecutableInputOutput
 
 		computeBbox = line.hasOption(OPTION_COMPUTE_BBOX);
 
-		fileNames = FileNameDefaults.forFormat(outputFormat);
+		// Use PBF as split format if input format is PBF so that we can take
+		// advantage of block-based splitting.
+		splitFormat = outputFormat;
+		if (inputFormat == FileFormat.PBF) {
+			splitFormat = FileFormat.PBF;
+		}
+
+		fileNames = FileNameDefaults.forFormat(splitFormat, outputFormat);
 
 		ExtractionFilesHelper.parse(line, fileNames);
 
@@ -224,10 +233,10 @@ public class BuildExtractionFiles extends AbstractExecutableInputOutput
 		}
 
 		ExtractionFilesBuilder builder = new ExtractionFilesBuilder(input,
-				pathOutput, outputFormat, files, fileNames.getTreeNames(),
-				fileNames.getRelationNames(), maxNodes, includeMetadata,
-				maxMembersSimple, maxMembersComplex, computeBbox,
-				continuePreviousBuild);
+				pathOutput, splitFormat, outputFormat, files,
+				fileNames.getTreeNames(), fileNames.getRelationNames(),
+				maxNodes, includeMetadata, maxMembersSimple, maxMembersComplex,
+				computeBbox, continuePreviousBuild);
 
 		builder.setKeepSplittedNodes(keepSplittedNodes);
 		builder.setKeepSplittedWays(keepSplittedWays);

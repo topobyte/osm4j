@@ -48,6 +48,22 @@ public class OsmStreamInput implements OsmInputAccessFactory
 		this.fileFormat = fileFormat;
 	}
 
+	public FileFormat getFileFormat()
+	{
+		return fileFormat;
+	}
+
+	public InputStream getInputStream()
+	{
+		return input;
+	}
+
+	@Override
+	public InputStream createInputStream() throws IOException
+	{
+		return input;
+	}
+
 	@Override
 	public OsmIteratorInput createIterator(boolean readTags,
 			boolean readMetadata) throws IOException

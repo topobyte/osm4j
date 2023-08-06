@@ -189,7 +189,7 @@ public class ComplexRelationSplitter
 		Path path = subdir.resolve(fileNamesRelations);
 		Files.createDirectory(subdir);
 
-		OutputStream output = StreamUtil.bufferedOutputStream(path.toFile());
+		OutputStream output = StreamUtil.bufferedOutputStream(path);
 		OsmOutputStream osmOutput = OsmIoUtils.setupOsmOutput(output,
 				outputConfig);
 

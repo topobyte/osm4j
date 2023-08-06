@@ -93,19 +93,19 @@ public abstract class BaseQuery extends AbstractExecutableInputOutput
 			pathTmp = null;
 		}
 
-		fileNames = FileNameDefaults.forFormat(inputFormat);
+		fileNames = FileNameDefaults.forFormat(inputFormat, inputFormat);
 
 		ExtractionFilesHelper.parse(line, fileNames);
 		extractionPaths = new ExtractionPaths(pathInput, fileNames);
 
 		pathTree = pathInput.resolve(fileNames.getTree());
 		pathSimpleRelations = pathInput.resolve(fileNames.getSimpleRelations());
-		pathComplexRelations = pathInput.resolve(fileNames
-				.getComplexRelations());
-		pathSimpleRelationsBboxes = pathInput.resolve(fileNames
-				.getSimpleRelationsBboxes());
-		pathComplexRelationsBboxes = pathInput.resolve(fileNames
-				.getComplexRelationsBboxes());
+		pathComplexRelations = pathInput
+				.resolve(fileNames.getComplexRelations());
+		pathSimpleRelationsBboxes = pathInput
+				.resolve(fileNames.getSimpleRelationsBboxes());
+		pathComplexRelationsBboxes = pathInput
+				.resolve(fileNames.getComplexRelationsBboxes());
 
 		keepTmp = line.hasOption(OPTION_KEEP_TMP);
 		simpleRelationTests = line.hasOption(OPTION_FAST_RELATION_QUERIES);
