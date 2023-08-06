@@ -46,9 +46,9 @@ public class EntitySplit
 			+ " [options]";
 
 	private static final String OPTION_INPUT = "input";
-	private static final String OPTION_OUTPUT_NODES = "output_nodes";
-	private static final String OPTION_OUTPUT_WAYS = "output_ways";
-	private static final String OPTION_OUTPUT_RELATIONS = "output_relations";
+	private static final String OPTION_OUTPUT_NODES = "output-nodes";
+	private static final String OPTION_OUTPUT_WAYS = "output-ways";
+	private static final String OPTION_OUTPUT_RELATIONS = "output-relations";
 
 	public static void main(String[] args) throws IOException
 	{

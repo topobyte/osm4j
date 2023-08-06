@@ -64,9 +64,9 @@ public class EntitySplitBlockwise
 			.getSimpleName() + " [options]";
 
 	private static final String OPTION_INPUT = "input";
-	private static final String OPTION_OUTPUT_NODES = "output_nodes";
-	private static final String OPTION_OUTPUT_WAYS = "output_ways";
-	private static final String OPTION_OUTPUT_RELATIONS = "output_relations";
+	private static final String OPTION_OUTPUT_NODES = "output-nodes";
+	private static final String OPTION_OUTPUT_WAYS = "output-ways";
+	private static final String OPTION_OUTPUT_RELATIONS = "output-relations";
 
 	public static void main(String[] args) throws IOException
 	{
@@ -82,8 +82,8 @@ public class EntitySplitBlockwise
 		try {
 			line = new DefaultParser().parse(options, args);
 		} catch (ParseException e) {
-			System.out.println("unable to parse command line: "
-					+ e.getMessage());
+			System.out
+					.println("unable to parse command line: " + e.getMessage());
 			new HelpFormatter().printHelp(HELP_MESSAGE, options);
 			System.exit(1);
 		}
@@ -114,8 +114,8 @@ public class EntitySplitBlockwise
 		}
 
 		if (outNodes == null && outWays == null && outRelations == null) {
-			System.out
-					.println("You should specify an output for at least one entity");
+			System.out.println(
+					"You should specify an output for at least one entity");
 			System.exit(1);
 		}
 
@@ -195,8 +195,8 @@ public class EntitySplitBlockwise
 		System.out.println("Last node block mixed? " + lastNodeBlockMixed);
 		System.out.println("First way block mixed? " + firstWayBlockMixed);
 		System.out.println("Last way block mixed? " + lastWayBlockMixed);
-		System.out.println("First relation block mixed? "
-				+ firstRelationBlockMixed);
+		System.out.println(
+				"First relation block mixed? " + firstRelationBlockMixed);
 
 		if (copyNodes) {
 			writeHeader(blockWriterNodes);
@@ -219,8 +219,8 @@ public class EntitySplitBlockwise
 
 	private void print(String type, Interval blocks)
 	{
-		System.out.println(String.format("%s: %d - %d", type,
-				blocks.getStart(), blocks.getEnd()));
+		System.out.println(String.format("%s: %d - %d", type, blocks.getStart(),
+				blocks.getEnd()));
 	}
 
 	private void writeHeader(BlockWriter blockWriter) throws IOException
