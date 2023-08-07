@@ -60,10 +60,6 @@ subprojects {
         withSourcesJar()
     }
 
-    tasks.withType(GenerateModuleMetadata) {
-        enabled = false
-    }
-
     def global = new File('info.pom');
     def local = new File(project.projectDir, 'info.pom');
 
