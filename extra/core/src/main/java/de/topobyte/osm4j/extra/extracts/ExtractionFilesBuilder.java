@@ -23,7 +23,10 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
@@ -32,6 +35,7 @@ import org.slf4j.LoggerFactory;
 import de.topobyte.adt.geo.BBox;
 import de.topobyte.adt.geo.BBoxString;
 import de.topobyte.melon.io.StreamUtil;
+import de.topobyte.melon.paths.PathUtil;
 import de.topobyte.osm4j.core.access.OsmInputAccessFactory;
 import de.topobyte.osm4j.core.access.OsmInputException;
 import de.topobyte.osm4j.core.access.OsmIteratorInput;
@@ -42,6 +46,7 @@ import de.topobyte.osm4j.extra.datatree.DataTree;
 import de.topobyte.osm4j.extra.datatree.DataTreeBoxGeometryCreator;
 import de.topobyte.osm4j.extra.datatree.DataTreeFiles;
 import de.topobyte.osm4j.extra.datatree.DataTreeUtil;
+import de.topobyte.osm4j.extra.datatree.Node;
 import de.topobyte.osm4j.extra.datatree.merge.ThreadedTreeFilesMerger;
 import de.topobyte.osm4j.extra.datatree.merge.TreeFilesMerger;
 import de.topobyte.osm4j.extra.datatree.nodetree.NodeTreeCreatorMaxNodes;
@@ -206,20 +211,22 @@ public class ExtractionFilesBuilder
 			logger.error(error);
 			throw new IOException(error);
 		}
+		String remarkContinueBuild = "If you want to continue a started build,"
+				+ " please specify the option to continue a previous build.";
 		if (pathOutput.toFile().listFiles().length != 0) {
 			if (continuePreviousBuild) {
 				logger.info(
 						"Output directory is not empty, but continuing anyway");
 			} else {
-				String error = "Output directory is not empty."
-						+ " If you want to continue a started build,"
-						+ " please specify the option to continue a previous build.";
+				String error = "Output directory is not empty. "
+						+ remarkContinueBuild;
 				logger.error(error);
 				throw new IOException(error);
 			}
 		}
-		if (Files.exists(files.getTree())) {
-			String error = "Tree directory is not empty";
+		if (Files.exists(files.getTree()) && !continuePreviousBuild) {
+			String error = "Tree directory is not empty. "
+					+ remarkContinueBuild;
 			logger.error(error);
 			throw new IOException(error);
 		}
@@ -307,14 +314,53 @@ public class ExtractionFilesBuilder
 		}
 
 		calculateBoundingBox();
-		buildNodeTree();
-		sortWays();
-		mapWaysToTree();
-		findMissingWayNodes();
-		extractMissingWayNodes();
-		distributeWays();
-		mergeNodes();
-		mergeWays();
+
+		boolean buildNodeTree = true;
+		boolean workOnWays = true;
+		boolean mergeNodes = true;
+		boolean mergeWays = true;
+		if (Files.exists(files.getTree())) {
+			// assume continuation is enabled, otherwise we would have bailed
+			// out before.
+			DataTree tree = DataTreeUtil.openExistingTree(files.getTree());
+			List<Node> leafs = tree.getLeafs();
+			if (leafs.size() > 0) {
+				// Try to guess state by looking at files in a single leaf
+				Node node = leafs.get(0);
+				DataTreeFiles tr = new DataTreeFiles(files.getTree(), "nodes");
+				Path dir = tr.getSubdirPath(node);
+				List<Path> files = PathUtil.list(dir);
+				Set<String> filesFound = new HashSet<>();
+				for (Path file : files) {
+					filesFound.add(dir.relativize(file).toString());
+				}
+				// TODO: detect more intermediate situations
+				if (filesFound.equals(new HashSet<>(Arrays
+						.asList(fileNamesFinalNodes, fileNamesFinalWays)))) {
+					buildNodeTree = false;
+					workOnWays = false;
+					mergeNodes = false;
+					mergeWays = false;
+				}
+			}
+		}
+
+		if (buildNodeTree) {
+			buildNodeTree();
+		}
+		if (workOnWays) {
+			sortWays();
+			mapWaysToTree();
+			findMissingWayNodes();
+			extractMissingWayNodes();
+			distributeWays();
+		}
+		if (mergeNodes) {
+			mergeNodes();
+		}
+		if (mergeWays) {
+			mergeWays();
+		}
 		separateRelations();
 		splitRelations();
 		distributeRelations();
