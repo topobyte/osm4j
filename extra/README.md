@@ -16,8 +16,8 @@ directory.
 
 To build extraction data structures for a region execute this:
 
-    OsmExtraBuildExtractionFiles --input-format pbf --input country.osm.pbf \
-        --output extraction --max-nodes 150000 \
+    OsmExtraBuildExtractionFiles --input-format pbf --input-file country.osm.pbf \
+        --output-format tbo --output extraction --max-nodes 150000 \
         --max-members-simple 20000 --max-members-complex 20000
 
 To then extract data for a region:
