@@ -35,6 +35,7 @@ import de.topobyte.melon.io.StreamUtil;
 import de.topobyte.osm4j.core.access.OsmInputAccessFactory;
 import de.topobyte.osm4j.core.access.OsmInputException;
 import de.topobyte.osm4j.core.access.OsmIteratorInput;
+import de.topobyte.osm4j.core.access.OsmIteratorInputFactory;
 import de.topobyte.osm4j.core.model.iface.OsmBounds;
 import de.topobyte.osm4j.extra.batch.BatchFilesUtil;
 import de.topobyte.osm4j.extra.datatree.DataTree;
@@ -210,7 +211,9 @@ public class ExtractionFilesBuilder
 				logger.info(
 						"Output directory is not empty, but continuing anyway");
 			} else {
-				String error = "Output directory is not empty";
+				String error = "Output directory is not empty."
+						+ " If you want to continue a started build,"
+						+ " please specify the option to continue a previous build.";
 				logger.error(error);
 				throw new IOException(error);
 			}
@@ -289,9 +292,20 @@ public class ExtractionFilesBuilder
 	{
 		t.start(KEY_TOTAL);
 
-		determineBounds();
-		splitEntities();
-		deleteInput();
+		boolean foundSplitFiles = Files.exists(files.getSplitNodes())
+				&& Files.exists(files.getSplitWays())
+				&& Files.exists(files.getSplitRelations());
+
+		if (foundSplitFiles) {
+			logger.info(
+					"No need to split input by entities, split files found");
+			determineBounds(fileInputNodes);
+		} else {
+			determineBounds(inputFactory);
+			splitEntities();
+			deleteInput();
+		}
+
 		calculateBoundingBox();
 		buildNodeTree();
 		sortWays();
@@ -315,13 +329,13 @@ public class ExtractionFilesBuilder
 
 	private BBox bbox = null;
 
-	private void determineBounds() throws IOException
+	private void determineBounds(OsmIteratorInputFactory input)
+			throws IOException
 	{
 		// Determine bounds
 		logger.info("Determining bounds from input");
 
-		OsmIteratorInput inputBounds = inputFactory.createIterator(false,
-				false);
+		OsmIteratorInput inputBounds = input.createIterator(false, false);
 
 		if (!inputBounds.getIterator().hasBounds() && !computeBbox) {
 			String error = "Input does not provide bounds"
