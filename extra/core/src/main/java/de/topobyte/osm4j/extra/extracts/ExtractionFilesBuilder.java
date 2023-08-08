@@ -320,6 +320,8 @@ public class ExtractionFilesBuilder
 		boolean mergeNodes = true;
 		boolean mergeWays = true;
 		if (Files.exists(files.getTree())) {
+			logger.info(
+					"Inspecting existing tree to see where we need to continue");
 			// assume continuation is enabled, otherwise we would have bailed
 			// out before.
 			DataTree tree = DataTreeUtil.openExistingTree(files.getTree());
@@ -341,6 +343,11 @@ public class ExtractionFilesBuilder
 					workOnWays = false;
 					mergeNodes = false;
 					mergeWays = false;
+				} else {
+					String error = "Unexpected tree situation found. Files found in leaf are: "
+							+ filesFound;
+					logger.error(error);
+					throw new IOException(error);
 				}
 			}
 		}
