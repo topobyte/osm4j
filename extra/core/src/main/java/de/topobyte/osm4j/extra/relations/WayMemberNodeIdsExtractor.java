@@ -73,8 +73,10 @@ public class WayMemberNodeIdsExtractor
 
 		int i = 0;
 		for (Path path : subdirs) {
-			logger.info(String.format("Processing directory %d of %d", ++i,
-					subdirs.size()));
+			int nc = path.getNameCount();
+			Path sub = path.subpath(nc - 2, nc);
+			logger.info(String.format("Processing directory %d of %d: %s", ++i,
+					subdirs.size(), sub));
 			extract(path);
 		}
 	}
