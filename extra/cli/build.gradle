@@ -15,7 +15,7 @@ startScripts.enabled = false
 launchAndInstall {
     installationPath = 'topobyte/osm4j-extra'
     makeselfLabel = 'Osm4j Extra'
-	createScript(project, 'de.topobyte.osm4j.extra.executables.BuildExtractionFiles', 'OsmExtraBuildExtractionFiles')
+	createScript(project, 'de.topobyte.osm4j.extra.executables.BuildExtractionFiles', 'OsmExtraBuildExtractionFiles', ['-Xmx8g'])
 	createScript(project, 'de.topobyte.osm4j.extra.executables.ComplexRelationsInfo', 'OsmExtraComplexRelationsInfo')
 	createScript(project, 'de.topobyte.osm4j.extra.executables.CreateBatchDirGeometry', 'OsmExtraCreateBatchDirGeometry')
 	createScript(project, 'de.topobyte.osm4j.extra.executables.CreateDataTreeBoxGeometry', 'OsmExtraCreateDataTreeBoxGeometry')
