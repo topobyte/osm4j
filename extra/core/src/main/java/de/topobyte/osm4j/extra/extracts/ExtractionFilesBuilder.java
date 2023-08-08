@@ -339,6 +339,8 @@ public class ExtractionFilesBuilder
 				// TODO: detect more intermediate situations
 				if (filesFound.equals(new HashSet<>(Arrays
 						.asList(fileNamesFinalNodes, fileNamesFinalWays)))) {
+					logger.info(
+							"Found existing tree with final nodes and ways already there");
 					buildNodeTree = false;
 					workOnWays = false;
 					mergeNodes = false;
@@ -353,27 +355,42 @@ public class ExtractionFilesBuilder
 		}
 
 		if (buildNodeTree) {
+			logger.info("Building node tree");
 			buildNodeTree();
 		}
 		if (workOnWays) {
+			logger.info("Sorting ways");
 			sortWays();
+			logger.info("Mapping ways to tree");
 			mapWaysToTree();
+			logger.info("Finding missing way nodes");
 			findMissingWayNodes();
+			logger.info("Extracting missing way nodes");
 			extractMissingWayNodes();
+			logger.info("Distributing ways");
 			distributeWays();
 		}
 		if (mergeNodes) {
+			logger.info("Merging tree nodes");
 			mergeNodes();
 		}
 		if (mergeWays) {
+			logger.info("Merging tree ways");
 			mergeWays();
 		}
+		logger.info("Separating relations");
 		separateRelations();
+		logger.info("Splitting relations");
 		splitRelations();
+		logger.info("Distributing relations");
 		distributeRelations();
+		logger.info("Sorting complex tree relations");
 		sortComplexTreeRelations();
+		logger.info("Sorting non tree relations");
 		sortNonTreeRelations();
+		logger.info("Cleaning up");
 		cleanUp();
+		logger.info("Creating geometries");
 		createGeometries();
 
 		t.stop(KEY_TOTAL);
