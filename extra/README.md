@@ -91,3 +91,17 @@ process took about 30 hours:
 | clean up                          | 5s              |
 | create geometries                 | 2s              |
 | **total**                         | **30h 21m 40s** |
+
+Afterwards, extracting a region such as the city of Leipzig takes
+4 minutes on that machine. On the same machine, `osmium extract`
+needs 43 minutes to extract the same region from the planet file when
+using the default `complete_ways` strategy.
+
+It can make sense to spend the preparation time if you have a requirement
+to extract many regions from a planet file and need all intersecting
+relations contained in the extracts. Running `osmium` sequentially many times
+can eventually take longer in sum especially if you use the `smart`
+strategy. Overpass can be an alternative, however for larger regions such
+as big cities, the query can be refused, especially if you try to recurse
+up to include relations and recurse down relations in order to receive a
+dataset with intersecting relations and referential integrity.
