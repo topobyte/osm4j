@@ -17,12 +17,12 @@ dependencies {
     api 'com.slimjars.trove4j:trove4j-long-int-hash-map:1.0.1'
     api 'com.slimjars.trove4j:trove4j-object-long-hash-map:1.0.1'
 
-    api 'commons-io:commons-io:2.13.0'
+    api 'commons-io:commons-io:2.18.0'
 
     api 'org.slf4j:slf4j-api:1.7.36'
 
     testImplementation 'junit:junit:4.13.2'
-    testImplementation 'commons-io:commons-io:2.13.0'
+    testImplementation 'commons-io:commons-io:2.18.0'
 
     testRuntimeOnly 'org.slf4j:slf4j-reload4j:1.7.36'
 }

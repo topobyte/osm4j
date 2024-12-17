@@ -16,7 +16,7 @@ dependencies {
 
     api 'com.slimjars.trove4j:trove4j-object-int-hash-map:1.0.1'
 
-    api 'com.google.protobuf:protobuf-javalite:3.23.4'
+    api 'com.google.protobuf:protobuf-javalite:4.29.1'
 
     api 'org.lz4:lz4-java:1.8.0'
 
