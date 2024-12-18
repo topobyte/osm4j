@@ -3,7 +3,7 @@ dependencies {
 
     implementation 'org.apache.commons:commons-compress:1.27.1'
 
-    runtimeOnly 'org.slf4j:slf4j-reload4j:1.7.36'
+    runtimeOnly 'org.slf4j:slf4j-reload4j:2.0.16'
 }
 
 task copyJars(type: Copy) {

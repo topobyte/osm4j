@@ -3,7 +3,7 @@ dependencies {
     implementation project(':osm4j-xml')
     implementation project(':osm4j-tbo')
 
-    runtimeOnly 'org.slf4j:slf4j-reload4j:1.7.36'
+    runtimeOnly 'org.slf4j:slf4j-reload4j:2.0.16'
 }
 
 task copyJars(type: Copy) {

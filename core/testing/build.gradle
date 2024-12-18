@@ -6,7 +6,7 @@ dependencies {
     implementation 'junit:junit:4.13.2'
     implementation 'com.google.guava:guava:19.0'
 
-    runtimeOnly 'org.slf4j:slf4j-reload4j:1.7.36'
+    runtimeOnly 'org.slf4j:slf4j-reload4j:2.0.16'
 }
 
 task copyJars(type: Copy) {

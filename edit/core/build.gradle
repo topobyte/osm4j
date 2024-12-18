@@ -3,9 +3,9 @@ dependencies {
 
     api 'de.topobyte:xml4jah-dom:0.0.6'
     api 'org.apache.httpcomponents:httpclient:4.5.14'
-    api 'org.slf4j:slf4j-api:1.7.36'
+    api 'org.slf4j:slf4j-api:2.0.16'
 
-    testRuntimeOnly 'org.slf4j:slf4j-reload4j:1.7.36'
+    testRuntimeOnly 'org.slf4j:slf4j-reload4j:2.0.16'
 }
 
 eclipse.project.name = 'osm4j-edit'

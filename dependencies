@@ -9,5 +9,5 @@ org.apache.commons:commons-lang3:3.17.0
 org.apache.commons:commons-text:1.13.0
 org.apache.httpcomponents:httpclient:4.5.14
 org.lz4:lz4-java:1.8.0
-org.slf4j:slf4j-api:1.7.36
-org.slf4j:slf4j-reload4j:1.7.36
+org.slf4j:slf4j-api:2.0.16
+org.slf4j:slf4j-reload4j:2.0.16
