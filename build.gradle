@@ -1,3 +1,7 @@
+plugins {
+    id "com.github.ben-manes.versions" version "0.51.0"
+}
+
 wrapper {
     gradleVersion = '7.6.1'
 }
@@ -110,4 +114,15 @@ subprojects {
             }
         }
     }
+}
+
+def isNonStable = { String version ->
+  def nonStableKeyword = ['ALPHA', 'BETA'].any { it -> version.toUpperCase().contains(it) }
+  return nonStableKeyword
+}
+
+tasks.named("dependencyUpdates").configure {
+  rejectVersionIf {
+    isNonStable(it.candidate.version)
+  }
 }
