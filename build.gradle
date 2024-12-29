@@ -98,7 +98,7 @@ subprojects {
     task showInterModuleDependencies {
         doLast {
             println "module '$project.name'"
-            project.configurations.compile.resolvedConfiguration.resolvedArtifacts.each {
+            project.configurations.runtimeClasspath.resolvedConfiguration.resolvedArtifacts.each {
                 if (it.id instanceof org.gradle.internal.component.local.model.PublishArtifactLocalArtifactMetadata) {
                     def component = it.id.componentIdentifier
                     if (component instanceof org.gradle.api.internal.artifacts.DefaultProjectComponentIdentifier) {
