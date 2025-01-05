@@ -28,8 +28,8 @@ import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 import de.topobyte.utilities.apache.commons.cli.parsing.ArgumentHelper;
 import de.topobyte.utilities.apache.commons.cli.parsing.ArgumentParseException;
 
-public class SortSimpleRelations extends
-		AbstractExecutableSingleInputStreamOutput
+public class SortSimpleRelations
+		extends AbstractExecutableSingleInputStreamOutput
 {
 
 	private static final String OPTION_INPUT_BBOXES = "bboxes";
@@ -91,9 +91,9 @@ public class SortSimpleRelations extends
 			maxMembers = ArgumentHelper.getInteger(line, OPTION_MAX_MEMBERS)
 					.getValue();
 		} catch (ArgumentParseException e) {
-			System.out.println(String.format(
-					"Error while parsing option '%s': %s", OPTION_MAX_MEMBERS,
-					e.getMessage()));
+			System.out.println(
+					String.format("Error while parsing option '%s': %s",
+							OPTION_MAX_MEMBERS, e.getMessage()));
 			System.exit(1);
 		}
 	}

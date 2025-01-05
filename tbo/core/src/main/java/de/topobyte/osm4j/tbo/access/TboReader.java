@@ -99,8 +99,8 @@ public class TboReader extends BlockReader implements OsmReader
 			long message = processed / notifysize;
 			if (message > lastMessage) {
 				lastMessage = message;
-				System.err.println(String.format("%.3f MiB",
-						processed / 1024.0 / 1024.0));
+				System.err.println(
+						String.format("%.3f MiB", processed / 1024.0 / 1024.0));
 			}
 
 			// System.out.println("type: " + block.getType());

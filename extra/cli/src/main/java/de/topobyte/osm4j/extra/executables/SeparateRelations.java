@@ -71,9 +71,9 @@ public class SeparateRelations extends AbstractExecutableSingleInputFileOutput
 		OsmOutputConfig outputConfig = new OsmOutputConfig(outputFormat,
 				pbfConfig, tboConfig, writeMetadata);
 
-		RelationsSeparator separator = new RelationsSeparator(
-				getOsmFileInput(), Paths.get(pathOutputSimple),
-				Paths.get(pathOutputComplex), outputConfig);
+		RelationsSeparator separator = new RelationsSeparator(getOsmFileInput(),
+				Paths.get(pathOutputSimple), Paths.get(pathOutputComplex),
+				outputConfig);
 
 		separator.execute();
 	}

@@ -60,8 +60,8 @@ class DateParser
 			}
 		}
 
-		throw new RuntimeException("Unable to parse date '" + formattedDate
-				+ "'");
+		throw new RuntimeException(
+				"Unable to parse date '" + formattedDate + "'");
 	}
 
 }

@@ -65,24 +65,24 @@ public class ExtractionFilesHelper
 			fileNames.setTree(line.getOptionValue(OPTION_TREE));
 		}
 		if (line.hasOption(OPTION_SIMPLE_RELATIONS)) {
-			fileNames.setSimpleRelations(line
-					.getOptionValue(OPTION_SIMPLE_RELATIONS));
+			fileNames.setSimpleRelations(
+					line.getOptionValue(OPTION_SIMPLE_RELATIONS));
 		}
 		if (line.hasOption(OPTION_COMPLEX_RELATIONS)) {
-			fileNames.setComplexRelations(line
-					.getOptionValue(OPTION_COMPLEX_RELATIONS));
+			fileNames.setComplexRelations(
+					line.getOptionValue(OPTION_COMPLEX_RELATIONS));
 		}
 		if (line.hasOption(OPTION_SIMPLE_RELATIONS_BBOXES)) {
-			fileNames.setSimpleRelationsBboxes(line
-					.getOptionValue(OPTION_SIMPLE_RELATIONS_BBOXES));
+			fileNames.setSimpleRelationsBboxes(
+					line.getOptionValue(OPTION_SIMPLE_RELATIONS_BBOXES));
 		}
 		if (line.hasOption(OPTION_COMPLEX_RELATIONS_BBOXES)) {
-			fileNames.setComplexRelationsBboxes(line
-					.getOptionValue(OPTION_COMPLEX_RELATIONS_BBOXES));
+			fileNames.setComplexRelationsBboxes(
+					line.getOptionValue(OPTION_COMPLEX_RELATIONS_BBOXES));
 		}
 		if (line.hasOption(OPTION_FILE_NAMES_TREE_NODES)) {
-			treeNames.setNodes(line
-					.getOptionValue(OPTION_FILE_NAMES_TREE_NODES));
+			treeNames.setNodes(
+					line.getOptionValue(OPTION_FILE_NAMES_TREE_NODES));
 		}
 		if (line.hasOption(OPTION_FILE_NAMES_TREE_WAYS)) {
 			treeNames.setWays(line.getOptionValue(OPTION_FILE_NAMES_TREE_WAYS));
@@ -96,16 +96,16 @@ public class ExtractionFilesHelper
 					.getOptionValue(OPTION_FILE_NAMES_TREE_RELATIONS_COMPLEX));
 		}
 		if (line.hasOption(OPTION_FILE_NAMES_RELATION_NODES)) {
-			relationNames.setNodes(line
-					.getOptionValue(OPTION_FILE_NAMES_RELATION_NODES));
+			relationNames.setNodes(
+					line.getOptionValue(OPTION_FILE_NAMES_RELATION_NODES));
 		}
 		if (line.hasOption(OPTION_FILE_NAMES_RELATION_WAYS)) {
-			relationNames.setWays(line
-					.getOptionValue(OPTION_FILE_NAMES_RELATION_WAYS));
+			relationNames.setWays(
+					line.getOptionValue(OPTION_FILE_NAMES_RELATION_WAYS));
 		}
 		if (line.hasOption(OPTION_FILE_NAMES_RELATION_RELATIONS)) {
-			relationNames.setRelations(line
-					.getOptionValue(OPTION_FILE_NAMES_RELATION_RELATIONS));
+			relationNames.setRelations(
+					line.getOptionValue(OPTION_FILE_NAMES_RELATION_RELATIONS));
 		}
 	}
 

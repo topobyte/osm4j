@@ -30,8 +30,8 @@ public class OsmUtils
 	public static BBox computeBBox(OsmIteratorInputFactory iteratorFactory)
 			throws IOException
 	{
-		OsmIteratorInput iterator = iteratorFactory
-				.createIterator(false, false);
+		OsmIteratorInput iterator = iteratorFactory.createIterator(false,
+				false);
 		BBoxCalculator calculator = new BBoxCalculator(iterator.getIterator());
 		BBox bbox = calculator.execute();
 		iterator.close();

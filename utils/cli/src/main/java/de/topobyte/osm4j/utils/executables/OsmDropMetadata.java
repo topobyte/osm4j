@@ -26,7 +26,8 @@ import de.topobyte.osm4j.core.model.iface.OsmRelation;
 import de.topobyte.osm4j.core.model.iface.OsmWay;
 import de.topobyte.osm4j.utils.AbstractExecutableSingleInputStreamSingleOutput;
 
-public class OsmDropMetadata extends AbstractExecutableSingleInputStreamSingleOutput
+public class OsmDropMetadata
+		extends AbstractExecutableSingleInputStreamSingleOutput
 {
 
 	@Override

@@ -86,8 +86,8 @@ public class RelationGraphInfo extends AbstractExecutableSingleInputStream
 				undirected = true;
 			}
 		} catch (ArgumentParseException e) {
-			System.out.println("Error while parsing option '"
-					+ OPTION_UNDIRECTED + "'");
+			System.out.println(
+					"Error while parsing option '" + OPTION_UNDIRECTED + "'");
 			System.exit(1);
 		}
 

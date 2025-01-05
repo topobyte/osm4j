@@ -39,14 +39,14 @@ public class TestRelationIterator extends BaseTestIterators
 	@Test
 	public void test() throws IOException
 	{
-		InMemoryListDataSet data = ListDataSetLoader.read(createInput()
-				.createIterator(true, true), true, true, true);
+		InMemoryListDataSet data = ListDataSetLoader.read(
+				createInput().createIterator(true, true), true, true, true);
 
 		OsmIteratorInput input = createInput().createIterator(true, true);
 		RelationIterator relationIterator = new RelationIterator(
 				input.getIterator());
-		List<OsmRelation> relations = Lists.newArrayList(relationIterator
-				.iterator());
+		List<OsmRelation> relations = Lists
+				.newArrayList(relationIterator.iterator());
 		input.close();
 
 		assertEquals(data.getRelations().size(), relations.size());

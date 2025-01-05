@@ -93,8 +93,8 @@ public class RelationsSeparator
 
 		OsmOutputStream osmOutputSimple = OsmIoUtils.setupOsmOutput(outSimple,
 				outputConfig);
-		OsmOutputStream osmOutputComplex = OsmIoUtils.setupOsmOutput(
-				outComplex, outputConfig);
+		OsmOutputStream osmOutputComplex = OsmIoUtils.setupOsmOutput(outComplex,
+				outputConfig);
 
 		OsmIteratorInput input = inputFactory.createIterator(true,
 				outputConfig.isWriteMetadata());

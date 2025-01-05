@@ -27,8 +27,8 @@ import de.topobyte.osm4j.core.access.OsmIterator;
 import de.topobyte.osm4j.core.access.OsmReader;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
-public abstract class AbstractExecutableSingleInputStreamOutput extends
-		AbstractExecutableInputOutput
+public abstract class AbstractExecutableSingleInputStreamOutput
+		extends AbstractExecutableInputOutput
 {
 
 	private static final String OPTION_INPUT = "input";

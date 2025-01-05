@@ -40,8 +40,8 @@ import de.topobyte.osm4j.utils.AbstractExecutableSingleInputFileOutput;
 import de.topobyte.osm4j.utils.OsmOutputConfig;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
-public class CreateNodeTreeMaxNodes extends
-		AbstractExecutableSingleInputFileOutput
+public class CreateNodeTreeMaxNodes
+		extends AbstractExecutableSingleInputFileOutput
 {
 
 	private static final String OPTION_OUTPUT = "output";

@@ -20,8 +20,8 @@ package de.topobyte.osm4j.extra.executables;
 import de.topobyte.osm4j.utils.AbstractExecutableSingleInputStreamOutput;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
-public abstract class CreateNodeTreeBase extends
-		AbstractExecutableSingleInputStreamOutput
+public abstract class CreateNodeTreeBase
+		extends AbstractExecutableSingleInputStreamOutput
 {
 
 	private static final String OPTION_OUTPUT = "output";

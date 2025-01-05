@@ -28,8 +28,8 @@ import de.topobyte.osm4j.utils.AbstractExecutableSingleInputStreamOutput;
 import de.topobyte.osm4j.utils.OsmOutputConfig;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
-public class SortWaysByFirstNodeId extends
-		AbstractExecutableSingleInputStreamOutput
+public class SortWaysByFirstNodeId
+		extends AbstractExecutableSingleInputStreamOutput
 {
 
 	private static final String OPTION_OUTPUT = "output";

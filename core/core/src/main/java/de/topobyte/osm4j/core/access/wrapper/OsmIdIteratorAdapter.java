@@ -51,8 +51,8 @@ public class OsmIdIteratorAdapter implements OsmIdIterator
 	public IdContainer next()
 	{
 		EntityContainer container = iterator.next();
-		return new IdContainer(container.getType(), container.getEntity()
-				.getId());
+		return new IdContainer(container.getType(),
+				container.getEntity().getId());
 	}
 
 	@Override

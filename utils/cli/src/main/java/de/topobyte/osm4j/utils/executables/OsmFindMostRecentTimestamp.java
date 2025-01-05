@@ -27,7 +27,8 @@ import de.topobyte.osm4j.core.model.iface.OsmMetadata;
 import de.topobyte.osm4j.utils.AbstractExecutableSingleInputStream;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
-public class OsmFindMostRecentTimestamp extends AbstractExecutableSingleInputStream
+public class OsmFindMostRecentTimestamp
+		extends AbstractExecutableSingleInputStream
 {
 
 	private static final String OPTION_VERBOSE = "verbose";

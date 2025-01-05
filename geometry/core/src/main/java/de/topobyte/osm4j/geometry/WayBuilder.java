@@ -158,8 +158,8 @@ public class WayBuilder extends AbstractGeometryBuilder
 			}
 		}
 
-		CoordinateSequence cs = factory.getCoordinateSequenceFactory().create(
-				numNodes, 2);
+		CoordinateSequence cs = factory.getCoordinateSequenceFactory()
+				.create(numNodes, 2);
 
 		for (int i = 0; i < numNodes; i++) {
 			OsmNode node = resolver.getNode(way.getNodeId(i));
@@ -186,16 +186,16 @@ public class WayBuilder extends AbstractGeometryBuilder
 			} else {
 				try {
 					OsmNode node = resolver.getNode(way.getNodeId(0));
-					result.getCoordinates().add(
-							nodeBuilder.buildCoordinate(node));
+					result.getCoordinates()
+							.add(nodeBuilder.buildCoordinate(node));
 				} catch (EntityNotFoundException e) {
 					return result;
 				}
 			}
 		}
 
-		CoordinateSequence cs = factory.getCoordinateSequenceFactory().create(
-				numNodes, 2);
+		CoordinateSequence cs = factory.getCoordinateSequenceFactory()
+				.create(numNodes, 2);
 
 		for (int i = 0; i < way.getNumberOfNodes(); i++) {
 			OsmNode node;
@@ -259,8 +259,8 @@ public class WayBuilder extends AbstractGeometryBuilder
 			coords.add(coords.get(0));
 		}
 
-		CoordinateSequence cs = factory.getCoordinateSequenceFactory().create(
-				coords.toArray(new Coordinate[0]));
+		CoordinateSequence cs = factory.getCoordinateSequenceFactory()
+				.create(coords.toArray(new Coordinate[0]));
 		createLine(result, cs, closed);
 
 		return result;
@@ -292,7 +292,8 @@ public class WayBuilder extends AbstractGeometryBuilder
 				builder.beginNewSequence();
 				continue;
 			}
-			builder.add(new Coordinate(node.getLongitude(), node.getLatitude()));
+			builder.add(
+					new Coordinate(node.getLongitude(), node.getLatitude()));
 		}
 		builder.finishSequence();
 

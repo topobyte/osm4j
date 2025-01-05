@@ -85,8 +85,8 @@ public class CreateNodeArray extends AbstractExecutableSingleInputStream
 		String argType = line.getOptionValue(OPTION_TYPE);
 		type = typeMap.get(argType);
 		if (type == null) {
-			System.out.println("Please specify a valid type argument: "
-					+ POSSIBLE_TYPES);
+			System.out.println(
+					"Please specify a valid type argument: " + POSSIBLE_TYPES);
 			System.exit(1);
 		}
 	}

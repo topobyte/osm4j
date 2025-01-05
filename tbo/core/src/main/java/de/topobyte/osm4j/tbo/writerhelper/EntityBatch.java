@@ -102,8 +102,7 @@ public abstract class EntityBatch<T extends OsmEntity> implements Blockable
 		writePool(writer, stringPoolTags);
 	}
 
-	public void writeUsernameStringPool(CompactWriter writer)
-			throws IOException
+	public void writeUsernameStringPool(CompactWriter writer) throws IOException
 	{
 		StringPoolBuilder poolBuilder = new StringPoolBuilder();
 		for (OsmEntity object : elements) {

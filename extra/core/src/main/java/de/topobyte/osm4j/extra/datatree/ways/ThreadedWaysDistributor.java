@@ -145,8 +145,8 @@ public class ThreadedWaysDistributor extends AbstractWaysDistributor
 
 		bufferWriter.write(new WayWriteRequest(way, wayOutput.getOsmOutput()));
 		for (OsmNode node : nodes.valueCollection()) {
-			bufferWriter.write(new NodeWriteRequest(node, nodeOutput
-					.getOsmOutput()));
+			bufferWriter.write(
+					new NodeWriteRequest(node, nodeOutput.getOsmOutput()));
 		}
 	}
 

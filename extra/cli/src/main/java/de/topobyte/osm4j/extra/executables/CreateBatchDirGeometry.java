@@ -109,7 +109,8 @@ public class CreateBatchDirGeometry extends AbstractExecutableInput
 
 			Envelope e = new Envelope(bounds.getLeft(), bounds.getRight(),
 					bounds.getBottom(), bounds.getTop());
-			boxList.add(factory.toGeometry(e.intersection(BoxUtil.WORLD_BOUNDS)));
+			boxList.add(
+					factory.toGeometry(e.intersection(BoxUtil.WORLD_BOUNDS)));
 		}
 
 		Geometry[] boxes = boxList.toArray(new Geometry[0]);

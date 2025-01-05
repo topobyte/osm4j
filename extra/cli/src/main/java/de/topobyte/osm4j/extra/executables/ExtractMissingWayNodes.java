@@ -26,8 +26,8 @@ import de.topobyte.osm4j.utils.AbstractExecutableSingleInputStreamOutput;
 import de.topobyte.osm4j.utils.OsmOutputConfig;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
-public class ExtractMissingWayNodes extends
-		AbstractExecutableSingleInputStreamOutput
+public class ExtractMissingWayNodes
+		extends AbstractExecutableSingleInputStreamOutput
 {
 
 	private static final String OPTION_TREE = "tree";

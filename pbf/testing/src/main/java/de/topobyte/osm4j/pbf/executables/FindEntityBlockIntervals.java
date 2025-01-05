@@ -32,9 +32,9 @@ public class FindEntityBlockIntervals
 	public static void main(String[] args) throws IOException
 	{
 		if (args.length != 1) {
-			System.out.println("usage: "
-					+ FindEntityBlockIntervals.class.getSimpleName()
-					+ " <filename>");
+			System.out.println(
+					"usage: " + FindEntityBlockIntervals.class.getSimpleName()
+							+ " <filename>");
 			System.exit(1);
 		}
 

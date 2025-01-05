@@ -86,8 +86,8 @@ public class OsmEntitySplit extends AbstractExecutableSingleInputStreamOutput
 		}
 
 		if (pathNodes == null && pathWays == null && pathRelations == null) {
-			System.out
-					.println("You should specify an output for at least one entity");
+			System.out.println(
+					"You should specify an output for at least one entity");
 			System.exit(1);
 		}
 

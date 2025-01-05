@@ -73,8 +73,8 @@ class RunnableEntitySplitter implements Runnable
 					break;
 				case Relation:
 					if (passRelations) {
-						oosRelations.write((OsmRelation) entityContainer
-								.getEntity());
+						oosRelations.write(
+								(OsmRelation) entityContainer.getEntity());
 					} else {
 						break loop;
 					}

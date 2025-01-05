@@ -412,7 +412,8 @@ public class PbfWriter extends BlockWriter implements OsmOutputStream
 		return builder.build();
 	}
 
-	private Osmformat.PrimitiveGroup serializeNonDense(Collection<OsmNode> nodes)
+	private Osmformat.PrimitiveGroup serializeNonDense(
+			Collection<OsmNode> nodes)
 	{
 		Osmformat.PrimitiveGroup.Builder builder = Osmformat.PrimitiveGroup
 				.newBuilder();

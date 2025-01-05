@@ -80,7 +80,8 @@ public class OsmXmlIterator implements OsmIterator, OsmHandler
 	}
 
 	// Run OsmXmlReader in separate thread
-	private void init(final InputStream inputStream, final boolean parseMetadata)
+	private void init(final InputStream inputStream,
+			final boolean parseMetadata)
 	{
 		Thread thread = new Thread(new Runnable() {
 
@@ -300,7 +301,8 @@ public class OsmXmlIterator implements OsmIterator, OsmHandler
 			while (true) {
 				if (state == State.PUSH) {
 					beyondBounds = true;
-					list.add(new EntityContainer(EntityType.Relation, relation));
+					list.add(
+							new EntityContainer(EntityType.Relation, relation));
 					if (list.size() == LIMIT) {
 						state = State.READ;
 						mutex.notify();

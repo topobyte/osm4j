@@ -49,15 +49,15 @@ public class ExtractionPaths
 		simpleRelations = base.resolve(fileNames.getSimpleRelations());
 		complexRelations = base.resolve(fileNames.getComplexRelations());
 
-		simpleRelationsBboxes = base.resolve(fileNames
-				.getSimpleRelationsBboxes());
-		complexRelationsBboxes = base.resolve(fileNames
-				.getComplexRelationsBboxes());
+		simpleRelationsBboxes = base
+				.resolve(fileNames.getSimpleRelationsBboxes());
+		complexRelationsBboxes = base
+				.resolve(fileNames.getComplexRelationsBboxes());
 
 		simpleRelationsEmpty = base
 				.resolve(fileNames.getSimpleRelationsEmpty());
-		complexRelationsEmpty = base.resolve(fileNames
-				.getComplexRelationsEmpty());
+		complexRelationsEmpty = base
+				.resolve(fileNames.getComplexRelationsEmpty());
 	}
 
 	public Path getSplitNodes()

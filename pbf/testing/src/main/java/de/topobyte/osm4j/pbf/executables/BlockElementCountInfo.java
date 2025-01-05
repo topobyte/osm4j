@@ -31,9 +31,9 @@ public class BlockElementCountInfo extends BlockParser
 	public static void main(String[] args) throws IOException
 	{
 		if (args.length != 1) {
-			System.out.println("usage: "
-					+ BlockElementCountInfo.class.getSimpleName()
-					+ " <filename>");
+			System.out.println(
+					"usage: " + BlockElementCountInfo.class.getSimpleName()
+							+ " <filename>");
 			System.exit(1);
 		}
 

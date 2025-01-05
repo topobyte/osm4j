@@ -257,13 +257,13 @@ public class RegionBuilder extends AbstractGeometryBuilder
 			}
 		}
 
-		MultiPolygon mp = PolygonHelper
-				.multipolygonFromRings(validRings, false);
+		MultiPolygon mp = PolygonHelper.multipolygonFromRings(validRings,
+				false);
 		result.setMultiPolygon(mp);
 
 		if (includePuntal) {
-			GeometryUtil
-					.buildNodes(nodeBuilder, nodes, result.getCoordinates());
+			GeometryUtil.buildNodes(nodeBuilder, nodes,
+					result.getCoordinates());
 		}
 
 		return result;

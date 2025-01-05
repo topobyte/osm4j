@@ -21,8 +21,8 @@ import java.nio.file.Paths;
 
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
-public abstract class AbstractExecutableSingleInputFileOutput extends
-		AbstractExecutableInputOutput
+public abstract class AbstractExecutableSingleInputFileOutput
+		extends AbstractExecutableInputOutput
 {
 
 	private static final String OPTION_INPUT = "input";

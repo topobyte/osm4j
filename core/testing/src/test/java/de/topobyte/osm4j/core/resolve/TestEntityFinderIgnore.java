@@ -80,16 +80,16 @@ public class TestEntityFinderIgnore extends BaseTestDataSets
 	@Test
 	public void getRelationSuccessful() throws EntityNotFoundException
 	{
-		List<OsmRelation> relations = finder.findRelations(TroveUtil
-				.collection(1));
+		List<OsmRelation> relations = finder
+				.findRelations(TroveUtil.collection(1));
 		assertEquals(relations.get(0).getId(), 1);
 	}
 
 	@Test
 	public void getRelationException() throws EntityNotFoundException
 	{
-		List<OsmRelation> relations = finder.findRelations(TroveUtil
-				.collection(3));
+		List<OsmRelation> relations = finder
+				.findRelations(TroveUtil.collection(3));
 		assertEquals(0, relations.size());
 	}
 

@@ -91,13 +91,13 @@ public class HeaderInfo
 		}
 
 		for (int i = 0; i < header.getRequiredFeaturesCount(); i++) {
-			System.out.println("Required feature: "
-					+ header.getRequiredFeatures(i));
+			System.out.println(
+					"Required feature: " + header.getRequiredFeatures(i));
 		}
 
 		for (int i = 0; i < header.getOptionalFeaturesCount(); i++) {
-			System.out.println("Optional feature: "
-					+ header.getOptionalFeatures(i));
+			System.out.println(
+					"Optional feature: " + header.getOptionalFeatures(i));
 		}
 
 		if (header.hasSource()) {

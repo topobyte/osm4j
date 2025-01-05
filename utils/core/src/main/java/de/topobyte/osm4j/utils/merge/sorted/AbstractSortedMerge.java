@@ -99,8 +99,8 @@ public class AbstractSortedMerge extends AbstractMerge
 
 	}
 
-	private class InputComparatorRelations implements
-			Comparator<Input<OsmRelation>>
+	private class InputComparatorRelations
+			implements Comparator<Input<OsmRelation>>
 	{
 
 		@Override

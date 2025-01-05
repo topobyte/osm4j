@@ -30,8 +30,8 @@ import de.topobyte.osm4j.extra.idbboxlist.IdBboxListOutputStream;
 import de.topobyte.osm4j.utils.AbstractExecutableInputOutput;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
-public abstract class DistributeRelationsBase extends
-		AbstractExecutableInputOutput
+public abstract class DistributeRelationsBase
+		extends AbstractExecutableInputOutput
 {
 
 	private static final String OPTION_TREE = "tree";

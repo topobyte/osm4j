@@ -70,8 +70,8 @@ public abstract class EntityFinderLogMissing extends AbstractEntityFinder
 
 	private void logRelationNotFound(long id)
 	{
-		String message = String
-				.format("Unable to find relation with id %d", id);
+		String message = String.format("Unable to find relation with id %d",
+				id);
 		log(message);
 	}
 

@@ -65,11 +65,10 @@ public class ComplexRelationsDistributor extends RelationsDistributorBase
 			.getLogger(ComplexRelationsDistributor.class);
 
 	public ComplexRelationsDistributor(Path pathTree, Path pathData,
-			Path pathOutputEmpty, Path pathOutputNonTree,
-			Path pathOutputBboxes, String fileNamesRelations,
-			String fileNamesWays, String fileNamesNodes,
-			String fileNamesTreeRelations, FileFormat inputFormat,
-			OsmOutputConfig outputConfig)
+			Path pathOutputEmpty, Path pathOutputNonTree, Path pathOutputBboxes,
+			String fileNamesRelations, String fileNamesWays,
+			String fileNamesNodes, String fileNamesTreeRelations,
+			FileFormat inputFormat, OsmOutputConfig outputConfig)
 	{
 		super(pathTree, pathData, pathOutputEmpty, pathOutputNonTree,
 				pathOutputBboxes, fileNamesRelations, fileNamesWays,
@@ -94,8 +93,8 @@ public class ComplexRelationsDistributor extends RelationsDistributorBase
 
 		RelationGraph relationGraph = new RelationGraph(false, true);
 
-		InputStream input = StreamUtil.bufferedInputStream(pathRelations
-				.toFile());
+		InputStream input = StreamUtil
+				.bufferedInputStream(pathRelations.toFile());
 		OsmIterator iterator = OsmIoUtils.setupOsmIterator(input, inputFormat,
 				false);
 		relationGraph.build(iterator);
@@ -129,8 +128,8 @@ public class ComplexRelationsDistributor extends RelationsDistributorBase
 				for (Group subGroup : groupGroups) {
 					List<OsmRelation> subGroupRelations = relationFinder
 							.findRelations(subGroup.getRelationIds());
-					relationGroups.add(new RelationGroupMultiple(subGroup
-							.getStart(), subGroupRelations));
+					relationGroups.add(new RelationGroupMultiple(
+							subGroup.getStart(), subGroupRelations));
 				}
 			} catch (EntityNotFoundException e) {
 				logger.warn("unable to build relation group");
@@ -139,12 +138,12 @@ public class ComplexRelationsDistributor extends RelationsDistributorBase
 
 		if (relationGroups.size() == 1) {
 			InMemoryMapDataSet dataNodes = read(pathNodes, false, false);
-			Envelope envelope = BboxBuilder.box(dataNodes.getNodes()
-					.valueCollection());
+			Envelope envelope = BboxBuilder
+					.box(dataNodes.getNodes().valueCollection());
 			List<Node> leafs = tree.query(envelope);
 
-			write(relationGroups.get(0), leafs, envelope, dataNodes.getNodes()
-					.size());
+			write(relationGroups.get(0), leafs, envelope,
+					dataNodes.getNodes().size());
 		} else {
 			InMemoryMapDataSet dataNodes = read(pathNodes, false, false);
 			InMemoryMapDataSet dataWays = read(pathWays, false, false);
@@ -200,9 +199,9 @@ public class ComplexRelationsDistributor extends RelationsDistributorBase
 
 			OsmFileInput fileInput = new OsmFileInput(path,
 					outputConfig.getFileFormat());
-			InMemoryListDataSet data = ListDataSetLoader.read(
-					fileInput.createIterator(true,
-							outputConfig.isWriteMetadata()), true, true, true);
+			InMemoryListDataSet data = ListDataSetLoader.read(fileInput
+					.createIterator(true, outputConfig.isWriteMetadata()), true,
+					true, true);
 
 			data.sort();
 			// TODO: remove duplicates

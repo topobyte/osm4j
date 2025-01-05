@@ -55,7 +55,8 @@ public class ThreadedEntitySplitter extends AbstractEntitySplitter
 	{
 		OsmBuffer buffer = new OsmBuffer(bufferSize, maxNumberOfBuffers);
 
-		RunnableBufferBridge bridge = new RunnableBufferBridge(iterator, buffer);
+		RunnableBufferBridge bridge = new RunnableBufferBridge(iterator,
+				buffer);
 
 		RunnableEntitySplitter splitter = new RunnableEntitySplitter(buffer,
 				oosNodes, oosWays, oosRelations);

@@ -33,8 +33,7 @@ public class DistributeComplexRelations extends DistributeRelationsBase
 		return DistributeComplexRelations.class.getSimpleName() + " [options]";
 	}
 
-	public static void main(String[] args) throws IOException,
-			OsmInputException
+	public static void main(String[] args) throws IOException, OsmInputException
 	{
 		DistributeComplexRelations task = new DistributeComplexRelations();
 

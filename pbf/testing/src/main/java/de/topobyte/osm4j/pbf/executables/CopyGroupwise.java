@@ -71,7 +71,8 @@ public class CopyGroupwise
 					Osmformat.PrimitiveBlock.Builder builder = Osmformat.PrimitiveBlock
 							.newBuilder();
 
-					for (int i = 0; i < primBlock.getPrimitivegroupCount(); i++) {
+					for (int i = 0; i < primBlock
+							.getPrimitivegroupCount(); i++) {
 						Osmformat.PrimitiveGroup.Builder groupBuilder = Osmformat.PrimitiveGroup
 								.newBuilder();
 						Osmformat.PrimitiveGroup group = primBlock

@@ -22,8 +22,8 @@ import java.util.Iterator;
 import de.topobyte.osm4j.core.model.iface.IdContainer;
 import de.topobyte.osm4j.core.model.iface.OsmBounds;
 
-public interface OsmIdIterator extends Iterable<IdContainer>,
-		Iterator<IdContainer>
+public interface OsmIdIterator
+		extends Iterable<IdContainer>, Iterator<IdContainer>
 {
 
 	public boolean hasBounds();

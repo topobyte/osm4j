@@ -113,8 +113,8 @@ public class EntityHelper
 				relation.getNumberOfMembers());
 		for (int i = 0; i < relation.getNumberOfMembers(); i++) {
 			OsmRelationMember member = relation.getMember(i);
-			members.add(new TestRelationMember(member.getId(),
-					member.getType(), member.getRole()));
+			members.add(new TestRelationMember(member.getId(), member.getType(),
+					member.getRole()));
 		}
 		return members;
 	}

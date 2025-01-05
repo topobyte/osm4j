@@ -29,8 +29,8 @@ import de.topobyte.osm4j.core.model.iface.OsmNode;
 import de.topobyte.osm4j.core.model.iface.OsmRelation;
 import de.topobyte.osm4j.core.model.iface.OsmWay;
 
-public class OsmElementCounterReaderAdapter implements OsmElementCounter,
-		OsmHandler
+public class OsmElementCounterReaderAdapter
+		implements OsmElementCounter, OsmHandler
 {
 
 	private OsmReader reader;

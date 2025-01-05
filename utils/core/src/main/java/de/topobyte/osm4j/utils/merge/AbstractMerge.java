@@ -53,8 +53,9 @@ public class AbstractMerge
 				envelope.expandToInclude(e);
 			}
 		}
-		bounds = !hasBounds ? null : new Bounds(envelope.getMinX(),
-				envelope.getMaxX(), envelope.getMaxY(), envelope.getMinY());
+		bounds = !hasBounds ? null
+				: new Bounds(envelope.getMinX(), envelope.getMaxX(),
+						envelope.getMaxY(), envelope.getMinY());
 	}
 
 }

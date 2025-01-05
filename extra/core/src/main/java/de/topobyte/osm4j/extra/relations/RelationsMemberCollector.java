@@ -76,8 +76,8 @@ public class RelationsMemberCollector
 
 		Path[] dirsData = pathsRelations.toArray(new Path[0]);
 
-		MemberIdsExtractor memberIdsExtractor = new MemberIdsExtractor(
-				dirsData, fileNamesRelations, fileNamesRelationNodeIds,
+		MemberIdsExtractor memberIdsExtractor = new MemberIdsExtractor(dirsData,
+				fileNamesRelations, fileNamesRelationNodeIds,
 				fileNamesRelationWayIds, outputConfig.getFileFormat());
 		memberIdsExtractor.execute();
 
@@ -85,8 +85,8 @@ public class RelationsMemberCollector
 
 		List<ExtractionItem> wayExtractionItems = new ArrayList<>();
 		for (Path path : pathsRelations) {
-			wayExtractionItems.addAll(ExtractionUtil.createExtractionItems(
-					path, fileNamesRelationWayIds, fileNamesWays));
+			wayExtractionItems.addAll(ExtractionUtil.createExtractionItems(path,
+					fileNamesRelationWayIds, fileNamesWays));
 		}
 
 		boolean threaded = true;

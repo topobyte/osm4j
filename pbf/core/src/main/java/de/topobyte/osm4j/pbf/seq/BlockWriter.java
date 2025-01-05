@@ -133,8 +133,8 @@ public class BlockWriter
 
 		int estimate = lz4Compressor.maxCompressedLength(size);
 		byte[] out = new byte[estimate];
-		int length = lz4Compressor.compress(data.toByteArray(), 0, size, out,
-				0, estimate);
+		int length = lz4Compressor.compress(data.toByteArray(), 0, size, out, 0,
+				estimate);
 
 		return new ByteArray(out, length);
 	}

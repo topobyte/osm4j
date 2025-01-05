@@ -52,8 +52,8 @@ public class ComplexRelationsInfo extends AbstractExecutableSingleInputStream
 		return ComplexRelationsInfo.class.getSimpleName() + " [options]";
 	}
 
-	public static void main(String[] args) throws IOException,
-			EntityNotFoundException
+	public static void main(String[] args)
+			throws IOException, EntityNotFoundException
 	{
 		ComplexRelationsInfo task = new ComplexRelationsInfo();
 
@@ -100,8 +100,8 @@ public class ComplexRelationsInfo extends AbstractExecutableSingleInputStream
 				.println("Number of relations: " + data.getRelations().size());
 
 		TLongSet simpleRelationIds = graph.getIdsSimpleRelations();
-		System.out.println("Number of simple relations: "
-				+ simpleRelationIds.size());
+		System.out.println(
+				"Number of simple relations: " + simpleRelationIds.size());
 		System.out.println("Size of complex relation graph: "
 				+ graph.getGraph().getNodes().size());
 		System.out.println("Complex relation graph info:");
@@ -141,14 +141,14 @@ public class ComplexRelationsInfo extends AbstractExecutableSingleInputStream
 			for (Group subGroup : groupGroups) {
 				if (subGroupInfo && groupGroups.size() > 1) {
 					System.out.println(String.format(
-							"  Subgroup start=%d has %d relations", subGroup
-									.getStart(), subGroup.getRelationIds()
-									.size()));
+							"  Subgroup start=%d has %d relations",
+							subGroup.getStart(),
+							subGroup.getRelationIds().size()));
 				}
 
 				l += subGroup.getNumRelations();
-				List<OsmRelation> subRelations = finder.findRelations(subGroup
-						.getRelationIds());
+				List<OsmRelation> subRelations = finder
+						.findRelations(subGroup.getRelationIds());
 				m += countWayReferences(subRelations);
 			}
 		}

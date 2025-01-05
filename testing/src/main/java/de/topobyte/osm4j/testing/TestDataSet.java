@@ -86,8 +86,8 @@ public class TestDataSet
 		long[] relationIds = data.getRelations().keys();
 		Arrays.sort(relationIds);
 		for (int i = 0; i < relationIds.length; i++) {
-			relations.add(EntityHelper.clone(data.getRelations().get(
-					relationIds[i])));
+			relations.add(EntityHelper
+					.clone(data.getRelations().get(relationIds[i])));
 		}
 	}
 

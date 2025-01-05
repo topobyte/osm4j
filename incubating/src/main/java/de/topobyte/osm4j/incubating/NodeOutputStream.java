@@ -108,8 +108,10 @@ public class NodeOutputStream implements OsmOutputStream
 			long timestamp = metadata.getTimestamp();
 			long uid = metadata.getUid();
 			writer.writeVariableLengthSignedInteger(version - versionOffset);
-			writer.writeVariableLengthSignedInteger(changeset - changesetOffset);
-			writer.writeVariableLengthSignedInteger(timestamp - timestampOffset);
+			writer.writeVariableLengthSignedInteger(
+					changeset - changesetOffset);
+			writer.writeVariableLengthSignedInteger(
+					timestamp - timestampOffset);
 			writer.writeVariableLengthSignedInteger(uid - uidOffset);
 			// writer.writeLong(version);
 			// writer.writeLong(changeset);

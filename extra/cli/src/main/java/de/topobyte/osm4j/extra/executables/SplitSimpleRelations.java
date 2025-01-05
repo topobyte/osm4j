@@ -26,8 +26,8 @@ import de.topobyte.osm4j.utils.OsmOutputConfig;
 import de.topobyte.osm4j.utils.OsmStreamInput;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
-public class SplitSimpleRelations extends
-		AbstractExecutableSingleInputStreamOutput
+public class SplitSimpleRelations
+		extends AbstractExecutableSingleInputStreamOutput
 {
 
 	private static final String OPTION_OUTPUT = "output";

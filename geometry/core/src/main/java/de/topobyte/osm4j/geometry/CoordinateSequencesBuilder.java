@@ -79,8 +79,8 @@ class CoordinateSequencesBuilder
 		if (closed && !firstMissing && numPoints == 0 && numLines == 1) {
 			List<Coordinate> coords = results.get(0);
 			if (coords.size() > 3) {
-				result.setLinearRing(factory.createLinearRing(coords
-						.toArray(new Coordinate[0])));
+				result.setLinearRing(factory
+						.createLinearRing(coords.toArray(new Coordinate[0])));
 				return result;
 			}
 		}

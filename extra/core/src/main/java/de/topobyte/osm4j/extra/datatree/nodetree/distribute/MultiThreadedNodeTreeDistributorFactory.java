@@ -22,8 +22,8 @@ import de.topobyte.osm4j.extra.datatree.DataTree;
 import de.topobyte.osm4j.extra.datatree.Node;
 import de.topobyte.osm4j.extra.datatree.output.DataTreeOutputFactory;
 
-public class MultiThreadedNodeTreeDistributorFactory implements
-		NodeTreeDistributorFactory
+public class MultiThreadedNodeTreeDistributorFactory
+		implements NodeTreeDistributorFactory
 {
 
 	private int numThreads;

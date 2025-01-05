@@ -28,8 +28,8 @@ import de.topobyte.osm4j.utils.OsmIoUtils;
 import de.topobyte.osm4j.utils.OsmOutputConfig;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
-public class SplitRelationsAndCollectMembers extends
-		AbstractExecutableInputOutput
+public class SplitRelationsAndCollectMembers
+		extends AbstractExecutableInputOutput
 {
 
 	private static final String OPTION_INPUT_NODES = "input-nodes";

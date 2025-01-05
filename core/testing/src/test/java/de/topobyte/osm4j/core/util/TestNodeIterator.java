@@ -39,8 +39,8 @@ public class TestNodeIterator extends BaseTestIterators
 	@Test
 	public void test() throws IOException
 	{
-		InMemoryListDataSet data = ListDataSetLoader.read(createInput()
-				.createIterator(true, true), true, true, true);
+		InMemoryListDataSet data = ListDataSetLoader.read(
+				createInput().createIterator(true, true), true, true, true);
 
 		OsmIteratorInput input = createInput().createIterator(true, true);
 		NodeIterator nodeIterator = new NodeIterator(input.getIterator());

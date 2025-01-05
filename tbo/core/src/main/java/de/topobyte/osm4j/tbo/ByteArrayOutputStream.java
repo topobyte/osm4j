@@ -77,7 +77,8 @@ public class ByteArrayOutputStream extends OutputStream
 	public ByteArrayOutputStream(int size)
 	{
 		if (size < 0) {
-			throw new IllegalArgumentException("Negative initial size: " + size);
+			throw new IllegalArgumentException(
+					"Negative initial size: " + size);
 		}
 		needNewBuffer(size);
 	}
@@ -102,8 +103,8 @@ public class ByteArrayOutputStream extends OutputStream
 				newBufferSize = newcount;
 				filledBufferSum = 0;
 			} else {
-				newBufferSize = Math.max(currentBuffer.length << 1, newcount
-						- filledBufferSum);
+				newBufferSize = Math.max(currentBuffer.length << 1,
+						newcount - filledBufferSum);
 				filledBufferSum += currentBuffer.length;
 			}
 

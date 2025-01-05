@@ -34,8 +34,7 @@ import de.topobyte.osm4j.core.model.impl.Relation;
 import de.topobyte.osm4j.core.model.impl.Way;
 import de.topobyte.osm4j.utils.AbstractExecutableSingleInputStreamSingleOutput;
 
-public class OsmDropTags extends
-		AbstractExecutableSingleInputStreamSingleOutput
+public class OsmDropTags extends AbstractExecutableSingleInputStreamSingleOutput
 {
 
 	@Override

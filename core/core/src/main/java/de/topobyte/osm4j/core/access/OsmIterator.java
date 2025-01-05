@@ -22,8 +22,8 @@ import java.util.Iterator;
 import de.topobyte.osm4j.core.model.iface.EntityContainer;
 import de.topobyte.osm4j.core.model.iface.OsmBounds;
 
-public interface OsmIterator extends Iterable<EntityContainer>,
-		Iterator<EntityContainer>
+public interface OsmIterator
+		extends Iterable<EntityContainer>, Iterator<EntityContainer>
 {
 
 	public boolean hasBounds();

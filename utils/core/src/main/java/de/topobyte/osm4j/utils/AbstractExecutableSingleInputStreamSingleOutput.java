@@ -25,8 +25,8 @@ import de.topobyte.melon.io.StreamUtil;
 import de.topobyte.osm4j.core.access.OsmOutputStream;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
-public abstract class AbstractExecutableSingleInputStreamSingleOutput extends
-		AbstractExecutableSingleInputStreamOutput
+public abstract class AbstractExecutableSingleInputStreamSingleOutput
+		extends AbstractExecutableSingleInputStreamOutput
 {
 
 	private static final String OPTION_OUTPUT = "output";

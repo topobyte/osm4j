@@ -38,8 +38,7 @@ public class CompressDeflate
 	public static void main(String[] args) throws IOException
 	{
 		if (args.length != 2) {
-			System.out.println("usage: "
-					+ CompressDeflate.class.getSimpleName()
+			System.out.println("usage: " + CompressDeflate.class.getSimpleName()
 					+ " <input> <output>");
 			System.exit(1);
 		}

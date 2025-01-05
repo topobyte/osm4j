@@ -52,8 +52,8 @@ public class SortFiles
 		List<Path> paths = find("input.tbo");
 		int i = 0;
 		for (Path path : paths) {
-			System.out.println(String.format("%d / %d: %s", ++i, paths.size(),
-					path));
+			System.out.println(
+					String.format("%d / %d: %s", ++i, paths.size(), path));
 			Path opath = path.resolveSibling("sorted.tbo");
 
 			OsmFileInput input = new OsmFileInput(path, FileFormat.TBO);

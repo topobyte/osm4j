@@ -127,8 +127,8 @@ public class PbfIterator implements OsmIterator
 	private void advanceBlock() throws IOException
 	{
 		BlobHeader header = PbfUtil.parseHeader(input);
-		Fileformat.Blob blob = PbfUtil
-				.parseBlock(input, header.getDataLength());
+		Fileformat.Blob blob = PbfUtil.parseBlock(input,
+				header.getDataLength());
 
 		BlockData blockData = PbfUtil.getBlockData(blob);
 
@@ -141,7 +141,8 @@ public class PbfIterator implements OsmIterator
 
 			PrimParser primParser = new PrimParser(block, fetchMetadata);
 
-			for (Osmformat.PrimitiveGroup group : block.getPrimitivegroupList()) {
+			for (Osmformat.PrimitiveGroup group : block
+					.getPrimitivegroupList()) {
 				if (group.getNodesCount() > 0) {
 					pushNodes(primParser, group.getNodesList());
 				}

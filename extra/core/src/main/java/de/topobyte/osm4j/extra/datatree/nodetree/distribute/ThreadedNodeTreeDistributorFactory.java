@@ -22,8 +22,8 @@ import de.topobyte.osm4j.extra.datatree.DataTree;
 import de.topobyte.osm4j.extra.datatree.Node;
 import de.topobyte.osm4j.extra.datatree.output.DataTreeOutputFactory;
 
-public class ThreadedNodeTreeDistributorFactory implements
-		NodeTreeDistributorFactory
+public class ThreadedNodeTreeDistributorFactory
+		implements NodeTreeDistributorFactory
 {
 
 	@Override

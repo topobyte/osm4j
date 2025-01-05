@@ -36,7 +36,8 @@ public class PbfMeta
 		return types.size() > 1;
 	}
 
-	public static Set<EntityType> getContentTypes(Osmformat.PrimitiveBlock block)
+	public static Set<EntityType> getContentTypes(
+			Osmformat.PrimitiveBlock block)
 	{
 		int count = block.getPrimitivegroupCount();
 		Set<EntityType> types = new HashSet<>();

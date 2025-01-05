@@ -60,8 +60,8 @@ public class TestMemorySort extends BaseTest
 
 		TestDataSetOutputStream output = new TestDataSetOutputStream();
 
-		MemorySort sort = new MemorySort(output, new TestDataSetIterator(
-				shuffled));
+		MemorySort sort = new MemorySort(output,
+				new TestDataSetIterator(shuffled));
 		sort.run();
 
 		TestDataSet sorted = output.getData();

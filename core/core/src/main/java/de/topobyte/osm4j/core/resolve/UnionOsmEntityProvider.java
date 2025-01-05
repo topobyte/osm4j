@@ -72,8 +72,8 @@ public class UnionOsmEntityProvider implements OsmEntityProvider
 				continue;
 			}
 		}
-		throw new EntityNotFoundException("unable to find relation with id: "
-				+ id);
+		throw new EntityNotFoundException(
+				"unable to find relation with id: " + id);
 	}
 
 }

@@ -32,8 +32,8 @@ import de.topobyte.osm4j.core.model.util.OsmModelUtil;
 import de.topobyte.osm4j.utils.AbstractExecutableSingleInputStreamSingleOutput;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
-public class OsmKeyFilter extends AbstractExecutableSingleInputStreamSingleOutput
-		implements OsmHandler
+public class OsmKeyFilter extends
+		AbstractExecutableSingleInputStreamSingleOutput implements OsmHandler
 {
 
 	private static final String OPTION_KEY = "key";

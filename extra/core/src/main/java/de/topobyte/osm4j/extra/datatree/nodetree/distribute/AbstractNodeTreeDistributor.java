@@ -27,8 +27,7 @@ import de.topobyte.osm4j.extra.datatree.DataTree;
 import de.topobyte.osm4j.extra.datatree.Node;
 import de.topobyte.osm4j.utils.OsmOutputConfig;
 
-public abstract class AbstractNodeTreeDistributor implements
-		NodeTreeDistributor
+public abstract class AbstractNodeTreeDistributor implements NodeTreeDistributor
 {
 
 	protected DataTree tree;

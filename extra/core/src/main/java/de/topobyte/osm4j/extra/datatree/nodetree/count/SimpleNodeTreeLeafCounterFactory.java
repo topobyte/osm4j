@@ -21,8 +21,8 @@ import de.topobyte.osm4j.core.access.OsmIterator;
 import de.topobyte.osm4j.extra.datatree.DataTree;
 import de.topobyte.osm4j.extra.datatree.Node;
 
-public class SimpleNodeTreeLeafCounterFactory implements
-		NodeTreeLeafCounterFactory
+public class SimpleNodeTreeLeafCounterFactory
+		implements NodeTreeLeafCounterFactory
 {
 
 	@Override

@@ -69,7 +69,8 @@ public class PbfFile
 
 				if (header.getType().equals(Constants.BLOCK_TYPE_DATA)) {
 					dataBlockInfos.add(info);
-				} else if (header.getType().equals(Constants.BLOCK_TYPE_HEADER)) {
+				} else if (header.getType()
+						.equals(Constants.BLOCK_TYPE_HEADER)) {
 					if (headerBlockInfo == null) {
 						headerBlockInfo = info;
 					} else {

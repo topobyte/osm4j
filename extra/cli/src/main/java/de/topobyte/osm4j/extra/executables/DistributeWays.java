@@ -106,13 +106,13 @@ public class DistributeWays extends AbstractExecutableInputOutput
 		if (!threaded) {
 			distributor = new SimpleWaysDistributor(Paths.get(pathTree),
 					fileNamesNodes1, fileNamesNodes2, fileNamesWays,
-					fileNamesOutputWays, fileNamesOutputNodes,
-					inputFormatNodes, inputFormatWays, outputConfig);
+					fileNamesOutputWays, fileNamesOutputNodes, inputFormatNodes,
+					inputFormatWays, outputConfig);
 		} else {
 			distributor = new ThreadedWaysDistributor(Paths.get(pathTree),
 					fileNamesNodes1, fileNamesNodes2, fileNamesWays,
-					fileNamesOutputWays, fileNamesOutputNodes,
-					inputFormatNodes, inputFormatWays, outputConfig);
+					fileNamesOutputWays, fileNamesOutputNodes, inputFormatNodes,
+					inputFormatWays, outputConfig);
 		}
 
 		distributor.execute();

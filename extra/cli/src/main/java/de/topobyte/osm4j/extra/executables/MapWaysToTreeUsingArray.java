@@ -26,8 +26,8 @@ import de.topobyte.osm4j.utils.AbstractExecutableSingleInputStreamOutput;
 import de.topobyte.osm4j.utils.OsmOutputConfig;
 import de.topobyte.utilities.apache.commons.cli.OptionHelper;
 
-public class MapWaysToTreeUsingArray extends
-		AbstractExecutableSingleInputStreamOutput
+public class MapWaysToTreeUsingArray
+		extends AbstractExecutableSingleInputStreamOutput
 {
 
 	private static final String OPTION_FILE_NAMES = "filenames";

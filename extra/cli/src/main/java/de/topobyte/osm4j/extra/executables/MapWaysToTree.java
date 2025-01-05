@@ -95,9 +95,9 @@ public class MapWaysToTree extends AbstractExecutableSingleInputStreamOutput
 					Paths.get(pathWays), inputFormat, fileNamesOutput,
 					outputConfig);
 		} else {
-			mapper = new ThreadedWaysToTreeMapper(iterator,
-					Paths.get(pathTree), Paths.get(pathWays), inputFormat,
-					fileNamesOutput, outputConfig);
+			mapper = new ThreadedWaysToTreeMapper(iterator, Paths.get(pathTree),
+					Paths.get(pathWays), inputFormat, fileNamesOutput,
+					outputConfig);
 		}
 
 		mapper.execute();

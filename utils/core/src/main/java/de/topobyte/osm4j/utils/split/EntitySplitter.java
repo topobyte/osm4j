@@ -63,8 +63,8 @@ public class EntitySplitter extends AbstractEntitySplitter
 				break;
 			case Relation:
 				if (passRelations) {
-					oosRelations.write((OsmRelation) entityContainer
-							.getEntity());
+					oosRelations
+							.write((OsmRelation) entityContainer.getEntity());
 				} else {
 					break loop;
 				}

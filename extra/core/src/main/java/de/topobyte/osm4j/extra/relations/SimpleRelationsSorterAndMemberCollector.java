@@ -48,9 +48,8 @@ public class SimpleRelationsSorterAndMemberCollector
 
 	public SimpleRelationsSorterAndMemberCollector(
 			OsmIteratorInputFactory inputSimpleRelations,
-			Path pathInputSimpleRelationsBboxes,
-			Path pathOutputSimpleRelations, String fileNamesRelations,
-			OsmIteratorInputFactory inputWays,
+			Path pathInputSimpleRelationsBboxes, Path pathOutputSimpleRelations,
+			String fileNamesRelations, OsmIteratorInputFactory inputWays,
 			OsmIteratorInputFactory inputNodes, OsmOutputConfig outputConfig,
 			Path pathOutputBboxList, int maxMembers)
 	{

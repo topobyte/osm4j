@@ -17,7 +17,6 @@
 
 package de.topobyte.osm4j.extra.batch;
 
-
 public abstract class SizeBatch<T> extends AbstractBatch<T>
 {
 

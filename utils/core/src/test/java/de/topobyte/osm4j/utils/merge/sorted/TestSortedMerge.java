@@ -64,8 +64,8 @@ public class TestSortedMerge extends BaseTest
 
 		Assert.assertEquals(data.getNodes().size(), merged.getNodes().size());
 		Assert.assertEquals(data.getWays().size(), merged.getWays().size());
-		Assert.assertEquals(data.getRelations().size(), merged.getRelations()
-				.size());
+		Assert.assertEquals(data.getRelations().size(),
+				merged.getRelations().size());
 		Assert.assertTrue(DataSetHelper.equals(data, merged));
 	}
 

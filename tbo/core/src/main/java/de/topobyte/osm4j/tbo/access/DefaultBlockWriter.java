@@ -67,8 +67,8 @@ public class DefaultBlockWriter implements BlockWriter
 	{
 		writer.writeByte(block.getCompression().getId());
 		if (block.getCompression() != Compression.NONE) {
-			writer.writeVariableLengthUnsignedInteger(block
-					.getUncompressedLength());
+			writer.writeVariableLengthUnsignedInteger(
+					block.getUncompressedLength());
 		}
 		writer.writeVariableLengthUnsignedInteger(block.getNumObjects());
 	}
