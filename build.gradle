@@ -1,3 +1,7 @@
+plugins {
+    id 'com.diffplug.spotless' version '6.25.0' apply false
+}
+
 wrapper {
     gradleVersion = '7.6.1'
 }
@@ -35,6 +39,29 @@ configure(libraries) {
 
 configure(subprojects.findAll {it !in libraries}) {
     apply plugin: 'java'
+}
+
+// Apply spotless to all projects except pbf-full-runtime. The plugin
+// fails with this one as it pulls in the source from the other pbf module.
+configure(subprojects.findAll {it.name != 'osm4j-pbf-full-runtime'}) {
+    apply plugin: 'com.diffplug.spotless'
+
+    spotless {
+        java {
+            eclipse('4.34').configFile("$project.rootDir/formatter.xml")
+            removeUnusedImports()
+        }
+    }
+}
+
+// Special spotless configuration for the pbf module: do not touch
+// the protobuf generated files.
+configure(project(':osm4j-pbf')) {
+    spotless {
+        java {
+            target = files("$project.projectDir/src/main/java", "$project.projectDir/src/test/java")
+        }
+    }
 }
 
 subprojects {
