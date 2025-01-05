@@ -83,6 +83,7 @@ class EntityIterator<T> implements Iterable<T>, Iterator<T>
 		return current;
 	}
 
+	@SuppressWarnings("unchecked")
 	private void advance()
 	{
 		while (iterator.hasNext()) {

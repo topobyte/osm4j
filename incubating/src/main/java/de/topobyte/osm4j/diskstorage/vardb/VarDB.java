@@ -203,6 +203,7 @@ public class VarDB<T extends Record>
 	 * @throws IOException
 	 *             on IO errors.
 	 */
+	@SuppressWarnings("unchecked")
 	public T find(long id) throws IOException
 	{
 		Entry found = index.find(id);
