@@ -72,18 +72,17 @@ subprojects {
 
     repositories {
         maven {
-            url 'https://mvn.topobyte.de'
+            url = 'https://mvn.topobyte.de'
         }
         maven {
-            url 'https://mvn.slimjars.com'
+            url = 'https://mvn.slimjars.com'
         }
         mavenCentral()
     }
 
-    sourceCompatibility = 1.8
-    targetCompatibility = 1.8
-
     java {
+        sourceCompatibility = 1.8
+        targetCompatibility = 1.8
         withSourcesJar()
     }
 

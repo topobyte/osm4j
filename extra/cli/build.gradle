@@ -1,6 +1,6 @@
 buildscript {
     repositories {
-        maven { url 'https://mvn.topobyte.de' }
+        maven { url = 'https://mvn.topobyte.de' }
     }
     dependencies {
         classpath 'de.topobyte:gradle-launch-and-install-plugin:0.0.5'
@@ -79,5 +79,5 @@ task copyDeps(type: Copy) {
 }
 
 task createRuntime(dependsOn: [copyJars, copyDeps]) {
-    description 'Setup the execution environment for the scripts'
+    description = 'Setup the execution environment for the scripts'
 }
