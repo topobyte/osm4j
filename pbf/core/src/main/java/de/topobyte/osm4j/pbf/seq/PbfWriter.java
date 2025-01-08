@@ -351,6 +351,11 @@ public class PbfWriter extends BlockWriter implements OsmOutputStream
 
 	private int mapDegrees(double degrees)
 	{
+		if (Double.isNaN(degrees)) {
+			System.out.println((degrees / .0000001) / (granularity / 100));
+			System.out.println(
+					(int) ((degrees / .0000001) / (granularity / 100)));
+		}
 		return (int) ((degrees / .0000001) / (granularity / 100));
 	}
 

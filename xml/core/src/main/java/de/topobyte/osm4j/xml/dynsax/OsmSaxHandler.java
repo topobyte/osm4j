@@ -280,8 +280,8 @@ class OsmSaxHandler extends DynamicSaxHandler
 			String aLat = data.getAttribute(ATTR_LAT);
 
 			long id = Long.parseLong(aId);
-			double lon = Double.parseDouble(aLon);
-			double lat = Double.parseDouble(aLat);
+			double lon = aLon == null ? Double.NaN : Double.parseDouble(aLon);
+			double lat = aLat == null ? Double.NaN : Double.parseDouble(aLat);
 
 			Node node = new Node(id, lon, lat, metadata);
 			fillTags(node, data);
