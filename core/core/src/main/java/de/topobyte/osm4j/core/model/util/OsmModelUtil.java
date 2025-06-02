@@ -43,8 +43,9 @@ public class OsmModelUtil
 	 */
 	public static Map<String, String> getTagsAsMap(OsmEntity entity)
 	{
-		Map<String, String> map = new HashMap<>();
-		for (int i = 0; i < entity.getNumberOfTags(); i++) {
+		int numberOfTags = entity.getNumberOfTags();
+		Map<String, String> map = new HashMap<>(numberOfTags);
+		for (int i = 0; i < numberOfTags; i++) {
 			OsmTag tag = entity.getTag(i);
 			map.put(tag.getKey(), tag.getValue());
 		}
@@ -53,8 +54,9 @@ public class OsmModelUtil
 
 	public static List<? extends OsmTag> getTagsAsList(OsmEntity entity)
 	{
-		List<OsmTag> list = new ArrayList<>();
-		for (int i = 0; i < entity.getNumberOfTags(); i++) {
+		int numberOfTags = entity.getNumberOfTags();
+		List<OsmTag> list = new ArrayList<>(numberOfTags);
+		for (int i = 0; i < numberOfTags; i++) {
 			OsmTag tag = entity.getTag(i);
 			list.add(tag);
 		}
@@ -63,8 +65,9 @@ public class OsmModelUtil
 
 	public static TLongList nodesAsList(OsmWay way)
 	{
-		TLongList ids = new TLongArrayList();
-		for (int i = 0; i < way.getNumberOfNodes(); i++) {
+		int numberOfNodes = way.getNumberOfNodes();
+		TLongList ids = new TLongArrayList(numberOfNodes);
+		for (int i = 0; i < numberOfNodes; i++) {
 			ids.add(way.getNodeId(i));
 		}
 		return ids;
@@ -72,8 +75,9 @@ public class OsmModelUtil
 
 	public static List<OsmRelationMember> membersAsList(OsmRelation relation)
 	{
-		List<OsmRelationMember> members = new ArrayList<>();
-		for (int i = 0; i < relation.getNumberOfMembers(); i++) {
+		int numberOfMembers = relation.getNumberOfMembers();
+		List<OsmRelationMember> members = new ArrayList<>(numberOfMembers);
+		for (int i = 0; i < numberOfMembers; i++) {
 			members.add(relation.getMember(i));
 		}
 		return members;
