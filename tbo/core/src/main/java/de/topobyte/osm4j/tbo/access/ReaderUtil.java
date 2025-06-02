@@ -86,8 +86,8 @@ public class ReaderUtil
 	private static List<String> parsePool(CompactReader reader)
 			throws IOException
 	{
-		List<String> pool = new ArrayList<>();
-		long size = reader.readVariableLengthUnsignedInteger();
+		int size = (int) reader.readVariableLengthUnsignedInteger();
+		List<String> pool = new ArrayList<>(size);
 		for (int i = 0; i < size; i++) {
 			String string = reader.readString();
 			pool.add(string);
@@ -104,7 +104,7 @@ public class ReaderUtil
 			throws IOException
 	{
 		int num = (int) reader.readVariableLengthUnsignedInteger();
-		List<Tag> tags = new ArrayList<>();
+		List<Tag> tags = new ArrayList<>(num);
 		for (int i = 0; i < num; i++) {
 			int k = (int) reader.readVariableLengthUnsignedInteger();
 			int v = (int) reader.readVariableLengthUnsignedInteger();
