@@ -52,8 +52,9 @@ public class ImplUtil
 	{
 		List<? extends OsmTag> tags = cloneTags(way);
 		OsmMetadata metadata = cloneMetadata(way);
-		TLongList nodes = new TLongArrayList(way.getNumberOfNodes());
-		for (int i = 0; i < way.getNumberOfNodes(); i++) {
+		int numberOfNodes = way.getNumberOfNodes();
+		TLongList nodes = new TLongArrayList(numberOfNodes);
+		for (int i = 0; i < numberOfNodes; i++) {
 			nodes.add(way.getNodeId(i));
 		}
 		return new Way(way.getId(), nodes, tags, metadata);
@@ -64,9 +65,9 @@ public class ImplUtil
 		List<? extends OsmTag> tags = cloneTags(relation);
 		OsmMetadata metadata = cloneMetadata(relation);
 
-		List<RelationMember> members = new ArrayList<>(
-				relation.getNumberOfMembers());
-		for (int i = 0; i < relation.getNumberOfMembers(); i++) {
+		int numberOfMembers = relation.getNumberOfMembers();
+		List<RelationMember> members = new ArrayList<>(numberOfMembers);
+		for (int i = 0; i < numberOfMembers; i++) {
 			OsmRelationMember member = relation.getMember(i);
 			members.add(new RelationMember(member.getId(), member.getType(),
 					member.getRole()));
@@ -86,8 +87,9 @@ public class ImplUtil
 
 	private static List<? extends OsmTag> cloneTags(OsmEntity entity)
 	{
-		List<Tag> tags = new ArrayList<>();
-		for (int i = 0; i < entity.getNumberOfTags(); i++) {
+		int numberOfTags = entity.getNumberOfTags();
+		List<Tag> tags = new ArrayList<>(numberOfTags);
+		for (int i = 0; i < numberOfTags; i++) {
 			OsmTag tag = entity.getTag(i);
 			tags.add(new Tag(tag.getKey(), tag.getValue()));
 		}
