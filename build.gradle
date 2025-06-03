@@ -8,13 +8,13 @@ wrapper {
 
 allprojects {
     group = 'de.topobyte'
-    version = '1.4.0'
+    version = '1.4.1'
 }
 
 // leaving this here for reference on how to modify
 // a single module version
 configure(project(':osm4j-core')) {
-    version = '1.4.0'
+    version = '1.4.1'
 }
 
 ext.libraries = [
